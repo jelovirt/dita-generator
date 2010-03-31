@@ -16,44 +16,23 @@
     <property name="resources.dir" location="${src.dir}/resources"/>
   </target>
 
-  <target name="-svn.info" depends="-init">
-    <exec outputproperty="build.current.revision" executable="svnversion">
-      <arg line="-n -c"/>
-      <redirector>
-        <outputfilterchain>
-          <tokenfilter>
-            <replaceregex pattern="^[0-9]*:?" replace="" flags="g"/>
-          </tokenfilter>
-        </outputfilterchain>
-      </redirector>
-    </exec>
-    <exec outputproperty="build.current.version" executable="svn">
-      <arg line="info"/>
-      <redirector>
-        <outputfilterchain>
-          <linecontainsregexp>
-            <regexp pattern="^URL:"/>
-          </linecontainsregexp>
-          <tokenfilter>
-            <replaceregex pattern=".*\/([^\/]+)$" replace="\1" flags="g"/>
-          </tokenfilter>
-        </outputfilterchain>
-      </redirector>
+  <target name="-hg.info" depends="-init">
+    <exec outputproperty="build.current.revision" executable="hg">
+      <arg line="id -i"/>
     </exec>
   </target>
 
   <target name="-version" unless="version">
-    <property name="version" value="${build.current.version}r${build.current.revision}"/>
+    <property name="version" value="r${build.current.revision}"/>
     <echo level="warning">Property version not set, using '${version}'.</echo>
   </target>
 
-  <target name="-manifest" depends="-svn.info">
+  <target name="-manifest" depends="-hg.info">
     <mkdir dir="${work.dir}"/>
     <manifest file="${work.dir}/manifest.mf">
       <attribute name="Built-By" value="${env.USER}"/>
       <attribute name="Build-Date" value="${DATE_ISO}"/>
       <attribute name="Release-Name" value="${ant.project.name}"/>
-      <attribute name="Release-Version" value="${build.current.version}"/>
       <attribute name="Release-Revision" value="${build.current.revision}"/>
     </manifest>
   </target>
