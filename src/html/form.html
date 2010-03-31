@@ -1,0 +1,403 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <form action="/generate" method="post" target="_blank">
+    {% if not advanced %}
+      <input type="hidden" name="file" value="plugin">
+    {% endif %}
+
+    {# output type #}
+    {% if output %}
+      <input type="hidden" name="output" value="{{ output }}">
+      <div class="page">
+        {% ifequal output "specialization" %}
+          <p class="help">The specialization feature of DITA allows for the creation of new element
+            types and attributes that are explicitly and formally derived from existing types in a way
+            that allows for the blind interchange of all conforming DITA content and a minimum level of
+            common processing for all DITA content.</p>
+          <p class="help">DITA Specialization Generator can be used to create a base for a structural
+            type spcialization with the correct naming and modularization conventions. This base can then
+            manually edited to define the element level specialization details.
+        {% endifequal %}
+        {% ifequal output "shell" %}
+          <p class="help">A DITA DTD shell defines the set of structural modules (topic or map types),
+            domain modules, and constraints modules that the map or topic can use.
+            In general, any production use of DITA involves definition of the set of modules best suited
+            to local requirements. This always requires the creation of local shell document types, even
+            if all they do is omit unneeded modules or apply constraints to the standard DITA-defined
+            vocabulary.</p>
+        {% endifequal %}
+      </div>
+    {% else %}
+      <div class="page">
+        <p class="help">Structural specialization defines new types of structured information, such
+          as new topic types or new map types.</p>
+        <p class="help">DITA documents are governed by concrete document types that represent
+          the combination of one or more structural types (maps or topics), domain vocabularies,
+          and constraint modules that define set of element types and attributes available to a
+          specific document. Concrete document types are referred as "local shells".</p>
+        <table>
+          <tr>
+            <th><label for="output">Output</label>:</th>
+            <td>
+              <select name="output" id="output">
+                <option value="specialization">Structural specialization</option>
+                <option value="shell">Concrete document types</option>
+              </select>
+            </td>
+          </tr>
+        </table>
+      </div>
+    {% endif %}
+    
+    {# version #}
+    {% if version %}
+      <input type="hidden" name="version" value="{{ version }}">
+    {% else %}
+      <div class="page">
+        <p class="help">Current stable DITA version is 1.1. DITA 1.2 is under development.</p>
+        <table>
+          <tr>
+            <th><label for="version">DITA version</label>:</th>
+            <td>
+              <select name="version" id="version"><!--class="required"-->
+                <option value="1.1">1.1</option>
+                <option value="1.2">1.2</option>
+              </select>
+            </td>
+          </tr>
+        </table>
+      </div>
+    {% endif %}
+    
+    <div class="page">  
+      {% if output %}
+        {% ifequal output "specialization" %}
+          <p class="help">Topic or map type to be uses as the base for specialization.</p>
+        {% endifequal %}
+        {% ifequal output "shell" %}
+          <p class="help">Structural module for local shell.</p>
+        {% endifequal %}  
+      {% else %}
+        <p class="help">Topic or map type to use as base specialization or local shell.</p>
+      {% endif %}
+      <table>
+        <tr>
+          <th>Base:</th>
+          <td>
+            <input type="radio" name="type" value="topic" class="required"> Topic<br>
+            <input type="radio" name="type" value="map" class="required"> Map
+          </td>
+        </tr>
+        <tr>
+          <th>Bookmap:</th>
+          <td>
+            <input type="radio" name="type" value="bookmap" class="required"> Book Map
+          </td>
+        </tr> 
+        <tr>
+          <th>Technical content:</th>
+          <td>
+            <input type="radio" name="type" value="concept" class="required"> Concept<br>
+            <input type="radio" name="type" value="task" class="required"> Task<br>
+            <input type="radio" name="type" value="reference" class="required"> Reference<br>
+          </td>
+        </tr> 
+        <tr class="v1_2">
+          <th>Learning:</th>
+          <td>
+            <input type="radio" name="type" value="learningAssessment" class="required"> Learning Assessment<br>
+            <input type="radio" name="type" value="learningBookmap" class="required"> Learning Book Map{% if advanced %} <sup>*</sup>{% endif %}<br>
+            <input type="radio" name="type" value="learningContent" class="required"> Learning Content<br>
+            <input type="radio" name="type" value="learningMap" class="required"> Learning Map{% if advanced %} <sup>*</sup>{% endif %}<br>
+            <input type="radio" name="type" value="learningOverview" class="required"> Learning Overview<br>
+            <input type="radio" name="type" value="learningPlan" class="required"> Learning Plan<br>
+            <input type="radio" name="type" value="learningSummary" class="required"> Learning Summary
+          </td>
+        </tr>
+        <tr class="v1_2">
+          <th>Machine:</th>
+          <td>
+            <input type="radio" name="type" value="machineryTask" class="v1_2 required"> Machine Task{% if advanced %} <sup>*</sup>{% endif %}
+          </td>
+        </tr>
+        <!--
+        <tr>
+          <th><label for="type">Parent type</label>:</th>
+          <td>
+            <select name="type" id="type" class="required">
+              <option value=""></option>
+              <optgroup label="Technical content">
+                <option value="topic">Topic</option>
+                <option value="concept">Concept</option>
+                <option value="task">Task</option>
+                <option value="reference">Reference</option>
+                <option value="map">Map</option>
+              </optgroup>
+              <optgroup label="Learning" class="v1_2">
+                <option value="learningAssessment">Learning Assessment</option>
+                <option value="learningBookmap">Learning Book Map</option>
+                <option value="learningContent">Learning Content</option>
+                <option value="learningMap">Learning Map</option>
+                <option value="learningOverview">Learning Overview</option>
+                <option value="learningPlan">Learning Plan</option>
+                <option value="learningSummary">Learning Summary</option>
+              </optgroup>
+              <option value="machineryTask" class="v1_2">Machine Task</option>
+              <option value="bookmap">Book Map</option>
+            </select>
+          </td>
+        </tr>
+        -->
+      </table>
+      {% if advanced %}
+        <p class="v1_2 legend"><sup>*</sup> Module is a concrete document type provided by DITA Technical Committee.</p>
+      {% endif %}
+      <p class="help">Should the topic type allow nesting topics.</p>
+      <table>
+        <tr title="Enable topic nesting">
+          <th><label for="nested">Nested topics</label>:</th>
+          <td><input type="checkbox" name="nested" id="nested" value="true"></td>
+        </tr>
+      </table>
+      {% if advanced %}
+        <!--
+        <p class="help"><em>Not supported at the time</em></p>
+        <table>
+          <tr title="Make shortdesc or abstract mandatory">
+            <th><label for="nested">Mandatory shortdesc or abstract</label>:</th>
+            <td><input type="checkbox" name="mandatory-shortdesc" id="mandatory-shortdesc" value="true"></td>
+          </tr>
+        </table>
+        -->
+      {% endif %}
+    </div>
+    <div class="page">
+      <p class="help">Domains define markup for a particular domain or subject area, such as programming, or hardware.
+        Domain elements become available wherever their ancestor elements are allowed</p>
+      <table>
+        <tr>
+          <th>Domains:</th>
+          <td>
+            <table>
+              <tr class="v1_2">
+                <td><input type="checkbox" name="domain" value="abbrev-d" class="topic domain"></td>
+                <td>Abbreviated Form</td>
+              </tr>
+              <tr class="v1_2">
+                <td><input type="checkbox" name="domain" value="classify-d" class="map domain"></td>
+                <td>Classify</td>
+                <!--td>The classification domain elements are used to identify subjects covered by the content.</td-->
+              </tr>
+              <tr class="v1_2">
+                <td><input type="checkbox" name="domain" value="hazard-d" class="topic domain"></td>
+                <td>Hazard Statement</td>
+                <!--td>The hazard statement domain elements represent labeling for product safety hazards that readers need to be aware of.</td-->
+              </tr>
+              <tr>
+                <td><input type="checkbox" name="domain" value="hi-d" class="topic domain"></td>
+                <td>Highlight</td>
+                <!--td>The typographic elements are used to highlight text with styles.</td-->
+              </tr>
+              <tr>
+                <td><input type="checkbox" name="domain" value="indexing-d" class="topic domain"></td>
+                <td>Indexing</td>
+                <!--td>The indexing domain provides several new elements for use with indexing.</td-->
+              </tr>
+              <tr class="v1_2">
+                <td><input type="checkbox" name="domain" value="learning-d" class="topic domain"></td>
+                <td>Learning</td>
+                <!--td>The learning interaction base domain defines an "abstract" base type for all learning assessments.</td-->
+              </tr>
+              <tr class="v1_2">
+                <td><input type="checkbox" name="domain" value="learningmap-d" class="map domain"></td>
+                <td>Learning Map</td>
+                <!--td>Use the learning and training map domain to organize groups of topics as learning objects.</td-->
+              </tr>
+              <tr class="v1_2">
+                <td><input type="checkbox" name="domain" value="learningmeta-d" class="topic domain"></td>
+                <td>Learning Meta</td>
+                <!--td>Use the learning and training metadata to describe specific characteristics of the learning content.</td-->
+              </tr>
+              <tr>
+                <td><input type="checkbox" name="domain" value="mapgroup-d" class="map domain"></td>
+                <td>Map Group</td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" name="domain" value="pr-d" class="topic domain"></td>
+                <td>Programming</td>
+                <!--td>The programming domains elements are used to define the syntax and to give examples of programming languages.</td-->
+              </tr>
+              <tr>
+                <td><input type="checkbox" name="domain" value="sw-d" class="topic domain"></td>
+                <td>Software</td>
+                <!--td>The software domain elements are used to describe the operation of a software program.</td-->
+              </tr>
+              <tr class="v1_2">
+                <td><input type="checkbox" name="domain" value="taskreq-d" class="task domain"></td>
+                <td>Task requirements</td>
+                <!--td>The machine-industry task domain contains elements for use describing tasks that involve machines or other pieces of hardware.</td-->
+              </tr>
+              <tr class="v1_2">
+                <td><input type="checkbox" name="domain" value="delay-d" class="topic map domain"></td>
+                <td>User Delayed Resolution</td>
+                <!--td>The delayed conref resolution domain provides several elements for use when using DITA in situations that enable delayed or run time resolution of conref.</td-->
+              </tr>
+              <tr>
+                <td><input type="checkbox" name="domain" value="ui-d" class="topic domain"></td>
+                <td>User interface</td>
+                <!--td>The user interface domain elements are used to describe the user interface of a software program.</td-->
+              </tr>
+              <tr>
+                <td><input type="checkbox" name="domain" value="ut-d" class="topic domain"></td>
+                <td>Utilities</td>
+                <!--td>The utilities domain elements represent common features of a language that may not necessarily be semantic, such as image maps.</td-->
+              </tr>
+              <tr>
+                <td><input type="checkbox" name="domain" value="xnal-d" class="map domain"></td>
+                <td>xNAL</td>
+                <!--td>The xNAL domain elements represent a subset of the Extensible Name and Address Standard.</td-->
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr class="task domain v1_2">
+          <th>Constraints:</th>
+          <td>
+            <table>
+              <tr class="v1_2">
+                <td><input type="checkbox" name="domain" value="strictTaskbody-c" class="task domain"></td>
+                <td>Strict taskbody constraints</td>
+              </tr>
+              <tr class="v1_2">
+                <td><input type="checkbox" name="domain" value="machineryTaskbody-c" class="task domain"></td>
+                <td>Machinery taskbody constraints</td>
+                <!--td>The machine-industry task domain contains elements for use describing tasks that involve machines or other pieces of hardware.</td-->
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>
+            Select:
+            <span class="action" id="selectAllDomains" title="Select all domains ">All</span>,
+            <span class="action" id="selectNoneDomains" title="Select no domains">None</span>,
+            <span class="action" id="selectDefaultDomains" title="Select default domains for the parent topic type">Defaults</span>
+          </td>
+        </tr>
+      </table>
+      {#% if advanced %#}
+        <p class="help">An attribute domain declares a new attribute specialized from either the props (for conditional processing) or base attribute (for other simple token attributes).</p>
+        <table id="attributes">
+          <thead>
+            <tr>
+              <th>Attribute name</th>
+              <th>Base</th>
+              <th>Datatype</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr id="noAttributesRow">
+              <td colspan="4"><em>No attributes</td>
+            </tr>
+          </tbody>
+        </table>
+        <p><button type="button" id="addAttribute">add</button></p>
+      {#% endif %#}
+    </div>
+    <div class="page">
+      <p class="help">Type or shell ID is used to identify the shell, the ID should be conform to XML ID syntax restrictions.
+        Type title is the human readable name for the type or specialization.
+        Owner is the owner company or organization of the type; the owner information is only use for Public Formal Identifier generation.</p>
+      <table>
+        <!--
+        <tr>
+          <th rowspan="2">Content-model rewrite</th>
+          <td><input type="checkbox" name="remove" value="separate" disabled></td>
+          <td>Block-inline separation</td>
+        </tr>
+        <tr style="display: none">
+          <td><input type="checkbox" name="remove" value="foreigndata" disabled>
+          </td>
+          <td>foreign and data element removal</td>
+        </tr>
+        -->
+        <tr title="ID of the new topic type or shell">
+          <th><label for="id">Type ID</label>:</th>
+          <!-- Leave empty to override base topic root element. XXX: Overriding root element in specialization is reshelling, so disable it -->
+          <td><input type="text" name="id" id="id" class="required" required></td>
+        </tr>
+        {% ifnotequal output "shell" %}
+          <tr title="Root element name"><!-- Defaults to type ID-->
+            <th><label for="root">Root element</label>:</th>
+            <td><input type="text" name="root" id="root" class="required" required></td>
+            <!-- Leave empty to override base topic root element. XXX: Overriding root element in specialization is reshelling, so disable it -->
+          </tr>
+        {% endifnotequal %}
+        <tr title="Title of the type"><!--Defaults to capitalized root name-->
+          <th><label for="title">Title</label>:</th>
+          <td><input type="text" name="title" id="title" class="required" required></td>
+        </tr>
+        <!--
+        <tr>
+          <th>Global attributes</th>
+          <td><textarea name="attribute" rows="2" cols="20" disabled>xtrc CDATA #IMPLIED&#xA;xtrf CDATA #IMPLIED</textarea></td>
+          <td>Attributes that are added globally by integrating into <code>%global-atts;</code>. Contents of the field are used as is in the DTD files.</td>
+        </tr>
+        -->
+        <tr title="For example a domain or company name, in uppercase by convention"><!-- PFI owner will default to 'OASIS'-->
+          <th><label for="owner"><abbr title="Public Formal Identifier">PFI</abbr> owner</label>:</th>
+          <td><input type="text" name="owner" id="owner" class="required" required></td>
+        </tr>
+        {% if advanced %}
+          <tr title="Generated plugin version number">
+            <th><label for="owner">Plugin version</label>:</th>
+            <td><input type="text" name="plugin-version" id="plugin-version"></td>
+          </tr>
+        {% endif %}
+      </table>
+      <!--
+      {% if advanced %}
+        <table>
+          <tr>
+            <th>Output</th>
+            <td>
+              <select name="file">
+                <option value="plugin">DITA-OT plugin</option>
+                <option value="dtd">DTD</option>
+                <option value="mod">MOD</option>
+                <option value="ent">ENT</option>
+              </select>
+            </td>
+          </tr>
+        </table>
+      {% endif %}
+      -->
+      {% ifnotequal output "shell" %}
+        <p class="help">DITA-OT can include XSLT stylesheets for processing specialization type
+          elements in semantically more correct way than the default fall-back processing.</p>
+        <table id="stylesheet">
+          <tr title="Stylesheet skeletons for modifying DITA-OT output">
+            <th>Stylesheet</th>
+            <td>
+              <select name="stylesheet" multiple>              
+                <option value="docbook">Docbook</option>
+                <option value="eclipse.plugin">Eclipse</option>
+                <option value="fo">PDF</option>
+                <option value="rtf">RTF</option>
+                <option value="xhtml">XHTML</option>
+              </select>
+            </td>
+          </tr>
+        </table>
+      {% endifnotequal %}
+    </div>
+    {% if output %}
+      <div id="controls">
+        <button id="generate" type="submit">Generate</button>
+      </div>
+    {% endif %}
+  </form>
+{% endblock %}

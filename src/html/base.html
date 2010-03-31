@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" type="text/css" href="/css/form.css">
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/domains.js"></script>
+    <script type="text/javascript" src="/js/form.js"></script>
+  </head>
+  <body>
+    <div id="body">
+      <header id="header">
+        <h1>{{ title }}</h1>
+      </header>
+      <div id="content">
+        {% block content %}{% endblock %}
+      </div>
+      <footer id="footer">
+        <hr>
+        <a href="http://www.elovirta.com/dita-generator/">About</a> |
+        <a href="http://code.google.com/p/dita-generator/">Source</a> |
+        Revision @revision@
+      </footer>
+    </div>
+    <script type="text/javascript">
+      var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+      document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type="text/javascript">
+      try {
+        var pageTracker = _gat._getTracker("UA-2665281-9");
+        pageTracker._trackPageview();
+      } catch(err) {}
+    </script>
+  </body>
+</html>

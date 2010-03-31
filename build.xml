@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="DITA DTD Generator">
+
+  <target name="-init">
+    <property file="${basedir}/local.properties"/>
+    <property environment="env"/>
+    <tstamp>
+      <format property="DATE_ISO" pattern="yyyy-mm-dd"/>
+      <format property="DATE_STAMP" pattern="yyyymmddhhmmssSSS"/>
+    </tstamp>
+    <property name="temp.dir" location="${env.HOME}/tmp/ditagen"/>
+    <property name="work.dir" location="${temp.dir}/work/${DATE_STAMP}"/>
+    <property name="dist.dir" location="${temp.dir}/dist"/>
+    <property name="src.dir" location="${basedir}/src"/>
+    <property name="python.dir" location="${src.dir}/python"/>
+    <property name="resources.dir" location="${src.dir}/resources"/>
+  </target>
+
+  <target name="-svn.info" depends="-init">
+    <exec outputproperty="build.current.revision" executable="svnversion">
+      <arg line="-n -c"/>
+      <redirector>
+        <outputfilterchain>
+          <tokenfilter>
+            <replaceregex pattern="^[0-9]*:?" replace="" flags="g"/>
+          </tokenfilter>
+        </outputfilterchain>
+      </redirector>
+    </exec>
+    <exec outputproperty="build.current.version" executable="svn">
+      <arg line="info"/>
+      <redirector>
+        <outputfilterchain>
+          <linecontainsregexp>
+            <regexp pattern="^URL:"/>
+          </linecontainsregexp>
+          <tokenfilter>
+            <replaceregex pattern=".*\/([^\/]+)$" replace="\1" flags="g"/>
+          </tokenfilter>
+        </outputfilterchain>
+      </redirector>
+    </exec>
+  </target>
+
+  <target name="-version" unless="version">
+    <property name="version" value="${build.current.version}r${build.current.revision}"/>
+    <echo level="warning">Property version not set, using '${version}'.</echo>
+  </target>
+
+  <target name="-manifest" depends="-svn.info">
+    <mkdir dir="${work.dir}"/>
+    <manifest file="${work.dir}/manifest.mf">
+      <attribute name="Built-By" value="${env.USER}"/>
+      <attribute name="Build-Date" value="${DATE_ISO}"/>
+      <attribute name="Release-Name" value="${ant.project.name}"/>
+      <attribute name="Release-Version" value="${build.current.version}"/>
+      <attribute name="Release-Revision" value="${build.current.revision}"/>
+    </manifest>
+  </target>
+
+  <target name="generate-js" depends="-init" description="Generate JS files from Python source.">
+    <exec executable="python" output="${src.dir}/javascript/domains.js">
+      <arg file="${basedir}/build/generate-js.py"/>
+      <env key="PYTHONPATH" path="${basedir}/build:${basedir}/build:${python.dir}"/>
+    </exec>
+  </target>
+
+  <target name="dist" depends="-init, -manifest, -version" description="Build distribution package.">
+    <property name="prefix" value="ditagen-${version}"/>
+    <property name="dist.file" location="${dist.dir}/${prefix}.zip"/><!--build.current.-->
+    <delete file="${dist.file}"/>
+    <mkdir dir="${dist.dir}"/>
+    <copy todir="${work.dir}" filtering="true">
+      <fileset dir="${python.dir}">
+        <include name="setup.py"/>
+      </fileset>
+      <filterset>
+        <filter token="version" value="${version}" />
+      </filterset>
+    </copy>
+    <jar file="${dist.file}" manifest="${work.dir}/manifest.mf">
+      <zipfileset dir="${work.dir}" prefix="${prefix}"><!--build.current.-->
+        <include name="setup.py"/>
+      </zipfileset>
+      <zipfileset dir="${python.dir}" prefix="${prefix}"><!--build.current.-->
+        <include name="**"/>
+        <exclude name="setup.py"/>
+        <exclude name="main.py"/>
+        <exclude name="**/*.pyc"/>
+      </zipfileset>
+      <zipfileset dir="${resources.dir}" prefix="${prefix}"><!--build.current.-->
+        <include name="**"/>
+      </zipfileset>
+    </jar>
+  </target>
+  
+  <target name="dist.appengine" depends="-init, -manifest, -version, generate-js" description="Build Google App Engine distribution package.">
+    <property name="prefix" value="ditagen-appengine-${version}"/>
+    <property name="dist.file" location="${dist.dir}/${prefix}.zip"/><!--build.current.-->
+    <delete file="${dist.file}"/>
+    <mkdir dir="${dist.dir}"/>
+    <copy todir="${work.dir}" filtering="true">
+      <fileset dir="${src.dir}/html">
+        <include name="*.html"/>
+      </fileset>
+      <filterset>
+        <filter token="version" value="${version}" />
+        <filter token="revision" value="${build.current.revision}" />
+      </filterset>
+    </copy>
+    <jar file="${dist.file}" manifest="${work.dir}/manifest.mf">
+      <zipfileset dir="${work.dir}" prefix="${prefix}">
+        <include name="*.html"/>
+      </zipfileset>
+      <zipfileset dir="${python.dir}" prefix="${prefix}">
+        <include name="**"/>
+        <exclude name="setup.py"/>
+        <exclude name="ditagen/cli.py"/>
+        <exclude name="ditagen/web.py"/>
+        <exclude name="**_test.py"/>
+        <exclude name="**/*.pyc"/>
+      </zipfileset>
+      <zipfileset dir="${src.dir}/conf" prefix="${prefix}">
+        <include name="*.yaml"/>
+      </zipfileset>
+      <zipfileset dir="${src.dir}/css" prefix="${prefix}/css">
+        <include name="*.css"/>
+      </zipfileset>
+      <zipfileset dir="${src.dir}/javascript" prefix="${prefix}/js">
+        <include name="*.js"/>
+      </zipfileset>
+    </jar>
+  </target>
+  
+  <target name="clean" depends="-init">
+    <delete dir="${temp.dir}"/>
+  </target>
+  
+</project>
