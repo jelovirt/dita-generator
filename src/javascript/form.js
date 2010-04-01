@@ -1,5 +1,10 @@
 var rootTest = new RegExp("^\\s*(topic|concept|task|reference)\\s*$");
 
+/** Current location fragment. */
+var hash = location.hash;
+/** Attribute domain counter. */
+var attributeCounter = 0;
+
 function validateForm(event) {
   var target = event.target;
   for (var i = 0; i < target.elements.length; i++) {
@@ -197,8 +202,6 @@ function selectNoneDomains(event) {
     $("input[name=domain]").removeAttr("checked");
 }
 
-//var virtualPage = 0;
-
 /**
  * Previous page button handler.
  */
@@ -207,7 +210,7 @@ function prevHandler(event) {
     $(".current").removeClass("current").hide();
     p.addClass("current").show();
     validatePage();
-    //setFragment(--virtualPage);
+    setFragment();
 }
 /**
  * Next page button handler.
@@ -217,14 +220,28 @@ function nextHandler(event) {
     $(".current").removeClass("current").hide();
     n.addClass("current").show();
     validatePage();
-    //setFragment(++virtualPage);
+    setFragment();
 }
 
-//function setFragment(i) {
-//    window.location.hash = "p" + i;
-//}
+/** Set location fragment to current page. */
+function setFragment(i) {
+    hash = $(".current").attr("id");
+    location.hash = hash;
+}
+/** Check if location fragment has changed and change page accordingly. */
+function checkFragment() {
+    if (location.hash.substr(1) != hash) {
+        //alert("changed: " + location.hash.substr(1) + " " + hash);
+        if (location.hash.substr(1) == "") {
+            location.replace("#" + $(".page:first").attr("id"));
+        }
+        hash = location.hash.substr(1);
+        $(".current").removeClass("current").hide();
+        $("#" + hash).addClass("current").show();
+        validatePage();
+    }
+}
 
-var attributeCounter = 0;
 function attributeAddHandler(event) {
     $("#noAttributesRow").hide();
     
@@ -277,4 +294,6 @@ $(document).ready(function() {
     typeChangeHandler();
     versionChangeHandler();
     validatePage();
+
+    setInterval(checkFragment, 100);
 });
