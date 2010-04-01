@@ -312,7 +312,7 @@ class DitaGenerator(DtdGenerator):
     def __domain_mod(self, domain):
         """Print domain module declaration."""
         if isinstance(domain, ditagen.dita.v1_2.Constraints):
-            __description = self.generate_public_identifier("mod", domain.id, self._pfi_version, domain.title, None, u"Constraints")
+            __description = self.generate_public_identifier("mod", domain.id, self._pfi_version, domain.title, None, u"Constraint")
         else:
             __description = self.generate_public_identifier("mod", domain.id, self._pfi_version, domain.title, None, u"Domain")
         self.__entity(domain.id + u"-def", self._dtd_base_dir + domain.file + u".mod",
