@@ -53,6 +53,9 @@ function validatePage() {
             valid = false;
         }
     });
+    if (elements.filter(".invalid").length > 0) {
+        valid = false;
+    }
     
     if ($(".current").prevAll(".page:first").length === 0) { // first page
         $("#prev").attr("disabled", true);
@@ -272,12 +275,63 @@ function attributeAddHandler(event) {
     $("#attributes tbody").append(tr);
 }
 
+// XML 1.0 fifth edition rules
+var nameStartChar = ":|[A-Z]|_|[a-z]|[\u00C0-\u00D6]|[\u00D8-\u00F6]|[\u00F8-\u02FF]|[\u0370-\u037D]|[\u037F-\u1FFF]|[\u200C-\u200D]|[\u2070-\u218F]|[\u2C00-\u2FEF]|[\u3001-\uD7FF]|[\uF900-\uFDCF]|[\uFDF0-\uFFFD]"; //|[\u10000-\uEFFFF]
+var nameChar = nameStartChar + "|-|\\.|[0-9]|\u00B7|[\u0300-\u036F]|[\u203F-\u2040]";
+var name = "^(" + nameStartChar + ")(" + nameChar + ")*$";
+
+function idChangeHandler(event) {
+    var id = $(event.target);
+    var val = id.attr("value");
+    var idPattern = new RegExp(name);
+    if (!idPattern.test(val)) {
+        setError(id, $("<span>Not a valid <a href='http://www.w3.org/TR/REC-xml/#NT-Name' target='_blank'>XML name</a></span>"),
+                 "Type ID must be a valid XML name.");
+    } else {
+        setOk(id);
+    }
+}
+
+function setError(input, text, tip) {
+    setMessage(input, "err", text, tip);
+    input.addClass("invalid");
+}
+function setWarning(input, text, tip) {
+    setMessage(input, "warn", text, tip);
+    input.removeClass("invalid");
+}
+function setOk(input) {
+    setMessage(input, "ok");
+    input.removeClass("invalid");
+}
+function setMessage(input, level, text, tip) {
+    var msg = input.nextAll(".msg");
+    if (msg.length == 0) {
+        msg = $("<span class='msg'></span>");
+        input.after(msg);
+    }
+    msg.removeClass().addClass("msg " + level);
+    if (text != undefined) {
+        msg.append(text);
+    } else {
+        msg.empty();
+    }
+    if (tip != undefined) {
+        msg.attr("title", tip);
+    } else {
+        msg.removeAttr("title");
+    }
+}
+
+// Initialization
+
 $(document).ready(function() {
     // handlers
-    $(".required:input").change(validatePage);
     $(":input[name=output]").change(typeChangeHandler);
     $(":input[name=version]").change(versionChangeHandler);
     $(":input[name=type]").change(topicChangeHandler);
+    $(":input[name=id]").change(idChangeHandler);
+    $(":input").change(validatePage);
     $("#selectDefaultDomains").click(selectDefaultDomains);
     $("#selectAllDomains").click(selectAllDomains);
     $("#selectNoneDomains").click(selectNoneDomains);

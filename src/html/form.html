@@ -107,9 +107,9 @@
           <th>Learning:</th>
           <td>
             <input type="radio" name="type" value="learningAssessment" class="required"> Learning Assessment<br>
-            <input type="radio" name="type" value="learningBookmap" class="required"> Learning Book Map{% if advanced %} <sup>*</sup>{% endif %}<br>
+            <input type="radio" name="type" value="learningBookmap" class="required"> Learning Book Map <sup>*</sup><br>
             <input type="radio" name="type" value="learningContent" class="required"> Learning Content<br>
-            <input type="radio" name="type" value="learningMap" class="required"> Learning Map{% if advanced %} <sup>*</sup>{% endif %}<br>
+            <input type="radio" name="type" value="learningMap" class="required"> Learning Map <sup>*</sup><br>
             <input type="radio" name="type" value="learningOverview" class="required"> Learning Overview<br>
             <input type="radio" name="type" value="learningPlan" class="required"> Learning Plan<br>
             <input type="radio" name="type" value="learningSummary" class="required"> Learning Summary
@@ -118,7 +118,7 @@
         <tr class="v1_2">
           <th>Machine:</th>
           <td>
-            <input type="radio" name="type" value="machineryTask" class="v1_2 required"> Machine Task{% if advanced %} <sup>*</sup>{% endif %}
+            <input type="radio" name="type" value="machineryTask" class="v1_2 required"> Machine Task <sup>*</sup>
           </td>
         </tr>
         <!--
@@ -150,9 +150,7 @@
         </tr>
         -->
       </table>
-      {% if advanced %}
         <p class="v1_2 legend"><sup>*</sup> Module is a concrete document type provided by DITA Technical Committee.</p>
-      {% endif %}
       <p class="help">Should the topic type allow nesting topics.</p>
       <table>
         <tr title="Enable topic nesting">

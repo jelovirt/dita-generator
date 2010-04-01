@@ -102,8 +102,9 @@
       <zipfileset dir="${src.dir}/conf" prefix="${prefix}">
         <include name="*.yaml"/>
       </zipfileset>
-      <zipfileset dir="${src.dir}/css" prefix="${prefix}/css">
-        <include name="*.css"/>
+      <zipfileset dir="${src.dir}" prefix="${prefix}">
+        <include name="css/*.css"/>
+        <include name="images/*.png"/>
       </zipfileset>
       <zipfileset dir="${src.dir}/javascript" prefix="${prefix}/js">
         <include name="*.js"/>

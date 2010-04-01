@@ -44,3 +44,13 @@ table table tr {
 .legend {
   font-size: small;
 }
+
+.msg {
+    padding-left: 26px;
+}
+.err {
+    background-image: url("../images/software-update-urgent.png");
+    background-repeat: no-repeat;
+    background-position: 5px center;
+    color: red;
+}
