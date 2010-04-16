@@ -100,7 +100,9 @@
         <exclude name="**/*.pyc"/>
       </zipfileset>
       <zipfileset dir="${src.dir}/conf" prefix="${prefix}">
-        <include name="*.yaml"/>
+        <include name="app.yaml"/>
+        <include name="index.yaml"/>
+        <include name="robots.txt"/>
       </zipfileset>
       <zipfileset dir="${src.dir}" prefix="${prefix}">
         <include name="css/*.css"/>
