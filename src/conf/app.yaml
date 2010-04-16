@@ -4,9 +4,9 @@ runtime: python
 api_version: 1
 
 handlers:
-- url: /(robots\.txt)
-  static_files: \1
-  upload: (.*)
+- url: /robots.txt
+  static_files: robots.txt
+  upload: robots.txt
 - url: /js
   static_dir: js
 - url: /css
