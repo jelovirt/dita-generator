@@ -104,6 +104,9 @@
         <include name="index.yaml"/>
         <include name="robots.txt"/>
       </zipfileset>
+      <zipfileset dir="${src.dir}/images" prefix="${prefix}">
+        <include name="favicon.ico"/>
+      </zipfileset>
       <zipfileset dir="${src.dir}" prefix="${prefix}">
         <include name="css/*.css"/>
         <include name="images/*.png"/>
