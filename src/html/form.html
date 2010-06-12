@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
+  <noscript>
+    <p><strong>Please enable JavaScript</strong><p>
+  </noscript>
   <form action="/generate" method="post" target="_blank">
     {% if not advanced %}
       <input type="hidden" name="file" value="plugin">
@@ -298,11 +301,11 @@
           </thead>
           <tbody>
             <tr id="noAttributesRow">
-              <td colspan="4"><em>No attributes</td>
+              <td colspan="4"><em>No attributes</em></td>
             </tr>
           </tbody>
         </table>
-        <p><button type="button" id="addAttribute">add</button></p>
+        <p><button type="button" id="addAttribute">Add</button></p>
       {#% endif %#}
     </div>
     <div class="page">
