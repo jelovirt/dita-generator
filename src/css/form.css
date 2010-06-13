@@ -54,3 +54,6 @@ table table tr {
     background-position: 5px center;
     color: red;
 }
+.ok {
+    padding: 0;
+}
