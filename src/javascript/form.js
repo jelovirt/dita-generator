@@ -1,3 +1,13 @@
+// XML 1.0 fifth edition rules
+var nameStartChar = ":|[A-Z]|_|[a-z]|[\u00C0-\u00D6]|[\u00D8-\u00F6]|[\u00F8-\u02FF]|[\u0370-\u037D]|[\u037F-\u1FFF]|[\u200C-\u200D]|[\u2070-\u218F]|[\u2C00-\u2FEF]|[\u3001-\uD7FF]|[\uF900-\uFDCF]|[\uFDF0-\uFFFD]"; //|[\u10000-\uEFFFF]
+var nameChar = nameStartChar + "|-|\\.|[0-9]|\u00B7|[\u0300-\u036F]|[\u203F-\u2040]";
+var name = "^(" + nameStartChar + ")(" + nameChar + ")*$";
+var nmtoken = "(" + nameChar + ")+";
+var nmtokens = "^(" + nameChar + ")+(\\s+(" + nameChar + ")+)*$";
+
+var idPattern = new RegExp(name);
+var attributePattern = new RegExp(nmtokens);
+
 var rootTest = new RegExp("^\\s*(topic|concept|task|reference)\\s*$");
 
 /** Current location fragment. */
@@ -253,7 +263,7 @@ function attributeAddHandler(event) {
     var p = "att." + attributeCounter; 
     tr.append("<td><input name='" + p + ".name'></td>");
     tr.append("<td><select name='" + p + ".type'><option value='props'>props</option><option value='base'>base</option></select></td>");
-    var d = $("<td><select name='" + p + ".datatype'><option value='CDATA'>space-separated values</option><option value='NMTOKENS'>enumeration</option></select> "
+    var d = $("<td><select name='" + p + ".datatype'><option value='CDATA'>Space-separated</option><option value='NMTOKENS'>Enumeration</option></select> "
               + "<input name='" + p + ".values' style='display:none' disabled title='Space-separated list of possible values'></td>");
     d.find("select").change(function(event) {
             var t = $(event.target);
@@ -263,8 +273,17 @@ function attributeAddHandler(event) {
                 t.nextAll("input").hide().attr("disabled", true);
             }
         });
+    d.find("input").change(function(event) {
+        var t = $(event.target);
+        var val = $.trim(t.attr("value"));
+        if (!attributePattern.test(val)) {
+            setError(t, "xxx", "yyy");
+        } else {
+            setOk(t);
+        }
+    });
     tr.append(d);
-    var r = $("<td><button type='button'>remove</button></td>");
+    var r = $("<td><button type='button'>Remove</button></td>");
     r.find("button").click(function(event) {
             $(event.target).parents("tr:first").remove();
             if ($("#attributes tbody tr:visible").length === 0) {
@@ -275,15 +294,9 @@ function attributeAddHandler(event) {
     $("#attributes tbody").append(tr);
 }
 
-// XML 1.0 fifth edition rules
-var nameStartChar = ":|[A-Z]|_|[a-z]|[\u00C0-\u00D6]|[\u00D8-\u00F6]|[\u00F8-\u02FF]|[\u0370-\u037D]|[\u037F-\u1FFF]|[\u200C-\u200D]|[\u2070-\u218F]|[\u2C00-\u2FEF]|[\u3001-\uD7FF]|[\uF900-\uFDCF]|[\uFDF0-\uFFFD]"; //|[\u10000-\uEFFFF]
-var nameChar = nameStartChar + "|-|\\.|[0-9]|\u00B7|[\u0300-\u036F]|[\u203F-\u2040]";
-var name = "^(" + nameStartChar + ")(" + nameChar + ")*$";
-
 function idChangeHandler(event) {
     var id = $(event.target);
-    var val = id.attr("value");
-    var idPattern = new RegExp(name);
+    var val = id.attr("value");    
     if (!idPattern.test(val)) {
         setError(id, $("<span>Not a valid <a href='http://www.w3.org/TR/REC-xml/#NT-Name' target='_blank'>XML name</a></span>"),
                  "Type ID must be a valid XML name.");
