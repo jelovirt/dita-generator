@@ -1,0 +1,24 @@
+{% extends "form.html" %}
+
+{% block form %}
+  {% if not advanced %}
+    <input type="hidden" name="file" value="plugin">
+  {% endif %}
+  <input type="hidden" name="output" value="{{ output }}">
+  <div class="page">
+    <p class="help">The attribute specialization feature of DITA allows.... for the creation of new element
+      types and attributes that are explicitly and formally derived from existing types in a way
+      that allows for the blind interchange of all conforming DITA content and a minimum level of
+      common processing for all DITA content.</p>
+    <p class="help">DITA Specialization Generator can be used to create a base for a structural
+      type spcialization with the correct naming and modularization conventions. This base can then
+      manually edited to define the element level specialization details.
+  </div>
+  {% include "version-page.html" %}
+  <div class="page">
+    {% include "attribute-domain.html" %}
+  </div>
+  <div class="page">
+    {% include "common-metadata.html" %}
+  </div>
+{% endblock %}

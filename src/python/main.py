@@ -51,10 +51,14 @@ class MainHandler(webapp.RequestHandler):
             if a == "":
                 pass
             elif __idx == 0:
-                template_file = "form.html"
-                if a in ("shell", "specialization"):
+                #template_file = "form.html"
+                if a in ("shell", "specialization", "attribute"):
                     template_values["output"] = a
-                    template_values["title"] = "DITA %s Generator" % path_args[__idx].capitalize()                
+                    if a == "attribute":
+                        template_values["title"] = "DITA %s Specialization Generator" % path_args[__idx].capitalize()
+                    else:
+                        template_values["title"] = "DITA %s Generator" % path_args[__idx].capitalize()
+                    template_file = a + ".html"
                 else:
                     self.response.set_status(404)
                     self.response.out.write("Unrecognized output type " + a)
@@ -107,15 +111,6 @@ class GenerateHandler(webapp.RequestHandler):
                     __domains.append(ditagen.DOMAIN_MAP[__version][__d]())
                 else:
                     raise ValueError("unsupported domain " + __d)
-            # topic type
-            __t = self.request.get(u"type")
-            if __t in ditagen.TOPIC_MAP[__version]:
-                __topic_type = ditagen.TOPIC_MAP[__version][__t]()
-            __o = self.request.get(u"output")
-            if __o in ditagen.OUTPUT_MAP:
-                __output_type = ditagen.OUTPUT_MAP[__o]
-            else:
-                raise ValueError("unsupported output type " + __o)
             # id
             if u"id" in self.request.arguments():
                 __id = self.request.get(u"id")
@@ -136,6 +131,8 @@ class GenerateHandler(webapp.RequestHandler):
                 raise ValueError("title missing")
             if u"plugin-name" in self.request.arguments():
                 __plugin_name = self.request.get(u"plugin-name")
+            else:
+                __plugin_name = __id
             if u"plugin-version" in self.request.arguments():
                 __plugin_version = self.request.get(u"plugin-version")
             #if not __title:
@@ -165,10 +162,21 @@ class GenerateHandler(webapp.RequestHandler):
                 __attrs.append((self.request.get(u"att." + i +".name"),
                                 self.request.get(u"att." + i +".type"),
                                 __values))
-            __topic_type = __output_type(__id, __title, __topic_type,
-                                         __owner, __file)#__root
-            if __topic_type == ditagen.dita.SpecializationType:
-                __topic_type.root = ditagen.dita.create_element(__topic_type, __root, __id)
+            if u"type" in self.request.arguments():
+                # topic type
+                __t = self.request.get(u"type")
+                if __t in ditagen.TOPIC_MAP[__version]:
+                    __topic_type = ditagen.TOPIC_MAP[__version][__t]()
+                # output
+                __o = self.request.get(u"output")
+                if __o in ditagen.OUTPUT_MAP:
+                    __output_type = ditagen.OUTPUT_MAP[__o]
+                else:
+                    raise ValueError("unsupported output type " + __o)
+                __topic_type = __output_type(__id, __title, __topic_type,
+                                             __owner, __file)#__root
+                if __topic_type == ditagen.dita.SpecializationType:
+                    __topic_type.root = ditagen.dita.create_element(__topic_type, __root, __id)
         except Exception:
             self.error(500)
             raise
@@ -177,12 +185,15 @@ class GenerateHandler(webapp.RequestHandler):
         if __format== u"plugin" or not __format:
             __dita_gen = ditagen.generator.PluginGenerator()
             __dita_gen.out = self.response.out
-            __dita_gen.topic_type = __topic_type
+            __dita_gen.owner = __owner
+
+            if __topic_type is not None:
+                __dita_gen.topic_type = __topic_type
             if not len(__domains) == 0:
                 __dita_gen.domains = __domains
             __dita_gen.nested = __nested
             __dita_gen.version = __version
-            #__dita_gen.set_title(__title)
+            __dita_gen.title = __title
             if __stylesheet:
                 __dita_gen.set_stylesheet(__stylesheet)
             if __plugin_name != None:
@@ -191,7 +202,7 @@ class GenerateHandler(webapp.RequestHandler):
                 __dita_gen.plugin_version = __plugin_version
             if __attrs:
                 __dita_gen.domain_attributes = __attrs
-            __file_name = __dita_gen.get_file_name(__topic_type, __file, "zip")
+            __file_name = __dita_gen.get_file_name(__id, __file, "zip")
             
             self.response.headers.add_header("Content-type", "application/zip")
             self.response.headers.add_header("Content-disposition", "attachment; filename=" + __file_name)

@@ -1,0 +1,43 @@
+<p class="help">Type or shell ID is used to identify the shell, the ID should be conform to XML ID syntax restrictions.
+  Type title is the human readable name for the type or specialization.
+  Owner is the owner company or organization of the type; the owner information is only use for Public Formal Identifier generation.</p>
+<table>
+<!--
+<tr>
+  <th rowspan="2">Content-model rewrite</th>
+  <td><input type="checkbox" name="remove" value="separate" disabled></td>
+  <td>Block-inline separation</td>
+</tr>
+<tr style="display: none">
+  <td><input type="checkbox" name="remove" value="foreigndata" disabled>
+  </td>
+  <td>foreign and data element removal</td>
+</tr>
+-->
+<tr title="ID of the new topic type or shell">
+  <th><label for="id">Type ID</label>:</th>
+  <!-- Leave empty to override base topic root element. XXX: Overriding root element in specialization is reshelling, so disable it -->
+  <td><input type="text" name="id" id="id" class="required" required></td>
+</tr>
+<tr title="Title of the type"><!--Defaults to capitalized root name-->
+  <th><label for="title">Title</label>:</th>
+  <td><input type="text" name="title" id="title" class="required" required></td>
+</tr>
+<!--
+<tr>
+  <th>Global attributes</th>
+  <td><textarea name="attribute" rows="2" cols="20" disabled>xtrc CDATA #IMPLIED&#xA;xtrf CDATA #IMPLIED</textarea></td>
+  <td>Attributes that are added globally by integrating into <code>%global-atts;</code>. Contents of the field are used as is in the DTD files.</td>
+</tr>
+-->
+<tr title="For example a domain or company name, in uppercase by convention"><!-- PFI owner will default to 'OASIS'-->
+  <th><label for="owner"><abbr title="Formal Public Identifier">FPI</abbr> owner</label>:</th>
+  <td><input type="text" name="owner" id="owner" class="required" required></td>
+</tr>
+{% if advanced %}
+  <tr title="Generated plugin version number">
+    <th><label for="owner">Plugin version</label>:</th>
+    <td><input type="text" name="plugin-version" id="plugin-version"></td>
+  </tr>
+{% endif %}
+</table>

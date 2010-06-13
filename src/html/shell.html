@@ -1,0 +1,21 @@
+{% extends "form.html" %}
+
+{% block form %}
+  {% if not advanced %}
+    <input type="hidden" name="file" value="plugin">
+  {% endif %}
+  <input type="hidden" name="output" value="{{ output }}">
+  <div class="page">
+    <p class="help">A DITA DTD shell defines the set of structural modules (topic or map types),
+      domain modules, and constraints modules that the map or topic can use.
+      In general, any production use of DITA involves definition of the set of modules best suited
+      to local requirements. This always requires the creation of local shell document types, even
+      if all they do is omit unneeded modules or apply constraints to the standard DITA-defined
+      vocabulary.</p>
+  </div>
+  {% include "version-page.html" %}
+  {% include "common-pages.html" %}
+  <div class="page">
+    {% include "common-metadata.html" %}
+  </div>
+{% endblock %}

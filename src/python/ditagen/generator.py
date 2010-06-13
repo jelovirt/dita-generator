@@ -277,12 +277,12 @@ class DitaGenerator(DtdGenerator):
         self._topic_type = None
         self.domains = []
         self._root_name = None
-        #self._owner = None
+        self._owner = None
         self.nested = None
         self.models = {}
         self.version = "1.1"
         self._dtd_base_dir = u"../../../dtd/"#u""
-        self._title = None
+        self.title = None
         # internal attributes
         self.__domains = []
         self.__types = None
@@ -433,12 +433,12 @@ class DitaGenerator(DtdGenerator):
 
     def _get_pfi(self, ext):
         """Generate Formal Public Identifier based on file extension."""
-        if self.topic_type.owner is not None:
-            __title = self.topic_type.title
+        if self.owner is not None:
+            __title = self.title #self.topic_type.title
             if ext == u"dtd" and self.__all_domains:
                 __title = u"%s (%s)" % (__title,
                                                u" ".join([__d.id for __d in self.__all_domains]))
-            return self.generate_public_identifier(ext, self.topic_type.file, self._pfi_version, __title, self.topic_type.owner)
+            return self.generate_public_identifier(ext, self.topic_type.file, self._pfi_version, __title, self.owner)
         else:
             return None
     
@@ -452,7 +452,7 @@ class DitaGenerator(DtdGenerator):
             self.comment_block(u""" Refer to this file by the following public identifier or an 
       appropriate system identifier 
 PUBLIC "%s"
-      Delivered as file "%s.%s" """ % (__pfi, self.topic_type.file, ext), before=0) #self._file_name
+      Delivered as file "%s.%s" """ % (__pfi, self._file_name, ext), before=0)#self.topic_type.file
         else:
             self.comment_block(u""" Refer to this file by an appropriate system identifier 
       Delivered as file "%s.%s" """ % (self._file_name, ext), before=0)
@@ -461,35 +461,36 @@ PUBLIC "%s"
         """Preprocess arguments."""
         if self._initialized == False:
             #if self._owner is None:
-            #    self._owner = self.topic_type.owner
-            if isinstance(self.topic_type, ditagen.dita.v1_2.MapType) or isinstance(self.topic_type, ditagen.dita.v1_1.MapType):
-                self.__pfi_prefix = u"MAP"
-            else:
-                self.__pfi_prefix = u"TOPIC"
-            if len(self.domains) == 0:
-                self.__domains = []
-                self.__constraints = []
-            else:
-                self.__all_domains = filter_domains(self.topic_type, self.domains)
-                sort_domains(self.__all_domains)
-                self.__domains = [__d for __d in self.__all_domains if not isinstance(__d, ditagen.dita.v1_2.Constraints)]
-                self.__constraints = [__d for __d in self.__all_domains if isinstance(__d, ditagen.dita.v1_2.Constraints)]
-            self.__elements = []
-            for __d in self.__all_domains:
-                self.__elements.extend(__d.elements)
-            self.__elements = set(self.__elements)
-            self.__types = get_parent_list(self.topic_type)
-            if self.topic_type.file is None:
-                self._file_name = self.topic_type.file
-            else:
-                self._file_name = self.topic_type.id
-            if self._root_name is None:
-                self._root_name = self.topic_type.id
-            #if self.version == "1.2":
-            #    self._dtd_base_dir = u"../../../dtd/"
+            #    self._owner = self.owner
+            if self.topic_type:
+                if isinstance(self.topic_type, ditagen.dita.v1_2.MapType) or isinstance(self.topic_type, ditagen.dita.v1_1.MapType):
+                    self.__pfi_prefix = u"MAP"
+                else:
+                    self.__pfi_prefix = u"TOPIC"
+                if len(self.domains) == 0:
+                    self.__domains = []
+                    self.__constraints = []
+                else:
+                    self.__all_domains = filter_domains(self.topic_type, self.domains)
+                    sort_domains(self.__all_domains)
+                    self.__domains = [__d for __d in self.__all_domains if not isinstance(__d, ditagen.dita.v1_2.Constraints)]
+                    self.__constraints = [__d for __d in self.__all_domains if isinstance(__d, ditagen.dita.v1_2.Constraints)]
+                self.__elements = []
+                for __d in self.__all_domains:
+                    self.__elements.extend(__d.elements)
+                self.__elements = set(self.__elements)
+                self.__types = get_parent_list(self.topic_type)
+                if self.topic_type.file is None:
+                    self._file_name = self.topic_type.file
+                else:
+                    self._file_name = self.topic_type.id
+                if self._root_name is None:
+                    self._root_name = self.topic_type.id
+                #if self.version == "1.2":
+                #    self._dtd_base_dir = u"../../../dtd/"
             
-            if self._title is None:
-                self._title = self.topic_type.id.capitalize()
+                if self.title is None:
+                    self.title = self.topic_type.id.capitalize()
             self._pfi_version = " " + self.version
             # done
             self._initialized = True
@@ -545,7 +546,7 @@ PUBLIC "%s"
     #    self.version = version
     #def set_title(self, title):
     #    """Set specialization title."""
-    #    self._title = title
+    #    self.title = title
 
     def generate_dtd(self):
         """generate DTD file."""
@@ -568,7 +569,7 @@ PUBLIC "%s"
                 self.__entity(d[0] + u"Att-d-dec", d[0] + u"AttDomain.ent",
                               self.generate_public_identifier("ent", d[0], self._pfi_version,
                                                               d[0].capitalize() + " Attribute",
-                                                              self.topic_type.owner, u"Domain"))
+                                                              self.owner, u"Domain"))
                 self.out.write("\n")
             for __d in self.__domains:
                 #if not isinstance(__d, ditagen.dita.v1_2.Constraints):
@@ -675,7 +676,7 @@ PUBLIC "%s"
         self._preprocess()
         
         self.__print_header("ent")
-        self.comment_block(u"%s ENTITIES" % (self.topic_type.title.upper()))
+        self.comment_block(u"%s ENTITIES" % (self.title.upper())) #(self.topic_type.title.upper()))
         __parents = [i.id for i in get_parent_list(self.topic_type)]
         self.internal_general_entity(self.topic_type.id + u"-att",
                                      u"(%s)" % (" ".join(__parents)))
@@ -689,7 +690,7 @@ PUBLIC "%s"
         
         self.__print_header("ent", self.generate_public_identifier("ent", d[0], self._pfi_version,
                                                                    d[0].capitalize() + " Attribute",
-                                                                   self.topic_type.owner, u"Domain"))
+                                                                   self.owner, u"Domain"))
         self.comment_block(u"ATTRIBUTE EXTENSION ENTITY DECLARATIONS")
         if d[2]:
             __value = u"%s (%s) #IMPLIED" % (d[0], "|".join(d[2]))
@@ -701,13 +702,14 @@ PUBLIC "%s"
                                      u"a(%s %s)" % (d[1], d[0]))
         self.centered_comment_line(u"End of file", after=1)
     
-    def get_file_name(self, topic_type, root, ext):
+    #def get_file_name(self, topic_type, root, ext):
+    def get_file_name(self, id, root, ext):
         """Get file name."""
         #if root is None:
         #    return "{0}.{1}".format(topic_type.id, ext)
         #else:
         #    return "{0}.{1}".format(root, ext)
-        return u"%s.%s" % (topic_type.file.split(u"/")[-1], ext)
+        return u"%s.%s" % (id, ext)
     
     #def generate_zip(self, out, topic_type, domains, root, owner, nested):
     #def generate_zip(self, __output):
@@ -769,8 +771,8 @@ class PluginGenerator(DitaGenerator):
         """Preprocess arguments."""
         if self._initialized == False:
             DitaGenerator._preprocess(self)
-            if self.plugin_name is None:
-                self.plugin_name = self.topic_type.id
+            #if self.plugin_name is None:
+            #    self.plugin_name = self.topic_type.id
             # done
             self._initialized = True
             
@@ -812,7 +814,7 @@ class PluginGenerator(DitaGenerator):
                     "extension": 'package.version',
                     "value": self.plugin_version
                     })
-        if self.topic_type.owner is not None or self.topic_type.system_identifier is not None:
+        if self.owner is not None or self.topic_type.system_identifier is not None:
             ET.SubElement(__root, "feature", {
                 "extension": 'dita.specialization.catalog.relative',
                 "value": 'catalog-dita.xml',
@@ -832,15 +834,16 @@ class PluginGenerator(DitaGenerator):
         """Generate catalog file."""
         #_file_name = str(self.topic_type.file)
         __c = []
-        __c.append((self._get_pfi("dtd"), "%s.dtd" % self._file_name))
-        if isinstance(self.topic_type, ditagen.dita.SpecializationType):
-            __c.append((self._get_pfi("mod"), "%s.mod" % self._file_name))
-            if self.version == "1.2":
-                __c.append((self._get_pfi("ent"), "%s.ent" % self._file_name))
+        if self.topic_type:
+            __c.append((self._get_pfi("dtd"), "%s.dtd" % self._file_name))
+            if isinstance(self.topic_type, ditagen.dita.SpecializationType):
+                __c.append((self._get_pfi("mod"), "%s.mod" % self._file_name))
+                if self.version == "1.2":
+                    __c.append((self._get_pfi("ent"), "%s.ent" % self._file_name))
         for d in self.domain_attributes:
             __c.append((self.generate_public_identifier("ent", d[0], self._pfi_version,
                                                               d[0].capitalize() + " Attribute",
-                                                              self.topic_type.owner, u"Domain"),
+                                                              self.owner, u"Domain"),
                         "%sAttDomain.ent" % d[0]))
         
         __root = ET.Element("catalog", {
@@ -883,25 +886,22 @@ class PluginGenerator(DitaGenerator):
             __zip.debug = 3
             try:
                 #_file_name = str(self.topic_type.file)
-                # DTD
-                self._run_generation(__zip,
-                                    self.generate_dtd,
-                                    "%s/dtd/%s.dtd" % (self.plugin_name, self._file_name))
-                if isinstance(self.topic_type, ditagen.dita.SpecializationType):
-                    # MOD
+                if self.topic_type:
+                    # DTD
                     self._run_generation(__zip,
-                                        self.generate_mod,
-                                        "%s/dtd/%s.mod" % (self.plugin_name, self._file_name))
-                    # ENT
-                    if self.version == "1.2":
+                                        self.generate_dtd,
+                                        "%s/dtd/%s.dtd" % (self.plugin_name, self._file_name))
+                    if isinstance(self.topic_type, ditagen.dita.SpecializationType):
+                        # MOD
                         self._run_generation(__zip,
-                                            self.generate_ent,
-                                            "%s/dtd/%s.ent" % (self.plugin_name, self._file_name))
+                                            self.generate_mod,
+                                            "%s/dtd/%s.mod" % (self.plugin_name, self._file_name))
+                        # ENT
+                        if self.version == "1.2":
+                            self._run_generation(__zip,
+                                                self.generate_ent,
+                                                "%s/dtd/%s.ent" % (self.plugin_name, self._file_name))
                 # ATTR ENT
-                #if self.domain_attributes:
-                #    self._run_generation(__zip,
-                #                        self.generate_att_ent,
-                #                        "%s/dtd/%sAttDomain.ent" % (self.plugin_name, self._file_name))
                 for a in self.domain_attributes:
                     self._run_generation(__zip,
                                         lambda: self.generate_att_ent(a),
@@ -915,7 +915,7 @@ class PluginGenerator(DitaGenerator):
                                     self.__generate_plugin_file,
                                     "%s/plugin.xml" % (self.plugin_name))
                 # catalog
-                if self.topic_type.owner is not None:
+                if self.owner is not None:
                     self._run_generation(__zip,
                                         self.__generate_catalog,
                                         "%s/catalog-dita.xml" % (self.plugin_name))

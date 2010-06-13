@@ -1,0 +1,58 @@
+{% extends "form.html" %}
+
+{% block form %}
+  {% if not advanced %}
+    <input type="hidden" name="file" value="plugin">
+  {% endif %}
+  <input type="hidden" name="output" value="{{ output }}">
+  <div class="page">
+    <p class="help">The specialization feature of DITA allows for the creation of new element
+      types and attributes that are explicitly and formally derived from existing types in a way
+      that allows for the blind interchange of all conforming DITA content and a minimum level of
+      common processing for all DITA content.</p>
+    <p class="help">DITA Specialization Generator can be used to create a base for a structural
+      type spcialization with the correct naming and modularization conventions. This base can then
+      manually edited to define the element level specialization details.
+  </div>
+  {% include "version-page.html" %}
+  {% include "common-pages.html" %}
+  <div class="page">
+    {% include "common-metadata.html" %}
+    <table>
+      <!--
+        <tr>
+          <th rowspan="2">Content-model rewrite</th>
+          <td><input type="checkbox" name="remove" value="separate" disabled></td>
+          <td>Block-inline separation</td>
+        </tr>
+        <tr style="display: none">
+          <td><input type="checkbox" name="remove" value="foreigndata" disabled>
+          </td>
+          <td>foreign and data element removal</td>
+        </tr>
+      -->
+      <tr title="Root element name"><!-- Defaults to type ID-->
+        <th><label for="root">Root element</label>:</th>
+        <td><input type="text" name="root" id="root" class="required" required></td>
+        <!-- Leave empty to override base topic root element. XXX: Overriding root element in specialization is reshelling, so disable it -->
+      </tr>
+    </table>
+    <p class="help">DITA-OT can include XSLT stylesheets for processing specialization type
+      elements in semantically more correct way than the default fall-back processing.</p>
+    <table>
+      <tr title="Stylesheet skeletons for modifying DITA-OT output">
+        <th>Stylesheet</th>
+        <td>
+          <select name="stylesheet" multiple>
+            <option value="docbook">Docbook</option>
+            <option value="eclipse.plugin">Eclipse</option>
+            <option value="fo">PDF</option>
+            <option value="rtf">RTF</option>
+            <option value="xhtml">XHTML</option>
+          </select>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+{% endblock %}

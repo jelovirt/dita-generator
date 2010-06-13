@@ -26,7 +26,7 @@ class Type(object):
     """DITA topic type base."""
     id = None
     file = None
-    title = None
+    title = None #TODO: Remove in favor of outside title
     parent = None
     root = None
     owner = u"OASIS"
