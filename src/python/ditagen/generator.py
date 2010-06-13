@@ -442,20 +442,24 @@ class DitaGenerator(DtdGenerator):
         else:
             return None
     
-    def __print_header(self, ext, pfi=None):
+    def __print_header(self, ext, pfi=None, sfi=None):
         """Print boiler plate."""
         if pfi:
             __pfi = pfi
         else:
             __pfi = self._get_pfi(ext)
+        if sfi:
+            __sfi = sfi
+        else:
+            __sfi = self.topic_type.file
         if __pfi:
             self.comment_block(u""" Refer to this file by the following public identifier or an 
       appropriate system identifier 
 PUBLIC "%s"
-      Delivered as file "%s.%s" """ % (__pfi, self._file_name, ext), before=0)#self.topic_type.file
+      Delivered as file "%s.%s" """ % (__pfi, __sfi, ext), before=0)
         else:
             self.comment_block(u""" Refer to this file by an appropriate system identifier 
-      Delivered as file "%s.%s" """ % (self._file_name, ext), before=0)
+      Delivered as file "%s.%s" """ % (__sfi, ext), before=0)
     
     def _preprocess(self):
         """Preprocess arguments."""
@@ -483,7 +487,7 @@ PUBLIC "%s"
                 if self.topic_type.file is None:
                     self._file_name = self.topic_type.file
                 else:
-                    self._file_name = self.topic_type.id
+                    self._file_name = self.plugin_name
                 if self._root_name is None:
                     self._root_name = self.topic_type.id
                 #if self.version == "1.2":
@@ -688,9 +692,11 @@ PUBLIC "%s"
         #if self.version == "1.2":
         self._preprocess()
         
-        self.__print_header("ent", self.generate_public_identifier("ent", d[0], self._pfi_version,
-                                                                   d[0].capitalize() + " Attribute",
-                                                                   self.owner, u"Domain"))
+        self.__print_header("ent",
+                            self.generate_public_identifier("ent", d[0], self._pfi_version,
+                                                            d[0].capitalize() + " Attribute",
+                                                            self.owner, u"Domain"),
+                            d[0] + u"AttDomain")
         self.comment_block(u"ATTRIBUTE EXTENSION ENTITY DECLARATIONS")
         if d[2]:
             __value = u"%s (%s) #IMPLIED" % (d[0], "|".join(d[2]))
