@@ -2,17 +2,16 @@
   <input type="hidden" name="version" value="{{ version }}">
 {% else %}
   <div class="page">
-    <p class="help">Current stable DITA version is 1.1. DITA 1.2 is under development.</p>
-    <table>
-      <tr>
-        <th><label for="version">DITA version</label>:</th>
-        <td>
-          <select name="version" id="version"><!--class="required"-->
-            <option value="1.1">1.1</option>
-            <option value="1.2">1.2</option>
-          </select>
-        </td>
-      </tr>
-    </table>
+    <fieldset>
+      <p>
+        <label for="version" class="required">DITA version</label>
+        <select name="version" id="version" required>
+          <option value="1.1">1.1</option>
+          <option value="1.2">1.2</option>
+        </select>
+        <span class="instruction">Version of DITA to be used.</span>
+      </p>
+      <p class="help">Current stable DITA version is 1.1. DITA 1.2 is under development.</p>
+    </fieldset>
   </div>
 {% endif %}

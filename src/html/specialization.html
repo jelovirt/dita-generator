@@ -6,19 +6,33 @@
   {% endif %}
   <input type="hidden" name="output" value="{{ output }}">
   <div class="page">
-    <p class="help">The specialization feature of DITA allows for the creation of new element
-      types and attributes that are explicitly and formally derived from existing types in a way
-      that allows for the blind interchange of all conforming DITA content and a minimum level of
+    <p class="help">The specialization feature of DITA allows for the creatio
+      of new element types and attributes that are explicitly and formally
+      derived from existing types in a way that allows for the blind interchange
+      of all conforming DITA content and a minimum level of
       common processing for all DITA content.</p>
-    <p class="help">DITA Specialization Generator can be used to create a base for a structural
-      type spcialization with the correct naming and modularization conventions. This base can then
-      manually edited to define the element level specialization details.</p>
+    <p class="help">{{ title }} can be used to create a base for a structural
+      type spcialization with the correct naming and modularization conventions.
+      This base can then manually edited to define the element level
+      specialization details.</p>
   </div>
   {% include "version-page.html" %}
   {% include "common-pages.html" %}
   <div class="page">
+    <fieldset>
+      <p>
+        <label for="id" class="required">Type ID</label>
+        <input type="text" name="id" id="id" class="required" required
+               title="ID of the new topic type or shell">
+        <span class="instruction">ID must conform to
+          <a href="http://www.w3.org/TR/REC-xml/#NT-Name" target="_blank">XML
+            Name syntax restrictions</a>.</span>
+      </p>
+      <p class="help">Type ID is used to identify the {{ output_title }} and the
+        DITA-OT plug-in.</p>
+    </fieldset>
     {% include "common-metadata.html" %}
-    <table>
+    <fieldset>
       <!--
         <tr>
           <th rowspan="2">Content-model rewrite</th>
@@ -31,28 +45,30 @@
           <td>foreign and data element removal</td>
         </tr>
       -->
-      <tr title="Root element name"><!-- Defaults to type ID-->
-        <th><label for="root">Root element</label>:</th>
-        <td><input type="text" name="root" id="root" class="required" required></td>
+      <p title="Root element name"><!-- Defaults to type ID-->
+        <label for="root" class="required">Root element</label>
+        <input type="text" name="root" id="root" class="required" required>
+        <span class="instruction">Root element name for the specialized topic
+          type.</span>
         <!-- Leave empty to override base topic root element. XXX: Overriding root element in specialization is reshelling, so disable it -->
-      </tr>
-    </table>
-    <p class="help">DITA-OT can include XSLT stylesheets for processing specialization type
-      elements in semantically more correct way than the default fall-back processing.</p>
-    <table>
-      <tr title="Stylesheet skeletons for modifying DITA-OT output">
-        <th>Stylesheet</th>
-        <td>
-          <select name="stylesheet" multiple>
-            <option value="docbook">Docbook</option>
-            <option value="eclipse.plugin">Eclipse</option>
-            <option value="fo">PDF</option>
-            <option value="rtf">RTF</option>
-            <option value="xhtml">XHTML</option>
-          </select>
-        </td>
-      </tr>
-    </table>
+      </p>
+    </fieldset>
+    <fieldset>
+      <div title="Stylesheet skeletons for modifying DITA-OT output">
+        <label for="stylesheet">Stylesheet</label>
+        <table><tbody>
+          <tr><td><input type="checkbox" value="docbook"></td><td>Docbook</td></tr>
+          <tr><td><input type="checkbox" value="eclipse.plugin"></td><td>Eclipse</td></tr>
+          <tr><td><input type="checkbox" value="fo"></td><td>PDF</td></tr>
+          <tr><td><input type="checkbox" value="rtf"></td><td>RTF</td></tr>
+          <tr><td><input type="checkbox" value="xhtml"></td><td>XHTML</td></tr>
+        </tbody></table>
+        <p class="instruction">XSLT stylesheet skeleton for custom styling.</p>
+      </div>
+      <p class="help">{{ output_title|capfirst }} plug-in can include skeleton
+        XSLT stylesheets for processing specialization type elements in
+        semantically more correct way than the default fall-back processing.</p>
+    </fieldset>
   </div>
 
 {% endblock %}

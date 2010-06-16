@@ -32,7 +32,13 @@ import re
 
 
 class MainHandler(webapp.RequestHandler):
-    
+
+    titles = {
+      "shell": "shell",
+      "specialization": "specialization",
+      "attribute": "attribute specialization"
+    }
+
     def get(self):
         path_args = [a.strip() for a in self.request.path.split("/")[1:]]
         template_values = {
@@ -51,16 +57,18 @@ class MainHandler(webapp.RequestHandler):
             if a == "":
                 pass
             elif __idx == 0:
-                #template_file = "form.html"
                 if a in ("shell", "specialization", "attribute"):
                     template_values["output"] = a
-                    if a == "attribute":
-                        template_values["title"] = "DITA %s Specialization Generator" % path_args[__idx].capitalize()
-                    else:
-                        template_values["title"] = "DITA %s Generator" % path_args[__idx].capitalize()
+                    #if a == "attribute":
+                    #    template_values["title"] = "DITA %s Specialization Generator" % path_args[__idx].capitalize()
+                    #else:
+                    #    template_values["title"] = "DITA %s Generator" % path_args[__idx].capitalize()
+                    template_values["title"] = "DITA %s Generator" % self.titles[path_args[__idx]].title()
+                    template_values["output_title"] = self.titles[path_args[__idx]]
                     template_file = a + ".html"
                 else:
                     self.response.set_status(404)
+                    self.response.headers.add_header("Content-Type", "text/plain; charset=UTF-8")
                     self.response.out.write("Unrecognized output type " + a)
                     return
             elif __idx == 1:
@@ -68,6 +76,7 @@ class MainHandler(webapp.RequestHandler):
                     template_values["version"] = a
                 else:
                     self.response.set_status(404)
+                    self.response.headers.add_header("Content-Type", "text/plain; charset=UTF-8")
                     self.response.out.write("Unrecognized DITA version " + a)
                     return
             __idx += 1

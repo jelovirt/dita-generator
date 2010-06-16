@@ -5,7 +5,7 @@ var name = "^(" + nameStartChar + ")(" + nameChar + ")*$";
 var nmtoken = "(" + nameChar + ")+";
 var nmtokens = "^(" + nameChar + ")+(\\s+(" + nameChar + ")+)*$";
 
-var idPattern = new RegExp(name);
+var namePattern = new RegExp(name);
 var attributePattern = new RegExp(nmtokens);
 
 var rootTest = new RegExp("^\\s*(topic|concept|task|reference)\\s*$");
@@ -257,49 +257,72 @@ function checkFragment() {
 
 function attributeAddHandler(event) {
     $("#noAttributesRow").hide();
+    $("#attributes thead").show();
     
-    attributeCounter++;
     var tr = $("<tr></tr>");
-    var p = "att." + attributeCounter; 
-    tr.append("<td><input name='" + p + ".name'></td>");
-    tr.append("<td><select name='" + p + ".type'><option value='props'>props</option><option value='base'>base</option></select></td>");
-    var d = $("<td><select name='" + p + ".datatype'><option value='CDATA'>Space-separated</option><option value='NMTOKENS'>Enumeration</option></select> "
-              + "<input name='" + p + ".values' style='display:none' disabled title='Space-separated list of possible values'></td>");
-    d.find("select").change(function(event) {
+    tr.append("<td><input name='name' size='15'></td>");
+    tr.append("<td><select name='type'><option value='props'>props</option><option value='base'>base</option></select></td>");
+    tr.append("<td><select name='datatype'><option value='CDATA'>Any</option><option value='NMTOKENS'>Enum</option></select> "
+              + "<input name='values' style='display:none' disabled title='Space-separated list of possible values'></td>");
+    // Add change handlers
+    tr.find("select").change(function(event) {
             var t = $(event.target);
+            var values = t.nextAll("input:first");
             if (t.val() == "NMTOKENS") {
-                t.nextAll("input").show().removeAttr("disabled");
+                values.show().removeAttr("disabled");
             } else {
-                t.nextAll("input").hide().attr("disabled", true);
+                values.hide().attr("disabled", true);
             }
         });
-    d.find("input").change(function(event) {
+    tr.find("input[name=values]").change(function(event) {
         var t = $(event.target);
         var val = $.trim(t.attr("value"));
         if (!attributePattern.test(val)) {
-            setError(t, "xxx", "yyy");
+            setError(t, $("<span>Values must be space separated XML names</span>"),
+                     "Values must be space separated XML names");
         } else {
             setOk(t);
         }
     });
-    tr.append(d);
+    // Add counter
+    attributeCounter++;
+    tr.find(":input").each(function() {
+        var t = $(this);
+        t.attr("name", "att." + attributeCounter + "." + t.attr("name"));
+    });
+    // Add remove button
     var r = $("<td><button type='button'>Remove</button></td>");
-    r.find("button").click(function(event) {
-            $(event.target).parents("tr:first").remove();
-            if ($("#attributes tbody tr:visible").length === 0) {
-                $("#noAttributesRow").show();
-            }
-        });
+    r.find("button").click(attributeRemoveHandler);
     tr.append(r);
+
     $("#attributes tbody").append(tr);
+}
+
+function attributeRemoveHandler(event) {
+    $(event.target).parents("tr:first").remove();
+    if ($("#attributes tbody tr:visible").length === 0) {
+        $("#noAttributesRow").show();
+        $("#attributes thead").hide();
+    }
 }
 
 function idChangeHandler(event) {
     var id = $(event.target);
     var val = id.attr("value");    
-    if (!idPattern.test(val)) {
-        setError(id, $("<span>Not a valid <a href='http://www.w3.org/TR/REC-xml/#NT-Name' target='_blank'>XML name</a></span>"),
+    if (!namePattern.test(val)) {
+        setError(id, $("<span>Not a valid XML name</span>"),
                  "Type ID must be a valid XML name.");
+    } else {
+        setOk(id);
+    }
+}
+
+function rootChangeHandler(event) {
+    var id = $(event.target);
+    var val = id.attr("value");
+    if (!namePattern.test(val)) {
+        setError(id, $("<span>Not a valid XML element name</span>"),
+                 "Type ID must be a valid XML element name.");
     } else {
         setOk(id);
     }
@@ -336,6 +359,14 @@ function setMessage(input, level, text, tip) {
     }
 }
 
+function helpHandler(event) {
+  $(event.target).parents("fieldset:first").find(".help").show("fast");
+}
+
+function closeHandler(event) {
+  $(event.target).parents(".help").hide("fast");
+}
+
 // Initialization
 
 $(document).ready(function() {
@@ -344,6 +375,7 @@ $(document).ready(function() {
     $(":input[name=version]").change(versionChangeHandler);
     $(":input[name=type]").change(topicChangeHandler);
     $(":input[name=id]").change(idChangeHandler);
+    $(":input[name=root]").change(rootChangeHandler);
     $(":input").change(validatePage);
     $("#selectDefaultDomains").click(selectDefaultDomains);
     $("#selectAllDomains").click(selectAllDomains);
@@ -356,6 +388,17 @@ $(document).ready(function() {
     var prev = $("<button type='button' id='prev'>&lt; Previous</button>").click(prevHandler);
     var next = $("<button type='button' id='next'>Next &gt;</button>").click(nextHandler);
     $("#generate").before(prev).before(" ").before(next).before(" ");
+    // help
+    $("fieldset label").each(function() {
+        var l = $(this);
+        if (l.parents("fieldset:first").find(".help").length != 0) {
+           l.append($("<span class='help-icon' title='Show help'></span>").click(helpHandler));
+        }
+    });
+    $("fieldset .help").hide().each(function() {
+        var l = $(this);
+        l.prepend($("<span class='close-icon' title='Close help'></span>").click(closeHandler));
+    });
     // init
     topicChangeHandler();
     typeChangeHandler();

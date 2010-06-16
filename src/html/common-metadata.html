@@ -1,7 +1,31 @@
-<p class="help">Type or shell ID is used to identify the shell, the ID should be conform to XML ID syntax restrictions.
-  Type title is the human readable name for the type or specialization.
-  Owner is the owner company or organization of the type; the owner information is only use for Public Formal Identifier generation.</p>
-<table>
+<fieldset>
+  <p>
+    <label for="title" class="required">Title</label>
+    <input type="text" name="title" id="title" class="required" required title="Title of the type">
+    <span class="instruction">Human readable name.</span>
+  </p>
+  <p class="help">
+    Type title is the human readable name for the {{ output_title }}.
+  </p>
+</fieldset>
+<fieldset>
+  <p title="For example a domain or company name, in uppercase by convention">
+    <label for="owner" class="required">Owner</label>
+    <input type="text" name="owner" id="owner" class="required" required>
+    <span class="instruction">Owner company or organization of the
+      {{ output_title }}.</span>
+  </p>
+  <p class="help">The owner information is only use for Public Formal Identifier
+    (<abbr title="Formal Public Identifier">FPI</abbr>) generation.</p>
+</fieldset>
+{% if advanced %}
+  <fieldset>
+    <p title="Generated plugin version number">
+      <label for="owner">Plugin version</label>
+      <input type="text" name="plugin-version" id="plugin-version">
+    </p>
+  </fieldset>
+{% endif %}
 <!--
 <tr>
   <th rowspan="2">Content-model rewrite</th>
@@ -14,30 +38,3 @@
   <td>foreign and data element removal</td>
 </tr>
 -->
-<tr title="ID of the new topic type or shell">
-  <th><label for="id">Type ID</label>:</th>
-  <!-- Leave empty to override base topic root element. XXX: Overriding root element in specialization is reshelling, so disable it -->
-  <td><input type="text" name="id" id="id" class="required" required></td>
-</tr>
-<tr title="Title of the type"><!--Defaults to capitalized root name-->
-  <th><label for="title">Title</label>:</th>
-  <td><input type="text" name="title" id="title" class="required" required></td>
-</tr>
-<!--
-<tr>
-  <th>Global attributes</th>
-  <td><textarea name="attribute" rows="2" cols="20" disabled>xtrc CDATA #IMPLIED&#xA;xtrf CDATA #IMPLIED</textarea></td>
-  <td>Attributes that are added globally by integrating into <code>%global-atts;</code>. Contents of the field are used as is in the DTD files.</td>
-</tr>
--->
-<tr title="For example a domain or company name, in uppercase by convention"><!-- PFI owner will default to 'OASIS'-->
-  <th><label for="owner"><abbr title="Formal Public Identifier">FPI</abbr> owner</label>:</th>
-  <td><input type="text" name="owner" id="owner" class="required" required></td>
-</tr>
-{% if advanced %}
-  <tr title="Generated plugin version number">
-    <th><label for="owner">Plugin version</label>:</th>
-    <td><input type="text" name="plugin-version" id="plugin-version"></td>
-  </tr>
-{% endif %}
-</table>

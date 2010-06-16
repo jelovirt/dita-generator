@@ -17,6 +17,14 @@
     {% include "attribute-domain.html" %}
   </div>
   <div class="page">
+    <fieldset>
+      <p>
+        <label for="id" class="required">Plug-in ID</label>
+        <input type="text" name="id" id="id" class="required" required title="ID of the new topic type or shell">
+        <span class="instruction">ID must conform to <a href="http://www.w3.org/TR/REC-xml/#NT-Name" target="_blank">XML Name syntax restrictions</a>.</span>
+      </p>
+      <p class="help">Plug-in ID is used to identify the .</p>
+    </fieldset>
     {% include "common-metadata.html" %}
   </div>
 {% endblock %}

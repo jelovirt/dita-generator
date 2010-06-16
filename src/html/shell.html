@@ -6,16 +6,29 @@
   {% endif %}
   <input type="hidden" name="output" value="{{ output }}">
   <div class="page">
-    <p class="help">A DITA DTD shell defines the set of structural modules (topic or map types),
-      domain modules, and constraints modules that the map or topic can use.
-      In general, any production use of DITA involves definition of the set of modules best suited
-      to local requirements. This always requires the creation of local shell document types, even
-      if all they do is omit unneeded modules or apply constraints to the standard DITA-defined
-      vocabulary.</p>
+    <p class="help">A {{ output_title }}  defines the set of structural modules
+      (topic or map types), domain modules, and constraints modules that the map
+      or topic can use. In general, any production use of DITA involves
+      definition of the set of modules best suited to local requirements. This
+      always requires the creation of local shell document types, even if all
+      they do is omit unneeded modules or apply constraints to the standard
+      DITA-defined vocabulary.</p>
   </div>
   {% include "version-page.html" %}
   {% include "common-pages.html" %}
   <div class="page">
+    <fieldset>
+      <p>
+        <label for="id" class="required">{{ output_title|capfirst }} ID</label>
+        <input type="text" name="id" id="id" class="required" required
+               title="ID of the new topic type or shell">
+        <span class="instruction">ID must conform to
+          <a href="http://www.w3.org/TR/REC-xml/#NT-Name" target="_blank">XML
+            Name syntax restrictions</a>.</span>
+      </p>
+      <p class="help">{{ output_title|capfirst }} ID is used to identify the
+        {{ output_title }} and the DITA-OT plug-in.</p>
+    </fieldset>
     {% include "common-metadata.html" %}
   </div>
 {% endblock %}

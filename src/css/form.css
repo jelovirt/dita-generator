@@ -8,13 +8,54 @@ body {
 #body {
   margin: 0 auto 0 auto;
   padding: 10px 0 0 0;
-  width: 640px;
+  width: 750px;/*640px;*/
   text-align: left;
 }
 
+fieldset {
+    margin: 0px;
+    padding: 0px;
+    border: none;
+    /*border-bottom: 1px solid gray;*/
+}
+fieldset:first-child {
+    /*border-top: 1px solid gray;*/
+}
+fieldset label {
+    width: 150px;
+    float: left;
+    display: block;
+}
+label.required {
+    font-weight: bold;
+}
+
+fieldset p,
+fieldset div {
+    margin: 14px 0;
+}
+hr {
+  display: none;
+}
+#footer {
+  margin-top: 28px;
+  font-size: smaller;
+  text-align: right;
+}
+
+/*
+label.required:after {
+    content: "*";
+    font-weight: bold;
+}
+*/
 th {
   text-align: left;
   padding-right: 10px;
+  vertical-align: top;
+}
+td {
+  text-align: left;
   vertical-align: top;
 }
 table table {
@@ -32,8 +73,31 @@ table table tr {
 }
 
 .page {
+  border-top: 1px solid gray;
+}
+#controls {
+  border-bottom: 1px solid gray;
+  padding-bottom: 14px;
+}
+.prose {
+  border-top: 1px solid gray;
+  border-bottom: 1px solid gray;
+}
+fieldset p.help,
+fieldset p.instruction,
+fieldset p.legend,
+fieldset p.controller,
+#controls {
+    padding-left: 150px;
 }
 .help {
+    /*font-size: small;*/
+}
+.instruction {
+  /*
+    font-size: small;
+    color: green;
+    */
 }
 #controls {
   margin-top: 1em;
@@ -44,7 +108,25 @@ table table tr {
 .legend {
   font-size: small;
 }
-
+.help-icon {
+    background-image: url("../images/help.png");
+    background-repeat: no-repeat;
+    background-position: center right;
+    height: 16px;
+    width: 16px;
+    padding-left: 20px;
+    cursor: pointer;
+}
+.close-icon {
+    background-image: url("../images/close.png");
+    background-repeat: no-repeat;
+    background-position: center right;
+    height: 16px;
+    width: 16px;
+    padding-left: 20px;
+    cursor: pointer;
+    float: right;
+}
 .msg {
     padding-left: 26px;
 }
