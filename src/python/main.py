@@ -184,7 +184,7 @@ class GenerateHandler(webapp.RequestHandler):
                     raise ValueError("unsupported output type " + __o)
                 __topic_type = __output_type(__id, __title, __topic_type,
                                              __owner, __file)#__root
-                if __topic_type == ditagen.dita.SpecializationType:
+                if type(__topic_type) == ditagen.dita.SpecializationType:
                     __topic_type.root = ditagen.dita.create_element(__topic_type, __root, __id)
         except Exception:
             self.error(500)

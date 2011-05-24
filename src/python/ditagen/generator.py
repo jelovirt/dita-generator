@@ -79,20 +79,24 @@ class DtdGenerator(object):
         """Get entity value."""
         if type(value) == list:
             __s = sep + "\n" + " " * (24 + 1)
-            return __s.join(value) + "\n" + " " * 24
+            return __s.join([str(v) for v in value]) + "\n" + " " * 24
         else:
             return value
-    
+
     def element_declaration(self, name, model):
         """Print element declaration."""
         self.out.write("""<!ELEMENT %s (%s)>""" % (name, model))
         self.out.write("\n")
-    
-    def attribute_declaration(self, name, attrs):
-        """Print attribute declaration.
-        
-        TODO: attrs should also be able to be a list"""
-        self.out.write("""<!ATTLIST %s %s>""" % (name, attrs))
+
+    def attribute_declaration(self, name, attrs, sep=u"\n    "):
+        """Print attribute declaration."""
+        if type(attrs) == list:
+            __value = sep.join([str(a) for a in attrs])
+            if len(attrs) > 1:
+              __value = sep + __value
+        else:
+            __value = str(attrs)
+        self.out.write("""<!ATTLIST %s %s>""" % (name, __value))
         self.out.write("\n")
     
     def parameter_entity_ref(self, name):
@@ -489,7 +493,7 @@ PUBLIC "%s"
                 else:
                     self._file_name = self.plugin_name
                 if self._root_name is None:
-                    self._root_name = self.topic_type.id
+                    self._root_name = self.topic_type.root.name#id
                 #if self.version == "1.2":
                 #    self._dtd_base_dir = u"../../../dtd/"
             
@@ -634,7 +638,8 @@ PUBLIC "%s"
     def generate_mod(self):
         """Generate mod file."""
         self._preprocess()
-        
+
+        self.out.write("<!--%s %s-->"  % (self._root_name, self.topic_type.root.name))
         if self._root_name is None:
             __root = self.topic_type.root.name
         else:
@@ -661,16 +666,35 @@ PUBLIC "%s"
         __model = self.topic_type.root.model % (__model_params)
         #if nested:
         #    __model += ", (%%%s-info-types;)*". % (root)
-        self.element_declaration(__root, __model)
-        __attrs = list(self.topic_type.root.attrs)
-        __attrs.extend([u"domains CDATA \"&included-domains;\""])
-        self.attribute_declaration(__root, u"\n    ".join([str(s) for s in __attrs]))
-        #self.out.write("\n")
+        #self.element_declaration(__root, __model)
+        # write content entity
+        self.internal_parameter_entity(__root + ".content", "(%s)" % __model)
+        # write attribute entity, without arch-atts entity
+        __attrs_ent = [str(a) for a in self.topic_type.root.attrs]
+        __attrs_list = [str(ParameterEntity(__root + ".attributes")),
+                        str(ParameterEntity("arch-atts")),
+                        u"domains CDATA \"&included-domains;\""]
+        for __a in list(__attrs_list):
+            if __a in __attrs_ent:
+                __attrs_ent.remove(__a)
+                #__attrs_list.remove(__a)
+        self.internal_parameter_entity(__root + ".attributes", __attrs_ent)
+        self.out.write("""<!ELEMENT %s %%%s.content;>""" % (__root, __root))
+        self.out.write("\n")
+#        #__attr_list = [ParameterEntity(__root + ".attributes")]
+#        #__attr_list.extend(__arch_atts)
+#        __arch_atts.insert(0, ParameterEntity(__root + ".attributes"))
+        self.attribute_declaration(__root, __attrs_list)
+#                                    __arch_atts,
+#                                    u"domains CDATA \"&included-domains;\""])
+        #self.attribute_declaration(__root, u"\n    ".join([str(s) for s in __attrs]))
+        #self.out.write("""<!ATTLIST %s %%%s.attributes;>""" % (__root, __root))
+        self.out.write("\n")
         self.comment_block(u"SPECIALIZATION ATTRIBUTE DECLARATIONS")
-        if self._root_name is None:
-            self.__class_declaration(__root, self.topic_type.root.cls)
-        else:
-            self.__class_declaration(__root, u"%s%s/%s " % (self.topic_type.root.cls, __root, __root))
+        #if self._root_name is None:
+        self.__class_declaration(__root, self.topic_type.root.cls)
+        #else:
+        #    self.__class_declaration(__root, u"%s%s/%s " % (self.topic_type.root.cls, __root, __root))
         #self.out.write("\n")
         self.centered_comment_line(u"End of file", after=1)
     
