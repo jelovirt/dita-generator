@@ -664,12 +664,8 @@ PUBLIC "%s"
         if "shortdesc" in self.models:
             __model_params["shortdesc"] = u""
         __model = self.topic_type.root.model % (__model_params)
-        #if nested:
-        #    __model += ", (%%%s-info-types;)*". % (root)
         #self.element_declaration(__root, __model)
-        # write content entity
         self.internal_parameter_entity(__root + ".content", "(%s)" % __model)
-        # write attribute entity, without arch-atts entity
         __attrs_ent = [str(a) for a in self.topic_type.root.attrs]
         __attrs_list = [str(ParameterEntity(__root + ".attributes")),
                         str(ParameterEntity("arch-atts")),
@@ -677,18 +673,11 @@ PUBLIC "%s"
         for __a in list(__attrs_list):
             if __a in __attrs_ent:
                 __attrs_ent.remove(__a)
-                #__attrs_list.remove(__a)
         self.internal_parameter_entity(__root + ".attributes", __attrs_ent)
         self.out.write("""<!ELEMENT %s %%%s.content;>""" % (__root, __root))
         self.out.write("\n")
-#        #__attr_list = [ParameterEntity(__root + ".attributes")]
-#        #__attr_list.extend(__arch_atts)
-#        __arch_atts.insert(0, ParameterEntity(__root + ".attributes"))
         self.attribute_declaration(__root, __attrs_list)
-#                                    __arch_atts,
-#                                    u"domains CDATA \"&included-domains;\""])
         #self.attribute_declaration(__root, u"\n    ".join([str(s) for s in __attrs]))
-        #self.out.write("""<!ATTLIST %s %%%s.attributes;>""" % (__root, __root))
         self.out.write("\n")
         self.comment_block(u"SPECIALIZATION ATTRIBUTE DECLARATIONS")
         #if self._root_name is None:
