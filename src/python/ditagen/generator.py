@@ -956,6 +956,176 @@ class PluginGenerator(DitaGenerator):
         finally:
             __temp.close()
 
+class StylePluginGenerator(DitaGenerator):
+    """Generator for a DITA-OT style plug-in."""
+
+    def __init__(self):
+        DitaGenerator.__init__(self)
+        self.ot_version = Version("1.5.3")
+        self.transtype = None
+        self.plugin_name = None
+        self.plugin_version = None
+        self.page_size = None
+        self.page_margins = None
+        self.font_family = None
+        self._stylesheet_stump = []
+
+    def _preprocess(self):
+        """Preprocess arguments."""
+        if self._initialized == False:
+            DitaGenerator._preprocess(self)
+            #if self.plugin_name is None:
+            #    self.plugin_name = self.topic_type.id
+            # done
+            self._initialized = True
+
+    def __generate_integrator(self):
+        """Generate plugin integrator Ant file."""
+        __root = ET.Element("project", {
+            "name": self.plugin_name,
+            })
+        __init = ET.SubElement(__root, "target", {
+            "name": ("dita2%s.init" % self.transtype)
+            })
+        ET.SubElement(__init, "property", {
+            "name": "customization.dir",
+            "location": ("${dita.plugin.%s.dir}/cfg" % self.plugin_name)
+            })
+        ET.SubElement(__root, "target", {
+            "name": "dita2%s" % self.transtype,
+            "depends": ("dita2%s.init, dita2pdf2" % self.transtype),
+            })
+        indent(__root)
+        __d = ET.ElementTree(__root)
+        __d.write(self.out, "UTF-8")
+
+    def __generate_plugin_file(self):
+        """Generate plugin configuration file."""
+        __root = ET.Element("plugin", id=self.plugin_name)
+        if self.plugin_version:
+            ET.SubElement(__root, "feature", extension="package.version", value=self.plugin_version)
+        ET.SubElement(__root, "feature", extension="dita.conductor.transtype.check", value=self.transtype)
+        ET.SubElement(__root, "feature", extension="dita.conductor.target.relative", file="integrator.xml")
+        indent(__root)
+        __d = ET.ElementTree(__root)
+        __d.write(self.out, "UTF-8")
+
+    def __generate_catalog(self):
+        """Generate plugin configuration file."""
+        __root = ET.Element("catalog", xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog", prefer="system")
+        ET.SubElement(__root, "uri", name="cfg:fo/attrs/custom.xsl", uri="fo/attrs/custom.xsl")
+        ET.SubElement(__root, "uri", name="cfg:fo/xsl/custom.xsl", uri="fo/xsl/custom.xsl")
+        indent(__root)
+        __d = ET.ElementTree(__root)
+        __d.write(self.out, "UTF-8")
+
+    def __generate_custom(self):
+        """Generate plugin custom XSLT file."""
+        __root = ET.Element("xsl:stylesheet", {
+            "xmlns:xsl": "http://www.w3.org/1999/XSL/Transform",
+            "xmlns:fo": "http://www.w3.org/1999/XSL/Format",
+            "version": "2.0"})
+        # page size
+        ET.SubElement(__root, "xsl:variable", name="page-width").text = self.page_size[0]
+        ET.SubElement(__root, "xsl:variable", name="page-height").text = self.page_size[1]
+        # page margins
+        if self.page_margins:
+            if self.page_margins[0]:
+                ET.SubElement(__root, "xsl:variable", name="page-margin-top").text = self.page_margins[0]
+            if self.page_margins[1]:
+                ET.SubElement(__root, "xsl:variable", name="page-height-right").text = self.page_margins[1]
+            if self.page_margins[2]:
+                ET.SubElement(__root, "xsl:variable", name="page-height-bottom").text = self.page_margins[2]
+            if self.page_margins[3]:
+                ET.SubElement(__root, "xsl:variable", name="page-height-left").text = self.page_margins[3]
+        # font size
+        if self.default_font_size:
+            ET.SubElement(__root, "xsl:variable", name="default-font-size").text = self.default_font_size
+        indent(__root)
+        __d = ET.ElementTree(__root)
+        __d.write(self.out, "UTF-8")
+
+    def __generate_custom_attr(self):
+        """Generate plugin custom XSLT file."""
+        __root = ET.Element("xsl:stylesheet", {
+            "xmlns:xsl": "http://www.w3.org/1999/XSL/Transform",
+            "xmlns:fo": "http://www.w3.org/1999/XSL/Format",
+            "version": "2.0"})
+        # font family
+        if self.font_family:
+            __root_attr = ET.SubElement(__root, "xsl:attribute-set", name="__fo__root")
+            ET.SubElement(__root_attr, "xsl:attribute", name="font-family").text = self.font_family
+        indent(__root)
+        __d = ET.ElementTree(__root)
+        __d.write(self.out, "UTF-8")
+
+    def generate_plugin(self):
+        """Generate ZIP file with specified stylesheets."""
+        self._preprocess()
+
+        __output = self.out
+
+        __temp = StringIO.StringIO()
+        try:
+            __zip = ZipFile(__temp, "w")
+            __zip.debug = 3
+            try:
+                # integrator
+                self._run_generation(__zip, self.__generate_integrator,
+                                    "%s/integrator.xml" % (self.plugin_name))
+                # plugin
+                self._run_generation(__zip, self.__generate_plugin_file,
+                                    "%s/plugin.xml" % (self.plugin_name))
+                # catalog
+                self._run_generation(__zip, self.__generate_catalog,
+                                    "%s/cfg/catalog.xml" % (self.plugin_name))
+                # custom XSLT
+                self._run_generation(__zip, self.__generate_custom,
+                                    "%s/cfg/fo/xsl/custom.xsl" % (self.plugin_name))
+
+                # custom XSLT attribute sets
+                self._run_generation(__zip, self.__generate_custom_attr,
+                                    "%s/cfg/fo/attrs/custom.xsl" % (self.plugin_name))
+            except:
+                print "Failed to write plugin:", sys.exc_info()[0]
+                raise
+            finally:
+                if __zip != None:
+                    __zip.close()
+            __output.write(__temp.getvalue())
+        except:
+            print "Failed to write ZIP file to output:", sys.exc_info()[0]
+            raise
+        finally:
+            __temp.close()
+
+class Version(object):
+    """DITA-OT version number object."""
+
+    def __init__(self, version):
+        self.version = version
+        self.tokens = [int(i) for i in version.split(".")]
+
+    def __str__(self):
+        return self.version
+
+    def __cmp__(self, other):
+        if self.version == other.version:
+            return 0
+        else:
+            n = min([len(self.tokens), len(other.tokens)])
+            for i in range(n):
+                c = self.tokens[i].__cmp__(other.tokens[i])
+                print str(i) + " " + str(self.tokens[i]) + " cmp " + str(other.tokens[i]) + " = " + str(c)
+                if self.tokens[i] > other.tokens[i]:
+                    return 1
+                elif self.tokens[i] < other.tokens[i]:
+                    return -1
+            if len(self.tokens) > n:
+                return 1
+            else:
+                return -1
+
 def sort_domains(domains):
     """Sort domains in order of required domains.
 

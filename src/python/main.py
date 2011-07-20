@@ -34,9 +34,10 @@ import re
 class MainHandler(webapp.RequestHandler):
 
     titles = {
-      "shell": "shell",
-      "specialization": "specialization",
-      "attribute": "attribute specialization"
+      "shell": "Shell",
+      "specialization": "Specialization",
+      "attribute": "Attribute Specialization",
+      "plugin": "PDF plug-in",
     }
 
     def get(self):
@@ -44,7 +45,7 @@ class MainHandler(webapp.RequestHandler):
         template_values = {
             #"advanced": self.request.get("debug") == "true",
             "advanced": False,
-            "title": "DITA DTD Generator"
+            "title": "DITA Generator"
         }
         template_file = "index.html"
         
@@ -59,12 +60,15 @@ class MainHandler(webapp.RequestHandler):
             elif __idx == 0:
                 if a in ("shell", "specialization", "attribute"):
                     template_values["output"] = a
-                    #if a == "attribute":
-                    #    template_values["title"] = "DITA %s Specialization Generator" % path_args[__idx].capitalize()
-                    #else:
-                    #    template_values["title"] = "DITA %s Generator" % path_args[__idx].capitalize()
-                    template_values["title"] = "DITA %s Generator" % self.titles[path_args[__idx]].title()
-                    template_values["output_title"] = self.titles[path_args[__idx]]
+                    template_values["title"] = "DITA %s Generator" % self.titles[path_args[__idx]]
+                    template_values["output_title"] = self.titles[path_args[__idx]].lower()
+                    template_values["generate_url"] = "/generate"
+                    template_file = a + ".html"
+                elif a in ("plugin"):
+                    template_values["output"] = a
+                    template_values["title"] = "DITA-OT %s Generator" % self.titles[path_args[__idx]]
+                    template_values["output_title"] = self.titles[path_args[__idx]].lower()
+                    template_values["generate_url"] = "/generate-plugin"
                     template_file = a + ".html"
                 else:
                     self.response.set_status(404)
@@ -237,8 +241,120 @@ class GenerateHandler(webapp.RequestHandler):
                 __dita_gen.generate_ent()
 
 
+class PluginGenerateHandler(webapp.RequestHandler):
+
+    def post(self):
+        self.get()
+
+    def get(self):
+        __topic_type = None
+        __output_type = None
+        __id = None
+        __root = None
+        __owner = None
+        __nested = None
+        __format = None
+        __domains = []
+        __ot_version = None
+        __plugin_name = None
+        __plugin_version = None
+        __stylesheet = None
+        __title = None
+        __file = None
+        __attrs = []
+        try:
+            # version
+            if u"ot.version" in self.request.arguments():
+                __ot_version = self.request.get(u"ot.version")
+            else:
+                raise ValueError("version missing")
+            # id
+            if u"id" in self.request.arguments():
+                __id = self.request.get(u"id")
+            else:
+                raise ValueError("id missing")
+            # root
+            if u"root" in self.request.arguments():
+                __root = self.request.get(u"root")
+            # page size
+            if u"owner" in self.request.arguments():
+                __owner = self.request.get(u"owner")
+            # title
+            #if u"title" in self.request.arguments():
+            #    __title = self.request.get(u"title")
+            #else:
+            #    raise ValueError("title missing")
+            if u"plugin-name" in self.request.arguments():
+                __plugin_name = self.request.get(u"plugin-name")
+            else:
+                __plugin_name = __id
+            if u"plugin-version" in self.request.arguments():
+                __plugin_version = self.request.get(u"plugin-version")
+            #if not __title:
+            #    __title = __id.capitalize()
+            __nested = u"nested" in self.request.arguments()
+            #__remove = dict([(n, True) for n in form.getlist("remove")])
+            #__global_atts = None#self.request.get(u"attribute")
+            # output type
+            #if u"file" in self.request.arguments():
+            #    __format = self.request.get(u"file")
+            #else:
+            #    raise ValueError("file missing")
+            # stylesheet
+            #__stylesheet = self.request.get_all(u"stylesheet")
+            #for s in __stylesheet:
+            #   if s not in ("docbook", "eclipse.plugin", "fo", "rtf", "xhtml"):
+            #        raise ValueError("unsupported stylesheet " + s)
+            # file name
+            __file = __id
+        except Exception:
+            self.error(500)
+            raise
+
+        # run generator
+        __dita_gen = ditagen.generator.StylePluginGenerator()
+        __dita_gen.out = self.response.out
+        __dita_gen.owner = __owner
+
+        if __topic_type is not None:
+            __dita_gen.topic_type = __topic_type
+        if not len(__domains) == 0:
+            __dita_gen.domains = __domains
+        __dita_gen.nested = __nested
+        __dita_gen.ot_version = __ot_version
+        __dita_gen.title = __title
+        # page size
+        if u"pdf.page-size" in self.request.arguments():
+            __dita_gen.page_size = self.request.get(u"pdf.page-size").split(" ")
+        # page margins
+        __dita_gen.page_margins = [
+            self.request.get(u"pdf.page-margin-top"),
+            self.request.get(u"pdf.page-margin-right"),
+            self.request.get(u"pdf.page-margin-bottom"),
+            self.request.get(u"pdf.page-margin-left")
+        ]
+        __dita_gen.default_font_size = self.request.get(u"pdf.default-font-size")
+        __dita_gen.font_family = self.request.get(u"pdf.font-family")
+        __dita_gen.transtype = self.request.get(u"transtype")
+        if __stylesheet:
+            __dita_gen.set_stylesheet(__stylesheet)
+        if __plugin_name != None:
+            __dita_gen.plugin_name = __plugin_name
+        if __plugin_version != None:
+            __dita_gen.plugin_version = __plugin_version
+        if __attrs:
+            __dita_gen.domain_attributes = __attrs
+        __file_name = __dita_gen.get_file_name(__id, __file, "zip")
+
+        self.response.headers.add_header("Content-type", "application/zip")
+        self.response.headers.add_header("Content-disposition", "attachment; filename=" + __file_name)
+        __dita_gen.generate_plugin()
+        
+
+
 def main():
     application = webapp.WSGIApplication([('/generate', GenerateHandler),
+                                          ('/generate-plugin', PluginGenerateHandler),
                                           ('/.*', MainHandler)],
                                          debug=True)
     util.run_wsgi_app(application)

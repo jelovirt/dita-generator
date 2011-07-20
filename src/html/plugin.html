@@ -1,0 +1,111 @@
+{% extends "form.html" %}
+
+{% block form %}
+  {% if not advanced %}
+    <!--input type="hidden" name="file" value="plugin"-->
+  {% endif %}
+  <input type="hidden" name="output" value="{{ output }}">
+  <!--div class="page">
+    <p class="help">A {{ output_title }} generation first page.</p>
+  </div-->
+    <div class="page">
+    <fieldset>
+      <p>
+        <label for="ot.version" class="required">DITA-OT version</label>
+        <select name="ot.version" id="ot.version" title="DITA-OT version">
+          <option value="1.5.3" selected>1.5.3 or newer</option>
+          <!--option value="1.0">1.5.2 or older</option-->
+        </select>
+      </p>
+      <p class="help">Currently only DITA-OT version 1.5.3 or newer is supported.</p>
+    </fieldset>
+  </div>
+  <div class="page">
+    <fieldset>
+      <p>
+        <label for="pdf.page-size" class="required">Page size</label>
+        <select name="pdf.page-size" id="pdf.page-size" title="Page size">
+          <option value="210mm 297mm">A4</option>
+          <option value="8.5in 14in">US Legal</option>
+          <option value="8.5in 11in" selected>US Letter</option>
+        </select>
+      </p>
+    </fieldset>
+    <fieldset>
+      <p>
+        <label for="pdf.page-margin-top">Margin top</label>
+        <input name="pdf.page-margin-top" id="pdf.page-margin-top" placeholder="20mm">
+      </p>
+      <p>
+        <label for="pdf.page-margin-right">Margin right</label>
+        <input name="pdf.page-margin-right" id="pdf.page-margin-right" placeholder="20mm">
+      </p>
+      <p>
+        <label for="pdf.page-margin-bottom">Margin bottom</label>
+        <input name="pdf.page-margin-bottom" id="pdf.page-margin-bottom" placeholder="20mm">
+      </p>
+      <p>
+        <label for="pdf.page-margin-left">Margin left</label>
+        <input name="pdf.page-margin-left" id="pdf.page-margin-left" placeholder="20mm">
+      </p>
+    </fieldset>
+  </div>
+  <div class="page">
+    <fieldset>
+      <p>
+        <label for="pdf.default-font-size">Font size</label>
+        <input name="pdf.default-font-size" id="pdf.default-font-size" placeholder="10pt">
+      </p>
+      </p>
+      <!--p class="help">Font size</p-->
+    </fieldset>
+    <fieldset>
+      <p>
+        <label for="pdf.font-family">Font family</label>
+        <select name="pdf.font-family" id="pdf.font-family" title="Font family">
+          <option value="Serif" selected>serif</option>
+          <option value="Sans">sans-serif</option>
+          <!--option value="Monospaced">monospace</option-->
+        </select>
+      </p>
+    </fieldset>
+  </div>
+  <div class="page">
+    <fieldset>
+      <p>
+        <label for="id" class="required">Plug-in ID</label>
+        <input type="text" name="id" id="id" class="required" required
+               title="ID of the new topic type or shell">
+        <span class="instruction">ID must conform to plug-in ID syntax rules.</span>
+      </p>
+      <p class="help">Plug-in ID is used to identify the DITA-OT plug-in.</p>
+    </fieldset>
+    <fieldset>
+      <p>
+        <label for="transtype" class="required">Transtype</label>
+        <input name="transtype" id="transtype" class="required" required
+               title="Transtype">
+        <span class="instruction">Transtype name must conform to same syntax
+          rules as plug-in ID.</span>
+      </p>
+      <p class="help">Plug-in ID is used to identify the DITA-OT plug-in.</p>
+    </fieldset>
+    <!--fieldset>
+      <p>
+        <label for="title" class="required">Title</label>
+        <input type="text" name="title" id="title" class="required" required title="Title of the type">
+        <span class="instruction">Human readable name.</span>
+      </p>
+      <p class="help">
+        Type title is the human readable name for the {{ output_title }}.
+      </p>
+    </fieldset-->
+    <fieldset>
+      <p title="Generated plugin version number">
+        <label for="plugin-version">Plug-in version</label>
+        <input type="text" name="plugin-version" id="plugin-version"
+               placeholder ="0.0.0">
+      </p>
+    </fieldset>
+  </div>
+{% endblock %}
