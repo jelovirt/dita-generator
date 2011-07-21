@@ -968,6 +968,10 @@ class StylePluginGenerator(DitaGenerator):
         self.page_size = None
         self.page_margins = None
         self.font_family = None
+        self.force_page_count = None
+        self.chapter_layout = None
+        self.bookmark_style = None
+        self.task_label = None
         self._stylesheet_stump = []
 
     def _preprocess(self):
@@ -991,6 +995,21 @@ class StylePluginGenerator(DitaGenerator):
             "name": "customization.dir",
             "location": ("${dita.plugin.%s.dir}/cfg" % self.plugin_name)
             })
+        if self.chapter_layout:
+            ET.SubElement(__init, "property", {
+                "name": "args.chapter.layout",
+                "value": self.chapter_layout
+                })
+        if self.bookmark_style:
+            ET.SubElement(__init, "property", {
+                "name": "args.bookmark.style",
+                "value": self.bookmark_style
+                })
+        if self.task_label:
+            ET.SubElement(__init, "property", {
+                "name": "args.gen.task.lbl",
+                "value": self.task_label
+                })
         ET.SubElement(__root, "target", {
             "name": "dita2%s" % self.transtype,
             "depends": ("dita2%s.init, dita2pdf2" % self.transtype),
@@ -1055,6 +1074,10 @@ class StylePluginGenerator(DitaGenerator):
         if self.font_family:
             __root_attr = ET.SubElement(__root, "xsl:attribute-set", name="__fo__root")
             ET.SubElement(__root_attr, "xsl:attribute", name="font-family").text = self.font_family
+        # force page count
+        if self.force_page_count:
+            __root_attr = ET.SubElement(__root, "xsl:attribute-set", name="__force__page__count")
+            ET.SubElement(__root_attr, "xsl:attribute", name="force-page-count").text = self.force_page_count
         indent(__root)
         __d = ET.ElementTree(__root)
         __d.write(self.out, "UTF-8")

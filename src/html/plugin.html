@@ -8,7 +8,7 @@
   <!--div class="page">
     <p class="help">A {{ output_title }} generation first page.</p>
   </div-->
-    <div class="page">
+  <div class="page">
     <fieldset>
       <p>
         <label for="ot.version" class="required">DITA-OT version</label>
@@ -20,6 +20,7 @@
       <p class="help">Currently only DITA-OT version 1.5.3 or newer is supported.</p>
     </fieldset>
   </div>
+  <!-- page dimensions -->
   <div class="page">
     <fieldset>
       <p>
@@ -48,8 +49,67 @@
         <label for="pdf.page-margin-left">Margin left</label>
         <input name="pdf.page-margin-left" id="pdf.page-margin-left" placeholder="20mm">
       </p>
+      <p class="instruction">Page margins.</p>
     </fieldset>
   </div>
+  <!-- page sequence -->
+  <div class="page">
+    <fieldset>
+      <p>
+        <label for="pdf.force-page-count">Chapter page</label>
+        <select name="pdf.force-page-count" id="pdf.force-page-count" title="Force page count">
+          <option>default</option>
+          <option value="even">start on odd page</option>
+          <!--option value="odd">odd</option-->
+          <option value="auto">no empty pages</option>
+        </select>
+      </p>
+      <p class="instruction">Chapters can be made to always start on an odd
+        page or directly follow the previous page.</p>
+      <p class="help">Default page count behavior for Bookmaps is to start every
+      chapter on an odd page.</p>
+    </fieldset>
+    <fieldset>
+      <p>
+        <label for="pdf.chapter-layout" >Chapter layout</label>
+        <select name="pdf.chapter-layout" id="pdf.chapter-layout" title="Chapter page layout">
+          <option>default</option>
+          <option value="MINITOC">TOC</option>
+          <option value="BASIC">no TOC</option>
+        </select>
+      </p>
+      <p class="instruction">Chapters can start with a table of chapter contents.</p>
+    </fieldset>
+  </div>
+  <!-- TOC and bookmarks -->
+  <div class="page">
+    <fieldset>
+      <p>
+        <label for="pdf.bookmark-style">Bookmarks state</label>
+        <select name="pdf.bookmark-style" id="pdf.bookmark-style" title="Bookmark initial state">
+          <option>default</option>
+          <option value="COLLAPSED">collapsed</option>
+          <option value="EXPANDED">expanded</option>
+        </select>
+      </p>
+      <p class="instruction">PDF bookmark node initial state.</p>
+    </fieldset>
+  </div>
+  <!-- task -->
+  <div class="page">
+    <fieldset>
+      <p>
+        <label for="pdf.task-label">Task labels</label>
+        <select name="pdf.task-label" id="pdf.task-label" title="Task labels">
+          <option>default</option>
+          <option value="YES">yes</option>
+          <option value="NO">no</option>
+        </select>
+      </p>
+      <p class="instruction">Generate titles for task steps.</p>
+    </fieldset>
+  </div>
+  <!-- text -->
   <div class="page">
     <fieldset>
       <p>
@@ -58,6 +118,7 @@
       </p>
       </p>
       <!--p class="help">Font size</p-->
+      <p class="instruction">Font size for the body content.</p>
     </fieldset>
     <fieldset>
       <p>
@@ -68,8 +129,10 @@
           <!--option value="Monospaced">monospace</option-->
         </select>
       </p>
+      <p class="instruction">Font family for the body content.</p>
     </fieldset>
   </div>
+  <!-- metadata -->
   <div class="page">
     <fieldset>
       <p>

@@ -336,6 +336,10 @@ class PluginGenerateHandler(webapp.RequestHandler):
         __dita_gen.default_font_size = self.request.get(u"pdf.default-font-size")
         __dita_gen.font_family = self.request.get(u"pdf.font-family")
         __dita_gen.transtype = self.request.get(u"transtype")
+        __dita_gen.force_page_count = self.request.get(u"pdf.force-page-count")
+        __dita_gen.chapter_layout = self.request.get(u"pdf.chapter-layout")
+        __dita_gen.bookmark_style = self.request.get(u"pdf.bookmark-style")
+        __dita_gen.task_label = self.request.get(u"pdf.task-label")
         if __stylesheet:
             __dita_gen.set_stylesheet(__stylesheet)
         if __plugin_name != None:
