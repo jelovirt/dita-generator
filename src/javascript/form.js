@@ -7,6 +7,7 @@ var nmtokens = "^(" + nameChar + ")+(\\s+(" + nameChar + ")+)*$";
 
 var namePattern = new RegExp(name);
 var attributePattern = new RegExp(nmtokens);
+var pluginPatter = new RegExp("[a-zA-Z\\-_]+(\\.[a-zA-Z\\-_]+)*")
 
 var rootTest = new RegExp("^\\s*(topic|concept|task|reference)\\s*$");
 
@@ -171,9 +172,9 @@ function topicChangeHandler(event) {
     });
     // filter nested topics
     if ($.inArray("topic", cls) == -1) {
-        $("input[name=nested]").attr("disabled", true);
+        $("input[name='nested']").attr("disabled", true);
     } else {
-        $("input[name=nested]").removeAttr("disabled");
+        $("input[name='nested']").removeAttr("disabled");
     }
     return true;
 }
@@ -195,24 +196,24 @@ function domainEnabled(cur, version, type) {
  * Check default domains.
  */
 function selectDefaultDomains(event) {
-    var version = $(":input[name=version]").val();
-    var type = $(":input[name=type]:checked").val();
+    var version = $(":input[name='version']").val();
+    var type = $(":input[name='type']:checked").val();
     if (type != undefined && type != "") {
         var ds = domains[version][type].defaultDomains;
-        $("input[name=domain]").val(ds);
+        $("input[name='domain']").val(ds);
     }
 }
 /**
  * Check all domains.
  */
 function selectAllDomains(event) {
-    $("input[name=domain]").attr("checked", true);
+    $("input[name='domain']").attr("checked", true);
 }
 /**
  * Uncheck all domain
  */
 function selectNoneDomains(event) {
-    $("input[name=domain]").removeAttr("checked");
+    $("input[name='domain']").removeAttr("checked");
 }
 
 /**
@@ -309,7 +310,7 @@ function attributeRemoveHandler(event) {
 function idChangeHandler(event) {
     var id = $(event.target);
     var val = id.attr("value");    
-    if (!namePattern.test(val)) {
+    if (!pluginPatter.test(val)) { //!namePattern.test(val)
         setError(id, $("<span>Not a valid XML name</span>"),
                  "Type ID must be a valid XML name.");
     } else {
@@ -370,7 +371,6 @@ function closeHandler(event) {
 // Initialization
 
 $(document).ready(function() {
-    // handlers
     $(":input[name=output]").change(typeChangeHandler);
     $(":input[name=version]").change(versionChangeHandler);
     $(":input[name=type]").change(topicChangeHandler);
@@ -383,7 +383,7 @@ $(document).ready(function() {
     $("#addAttribute").click(attributeAddHandler);
     $("form").submit(validateForm);
     // wizard pages
-    $(".page").each(function(i) { $(this).attr("id", "p" + i); }).hide();
+    $(".page").each(function(i) {$(this).attr("id", "p" + i);}).hide();
     $(".page:first").addClass("current").show();
     var prev = $("<button type='button' id='prev'>&lt; Previous</button>").click(prevHandler);
     var next = $("<button type='button' id='next'>Next &gt;</button>").click(nextHandler);

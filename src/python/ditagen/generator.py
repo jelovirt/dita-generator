@@ -512,9 +512,8 @@ PUBLIC "%s"
             self.out = __buf
             func()
             __zip.writestr(__zipinfo, __buf.getvalue().encode("UTF-8"))
-        except:
-            print "Failed to write " + filename + " :", sys.exc_info()[0]
-            raise
+        except Exception as e:
+            raise Exception("Failed to write " + filename, e), None, sys.exc_info()[2]
         finally:
             __buf.close()
     
@@ -943,9 +942,8 @@ class PluginGenerator(DitaGenerator):
                     self._run_generation(__zip,
                                         self.__generate_stylesheet,
                                         "%s/xslt/%s2%s.xsl" % (self.plugin_name, self._root_name, ss))
-            except:
-                print "Failed to write plugin:", sys.exc_info()[0]
-                raise                
+            except Exception as e:
+                raise Exception("Failed to write plugin", e), None, sys.exc_info()[2]
             finally:
                 if __zip != None:
                     __zip.close()
@@ -961,7 +959,7 @@ class StylePluginGenerator(DitaGenerator):
 
     def __init__(self):
         DitaGenerator.__init__(self)
-        self.ot_version = Version("1.5.3")
+        self.ot_version = None
         self.transtype = None
         self.plugin_name = None
         self.plugin_version = None
@@ -972,6 +970,7 @@ class StylePluginGenerator(DitaGenerator):
         self.chapter_layout = None
         self.bookmark_style = None
         self.task_label = None
+        self.side_col_width = None
         self._stylesheet_stump = []
 
     def _preprocess(self):
@@ -1044,22 +1043,6 @@ class StylePluginGenerator(DitaGenerator):
             "xmlns:xsl": "http://www.w3.org/1999/XSL/Transform",
             "xmlns:fo": "http://www.w3.org/1999/XSL/Format",
             "version": "2.0"})
-        # page size
-        ET.SubElement(__root, "xsl:variable", name="page-width").text = self.page_size[0]
-        ET.SubElement(__root, "xsl:variable", name="page-height").text = self.page_size[1]
-        # page margins
-        if self.page_margins:
-            if self.page_margins[0]:
-                ET.SubElement(__root, "xsl:variable", name="page-margin-top").text = self.page_margins[0]
-            if self.page_margins[1]:
-                ET.SubElement(__root, "xsl:variable", name="page-height-right").text = self.page_margins[1]
-            if self.page_margins[2]:
-                ET.SubElement(__root, "xsl:variable", name="page-height-bottom").text = self.page_margins[2]
-            if self.page_margins[3]:
-                ET.SubElement(__root, "xsl:variable", name="page-height-left").text = self.page_margins[3]
-        # font size
-        if self.default_font_size:
-            ET.SubElement(__root, "xsl:variable", name="default-font-size").text = self.default_font_size
         indent(__root)
         __d = ET.ElementTree(__root)
         __d.write(self.out, "UTF-8")
@@ -1072,12 +1055,35 @@ class StylePluginGenerator(DitaGenerator):
             "version": "2.0"})
         # font family
         if self.font_family:
-            __root_attr = ET.SubElement(__root, "xsl:attribute-set", name="__fo__root")
-            ET.SubElement(__root_attr, "xsl:attribute", name="font-family").text = self.font_family
+            __root_attr = ET.SubElement(__root, u"xsl:attribute-set", name="__fo__root")
+            ET.SubElement(__root_attr, u"xsl:attribute", name=u"font-family").text = self.font_family
         # force page count
         if self.force_page_count:
-            __root_attr = ET.SubElement(__root, "xsl:attribute-set", name="__force__page__count")
-            ET.SubElement(__root_attr, "xsl:attribute", name="force-page-count").text = self.force_page_count
+            __root_attr = ET.SubElement(__root, u"xsl:attribute-set", name="__force__page__count")
+            ET.SubElement(__root_attr, u"xsl:attribute", name=u"force-page-count").text = self.force_page_count
+        # page size
+        if self.page_size:
+            ET.SubElement(__root, u"xsl:variable", name=u"page-width").text = self.page_size[0]
+            ET.SubElement(__root, u"xsl:variable", name=u"page-height").text = self.page_size[1]
+        # page margins
+        for k, v in self.page_margins.iteritems():
+            if v:
+                ET.SubElement(__root, u"xsl:variable", name=k).text = v
+#        if self.page_margins:
+#            if  self.page_margins[0]:
+#                ET.SubElement(__root, "xsl:variable", name="page-margin-top").text = self.page_margins[0]
+#            if self.page_margins[1]:
+#                ET.SubElement(__root, "xsl:variable", name="page-height-right").text = self.page_margins[1]
+#            if self.page_margins[2]:
+#                ET.SubElement(__root, "xsl:variable", name="page-height-bottom").text = self.page_margins[2]
+#            if self.page_margins[3]:
+#                ET.SubElement(__root, "xsl:variable", name="page-height-left").text = self.page_margins[3]
+        # font size
+        if self.default_font_size:
+            ET.SubElement(__root, u"xsl:variable", name=u"default-font-size").text = self.default_font_size
+        # body indent
+        if self.side_col_width:
+            ET.SubElement(__root, u"xsl:variable", name=u"side-col-width").text = self.side_col_width
         indent(__root)
         __d = ET.ElementTree(__root)
         __d.write(self.out, "UTF-8")
@@ -1089,6 +1095,7 @@ class StylePluginGenerator(DitaGenerator):
         __output = self.out
 
         __temp = StringIO.StringIO()
+        __failed = False
         try:
             __zip = ZipFile(__temp, "w")
             __zip.debug = 3
@@ -1103,22 +1110,22 @@ class StylePluginGenerator(DitaGenerator):
                 self._run_generation(__zip, self.__generate_catalog,
                                     "%s/cfg/catalog.xml" % (self.plugin_name))
                 # custom XSLT
-                self._run_generation(__zip, self.__generate_custom,
-                                    "%s/cfg/fo/xsl/custom.xsl" % (self.plugin_name))
-
+#                self._run_generation(__zip, self.__generate_custom,
+#                                    "%s/cfg/fo/xsl/custom.xsl" % (self.plugin_name))
                 # custom XSLT attribute sets
                 self._run_generation(__zip, self.__generate_custom_attr,
                                     "%s/cfg/fo/attrs/custom.xsl" % (self.plugin_name))
-            except:
-                print "Failed to write plugin:", sys.exc_info()[0]
-                raise
+            except Exception as e:
+                __failed = True
+                raise Exception("Failed to write plugin", e), None, sys.exc_info()[2]
             finally:
                 if __zip != None:
                     __zip.close()
-            __output.write(__temp.getvalue())
-        except:
-            print "Failed to write ZIP file to output:", sys.exc_info()[0]
-            raise
+            if not __failed:
+                __output.write(__temp.getvalue())
+        except Exception as e:
+            __failed = True
+            raise Exception("Failed to write ZIP file to output", e), None, sys.exc_info()[2]
         finally:
             __temp.close()
 
@@ -1139,7 +1146,6 @@ class Version(object):
             n = min([len(self.tokens), len(other.tokens)])
             for i in range(n):
                 c = self.tokens[i].__cmp__(other.tokens[i])
-                print str(i) + " " + str(self.tokens[i]) + " cmp " + str(other.tokens[i]) + " = " + str(c)
                 if self.tokens[i] > other.tokens[i]:
                     return 1
                 elif self.tokens[i] < other.tokens[i]:

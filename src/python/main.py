@@ -16,6 +16,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
+from google.appengine.dist import use_library
+use_library('django', '1.2')
 
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
@@ -28,6 +32,7 @@ import ditagen.dtdgen
 import ditagen.dita.v1_1
 import ditagen.dita.v1_2
 import ditagen.generator
+from ditagen.generator import Version
 import re
 
 
@@ -265,7 +270,7 @@ class PluginGenerateHandler(webapp.RequestHandler):
         try:
             # version
             if u"ot.version" in self.request.arguments():
-                __ot_version = self.request.get(u"ot.version")
+                __ot_version = Version(self.request.get(u"ot.version"))
             else:
                 raise ValueError("version missing")
             # id
@@ -274,8 +279,8 @@ class PluginGenerateHandler(webapp.RequestHandler):
             else:
                 raise ValueError("id missing")
             # root
-            if u"root" in self.request.arguments():
-                __root = self.request.get(u"root")
+            #if u"root" in self.request.arguments():
+            #    __root = self.request.get(u"root")
             # page size
             if u"owner" in self.request.arguments():
                 __owner = self.request.get(u"owner")
@@ -327,12 +332,20 @@ class PluginGenerateHandler(webapp.RequestHandler):
         if u"pdf.page-size" in self.request.arguments():
             __dita_gen.page_size = self.request.get(u"pdf.page-size").split(" ")
         # page margins
-        __dita_gen.page_margins = [
-            self.request.get(u"pdf.page-margin-top"),
-            self.request.get(u"pdf.page-margin-right"),
-            self.request.get(u"pdf.page-margin-bottom"),
-            self.request.get(u"pdf.page-margin-left")
-        ]
+        if __ot_version >= Version("1.5.4"):
+            __dita_gen.page_margins = {
+                "page-margin-top": self.request.get(u"pdf.page-margin-top"),
+                "page-margin-outside": self.request.get(u"pdf.page-margin-outside"),
+                "page-margin-bottom": self.request.get(u"pdf.page-margin-bottom"),
+                "page-margin-inside": self.request.get(u"pdf.page-margin-inside")
+            }
+        else:
+            __dita_gen.page_margins = {
+                "page-margin-top": self.request.get(u"pdf.page-margin-top"),
+                "page-margin-right": self.request.get(u"pdf.page-margin-right"),
+                "page-margin-bottom": self.request.get(u"pdf.page-margin-bottom"),
+                "page-margin-left": self.request.get(u"pdf.page-margin-left")
+            }
         __dita_gen.default_font_size = self.request.get(u"pdf.default-font-size")
         __dita_gen.font_family = self.request.get(u"pdf.font-family")
         __dita_gen.transtype = self.request.get(u"transtype")
@@ -340,14 +353,11 @@ class PluginGenerateHandler(webapp.RequestHandler):
         __dita_gen.chapter_layout = self.request.get(u"pdf.chapter-layout")
         __dita_gen.bookmark_style = self.request.get(u"pdf.bookmark-style")
         __dita_gen.task_label = self.request.get(u"pdf.task-label")
-        if __stylesheet:
-            __dita_gen.set_stylesheet(__stylesheet)
+        __dita_gen.side_col_width = self.request.get(u"pdf.side-col-width")
         if __plugin_name != None:
             __dita_gen.plugin_name = __plugin_name
         if __plugin_version != None:
             __dita_gen.plugin_version = __plugin_version
-        if __attrs:
-            __dita_gen.domain_attributes = __attrs
         __file_name = __dita_gen.get_file_name(__id, __file, "zip")
 
         self.response.headers.add_header("Content-type", "application/zip")

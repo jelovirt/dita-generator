@@ -5,27 +5,124 @@
     <!--input type="hidden" name="file" value="plugin"-->
   {% endif %}
   <input type="hidden" name="output" value="{{ output }}">
-  <!--div class="page">
-    <p class="help">A {{ output_title }} generation first page.</p>
-  </div-->
+  <div class="page">
+    <p class="help">A PDF customization plug-in defines a new DITA-OT
+      transformation type based on the built-in PDF conversion.</p>
+  </div>
   <div class="page">
     <fieldset>
       <p>
         <label for="ot.version" class="required">DITA-OT version</label>
         <select name="ot.version" id="ot.version" title="DITA-OT version">
-          <option value="1.5.3" selected>1.5.3 or newer</option>
           <!--option value="1.0">1.5.2 or older</option-->
+          <option value="1.5.3" selected>1.5.3</option>
+          {% if advanced %}
+            <option value="1.5.4">1.5.4 or newer</option>
+          {% else %}
+            <option value="1.5.4" disabled style="display:none">1.5.4 or newer</option>
+          {% endif %}
         </select>
       </p>
-      <p class="help">Currently only DITA-OT version 1.5.3 or newer is supported.</p>
+      <p class="instruction">Version of DITA-OT for which the plug-in is
+        installed into.</p>
     </fieldset>
   </div>
   <!-- page dimensions -->
   <div class="page">
+    <!--
+    <div id="page-preview" class="preview" style="float: right; width: 130px;">
+      <div>Preview</div>
+      <div class="preview-page preview-page-even">
+        <div class="preview-content">
+          <div class="preview-title"></div>
+          <div class="preview-para">
+            <div class="preview-line"></div>
+            <div class="preview-line"></div>
+            <div class="preview-line-last"></div>
+          </div>
+          <div class="preview-para">
+            <div class="preview-line"></div>
+            <div class="preview-line"></div>
+            <div class="preview-line-last"></div>
+          </div>
+          <div class="preview-title"></div>
+          <div class="preview-para">
+            <div class="preview-line"></div>
+            <div class="preview-line"></div>
+            <div class="preview-line-last"></div>
+          </div>
+          <div class="preview-para">
+            <div class="preview-line"></div>
+            <div class="preview-line"></div>
+            <div class="preview-line-last"></div>
+          </div>
+          <div class="preview-para">
+            <div class="preview-line"></div>
+            <div class="preview-line"></div>
+            <div class="preview-line-last"></div>
+          </div>
+          <div class="preview-title"></div>
+          <div class="preview-para">
+            <div class="preview-line"></div>
+            <div class="preview-line"></div>
+            <div class="preview-line-last"></div>
+          </div>
+          <div class="preview-para">
+            <div class="preview-line"></div>
+            <div class="preview-line"></div>
+            <div class="preview-line-last"></div>
+          </div>
+        </div>
+      </div>
+      <div class="preview-page preview-page-odd">
+        <div class="preview-content">
+          <div class="preview-title"></div>
+          <div class="preview-para">
+            <div class="preview-line"></div>
+            <div class="preview-line"></div>
+            <div class="preview-line-last"></div>
+          </div>
+          <div class="preview-para">
+            <div class="preview-line"></div>
+            <div class="preview-line"></div>
+            <div class="preview-line-last"></div>
+          </div>
+          <div class="preview-title"></div>
+          <div class="preview-para">
+            <div class="preview-line"></div>
+            <div class="preview-line"></div>
+            <div class="preview-line-last"></div>
+          </div>
+          <div class="preview-para">
+            <div class="preview-line"></div>
+            <div class="preview-line"></div>
+            <div class="preview-line-last"></div>
+          </div>
+          <div class="preview-para">
+            <div class="preview-line"></div>
+            <div class="preview-line"></div>
+            <div class="preview-line-last"></div>
+          </div>
+          <div class="preview-title"></div>
+          <div class="preview-para">
+            <div class="preview-line"></div>
+            <div class="preview-line"></div>
+            <div class="preview-line-last"></div>
+          </div>
+          <div class="preview-para">
+            <div class="preview-line"></div>
+            <div class="preview-line"></div>
+            <div class="preview-line-last"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    -->
     <fieldset>
       <p>
         <label for="pdf.page-size" class="required">Page size</label>
         <select name="pdf.page-size" id="pdf.page-size" title="Page size">
+          <option value="">default</option>
           <option value="210mm 297mm">A4</option>
           <option value="8.5in 14in">US Legal</option>
           <option value="8.5in 11in" selected>US Letter</option>
@@ -37,19 +134,34 @@
         <label for="pdf.page-margin-top">Margin top</label>
         <input name="pdf.page-margin-top" id="pdf.page-margin-top" placeholder="20mm">
       </p>
-      <p>
+      <p class="v1_5_3">
         <label for="pdf.page-margin-right">Margin right</label>
         <input name="pdf.page-margin-right" id="pdf.page-margin-right" placeholder="20mm">
+      </p>
+      <p class="v1_5_4">
+        <label for="pdf.page-margin-outside">Margin outside</label>
+        <input name="pdf.page-margin-outside" id="pdf.page-margin-outside" placeholder="20mm">
       </p>
       <p>
         <label for="pdf.page-margin-bottom">Margin bottom</label>
         <input name="pdf.page-margin-bottom" id="pdf.page-margin-bottom" placeholder="20mm">
       </p>
-      <p>
+      <p class="v1_5_3">
         <label for="pdf.page-margin-left">Margin left</label>
         <input name="pdf.page-margin-left" id="pdf.page-margin-left" placeholder="20mm">
       </p>
+      <p class="v1_5_4">
+        <label for="pdf.page-margin-inside">Margin inside</label>
+        <input name="pdf.page-margin-inside" id="pdf.page-margin-inside" placeholder="20mm">
+      </p>
       <p class="instruction">Page margins.</p>
+    </fieldset>
+    <fieldset class="v1_5_4">
+      <p>
+        <label for="pdf.mirror-page-margins">Mirror margins</label>
+        <input type="checkbox" name="pdf.mirror-page-margins" id="pdf.mirror-page-margins"
+               value="true">
+      </p>
     </fieldset>
   </div>
   <!-- page sequence -->
@@ -58,7 +170,7 @@
       <p>
         <label for="pdf.force-page-count">Chapter page</label>
         <select name="pdf.force-page-count" id="pdf.force-page-count" title="Force page count">
-          <option>default</option>
+          <option value="">default</option>
           <option value="even">start on odd page</option>
           <!--option value="odd">odd</option-->
           <option value="auto">no empty pages</option>
@@ -73,7 +185,7 @@
       <p>
         <label for="pdf.chapter-layout" >Chapter layout</label>
         <select name="pdf.chapter-layout" id="pdf.chapter-layout" title="Chapter page layout">
-          <option>default</option>
+          <option value="">default</option>
           <option value="MINITOC">TOC</option>
           <option value="BASIC">no TOC</option>
         </select>
@@ -87,7 +199,7 @@
       <p>
         <label for="pdf.bookmark-style">Bookmarks state</label>
         <select name="pdf.bookmark-style" id="pdf.bookmark-style" title="Bookmark initial state">
-          <option>default</option>
+          <option value="">default</option>
           <option value="COLLAPSED">collapsed</option>
           <option value="EXPANDED">expanded</option>
         </select>
@@ -101,7 +213,7 @@
       <p>
         <label for="pdf.task-label">Task labels</label>
         <select name="pdf.task-label" id="pdf.task-label" title="Task labels">
-          <option>default</option>
+          <option value="">default</option>
           <option value="YES">yes</option>
           <option value="NO">no</option>
         </select>
@@ -124,12 +236,20 @@
       <p>
         <label for="pdf.font-family">Font family</label>
         <select name="pdf.font-family" id="pdf.font-family" title="Font family">
-          <option value="Serif" selected>serif</option>
+          <option value="">default</option>
+          <option value="Serif">serif</option>
           <option value="Sans">sans-serif</option>
           <!--option value="Monospaced">monospace</option-->
         </select>
       </p>
       <p class="instruction">Font family for the body content.</p>
+    </fieldset>
+    <fieldset>
+      <p>
+        <label for="pdf.side-col-width">Body indent</label>
+        <input name="pdf.side-col-width" id="pdf.side-col-width" placeholder="25pt">
+      </p>
+      <p class="instruction">Amount the body text is indented relative to the left margin.</p>
     </fieldset>
   </div>
   <!-- metadata -->
