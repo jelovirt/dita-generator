@@ -512,8 +512,8 @@ PUBLIC "%s"
             self.out = __buf
             func()
             __zip.writestr(__zipinfo, __buf.getvalue().encode("UTF-8"))
-        except Exception as e:
-            raise Exception("Failed to write " + filename, e), None, sys.exc_info()[2]
+        except:
+            raise Exception("Failed to write " + filename, sys.exc_info()[1]), None, sys.exc_info()[2]
         finally:
             __buf.close()
     
@@ -942,8 +942,8 @@ class PluginGenerator(DitaGenerator):
                     self._run_generation(__zip,
                                         self.__generate_stylesheet,
                                         "%s/xslt/%s2%s.xsl" % (self.plugin_name, self._root_name, ss))
-            except Exception as e:
-                raise Exception("Failed to write plugin", e), None, sys.exc_info()[2]
+            except:
+                raise Exception("Failed to write plugin", sys.exc_info()[1]), None, sys.exc_info()[2]
             finally:
                 if __zip != None:
                     __zip.close()
@@ -1115,17 +1115,17 @@ class StylePluginGenerator(DitaGenerator):
                 # custom XSLT attribute sets
                 self._run_generation(__zip, self.__generate_custom_attr,
                                     "%s/cfg/fo/attrs/custom.xsl" % (self.plugin_name))
-            except Exception as e:
+            except:
                 __failed = True
-                raise Exception("Failed to write plugin", e), None, sys.exc_info()[2]
+                raise Exception("Failed to write plugin", sys.exc_info()[1]), None, sys.exc_info()[2]
             finally:
                 if __zip != None:
                     __zip.close()
             if not __failed:
                 __output.write(__temp.getvalue())
-        except Exception as e:
+        except:
             __failed = True
-            raise Exception("Failed to write ZIP file to output", e), None, sys.exc_info()[2]
+            raise Exception("Failed to write ZIP file to output", sys.exc_info()[1]), None, sys.exc_info()[2]
         finally:
             __temp.close()
 
