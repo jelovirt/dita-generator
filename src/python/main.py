@@ -321,15 +321,15 @@ class PluginGenerateHandler(webapp.RequestHandler):
         __dita_gen.out = self.response.out
         __dita_gen.owner = __owner
 
-        if __topic_type is not None:
-            __dita_gen.topic_type = __topic_type
-        if not len(__domains) == 0:
-            __dita_gen.domains = __domains
-        __dita_gen.nested = __nested
+#        if __topic_type is not None:
+#            __dita_gen.topic_type = __topic_type
+#        if not len(__domains) == 0:
+#            __dita_gen.domains = __domains
+#        __dita_gen.nested = __nested
         __dita_gen.ot_version = __ot_version
         __dita_gen.title = __title
         # page size
-        if u"pdf.page-size" in self.request.arguments():
+        if self.request.get(u"pdf.page-size"):
             __dita_gen.page_size = self.request.get(u"pdf.page-size").split(" ")
         # page margins
         if __ot_version >= Version("1.5.4"):
