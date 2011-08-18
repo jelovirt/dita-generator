@@ -17,8 +17,8 @@
   </target>
 
   <target name="-hg.info" depends="-init">
-    <exec outputproperty="build.current.revision" executable="hg">
-      <arg line="id -i"/>
+    <exec outputproperty="build.current.revision" executable="git">
+      <arg line='log --pretty=format:"%H" -1'/>
     </exec>
   </target>
 
