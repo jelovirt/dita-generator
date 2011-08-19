@@ -10,4 +10,6 @@ Currently implemented:
 
 Future targets:
 
-*   Support XML Schema generation. 
+*   Support XML Schema generation.
+
+Online generator is available at [DITA Generator](http://dita-generator.appspot.com/) hosted by Google App Engine.
