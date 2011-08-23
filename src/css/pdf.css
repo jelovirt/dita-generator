@@ -1,0 +1,30 @@
+.preview .preview-page {
+  width: 50px;
+  height: 75px;
+  border: solid 1px black;
+  overflow: hidden;
+  box-shadow: 3px 3px 3px #ccc;
+  margin: 5px;
+  float: right;
+}
+.preview .preview-content {
+}
+.preview .preview-para {
+  margin-bottom: 5px;
+}
+.preview .preview-line,
+.preview .preview-line-last {
+  border-top: solid 1px silver;
+  height: 1px;
+  margin-left: 2px;
+  margin-bottom: 1px;
+}
+.preview .preview-line-last {
+  width: 30%;
+}
+.preview .preview-title {
+  border-top: solid 1px black;
+  height: 1px;
+  width: 60%;
+  margin-bottom: 1px;
+}

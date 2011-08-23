@@ -39,9 +39,9 @@ import re
 class MainHandler(webapp.RequestHandler):
 
     titles = {
-      "shell": "Shell",
-      "specialization": "Specialization",
-      "attribute": "Attribute Specialization",
+      "shell": "Shell DTD",
+      "specialization": "Specialization DTD",
+      "attribute": "Attribute Specialization DTD",
       "plugin": "PDF plug-in",
     }
 
@@ -50,7 +50,7 @@ class MainHandler(webapp.RequestHandler):
         template_values = {
             #"advanced": self.request.get("debug") == "true",
             "advanced": False,
-            "title": "DITA Generator"
+            #"title": "DITA Generator"
         }
         template_file = "index.html"
         
@@ -65,13 +65,13 @@ class MainHandler(webapp.RequestHandler):
             elif __idx == 0:
                 if a in ("shell", "specialization", "attribute"):
                     template_values["output"] = a
-                    template_values["title"] = "DITA %s Generator" % self.titles[path_args[__idx]]
+                    template_values["title"] = "%s" % self.titles[path_args[__idx]]
                     template_values["output_title"] = self.titles[path_args[__idx]].lower()
                     template_values["generate_url"] = "/generate"
                     template_file = a + ".html"
                 elif a in ("plugin"):
                     template_values["output"] = a
-                    template_values["title"] = "DITA-OT %s Generator" % self.titles[path_args[__idx]]
+                    template_values["title"] = "DITA-OT %s" % self.titles[path_args[__idx]]
                     template_values["output_title"] = self.titles[path_args[__idx]].lower()
                     template_values["generate_url"] = "/generate-plugin"
                     template_file = a + ".html"
