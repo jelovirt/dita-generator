@@ -1032,7 +1032,7 @@ class StylePluginGenerator(DitaGenerator):
         """Generate plugin configuration file."""
         __root = ET.Element("catalog", xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog", prefer="system")
         ET.SubElement(__root, "uri", name="cfg:fo/attrs/custom.xsl", uri="fo/attrs/custom.xsl")
-        ET.SubElement(__root, "uri", name="cfg:fo/xsl/custom.xsl", uri="fo/xsl/custom.xsl")
+        #ET.SubElement(__root, "uri", name="cfg:fo/xsl/custom.xsl", uri="fo/xsl/custom.xsl")
         indent(__root)
         __d = ET.ElementTree(__root)
         __d.write(self.out, "UTF-8")
