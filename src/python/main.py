@@ -222,8 +222,8 @@ class GenerateHandler(webapp.RequestHandler):
                 __dita_gen.domain_attributes = __attrs
             __file_name = __dita_gen.get_file_name(__id, __file, "zip")
             
-            self.response.headers.add_header("Content-type", "application/zip")
-            self.response.headers.add_header("Content-disposition", "attachment; filename=" + __file_name)
+            self.response.headers.add_header("Content-Type", "application/zip")
+            self.response.headers.add_header("Content-Disposition", "attachment; filename=" + __file_name)
             __dita_gen.generate_plugin()
         else:
             __dita_gen = ditagen.generator.DitaGenerator()
@@ -367,8 +367,8 @@ class PluginGenerateHandler(webapp.RequestHandler):
             __dita_gen.plugin_version = __plugin_version
         __file_name = __dita_gen.get_file_name(__id, __file, "zip")
 
-        self.response.headers.add_header("Content-type", "application/zip")
-        self.response.headers.add_header("Content-disposition", "attachment; filename=" + __file_name)
+        self.response.headers.add_header("Content-Type", "application/zip")
+        self.response.headers.add_header("Content-Disposition", "attachment; filename=" + __file_name)
         __dita_gen.generate_plugin()
         
 
