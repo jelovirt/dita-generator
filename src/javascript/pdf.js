@@ -71,6 +71,21 @@ function toMm(val) {
   }
 }
 
+function colorChangeHandler(event) {
+	var target = $(event.target);
+	var other = $(":input[name='" + target.attr("name") + ".other']");
+	if (target.val() == "#other") {
+		other.show().prop("disabled", false);
+	} else {
+		other.hide().prop("disabled", true);
+	}
+}
+
+function linkColorChangeHandler(event) {
+	colorChangeHandler(event);
+}
+
+
 $(document).ready(function() {
     $(":input[name='ot.version']").change(toolkitVersionChangeHandler).change();
     $(":input[name='transtype']").change(transtypeChangeHandler);
@@ -79,9 +94,12 @@ $(document).ready(function() {
 //    $(":input[name='pdf.page-margin-top']").change(function(event) { pageMarginChangeHandler(event, "top") }).change();
 //    $(":input[name='pdf.page-margin-right']").change(function(event) { pageMarginChangeHandler(event, "right") }).change();
 //    $(":input[name='pdf.page-margin-bottom']").change(function(event) { pageMarginChangeHandler(event, "bottom") }).change();
-//    $(":input[name='pdf.page-margin-left']").change(function(event) { pageMarginChangeHandler(event, "left") }).change();    
+//    $(":input[name='pdf.page-margin-left']").change(function(event) { pageMarginChangeHandler(event, "left") }).change();
 //    $(":input[name='pdf.force-page-count']").change(forcePageCountChangeHandler).change();
 //    $(":input[name='pdf.chapter-layout']").change(forcePageCountChangeHandler).change();
+    
+    $(":input[name='pdf.color']").change(colorChangeHandler).change();
+    $(":input[name='pdf.link-color']").change(linkColorChangeHandler).change();
 });
 
 // preview page drawing
@@ -90,45 +108,34 @@ var margins = [5, 5, 5, 5];
 
 function drawSequencePreview() {
 	var canvas = document.getElementById("preview.sequence");
-    if (canvas.getContext) {
+    if (canvas != null && canvas.getContext) {
     	var ctx = canvas.getContext("2d");
     	ctx.clearRect(0, 0, canvas.width, canvas.height);
+    	var p1 = drawPage(ctx, 2, 1);
+    	p1[3] = p1[3] / 2;
+    	drawContents(ctx, p1, false);
     	if ($(":input[name='pdf.force-page-count']").val() == "auto") {
-//    		var p1 = drawPage(ctx, 1, 1);
-//        	drawContents(ctx, p1, true);
-        	var p2 = drawPage(ctx, 2, 1);
-        	p2[3] = p2[3] / 2;
-        	drawContents(ctx, p2, false);
-        	var p3 = drawPage(ctx, 1, 2);
-        	drawContents(ctx, p3, true);
-        	var p4 = drawPage(ctx, 2, 2);
+        	var p2 = drawPage(ctx, 1, 2);
         	if ($(":input[name='pdf.chapter-layout']").val() == "BASIC") {
-            	drawContents(ctx, p4, false);	
+            	drawContents(ctx, p2, false);	
         	} else {
-            	drawMinitoc(ctx, p4, false);
+            	drawMinitoc(ctx, p2, false);
         	}
-        	
-        	
-        	
+        	var p3 = drawPage(ctx, 2, 2);
+        	drawContents(ctx, p3, true);
     	} else {
-//        	var p1 = drawPage(ctx, 1, 1);
-//        	drawContents(ctx, p1, true);
-        	var p2 = drawPage(ctx, 2, 1);
-        	p2[3] = p2[3] / 2;
-        	drawContents(ctx, p2, false);
-        	var p3 = drawPage(ctx, 1, 2);
-        	//drawContents(ctx, p3, true);
-        	var p4 = drawPage(ctx, 2, 2);
+        	var p2 = drawPage(ctx, 1, 2);
+        	var p3 = drawPage(ctx, 2, 2);
         	if ($(":input[name='pdf.chapter-layout']").val() == "BASIC") {
-            	drawContents(ctx, p4, true);	
+            	drawContents(ctx, p3, true);	
         	} else {
-            	drawMinitoc(ctx, p4, true);
+            	drawMinitoc(ctx, p3, true);
         	}
     	}
     }
 }
 
-function drawPage(ctx, col, row) {
+function drawPage(ctx, col, row, content) {
 	ctx.lineWidth = "1px";
 	var height = 297 / 4;
 	var width = 210 / 4;
@@ -138,10 +145,12 @@ function drawPage(ctx, col, row) {
 	ctx.strokeStyle = "black";
 	ctx.strokeRect(x, y, width, height);
 	
-	return [x + margins[0],
-	        y + margins[1],
-	        width - margins[0] - margins[2],
-	        height - margins[1] - margins[3]];
+	return {
+		x: x + margins[0],
+		y: y + margins[1],
+	    width: width - margins[0] - margins[2],
+	    height: height - margins[1] - margins[3]
+	};
 }
 
 function drawContents(ctx, c, cont) {
@@ -149,7 +158,7 @@ function drawContents(ctx, c, cont) {
 	var start = cont;
 	var offset = 0;
 	var lines = 0;
-	while (offset < c[3]) {
+	while (offset < c.height) {
 		if (start || Math.random() < 0.1) {
 			ctx.strokeStyle = "black";
 			offset = offset + 3;
@@ -159,10 +168,10 @@ function drawContents(ctx, c, cont) {
 			ctx.strokeStyle = "silver";
 		}
 		ctx.beginPath();
-		ctx.moveTo(c[0],
-				   c[1] + offset);
-		ctx.lineTo(c[2] + c[0] - Math.random() * 20,
-				   c[1] + offset);
+		ctx.moveTo(c.x,
+				   c.y + offset);
+		ctx.lineTo(c.width + c.x - Math.random() * 20,
+				   c.y + offset);
 		ctx.closePath();
 		ctx.stroke();
 		offset = offset + 3;
@@ -179,16 +188,16 @@ function drawMinitoc(ctx, c, cont) {
 	ctx.lineWidth = "2px";
 	ctx.strokeStyle = "black";
 	ctx.beginPath();
-	ctx.moveTo(c[0],
-			   c[1]);
-	ctx.lineTo(c[0] + c[2] / 1.5,
-			   c[1]);
+	ctx.moveTo(c.x,
+			   c.y);
+	ctx.lineTo(c.x + c.width / 1.5,
+			   c.y);
 	ctx.closePath();
 	ctx.stroke();
 	var start = cont;
 	var offset = 3;
 	var lines = 0;
-	while (offset < c[3] / 2) {
+	while (offset < c.height / 2) {
 //		if (start || Math.random() < 0.1) {
 //			ctx.strokeStyle = "black";
 //			offset = offset + 3;
@@ -198,10 +207,10 @@ function drawMinitoc(ctx, c, cont) {
 			ctx.strokeStyle = "silver";
 //		}
 		ctx.beginPath();
-		ctx.moveTo(c[0],
-				   c[1] + offset);
-		ctx.lineTo(c[2] + c[0] / 1.5 - Math.random() * 5,
-				   c[1] + offset);
+		ctx.moveTo(c.x,
+				   c.y + offset);
+		ctx.lineTo(c.width + c.x / 1.5 - Math.random() * 5,
+				   c.y + offset);
 		ctx.closePath();
 		ctx.stroke();
 		offset = offset + 3;
@@ -213,10 +222,10 @@ function drawMinitoc(ctx, c, cont) {
 		}
 	}
 	ctx.beginPath();
-	ctx.moveTo(c[2] + c[0] / 1.5 + 2,
-			   c[1] + 3);
-	ctx.lineTo(c[2] + c[0] / 1.5 + 2,
-			   c[1] + c[3] / 2 + 3);
+	ctx.moveTo(c.width + c.x / 1.5 + 2,
+			   c.y + 3);
+	ctx.lineTo(c.width + c.x / 1.5 + 2,
+			   c.y + c.height / 2 + 3);
 	ctx.closePath();
 	ctx.stroke();
 }

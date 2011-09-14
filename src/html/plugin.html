@@ -208,6 +208,19 @@
       </p>
       <p class="instruction">PDF bookmark node initial state.</p>
     </fieldset>
+    <fieldset>
+      <p>
+        <label for="pdf.toc-maximum-level">TOC level</label>
+        <select name="pdf.toc-maximum-level" id="pdf.toc-maximum-level">
+          <option value="">default</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+        </select>
+      </p>
+      <p class="instruction">Number of levels displayed on TOC page.</p>
+    </fieldset>
   </div>
   <!-- task -->
   <div class="page">
@@ -221,6 +234,18 @@
         </select>
       </p>
       <p class="instruction">Generate titles for task steps.</p>
+    </fieldset>
+    <fieldset>
+      <p>
+        <label for="pdf.include-related-links">Related links</label>
+        <select name="pdf.include-related-links" id="pdf.include-related-links" title="Task labels">
+          <option value="">default</option>
+          <option value="none">none</option>
+          <option value="nofamily">no family</option>
+          <option value="all">all</option>
+        </select>
+      </p>
+      <p class="instruction">Specifies which links to include.</p>
     </fieldset>
   </div>
   <!-- text -->
@@ -262,7 +287,9 @@
           <option value="">default</option>
           <option value="black" selected>black</option>
           <option value="inherit">inherit</option>
+          <option value="#other">other…</option>
         </select>
+        <input type="text" name="pdf.color.other" style="display:none" size="7"/>
       </p>
       </p>
       <p class="instruction">Font family and size for the body content.</p>
@@ -277,16 +304,18 @@
     <fieldset>
       <p>
         <label>Link</label>
-        <label for="pdf.link-font-weight" class="inline">Bold</label>
-        <input name="pdf.link-font-weight" type="checkbox" value="bold"/>
-        <label for="pdf.link-font-style" class="inline">Italic</label>
-        <input name="pdf.link-font-style" type="checkbox" checked value="italic"/>
+        <label for="pdf.link-font-weight" class="inline">Bold</label><input name="pdf.link-font-weight" type="checkbox" value="bold"/>
+        <label for="pdf.link-font-style" class="inline">Italic</label><input name="pdf.link-font-style" type="checkbox" checked value="italic"/>
+        <label for="pdf.link-text-decoration" class="inline">Underline</label><input name="pdf.link-text-decoration" type="checkbox" value="underline"/>
+        <label for="pdf.link-color" class="inline">Color</label>
         <select name="pdf.link-color" id="pdf.link-color" title="Link color">
           <option value="">default</option>
           <option value="blue" selected>blue</option>
           <option value="black">black</option>
           <option value="inherit">inherit</option>
+          <option value="#other">other…</option>
         </select>
+        <input type="text" name="pdf.link-color.other" style="display:none" size="7"/>
       </p>
     </fieldset>
   </div>

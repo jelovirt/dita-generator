@@ -970,10 +970,13 @@ class StylePluginGenerator(DitaGenerator):
         self.link_font_weight = None
         self.link_font_style = None
         self.link_color = None
+        self.link_text_decoration = None
         self.force_page_count = None
         self.chapter_layout = None
         self.bookmark_style = None
+        self.toc_maximum_level = None
         self.task_label = None
+        self.include_related_links = None
         self.side_col_width = None
         self._stylesheet_stump = []
 
@@ -1009,6 +1012,11 @@ class StylePluginGenerator(DitaGenerator):
             ET.SubElement(__init, "property", {
                 "name": "args.gen.task.lbl",
                 "value": self.task_label
+                })
+        if self.include_related_links:
+            ET.SubElement(__init, "property", {
+                "name": "args.fo.include.rellinks",
+                "value": self.include_related_links
                 })
         ET.SubElement(__root, "target", {
             "name": "dita2%s" % self.transtype,
@@ -1076,6 +1084,9 @@ class StylePluginGenerator(DitaGenerator):
                 ET.SubElement(__link_attr, u"xsl:attribute", name=u"font-weight").text = self.link_font_weight
             if self.link_font_style:
                 ET.SubElement(__link_attr, u"xsl:attribute", name=u"font-style").text = self.link_font_style
+            if self.link_text_decoration:
+                ET.SubElement(__link_attr, u"xsl:attribute", name=u"text-decoration").text = self.link_text_decoration
+
         # force page count
         if self.force_page_count:
             __page_count_attr = ET.SubElement(__root, u"xsl:attribute-set", name="__force__page__count")
@@ -1094,6 +1105,10 @@ class StylePluginGenerator(DitaGenerator):
         # body indent
         if self.side_col_width:
             ET.SubElement(__root, u"xsl:variable", name=u"side-col-width").text = self.side_col_width
+        # toc
+        if self.toc_maximum_level:
+            ET.SubElement(__root, u"xsl:variable", name=u"tocMaximumLevel").text = self.toc_maximum_level
+        
         indent(__root)
         __d = ET.ElementTree(__root)
         __d.write(self.out, "UTF-8")

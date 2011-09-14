@@ -348,19 +348,18 @@ class PluginGenerateHandler(webapp.RequestHandler):
             }
         __dita_gen.default_font_size = self.request.get(u"pdf.default-font-size")
         __dita_gen.font_family = self.request.get(u"pdf.font-family")
-        __dita_gen.color = self.request.get(u"pdf.color")
-        __dita_gen.link_font_weight = self.request.get(u"pdf.link-font-weight")
-        if not __dita_gen.link_font_weight:
-            __dita_gen.link_font_weight = "normal"
-        __dita_gen.link_font_style = self.request.get(u"pdf.link-font-style")
-        if not __dita_gen.link_font_style:
-            __dita_gen.link_font_style = "normal"
-        __dita_gen.link_color = self.request.get(u"pdf.link-color")
+        __dita_gen.color = self.request.get(u"pdf.color.other") or self.request.get(u"pdf.color")
+        __dita_gen.link_font_weight = self.request.get(u"pdf.link-font-weight") or "normal"
+        __dita_gen.link_font_style = self.request.get(u"pdf.link-font-style") or "normal"
+        __dita_gen.link_text_decoration = self.request.get(u"pdf.link-text-decoration") or "none"
+        __dita_gen.link_color = self.request.get(u"pdf.link-color.other") or self.request.get(u"pdf.link-color")
         __dita_gen.transtype = self.request.get(u"transtype")
         __dita_gen.force_page_count = self.request.get(u"pdf.force-page-count")
         __dita_gen.chapter_layout = self.request.get(u"pdf.chapter-layout")
         __dita_gen.bookmark_style = self.request.get(u"pdf.bookmark-style")
+        __dita_gen.toc_maximum_level = self.request.get(u"pdf.toc-maximum-level")
         __dita_gen.task_label = self.request.get(u"pdf.task-label")
+        __dita_gen.include_related_links = self.request.get(u"pdf.include-related-links")
         __dita_gen.side_col_width = self.request.get(u"pdf.side-col-width")
         if __plugin_name != None:
             __dita_gen.plugin_name = __plugin_name
