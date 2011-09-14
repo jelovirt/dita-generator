@@ -77,7 +77,7 @@ class MainHandler(webapp.RequestHandler):
                     template_file = a + ".html"
                 else:
                     self.response.set_status(404)
-                    self.response.headers.add_header("Content-Type", "text/plain; charset=UTF-8")
+                    self.response.headers["Content-Type"] = "text/plain; charset=UTF-8"
                     self.response.out.write("Unrecognized output type " + a)
                     return
             elif __idx == 1:
@@ -85,7 +85,7 @@ class MainHandler(webapp.RequestHandler):
                     template_values["version"] = a
                 else:
                     self.response.set_status(404)
-                    self.response.headers.add_header("Content-Type", "text/plain; charset=UTF-8")
+                    self.response.headers["Content-Type"] = "text/plain; charset=UTF-8"
                     self.response.out.write("Unrecognized DITA version " + a)
                     return
             __idx += 1
@@ -222,8 +222,8 @@ class GenerateHandler(webapp.RequestHandler):
                 __dita_gen.domain_attributes = __attrs
             __file_name = __dita_gen.get_file_name(__id, __file, "zip")
             
-            self.response.headers.add_header("Content-Type", "application/zip")
-            self.response.headers.add_header("Content-Disposition", "attachment; filename=" + __file_name)
+            self.response.headers["Content-Type"] = "application/zip"
+            self.response.headers["Content-Disposition"] = "attachment; filename=" + __file_name
             __dita_gen.generate_plugin()
         else:
             __dita_gen = ditagen.generator.DitaGenerator()
@@ -237,7 +237,7 @@ class GenerateHandler(webapp.RequestHandler):
                 __dita_gen.domain_attributes = __attrs
             __file_name = __dita_gen.get_file_name(__topic_type, __file, __format)
             
-            self.response.headers.add_header("Content-Type", "text/plain; charset=UTF-8")
+            self.response.headers["Content-Type"] = "text/plain; charset=UTF-8"
             if __format == u"dtd":
                 __dita_gen.generate_dtd()
             elif __format == u"mod":
@@ -367,8 +367,8 @@ class PluginGenerateHandler(webapp.RequestHandler):
             __dita_gen.plugin_version = __plugin_version
         __file_name = __dita_gen.get_file_name(__id, __file, "zip")
 
-        self.response.headers.add_header("Content-Type", "application/zip")
-        self.response.headers.add_header("Content-Disposition", "attachment; filename=" + __file_name)
+        self.response.headers["Content-Type"] = "application/zip"
+        self.response.headers["Content-Disposition"] = "attachment; filename=" + __file_name
         __dita_gen.generate_plugin()
         
 
