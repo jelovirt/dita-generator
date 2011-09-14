@@ -20,6 +20,9 @@
     <exec outputproperty="build.current.revision" executable="git">
       <arg line='log --pretty=format:"%H" -1'/>
     </exec>
+    <exec outputproperty="build.current.revision.short" executable="git">
+      <arg line='log --pretty=format:"%h" -1'/>
+    </exec>
   </target>
 
   <target name="-version" unless="version">
@@ -85,6 +88,7 @@
       <filterset>
         <filter token="version" value="${version}" />
         <filter token="revision" value="${build.current.revision}" />
+        <filter token="revision.short" value="${build.current.revision.short}" />
       </filterset>
     </copy>
     <jar file="${dist.file}" manifest="${work.dir}/manifest.mf">

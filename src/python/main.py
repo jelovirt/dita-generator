@@ -348,6 +348,7 @@ class PluginGenerateHandler(webapp.RequestHandler):
             }
         __dita_gen.default_font_size = self.request.get(u"pdf.default-font-size")
         __dita_gen.font_family = self.request.get(u"pdf.font-family")
+        __dita_gen.color = self.request.get(u"pdf.color")
         __dita_gen.transtype = self.request.get(u"transtype")
         __dita_gen.force_page_count = self.request.get(u"pdf.force-page-count")
         __dita_gen.chapter_layout = self.request.get(u"pdf.chapter-layout")

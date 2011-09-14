@@ -16,11 +16,7 @@
         <select name="ot.version" id="ot.version" title="DITA-OT version">
           <!--option value="1.0">1.5.2 or older</option-->
           <option value="1.5.3" selected>1.5.3</option>
-          {% if advanced %}
-            <option value="1.5.4">1.5.4 or newer</option>
-          {% else %}
-            <option value="1.5.4" disabled style="display:none">1.5.4 or newer</option>
-          {% endif %}
+          <option value="1.5.4">1.5.4 or newer</option>
         </select>
       </p>
       <p class="instruction">Version of DITA-OT for which the plug-in is
@@ -231,24 +227,45 @@
   <div class="page">
     <fieldset>
       <p>
-        <label for="pdf.default-font-size">Font size</label>
-        <input name="pdf.default-font-size" id="pdf.default-font-size" placeholder="10pt">
-      </p>
-      </p>
-      <!--p class="help">Font size</p-->
-      <p class="instruction">Font size for the body content.</p>
-    </fieldset>
-    <fieldset>
-      <p>
-        <label for="pdf.font-family">Font family</label>
+        <label>Body font</label>
+        <label for="pdf.font-family" style="display:none">Font family</label>
         <select name="pdf.font-family" id="pdf.font-family" title="Font family">
           <option value="">default</option>
-          <option value="Serif">serif</option>
+          <option value="Serif" selected>serif</option>
           <option value="Sans">sans-serif</option>
           <!--option value="Monospaced">monospace</option-->
         </select>
+        <label for="pdf.default-font-size" style="display:none">Font size</label>
+        <!--input name="pdf.default-font-size" id="pdf.default-font-size" placeholder="10pt"-->
+        <select name="pdf.default-font-size" id="pdf.default-font-size">
+          <option value="">default</option>
+          <option value="8pt">8</option>
+          <option value="9pt">9</option>
+          <option value="10pt" selected>10</option>
+          <option value="11pt">11</option>
+          <option value="12pt">12</option>
+          <option value="14pt">14</option>
+          <option value="16pt">16</option>
+          <option value="18pt">18</option>
+          <option value="20pt">20</option>
+          <option value="22pt">22</option>
+          <option value="24pt">24</option>
+          <option value="26pt">26</option>
+          <option value="28pt">28</option>
+          <option value="36pt">36</option>
+          <option value="48pt">48</option>
+          <option value="72pt">72</option>
+          <option value="inherit">inherit</option>
+        </select>
+        <label for="pdf.color" style="display:none">Color</label>
+        <select name="pdf.color" id="pdf.color" title="Color">
+          <option value="">default</option>
+          <option value="black" selected>black</option>
+          <option value="inherit">inherit</option>
+        </select>
       </p>
-      <p class="instruction">Font family for the body content.</p>
+      </p>
+      <p class="instruction">Font family and size for the body content.</p>
     </fieldset>
     <fieldset>
       <p>
@@ -257,6 +274,19 @@
       </p>
       <p class="instruction">Amount the body text is indented relative to the left margin.</p>
     </fieldset>
+    <!--fieldset>
+      <p>
+        <label for="pdf.link-font-weight">Link</label>
+        B<input name="pdf.link-font-weight" type="checkbox" value="bold" class="weight"/>
+        I<input name="pdf.link-font-weight" type="checkbox" checked value="italic" class="style"/>
+        <select name="pdf.link-color" id="pdf.link-color" title="Link color">
+          <option value="">default</option>
+          <option value="blue" selected>blue</option>
+          <option value="black">black</option>
+          <option value="#inherit">inherit</option>
+        </select>
+      </p>
+    </fieldset-->
   </div>
   <!-- metadata -->
   <div class="page">

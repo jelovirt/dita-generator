@@ -966,6 +966,7 @@ class StylePluginGenerator(DitaGenerator):
         self.page_size = None
         self.page_margins = None
         self.font_family = None
+        self.color = None
         self.force_page_count = None
         self.chapter_layout = None
         self.bookmark_style = None
@@ -977,9 +978,6 @@ class StylePluginGenerator(DitaGenerator):
         """Preprocess arguments."""
         if self._initialized == False:
             DitaGenerator._preprocess(self)
-            #if self.plugin_name is None:
-            #    self.plugin_name = self.topic_type.id
-            # done
             self._initialized = True
 
     def __generate_integrator(self):
@@ -1053,14 +1051,18 @@ class StylePluginGenerator(DitaGenerator):
             "xmlns:xsl": "http://www.w3.org/1999/XSL/Transform",
             "xmlns:fo": "http://www.w3.org/1999/XSL/Format",
             "version": "2.0"})
+        
+        __root_attr = ET.SubElement(__root, u"xsl:attribute-set", name="__fo__root")
         # font family
         if self.font_family:
-            __root_attr = ET.SubElement(__root, u"xsl:attribute-set", name="__fo__root")
             ET.SubElement(__root_attr, u"xsl:attribute", name=u"font-family").text = self.font_family
+        # font color
+        if self.color:
+            ET.SubElement(__root_attr, u"xsl:attribute", name=u"color").text = self.color
         # force page count
         if self.force_page_count:
-            __root_attr = ET.SubElement(__root, u"xsl:attribute-set", name="__force__page__count")
-            ET.SubElement(__root_attr, u"xsl:attribute", name=u"force-page-count").text = self.force_page_count
+            __page_count_attr = ET.SubElement(__root, u"xsl:attribute-set", name="__force__page__count")
+            ET.SubElement(__page_count_attr, u"xsl:attribute", name=u"force-page-count").text = self.force_page_count
         # page size
         if self.page_size:
             ET.SubElement(__root, u"xsl:variable", name=u"page-width").text = self.page_size[0]
@@ -1069,15 +1071,6 @@ class StylePluginGenerator(DitaGenerator):
         for k, v in self.page_margins.iteritems():
             if v:
                 ET.SubElement(__root, u"xsl:variable", name=k).text = v
-#        if self.page_margins:
-#            if  self.page_margins[0]:
-#                ET.SubElement(__root, "xsl:variable", name="page-margin-top").text = self.page_margins[0]
-#            if self.page_margins[1]:
-#                ET.SubElement(__root, "xsl:variable", name="page-height-right").text = self.page_margins[1]
-#            if self.page_margins[2]:
-#                ET.SubElement(__root, "xsl:variable", name="page-height-bottom").text = self.page_margins[2]
-#            if self.page_margins[3]:
-#                ET.SubElement(__root, "xsl:variable", name="page-height-left").text = self.page_margins[3]
         # font size
         if self.default_font_size:
             ET.SubElement(__root, u"xsl:variable", name=u"default-font-size").text = self.default_font_size
