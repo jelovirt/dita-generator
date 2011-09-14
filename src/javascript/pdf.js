@@ -75,7 +75,7 @@ function colorChangeHandler(event) {
 	var target = $(event.target);
 	var other = $(":input[name='" + target.attr("name") + ".other']");
 	if (target.val() == "#other") {
-		other.show().prop("disabled", false);
+		other.show().prop("disabled", false).focus();
 	} else {
 		other.hide().prop("disabled", true);
 	}

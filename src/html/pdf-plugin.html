@@ -16,7 +16,7 @@
         <select name="ot.version" id="ot.version" title="DITA-OT version">
           <!--option value="1.0">1.5.2 or older</option-->
           <option value="1.5.3" selected>1.5.3</option>
-          <option value="1.5.4">1.5.4 or newer</option>
+          <option value="1.5.4">1.5.4</option>
         </select>
       </p>
       <p class="instruction">Version of DITA-OT for which the plug-in is
@@ -118,7 +118,9 @@
       <p>
         <label for="pdf.page-size" class="required">Page size</label>
         <select name="pdf.page-size" id="pdf.page-size" title="Page size">
-          <option value="">default</option>
+          {% if advanced %}
+            <option value="">default</option>
+          {% endif %}
           <option value="210mm 297mm">A4</option>
           <option value="8.5in 14in">US Legal</option>
           <option value="8.5in 11in" selected>US Letter</option>
@@ -172,8 +174,10 @@
       <p>
         <label for="pdf.force-page-count">Chapter page</label>
         <select name="pdf.force-page-count" id="pdf.force-page-count" title="Force page count">
-          <option value="">default</option>
-          <option value="even">start on odd page</option>
+          {% if advanced %}
+            <option value="">default</option>
+          {% endif %}
+          <option value="even" selected>start on odd page</option>
           <!--option value="odd">odd</option-->
           <option value="auto">no empty pages</option>
         </select>
@@ -187,8 +191,10 @@
       <p>
         <label for="pdf.chapter-layout" >Chapter layout</label>
         <select name="pdf.chapter-layout" id="pdf.chapter-layout" title="Chapter page layout">
-          <option value="">default</option>
-          <option value="MINITOC">TOC</option>
+          {% if advanced %}
+            <option value="">default</option>
+          {% endif %}
+          <option value="MINITOC" selected>TOC</option>
           <option value="BASIC">no TOC</option>
         </select>
       </p>
@@ -201,8 +207,10 @@
       <p>
         <label for="pdf.bookmark-style">Bookmarks state</label>
         <select name="pdf.bookmark-style" id="pdf.bookmark-style" title="Bookmark initial state">
-          <option value="">default</option>
-          <option value="COLLAPSED">collapsed</option>
+          {% if advanced %}
+            <option value="">default</option>
+          {% endif %}
+          <option value="COLLAPSED" selected>collapsed</option>
           <option value="EXPANDED">expanded</option>
         </select>
       </p>
@@ -212,11 +220,13 @@
       <p>
         <label for="pdf.toc-maximum-level">TOC level</label>
         <select name="pdf.toc-maximum-level" id="pdf.toc-maximum-level">
-          <option value="">default</option>
+          {% if advanced %}
+            <option value="">default</option>
+          {% endif %}
           <option value="1">1</option>
           <option value="2">2</option>
           <option value="3">3</option>
-          <option value="4">4</option>
+          <option value="4" selected>4</option>
         </select>
       </p>
       <p class="instruction">Number of levels displayed on TOC page.</p>
@@ -228,9 +238,11 @@
       <p>
         <label for="pdf.task-label">Task labels</label>
         <select name="pdf.task-label" id="pdf.task-label" title="Task labels">
-          <option value="">default</option>
+          {% if advanced %}
+            <option value="">default</option>
+          {% endif %}
           <option value="YES">yes</option>
-          <option value="NO">no</option>
+          <option value="NO" selected>no</option>
         </select>
       </p>
       <p class="instruction">Generate titles for task steps.</p>
@@ -239,13 +251,15 @@
       <p>
         <label for="pdf.include-related-links">Related links</label>
         <select name="pdf.include-related-links" id="pdf.include-related-links" title="Task labels">
-          <option value="">default</option>
-          <option value="none">none</option>
+          {% if advanced %}
+            <option value="">default</option>
+          {% endif %}
+          <option value="none" selected>none</option>
           <option value="nofamily">no family</option>
           <option value="all">all</option>
         </select>
       </p>
-      <p class="instruction">Specifies which links to include.</p>
+      <p class="instruction">Related links generated for topics.</p>
     </fieldset>
   </div>
   <!-- text -->
@@ -255,7 +269,9 @@
         <label>Body font</label>
         <label for="pdf.font-family" class="inline">Font family</label>
         <select name="pdf.font-family" id="pdf.font-family" title="Font family">
-          <option value="">default</option>
+          {% if advanced %}
+            <option value="">default</option>
+          {% endif %}
           <option value="Serif" selected>serif</option>
           <option value="Sans">sans-serif</option>
           <!--option value="Monospaced">monospace</option-->
@@ -263,7 +279,9 @@
         <label for="pdf.default-font-size" class="inline">Font size</label>
         <!--input name="pdf.default-font-size" id="pdf.default-font-size" placeholder="10pt"-->
         <select name="pdf.default-font-size" id="pdf.default-font-size">
-          <option value="">default</option>
+          {% if advanced %}
+            <option value="">default</option>
+          {% endif %}
           <option value="8pt">8</option>
           <option value="9pt">9</option>
           <option value="10pt" selected>10</option>
@@ -280,13 +298,15 @@
           <option value="36pt">36</option>
           <option value="48pt">48</option>
           <option value="72pt">72</option>
-          <option value="inherit">inherit</option>
+          <!--option value="inherit">inherit</option-->
         </select>
         <label for="pdf.color" class="inline">Color</label>
         <select name="pdf.color" id="pdf.color" title="Color">
-          <option value="">default</option>
+          {% if advanced %}
+            <option value="">default</option>
+          {% endif %}
           <option value="black" selected>black</option>
-          <option value="inherit">inherit</option>
+          <!--option value="inherit">inherit</option-->
           <option value="#other">other…</option>
         </select>
         <input type="text" name="pdf.color.other" style="display:none" size="7"/>
@@ -297,7 +317,7 @@
     <fieldset>
       <p>
         <label for="pdf.side-col-width">Body indent</label>
-        <input name="pdf.side-col-width" id="pdf.side-col-width" placeholder="25pt">
+        <input name="pdf.side-col-width" id="pdf.side-col-width" placeholder="25pt" size="5">
       </p>
       <p class="instruction">Amount the body text is indented relative to the left margin.</p>
     </fieldset>
@@ -309,7 +329,9 @@
         <label for="pdf.link-text-decoration" class="inline">Underline</label><input name="pdf.link-text-decoration" type="checkbox" value="underline"/>
         <label for="pdf.link-color" class="inline">Color</label>
         <select name="pdf.link-color" id="pdf.link-color" title="Link color">
-          <option value="">default</option>
+          {% if advanced %}
+            <option value="">default</option>
+          {% endif %}
           <option value="blue" selected>blue</option>
           <option value="black">black</option>
           <option value="inherit">inherit</option>

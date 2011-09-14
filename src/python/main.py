@@ -42,7 +42,7 @@ class MainHandler(webapp.RequestHandler):
       "shell": "Shell DTD",
       "specialization": "Specialization DTD",
       "attribute": "Attribute Specialization DTD",
-      "plugin": "PDF plug-in",
+      "pdf-plugin": "PDF plug-in",
     }
 
     def get(self):
@@ -69,7 +69,7 @@ class MainHandler(webapp.RequestHandler):
                     template_values["output_title"] = self.titles[path_args[__idx]].lower()
                     template_values["generate_url"] = "/generate"
                     template_file = a + ".html"
-                elif a in ("plugin"):
+                elif a in ("pdf-plugin"):
                     template_values["output"] = a
                     template_values["title"] = "DITA-OT %s" % self.titles[path_args[__idx]]
                     template_values["output_title"] = self.titles[path_args[__idx]].lower()
