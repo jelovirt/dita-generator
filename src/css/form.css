@@ -31,6 +31,11 @@ fieldset label {
     float: left;
     display: block;
 }
+label.inline {
+    width: auto;
+    float: none;
+    display: inline;
+}
 label.required {
     font-weight: bold;
 }

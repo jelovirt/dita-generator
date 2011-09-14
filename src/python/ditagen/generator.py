@@ -967,6 +967,9 @@ class StylePluginGenerator(DitaGenerator):
         self.page_margins = None
         self.font_family = None
         self.color = None
+        self.link_font_weight = None
+        self.link_font_style = None
+        self.link_color = None
         self.force_page_count = None
         self.chapter_layout = None
         self.bookmark_style = None
@@ -1059,6 +1062,20 @@ class StylePluginGenerator(DitaGenerator):
         # font color
         if self.color:
             ET.SubElement(__root_attr, u"xsl:attribute", name=u"color").text = self.color
+        # link
+        link_attr_sets = []
+        if self.ot_version >= Version("1.5.4"):
+            link_attr_sets.extend(["common.link"])
+        else:
+            link_attr_sets.extend(["link__content", "xref"])
+        for n in link_attr_sets:
+            __link_attr = ET.SubElement(__root, u"xsl:attribute-set", name=n)
+            if self.link_color:
+                ET.SubElement(__link_attr, u"xsl:attribute", name=u"color").text = self.link_color
+            if self.link_font_weight:
+                ET.SubElement(__link_attr, u"xsl:attribute", name=u"font-weight").text = self.link_font_weight
+            if self.link_font_style:
+                ET.SubElement(__link_attr, u"xsl:attribute", name=u"font-style").text = self.link_font_style
         # force page count
         if self.force_page_count:
             __page_count_attr = ET.SubElement(__root, u"xsl:attribute-set", name="__force__page__count")

@@ -228,14 +228,14 @@
     <fieldset>
       <p>
         <label>Body font</label>
-        <label for="pdf.font-family" style="display:none">Font family</label>
+        <label for="pdf.font-family" class="inline">Font family</label>
         <select name="pdf.font-family" id="pdf.font-family" title="Font family">
           <option value="">default</option>
           <option value="Serif" selected>serif</option>
           <option value="Sans">sans-serif</option>
           <!--option value="Monospaced">monospace</option-->
         </select>
-        <label for="pdf.default-font-size" style="display:none">Font size</label>
+        <label for="pdf.default-font-size" class="inline">Font size</label>
         <!--input name="pdf.default-font-size" id="pdf.default-font-size" placeholder="10pt"-->
         <select name="pdf.default-font-size" id="pdf.default-font-size">
           <option value="">default</option>
@@ -257,7 +257,7 @@
           <option value="72pt">72</option>
           <option value="inherit">inherit</option>
         </select>
-        <label for="pdf.color" style="display:none">Color</label>
+        <label for="pdf.color" class="inline">Color</label>
         <select name="pdf.color" id="pdf.color" title="Color">
           <option value="">default</option>
           <option value="black" selected>black</option>
@@ -274,19 +274,21 @@
       </p>
       <p class="instruction">Amount the body text is indented relative to the left margin.</p>
     </fieldset>
-    <!--fieldset>
+    <fieldset>
       <p>
-        <label for="pdf.link-font-weight">Link</label>
-        B<input name="pdf.link-font-weight" type="checkbox" value="bold" class="weight"/>
-        I<input name="pdf.link-font-weight" type="checkbox" checked value="italic" class="style"/>
+        <label>Link</label>
+        <label for="pdf.link-font-weight" class="inline">Bold</label>
+        <input name="pdf.link-font-weight" type="checkbox" value="bold"/>
+        <label for="pdf.link-font-style" class="inline">Italic</label>
+        <input name="pdf.link-font-style" type="checkbox" checked value="italic"/>
         <select name="pdf.link-color" id="pdf.link-color" title="Link color">
           <option value="">default</option>
           <option value="blue" selected>blue</option>
           <option value="black">black</option>
-          <option value="#inherit">inherit</option>
+          <option value="inherit">inherit</option>
         </select>
       </p>
-    </fieldset-->
+    </fieldset>
   </div>
   <!-- metadata -->
   <div class="page">
