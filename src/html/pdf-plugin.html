@@ -6,7 +6,7 @@
   {% endif %}
   <input type="hidden" name="output" value="{{ output }}">
   <div class="page">
-    <p class="help">A PDF customization plug-in defines a new DITA-OT
+    <p class="help">A PDF customisation plug-in defines a new DITA-OT
       transformation type based on the built-in PDF conversion.</p>
   </div>
   <div class="page">
@@ -20,7 +20,8 @@
         </select>
       </p>
       <p class="instruction">Version of DITA-OT for which the plug-in is
-        installed into.</p>
+        installed into. Note that customisation features available are dependent
+        on the target DITA-OT version.</p>
     </fieldset>
   </div>
   <!-- page dimensions -->
@@ -152,13 +153,25 @@
         <label for="pdf.page-margin-inside">Margin inside</label>
         <input name="pdf.page-margin-inside" id="pdf.page-margin-inside" placeholder="20mm">
       </p>
-      <p class="instruction">Page margins.</p>
+      <p class="help">Page margins.</p>
     </fieldset>
     <fieldset class="v1_5_4">
       <p>
         <label for="pdf.mirror-page-margins">Mirror margins</label>
         <input type="checkbox" name="pdf.mirror-page-margins" id="pdf.mirror-page-margins"
                value="true">
+      </p>
+    </fieldset>
+    <fieldset class="v1_5_4">
+      <p>
+        <label for="pdf.body-column-count">Body column count</label>
+        <select name="pdf.body-column-count" id="pdf.body-column-count">
+          {% if advanced %}
+            <option value="">default</option>
+          {% endif %}
+          <option value="1" selected>1</option>
+          <option value="2">2</option>
+        </select>
       </p>
     </fieldset>
   </div>
@@ -194,11 +207,11 @@
           {% if advanced %}
             <option value="">default</option>
           {% endif %}
-          <option value="MINITOC" selected>TOC</option>
-          <option value="BASIC">no TOC</option>
+          <option value="MINITOC" selected>chapter TOC</option>
+          <option value="BASIC">no chapter TOC</option>
         </select>
       </p>
-      <p class="instruction">Chapters can start with a table of chapter contents.</p>
+      <p class="instruction">Chapters can start with a table of chapter contents on a separate chapter cover page.</p>
     </fieldset>
   </div>
   <!-- TOC and bookmarks -->
@@ -229,7 +242,7 @@
           <option value="4" selected>4</option>
         </select>
       </p>
-      <p class="instruction">Number of levels displayed on TOC page.</p>
+      <p class="instruction">Number of levels displayed on table of contents page.</p>
     </fieldset>
   </div>
   <!-- task -->

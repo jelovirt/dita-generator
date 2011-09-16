@@ -973,6 +973,7 @@ class StylePluginGenerator(DitaGenerator):
         self.link_text_decoration = None
         self.force_page_count = None
         self.chapter_layout = None
+        self.body_column_count = None
         self.bookmark_style = None
         self.toc_maximum_level = None
         self.task_label = None
@@ -1086,6 +1087,15 @@ class StylePluginGenerator(DitaGenerator):
                 ET.SubElement(__link_attr, u"xsl:attribute", name=u"font-style").text = self.link_font_style
             if self.link_text_decoration:
                 ET.SubElement(__link_attr, u"xsl:attribute", name=u"text-decoration").text = self.link_text_decoration
+
+        # page column count
+        if self.body_column_count and self.ot_version >= Version("1.5.4"):
+            for a in ["region-body.odd", "region-body.even"]:
+                __region_body_attr = ET.SubElement(__root, u"xsl:attribute-set", name=a)
+                ET.SubElement(__region_body_attr, u"xsl:attribute", name=u"column-count").text = self.body_column_count
+            for a in ["region-body__frontmatter.odd", "region-body__frontmatter.even"]:
+                __region_body_attr = ET.SubElement(__root, u"xsl:attribute-set", name=a)
+                ET.SubElement(__region_body_attr, u"xsl:attribute", name=u"column-count").text = 1
 
         # force page count
         if self.force_page_count:
