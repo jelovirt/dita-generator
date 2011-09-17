@@ -63,6 +63,10 @@ class MainHandler(webapp.RequestHandler):
             if a == "":
                 pass
             elif __idx == 0:
+                # legacy
+                if a in ("plugin"):
+                    self.redirect("/pdf-plugin")
+                    return
                 if a in ("shell", "specialization", "attribute"):
                     template_values["output"] = a
                     template_values["title"] = "%s" % self.titles[path_args[__idx]]
