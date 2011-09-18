@@ -1096,7 +1096,7 @@ class StylePluginGenerator(DitaGenerator):
                 ET.SubElement(__region_body_attr, u"xsl:attribute", name=u"column-count").text = self.body_column_count
             for a in ["region-body__frontmatter.odd", "region-body__frontmatter.even"]:
                 __region_body_attr = ET.SubElement(__root, u"xsl:attribute-set", name=a)
-                ET.SubElement(__region_body_attr, u"xsl:attribute", name=u"column-count").text = 1
+                ET.SubElement(__region_body_attr, u"xsl:attribute", name=u"column-count").text = "1"
 
         # force page count
         if self.force_page_count:
