@@ -1034,6 +1034,7 @@ class StylePluginGenerator(DitaGenerator):
             ET.SubElement(__root, "feature", extension="package.version", value=self.plugin_version)
         ET.SubElement(__root, "require", plugin="org.dita.pdf2")
         ET.SubElement(__root, "feature", extension="dita.conductor.transtype.check", value=self.transtype)
+        ET.SubElement(__root, "feature", extension="dita.transtype.print", value=self.transtype)
         ET.SubElement(__root, "feature", extension="dita.conductor.target.relative", file="integrator.xml")
         indent(__root)
         __d = ET.ElementTree(__root)
