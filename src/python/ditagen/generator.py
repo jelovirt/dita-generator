@@ -979,6 +979,7 @@ class StylePluginGenerator(DitaGenerator):
         self.task_label = None
         self.include_related_links = None
         self.side_col_width = None
+        self.mirror_page_margins = None
         self._stylesheet_stump = []
 
     def _preprocess(self):
@@ -1107,6 +1108,9 @@ class StylePluginGenerator(DitaGenerator):
         if self.page_size:
             ET.SubElement(__root, u"xsl:variable", name=u"page-width").text = self.page_size[0]
             ET.SubElement(__root, u"xsl:variable", name=u"page-height").text = self.page_size[1]
+        # mirror pages
+        if self.mirror_page_margins:
+            ET.SubElement(__root, u"xsl:variable", name=u"mirror-page-margins", select=u"true()")
         # page margins
         for k, v in self.page_margins.iteritems():
             if v:

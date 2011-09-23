@@ -366,6 +366,7 @@ class PluginGenerateHandler(webapp.RequestHandler):
         __dita_gen.include_related_links = self.request.get(u"pdf.include-related-links")
         __dita_gen.side_col_width = self.request.get(u"pdf.side-col-width")
         __dita_gen.body_column_count = self.request.get(u"pdf.body-column-count")
+        __dita_gen.mirror_page_margins = self.request.get(u"pdf.mirror-page-margins")
         if __plugin_name != None:
             __dita_gen.plugin_name = __plugin_name
         if __plugin_version != None:
