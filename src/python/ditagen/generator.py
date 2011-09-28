@@ -1008,6 +1008,7 @@ class StylePluginGenerator(DitaGenerator):
         self.task_label = None
         self.include_related_links = None
         self.side_col_width = None
+        self.column_gap = None
         self.mirror_page_margins = None
         self.text_align = None
         self._stylesheet_stump = []
@@ -1129,6 +1130,8 @@ class StylePluginGenerator(DitaGenerator):
             for a in ["region-body.odd", "region-body.even"]:
                 __region_body_attr = ET.SubElement(__root, u"xsl:attribute-set", name=a)
                 ET.SubElement(__region_body_attr, u"xsl:attribute", name=u"column-count").text = self.body_column_count
+                if self.column_gap:
+                    ET.SubElement(__region_body_attr, u"xsl:attribute", name=u"column-gap").text = self.column_gap
             for a in ["region-body__frontmatter.odd", "region-body__frontmatter.even"]:
                 __region_body_attr = ET.SubElement(__root, u"xsl:attribute-set", name=a)
                 ET.SubElement(__region_body_attr, u"xsl:attribute", name=u"column-count").text = "1"

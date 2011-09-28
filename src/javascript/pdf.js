@@ -81,6 +81,15 @@ function otherChangeHandler(event) {
 	}
 }
 
+function columnChangeHandler(event) {
+	var target = $(event.target);
+	if (target.val() == 1) {
+		$(":input[name='pdf.column-gap']").prop("disable", true).parent().hide();
+	} else {
+		$(":input[name='pdf.column-gap']").prop("disable", false).parent().show();
+	}
+}
+
 $(document).ready(function() {
     $(":input[name='ot.version']").change(toolkitVersionChangeHandler).change();
     $(":input[name='transtype']").change(transtypeChangeHandler);
@@ -94,6 +103,7 @@ $(document).ready(function() {
 //    $(":input[name='pdf.chapter-layout']").change(forcePageCountChangeHandler).change();
     
     $("option[value='#other']").parent().change(otherChangeHandler).change();
+    $(":input[name='pdf.body-column-count']").change(columnChangeHandler).change();
 });
 
 // preview page drawing
