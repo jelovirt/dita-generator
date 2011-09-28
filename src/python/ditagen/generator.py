@@ -957,6 +957,35 @@ class PluginGenerator(DitaGenerator):
 class StylePluginGenerator(DitaGenerator):
     """Generator for a DITA-OT style plug-in."""
 
+    fonts = {
+        "Sans": {
+            "default": ["Helvetica"],
+            "Simplified Chinese": ["AdobeSongStd-Light"],
+            "Japanese": ["KozMinProVI-Regular"],
+            "Korean": ["AdobeMyungjoStd-Medium"],
+            "Symbols": ["ZapfDingbats"],
+            "SubmenuSymbol": ["ZapfDingbats"],
+            "SymbolsSuperscript": ["Helvetica", "20%", "smaller"]
+            },
+        "Serif": {
+            "default": ["Times"],
+            "Simplified Chinese": ["AdobeSongStd-Light"],
+            "Japanese": ["KozMinProVI-Regular"],
+            "Korean": ["AdobeMyungjoStd-Medium"],
+            "Symbols": ["ZapfDingbats"],
+            "SubmenuSymbol": ["ZapfDingbats"],
+            "SymbolsSuperscript": ["Times", "20%", "smaller"]
+            },
+        "Monospaced": {
+            "default": ["Courier"],
+            "Simplified Chinese": ["AdobeSongStd-Light"],
+            "Japanese": ["KozMinProVI-Regular"],
+            "Korean": ["AdobeMyungjoStd-Medium"],
+            "Symbols": ["ZapfDingbats"],
+            "SymbolsSuperscript": ["Courier", "20%", "smaller"]
+            }
+        }
+
     def __init__(self):
         DitaGenerator.__init__(self)
         self.ot_version = None
@@ -980,6 +1009,7 @@ class StylePluginGenerator(DitaGenerator):
         self.include_related_links = None
         self.side_col_width = None
         self.mirror_page_margins = None
+        self.text_align = None
         self._stylesheet_stump = []
 
     def _preprocess(self):
@@ -1074,6 +1104,9 @@ class StylePluginGenerator(DitaGenerator):
         # font color
         if self.color:
             ET.SubElement(__root_attr, u"xsl:attribute", name=u"color").text = self.color
+        # text alignment
+        if self.text_align:
+            ET.SubElement(__root_attr, u"xsl:attribute", name=u"text-align").text = self.text_align
         # link
         link_attr_sets = []
         if self.ot_version >= Version("1.5.4"):
@@ -1129,6 +1162,23 @@ class StylePluginGenerator(DitaGenerator):
         __d = ET.ElementTree(__root)
         __d.write(self.out, "UTF-8")
 
+    def __generate_font_mappings(self):
+        """Generate font mapping file."""
+        __root = ET.Element(u"font-mappings")
+        __table = ET.SubElement(__root, u"font-table")
+        for k, v in self.fonts.iteritems():
+            __logical = ET.SubElement(__table, u"logical-font", name=k)
+            for pk, pv in v.iteritems():
+                __physical = ET.SubElement(__logical, u"physical-font", { "char-set": pk })
+                ET.SubElement(__physical, u"font-face").text = pv[0]
+                if len(pv) > 1:
+                    ET.SubElement(__physical, u"baseline-shift").text = pv[1]
+                if len(pv) > 2:
+                    ET.SubElement(__physical, u"override-size").text = pv[2]
+        indent(__root)
+        __d = ET.ElementTree(__root)
+        __d.write(self.out, "UTF-8")
+
     def generate_plugin(self):
         """Generate ZIP file with specified stylesheets."""
         self._preprocess()
@@ -1150,6 +1200,9 @@ class StylePluginGenerator(DitaGenerator):
                 # catalog
                 self._run_generation(__zip, self.__generate_catalog,
                                     "%s/cfg/catalog.xml" % (self.plugin_name))
+                # font-mappings
+#                self._run_generation(__zip, self.__generate_font_mappings,
+#                                    "%s/cfg/fo/font-mappins.xml" % (self.plugin_name))
                 # custom XSLT
 #                self._run_generation(__zip, self.__generate_custom,
 #                                    "%s/cfg/fo/xsl/custom.xsl" % (self.plugin_name))

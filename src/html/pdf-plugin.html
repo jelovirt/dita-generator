@@ -24,100 +24,12 @@
         on the target DITA-OT version.</p>
     </fieldset>
   </div>
-  <!-- page dimensions -->
+  <!-- page -->
   <div class="page">
-    <!--
-    <div id="page-preview" class="preview" style="float: right; width: 130px;">
-      <div>Preview</div>
-      <div class="preview-page preview-page-even">
-        <div class="preview-content">
-          <div class="preview-title"></div>
-          <div class="preview-para">
-            <div class="preview-line"></div>
-            <div class="preview-line"></div>
-            <div class="preview-line-last"></div>
-          </div>
-          <div class="preview-para">
-            <div class="preview-line"></div>
-            <div class="preview-line"></div>
-            <div class="preview-line-last"></div>
-          </div>
-          <div class="preview-title"></div>
-          <div class="preview-para">
-            <div class="preview-line"></div>
-            <div class="preview-line"></div>
-            <div class="preview-line-last"></div>
-          </div>
-          <div class="preview-para">
-            <div class="preview-line"></div>
-            <div class="preview-line"></div>
-            <div class="preview-line-last"></div>
-          </div>
-          <div class="preview-para">
-            <div class="preview-line"></div>
-            <div class="preview-line"></div>
-            <div class="preview-line-last"></div>
-          </div>
-          <div class="preview-title"></div>
-          <div class="preview-para">
-            <div class="preview-line"></div>
-            <div class="preview-line"></div>
-            <div class="preview-line-last"></div>
-          </div>
-          <div class="preview-para">
-            <div class="preview-line"></div>
-            <div class="preview-line"></div>
-            <div class="preview-line-last"></div>
-          </div>
-        </div>
-      </div>
-      <div class="preview-page preview-page-odd">
-        <div class="preview-content">
-          <div class="preview-title"></div>
-          <div class="preview-para">
-            <div class="preview-line"></div>
-            <div class="preview-line"></div>
-            <div class="preview-line-last"></div>
-          </div>
-          <div class="preview-para">
-            <div class="preview-line"></div>
-            <div class="preview-line"></div>
-            <div class="preview-line-last"></div>
-          </div>
-          <div class="preview-title"></div>
-          <div class="preview-para">
-            <div class="preview-line"></div>
-            <div class="preview-line"></div>
-            <div class="preview-line-last"></div>
-          </div>
-          <div class="preview-para">
-            <div class="preview-line"></div>
-            <div class="preview-line"></div>
-            <div class="preview-line-last"></div>
-          </div>
-          <div class="preview-para">
-            <div class="preview-line"></div>
-            <div class="preview-line"></div>
-            <div class="preview-line-last"></div>
-          </div>
-          <div class="preview-title"></div>
-          <div class="preview-para">
-            <div class="preview-line"></div>
-            <div class="preview-line"></div>
-            <div class="preview-line-last"></div>
-          </div>
-          <div class="preview-para">
-            <div class="preview-line"></div>
-            <div class="preview-line"></div>
-            <div class="preview-line-last"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    -->
+    <h3>Page</h3>
     <fieldset>
       <p>
-        <label for="pdf.page-size" class="required">Page size</label>
+        <label for="pdf.page-size">Page size</label>
         <select name="pdf.page-size" id="pdf.page-size" title="Page size">
           {% if advanced %}
             <option value="">default</option>
@@ -130,30 +42,47 @@
     </fieldset>
     <fieldset>
       <p>
-        <label for="pdf.page-margin-top">Margin top</label>
+        <label for="pdf.orientation">Orientation</label>
+        <select name="pdf.orientation" id="pdf.orientation">
+          {% if advanced %}
+            <option value="">default</option>
+          {% endif %}
+          <option value="portrait" selected>portrait</option>
+          <option value="landscape">landscape</option>
+          
+        </select>
+      </p>
+    </fieldset>
+  </div>
+  <!-- margins -->
+  <div class="page">
+    <h3>Margins</h3>
+    <fieldset>
+      <p>
+        <label for="pdf.page-margin-top">Top</label>
         <input name="pdf.page-margin-top" id="pdf.page-margin-top" placeholder="20mm">
       </p>
       <p class="v1_5_3">
-        <label for="pdf.page-margin-right">Margin right</label>
+        <label for="pdf.page-margin-right">Right</label>
         <input name="pdf.page-margin-right" id="pdf.page-margin-right" placeholder="20mm">
       </p>
       <p class="v1_5_4">
-        <label for="pdf.page-margin-outside">Margin outside</label>
+        <label for="pdf.page-margin-outside">Outside</label>
         <input name="pdf.page-margin-outside" id="pdf.page-margin-outside" placeholder="20mm">
       </p>
       <p>
-        <label for="pdf.page-margin-bottom">Margin bottom</label>
+        <label for="pdf.page-margin-bottom">Bottom</label>
         <input name="pdf.page-margin-bottom" id="pdf.page-margin-bottom" placeholder="20mm">
       </p>
       <p class="v1_5_3">
-        <label for="pdf.page-margin-left">Margin left</label>
+        <label for="pdf.page-margin-left">Left</label>
         <input name="pdf.page-margin-left" id="pdf.page-margin-left" placeholder="20mm">
       </p>
       <p class="v1_5_4">
-        <label for="pdf.page-margin-inside">Margin inside</label>
+        <label for="pdf.page-margin-inside">Inside</label>
         <input name="pdf.page-margin-inside" id="pdf.page-margin-inside" placeholder="20mm">
       </p>
-      <p class="help">Page margins.</p>
+      <p class="instruction">Page margins.</p>
     </fieldset>
     <fieldset class="v1_5_4">
       <p>
@@ -175,8 +104,9 @@
       </p>
     </fieldset>
   </div>
-  <!-- page sequence -->
+  <!-- layout -->
   <div class="page">
+    <h3>Layout</h3>
     <!--
     <div id="page-preview" class="preview" style="float: right; width: 130px;">
       <div>Preview</div>
@@ -185,14 +115,14 @@
     -->
     <fieldset>
       <p>
-        <label for="pdf.force-page-count">Chapter page</label>
+        <label for="pdf.force-page-count">Section start<!--Chapter page--></label>
         <select name="pdf.force-page-count" id="pdf.force-page-count" title="Force page count">
           {% if advanced %}
             <option value="">default</option>
           {% endif %}
-          <option value="even" selected>start on odd page</option>
-          <!--option value="odd">odd</option-->
-          <option value="auto">no empty pages</option>
+          <option value="auto">new page</option>
+          <option value="even" selected>odd page</option>
+          <option value="odd">even page</option>
         </select>
       </p>
       <p class="instruction">Chapters can be made to always start on an odd
@@ -214,72 +144,38 @@
       <p class="instruction">Chapters can start with a table of chapter contents on a separate chapter cover page.</p>
     </fieldset>
   </div>
-  <!-- TOC and bookmarks -->
+  
+  <!-- paragraph -->
   <div class="page">
+    <h3>Paragraph</h3>
     <fieldset>
       <p>
-        <label for="pdf.bookmark-style">Bookmarks state</label>
-        <select name="pdf.bookmark-style" id="pdf.bookmark-style" title="Bookmark initial state">
-          {% if advanced %}
-            <option value="">default</option>
-          {% endif %}
-          <option value="COLLAPSED" selected>collapsed</option>
-          <option value="EXPANDED">expanded</option>
-        </select>
+        <label for="pdf.side-col-width">Indentation</label>
+        <input name="pdf.side-col-width" id="pdf.side-col-width" placeholder="25pt" size="5">
       </p>
-      <p class="instruction">PDF bookmark node initial state.</p>
+      <p class="instruction">Amount the body text is indented relative to the left margin.</p>
     </fieldset>
     <fieldset>
       <p>
-        <label for="pdf.toc-maximum-level">TOC level</label>
-        <select name="pdf.toc-maximum-level" id="pdf.toc-maximum-level">
+        <label for="pdf.text-align">Text alignment</label>
+        <select name="pdf.text-align" id="pdf.text-align">
           {% if advanced %}
             <option value="">default</option>
           {% endif %}
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4" selected>4</option>
+          <option value="end">left</option>
+          <option value="center">center</option>
+          <option value="start" selected>right</option>
+          <option value="justify">justify</option>
         </select>
       </p>
-      <p class="instruction">Number of levels displayed on table of contents page.</p>
     </fieldset>
   </div>
-  <!-- task -->
+  <!-- font -->
   <div class="page">
+    <h3>Font</h3>
     <fieldset>
       <p>
-        <label for="pdf.task-label">Task labels</label>
-        <select name="pdf.task-label" id="pdf.task-label" title="Task labels">
-          {% if advanced %}
-            <option value="">default</option>
-          {% endif %}
-          <option value="YES">yes</option>
-          <option value="NO" selected>no</option>
-        </select>
-      </p>
-      <p class="instruction">Generate titles for task steps.</p>
-    </fieldset>
-    <fieldset>
-      <p>
-        <label for="pdf.include-related-links">Related links</label>
-        <select name="pdf.include-related-links" id="pdf.include-related-links" title="Task labels">
-          {% if advanced %}
-            <option value="">default</option>
-          {% endif %}
-          <option value="none" selected>none</option>
-          <option value="nofamily">no family</option>
-          <option value="all">all</option>
-        </select>
-      </p>
-      <p class="instruction">Related links generated for topics.</p>
-    </fieldset>
-  </div>
-  <!-- text -->
-  <div class="page">
-    <fieldset>
-      <p>
-        <label>Body font</label>
+        <label>Body</label>
         <label for="pdf.font-family" class="inline">Font family</label>
         <select name="pdf.font-family" id="pdf.font-family" title="Font family">
           {% if advanced %}
@@ -324,15 +220,7 @@
         </select>
         <input type="text" name="pdf.color.other" style="display:none" size="7"/>
       </p>
-      </p>
-      <p class="instruction">Font family and size for the body content.</p>
-    </fieldset>
-    <fieldset>
-      <p>
-        <label for="pdf.side-col-width">Body indent</label>
-        <input name="pdf.side-col-width" id="pdf.side-col-width" placeholder="25pt" size="5">
-      </p>
-      <p class="instruction">Amount the body text is indented relative to the left margin.</p>
+      <p class="help">Font family and size for the body content.</p>
     </fieldset>
     <fieldset>
       <p>
@@ -354,8 +242,72 @@
       </p>
     </fieldset>
   </div>
+  <!-- TOC and bookmarks -->
+  <div class="page">
+    <h3>Table of Contents</h3>
+    <fieldset>
+      <p>
+        <label for="pdf.toc-maximum-level">Show level</label>
+        <select name="pdf.toc-maximum-level" id="pdf.toc-maximum-level">
+          {% if advanced %}
+            <option value="">default</option>
+          {% endif %}
+          <option value="2">1</option>
+          <option value="3">2</option>
+          <option value="4" selected>3</option>
+          <option value="5">4</option>
+        </select>
+      </p>
+      <p class="instruction">Number of levels displayed on table of contents page.</p>
+    </fieldset>
+    <fieldset>
+      <p>
+        <label for="pdf.bookmark-style">Bookmarks state</label>
+        <select name="pdf.bookmark-style" id="pdf.bookmark-style" title="Bookmark initial state">
+          {% if advanced %}
+            <option value="">default</option>
+          {% endif %}
+          <option value="COLLAPSED" selected>collapsed</option>
+          <option value="EXPANDED">expanded</option>
+        </select>
+      </p>
+      <p class="instruction">PDF bookmark node initial state.</p>
+    </fieldset>
+  </div>
+  <!-- task -->
+  <div class="page">
+    <h3>Labels</h3>
+    <fieldset>
+      <p>
+        <label for="pdf.task-label">Task labels</label>
+        <select name="pdf.task-label" id="pdf.task-label" title="Task labels">
+          {% if advanced %}
+            <option value="">default</option>
+          {% endif %}
+          <option value="YES">yes</option>
+          <option value="NO" selected>no</option>
+        </select>
+      </p>
+      <p class="instruction">Generate titles for task steps.</p>
+    </fieldset>
+    <fieldset>
+      <p>
+        <label for="pdf.include-related-links">Related links</label>
+        <select name="pdf.include-related-links" id="pdf.include-related-links" title="Task labels">
+          {% if advanced %}
+            <option value="">default</option>
+          {% endif %}
+          <option value="none" selected>none</option>
+          <option value="nofamily">no family</option>
+          <option value="all">all</option>
+        </select>
+      </p>
+      <p class="instruction">Related links generated for topics.</p>
+    </fieldset>
+  </div>
   <!-- metadata -->
   <div class="page">
+    <h3>Metadata</h3>
     <fieldset>
       <p>
         <label for="id" class="required">Plug-in ID</label>

@@ -335,6 +335,8 @@ class PluginGenerateHandler(webapp.RequestHandler):
         # page size
         if self.request.get(u"pdf.page-size"):
             __dita_gen.page_size = self.request.get(u"pdf.page-size").split(" ")
+        if self.request.get(u"pdf.orientation") == u"landscape":
+            __dita_gen.page_size.reverse()
         # page margins
         if __ot_version >= Version("1.5.4"):
             __dita_gen.page_margins = {
@@ -350,6 +352,7 @@ class PluginGenerateHandler(webapp.RequestHandler):
                 "page-margin-bottom": self.request.get(u"pdf.page-margin-bottom"),
                 "page-margin-left": self.request.get(u"pdf.page-margin-left")
             }
+        __dita_gen.text_align = self.request.get(u"pdf.text-align")
         __dita_gen.default_font_size = self.request.get(u"pdf.default-font-size")
         __dita_gen.font_family = self.request.get(u"pdf.font-family")
         __dita_gen.color = self.request.get(u"pdf.color.other") or self.request.get(u"pdf.color")

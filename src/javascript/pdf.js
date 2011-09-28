@@ -71,7 +71,7 @@ function toMm(val) {
   }
 }
 
-function colorChangeHandler(event) {
+function otherChangeHandler(event) {
 	var target = $(event.target);
 	var other = $(":input[name='" + target.attr("name") + ".other']");
 	if (target.val() == "#other") {
@@ -80,11 +80,6 @@ function colorChangeHandler(event) {
 		other.hide().prop("disabled", true);
 	}
 }
-
-function linkColorChangeHandler(event) {
-	colorChangeHandler(event);
-}
-
 
 $(document).ready(function() {
     $(":input[name='ot.version']").change(toolkitVersionChangeHandler).change();
@@ -98,8 +93,7 @@ $(document).ready(function() {
 //    $(":input[name='pdf.force-page-count']").change(forcePageCountChangeHandler).change();
 //    $(":input[name='pdf.chapter-layout']").change(forcePageCountChangeHandler).change();
     
-    $(":input[name='pdf.color']").change(colorChangeHandler).change();
-    $(":input[name='pdf.link-color']").change(linkColorChangeHandler).change();
+    $("option[value='#other']").parent().change(otherChangeHandler).change();
 });
 
 // preview page drawing

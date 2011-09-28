@@ -389,7 +389,7 @@ $(document).ready(function() {
     var next = $("<button type='button' id='next'>Next &gt;</button>").click(nextHandler);
     $("#generate").before(prev).before(" ").before(next).before(" ");
     // help
-    $("fieldset label").each(function() {
+    $("fieldset label:not(.inline)").each(function() {
         var l = $(this);
         if (l.parents("fieldset:first").find(".help").length != 0) {
            l.append($("<span class='help-icon' title='Show help'></span>").click(helpHandler));
