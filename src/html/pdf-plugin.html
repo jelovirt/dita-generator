@@ -103,6 +103,18 @@
         </select>
       </p>
       <p>
+        <label for="pdf.index-column-count">Index column count</label>
+        <select name="pdf.index-column-count" id="pdf.index-column-count">
+          {% if advanced %}
+            <option value="">default</option>
+          {% endif %}
+          <option value="1">1</option>
+          <option value="2" selected>2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+        </select>
+      </p>
+      <p>
         <label for="pdf.column-gap">Column gap</label>
         <input name="pdf.column-gap" id="pdf.column-gap" placeholder="12pt">
       </p>

@@ -26,6 +26,9 @@ import StringIO
 from zipfile import ZipFile, ZipInfo
 from xml.etree import ElementTree as ET
 
+NS_XSL = "{http://www.w3.org/1999/XSL/Transform}"
+NS_FO = "{http://www.w3.org/1999/XSL/Format}"
+
 class DtdGenerator(object):
     """DTD generator."""
     # Constants
@@ -864,10 +867,7 @@ class PluginGenerator(DitaGenerator):
                                                               self.owner, u"Domain"),
                         "%sAttDomain.ent" % d[0]))
         
-        __root = ET.Element("catalog", {
-            "xmlns": "urn:oasis:names:tc:entity:xmlns:xml:catalog",
-            "prefer": "public"
-            })
+        __root = ET.Element("catalog", prefer="public")
         #__group = ET.SubElement(__root, "group", {
         #    "xml:base": "plugins/%s/dtd/" % self.plugin_name
         #    })
@@ -877,18 +877,19 @@ class PluginGenerator(DitaGenerator):
                 "uri": "dtd/%s" % sfi
                 })
         indent(__root)
+        set_prefixes(__root, {"": "urn:oasis:names:tc:entity:xmlns:xml:catalog"})
         __d = ET.ElementTree(__root)
         __d.write(self.out, "UTF-8")
     
     def __generate_stylesheet(self):
         """Generate stylesheet file."""
-        __root = ET.Element("xsl:stylesheet", {
-            "xmlns:xsl": "http://www.w3.org/1999/XSL/Transform",
+        __root = ET.Element(NS_XSL + "stylesheet", {
             "version": "1.0"
             })
         #__import = "../../../xsl/dita2{0}.xsl".format(self._stylesheet_stump)
-        #ET.SubElement(__root, "xsl:import", { "href": __import })
+        #ET.SubElement(__root, NS_XSL + "import", { "href": __import })
         indent(__root)
+        set_prefixes(__root, {"xsl": "http://www.w3.org/1999/XSL/Transform", "fo": "http://www.w3.org/1999/XSL/Format"})
         __d = ET.ElementTree(__root)
         __d.write(self.out, "UTF-8")
         
@@ -1003,6 +1004,7 @@ class StylePluginGenerator(DitaGenerator):
         self.force_page_count = None
         self.chapter_layout = None
         self.body_column_count = None
+        self.index_column_count = None
         self.bookmark_style = None
         self.toc_maximum_level = None
         self.task_label = None
@@ -1074,40 +1076,36 @@ class StylePluginGenerator(DitaGenerator):
 
     def __generate_catalog(self):
         """Generate plugin configuration file."""
-        __root = ET.Element("catalog", xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog", prefer="system")
+        __root = ET.Element("catalog", prefer="system")
         ET.SubElement(__root, "uri", name="cfg:fo/attrs/custom.xsl", uri="fo/attrs/custom.xsl")
         #ET.SubElement(__root, "uri", name="cfg:fo/xsl/custom.xsl", uri="fo/xsl/custom.xsl")
         indent(__root)
+        set_prefixes(__root, {"": "urn:oasis:names:tc:entity:xmlns:xml:catalog"})
         __d = ET.ElementTree(__root)
         __d.write(self.out, "UTF-8")
 
     def __generate_custom(self):
         """Generate plugin custom XSLT file."""
-        __root = ET.Element("xsl:stylesheet", {
-            "xmlns:xsl": "http://www.w3.org/1999/XSL/Transform",
-            "xmlns:fo": "http://www.w3.org/1999/XSL/Format",
-            "version": "2.0"})
+        __root = ET.Element(NS_XSL + "stylesheet", version="2.0")
         indent(__root)
+        set_prefixes(__root, {"xsl": "http://www.w3.org/1999/XSL/Transform", "fo": "http://www.w3.org/1999/XSL/Format"})
         __d = ET.ElementTree(__root)
         __d.write(self.out, "UTF-8")
 
     def __generate_custom_attr(self):
         """Generate plugin custom XSLT file."""
-        __root = ET.Element("xsl:stylesheet", {
-            "xmlns:xsl": "http://www.w3.org/1999/XSL/Transform",
-            "xmlns:fo": "http://www.w3.org/1999/XSL/Format",
-            "version": "2.0"})
+        __root = ET.Element(NS_XSL + "stylesheet", version="2.0")
         
-        __root_attr = ET.SubElement(__root, u"xsl:attribute-set", name="__fo__root")
+        __root_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name="__fo__root")
         # font family
         if self.font_family:
-            ET.SubElement(__root_attr, u"xsl:attribute", name=u"font-family").text = self.font_family
+            ET.SubElement(__root_attr, NS_XSL + "attribute", name=u"font-family").text = self.font_family
         # font color
         if self.color:
-            ET.SubElement(__root_attr, u"xsl:attribute", name=u"color").text = self.color
+            ET.SubElement(__root_attr, NS_XSL + "attribute", name=u"color").text = self.color
         # text alignment
         if self.text_align:
-            ET.SubElement(__root_attr, u"xsl:attribute", name=u"text-align").text = self.text_align
+            ET.SubElement(__root_attr, NS_XSL + "attribute", name=u"text-align").text = self.text_align
         # link
         link_attr_sets = []
         if self.ot_version >= Version("1.5.4"):
@@ -1115,53 +1113,59 @@ class StylePluginGenerator(DitaGenerator):
         else:
             link_attr_sets.extend(["link__content", "xref"])
         for n in link_attr_sets:
-            __link_attr = ET.SubElement(__root, u"xsl:attribute-set", name=n)
+            __link_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name=n)
             if self.link_color:
-                ET.SubElement(__link_attr, u"xsl:attribute", name=u"color").text = self.link_color
+                ET.SubElement(__link_attr, NS_XSL + "attribute", name=u"color").text = self.link_color
             if self.link_font_weight:
-                ET.SubElement(__link_attr, u"xsl:attribute", name=u"font-weight").text = self.link_font_weight
+                ET.SubElement(__link_attr, NS_XSL + "attribute", name=u"font-weight").text = self.link_font_weight
             if self.link_font_style:
-                ET.SubElement(__link_attr, u"xsl:attribute", name=u"font-style").text = self.link_font_style
+                ET.SubElement(__link_attr, NS_XSL + "attribute", name=u"font-style").text = self.link_font_style
             if self.link_text_decoration:
-                ET.SubElement(__link_attr, u"xsl:attribute", name=u"text-decoration").text = self.link_text_decoration
+                ET.SubElement(__link_attr, NS_XSL + "attribute", name=u"text-decoration").text = self.link_text_decoration
 
         # page column count
         if self.body_column_count and self.ot_version >= Version("1.5.4"):
             for a in ["region-body.odd", "region-body.even"]:
-                __region_body_attr = ET.SubElement(__root, u"xsl:attribute-set", name=a)
-                ET.SubElement(__region_body_attr, u"xsl:attribute", name=u"column-count").text = self.body_column_count
+                __region_body_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name=a)
+                ET.SubElement(__region_body_attr, NS_XSL + "attribute", name=u"column-count").text = self.body_column_count
                 if self.column_gap:
-                    ET.SubElement(__region_body_attr, u"xsl:attribute", name=u"column-gap").text = self.column_gap
+                    ET.SubElement(__region_body_attr, NS_XSL + "attribute", name=u"column-gap").text = self.column_gap
             for a in ["region-body__frontmatter.odd", "region-body__frontmatter.even"]:
-                __region_body_attr = ET.SubElement(__root, u"xsl:attribute-set", name=a)
-                ET.SubElement(__region_body_attr, u"xsl:attribute", name=u"column-count").text = "1"
+                __region_body_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name=a)
+                ET.SubElement(__region_body_attr, NS_XSL + "attribute", name=u"column-count").text = "1"
+            if self.index_column_count:
+                for a in ["region-body__index.odd", "region-body__index.even"]:
+                    __region_body_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name=a)
+                    ET.SubElement(__region_body_attr, NS_XSL + "attribute", name=u"column-count").text = self.index_column_count
+                
 
         # force page count
         if self.force_page_count:
-            __page_count_attr = ET.SubElement(__root, u"xsl:attribute-set", name="__force__page__count")
-            ET.SubElement(__page_count_attr, u"xsl:attribute", name=u"force-page-count").text = self.force_page_count
+            __page_count_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name="__force__page__count")
+            ET.SubElement(__page_count_attr, NS_XSL + "attribute", name=u"force-page-count").text = self.force_page_count
         # page size
         if self.page_size:
-            ET.SubElement(__root, u"xsl:variable", name=u"page-width").text = self.page_size[0]
-            ET.SubElement(__root, u"xsl:variable", name=u"page-height").text = self.page_size[1]
+            ET.SubElement(__root, NS_XSL + "variable", name=u"page-width").text = self.page_size[0]
+            ET.SubElement(__root, NS_XSL + "variable", name=u"page-height").text = self.page_size[1]
         # mirror pages
         if self.mirror_page_margins:
-            ET.SubElement(__root, u"xsl:variable", name=u"mirror-page-margins", select=u"true()")
+            ET.SubElement(__root, NS_XSL + "variable", name=u"mirror-page-margins", select=u"true()")
         # page margins
         for k, v in self.page_margins.iteritems():
             if v:
-                ET.SubElement(__root, u"xsl:variable", name=k).text = v
+                ET.SubElement(__root, NS_XSL + "variable", name=k).text = v
         # font size
         if self.default_font_size:
-            ET.SubElement(__root, u"xsl:variable", name=u"default-font-size").text = self.default_font_size
+            ET.SubElement(__root, NS_XSL + "variable", name=u"default-font-size").text = self.default_font_size
         # body indent
         if self.side_col_width:
-            ET.SubElement(__root, u"xsl:variable", name=u"side-col-width").text = self.side_col_width
+            ET.SubElement(__root, NS_XSL + "variable", name=u"side-col-width").text = self.side_col_width
         # toc
         if self.toc_maximum_level:
-            ET.SubElement(__root, u"xsl:variable", name=u"tocMaximumLevel").text = self.toc_maximum_level
+            ET.SubElement(__root, NS_XSL + "variable", name=u"tocMaximumLevel").text = self.toc_maximum_level
         
         indent(__root)
+        set_prefixes(__root, {"xsl": "http://www.w3.org/1999/XSL/Transform", "fo": "http://www.w3.org/1999/XSL/Format"})
         __d = ET.ElementTree(__root)
         __d.write(self.out, "UTF-8")
 
@@ -1376,3 +1380,43 @@ def indent(elem, level=0):
     else:
         if level and (not elem.tail or not elem.tail.strip()):
             elem.tail = i
+            
+def set_prefixes(elem, prefix_map):
+    # check if this is a tree wrapper
+    if not ET.iselement(elem):
+        elem = elem.getroot()
+    # build uri map and add to root element
+    uri_map = {}
+    for prefix, uri in prefix_map.items():
+        uri_map[uri] = prefix
+        if prefix == "":
+            elem.set("xmlns", uri)
+        else:
+            elem.set("xmlns:" + prefix, uri)
+    # fixup all elements in the tree
+    memo = {}
+    for elem in elem.getiterator():
+        fixup_element_prefixes(elem, uri_map, memo)
+
+def fixup_element_prefixes(elem, uri_map, memo):
+    def fixup(name):
+        try:
+            return memo[name]
+        except KeyError:
+            if name[0] != "{":
+                return
+            uri, tag = name[1:].split("}")
+            if uri in uri_map:
+                new_name = uri_map[uri] + ":" + tag
+                memo[name] = new_name
+                return new_name
+    # fix element name
+    name = fixup(elem.tag)
+    if name:
+        elem.tag = name
+    # fix attribute names
+    for key, value in elem.items():
+        name = fixup(key)
+        if name:
+            elem.set(name, value)
+            del elem.attrib[key]
