@@ -14,6 +14,7 @@
       <p>
         <label for="ot.version" class="required">DITA-OT version</label>
         <select name="ot.version" id="ot.version" title="DITA-OT version">
+          <option value="1.6">1.6</option>
           <option value="1.5.4" selected>1.5.4</option>
           <option value="1.5.3">1.5.3</option>
           <!--option value="1.0">1.5.2 or older</option-->
@@ -49,7 +50,6 @@
           {% endif %}
           <option value="portrait" selected>portrait</option>
           <option value="landscape">landscape</option>
-          
         </select>
       </p>
     </fieldset>
@@ -319,6 +319,21 @@
         </select>
       </p>
       <p class="instruction">Related links generated for topics.</p>
+    </fieldset>
+  </div>
+  <!-- lists -->
+  <div class="page">
+    <h3>Lists</h3>
+    <fieldset>
+      <p>
+        <label for="pdf.dl">Definition list</label>
+        <select name="pdf.dl" id="pdf.dl" title="Definition list">
+          <option value="table" selected>table</option>
+          <option value="html">HTML style</option>
+          <option value="list">bullet list</option>
+        </select>
+      </p>
+      <p class="instruction">Definition list style.</p>
     </fieldset>
   </div>
   <!-- metadata -->

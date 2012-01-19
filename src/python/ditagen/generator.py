@@ -1013,6 +1013,7 @@ class StylePluginGenerator(DitaGenerator):
         self.column_gap = None
         self.mirror_page_margins = None
         self.text_align = None
+        self.dl = None
         self._stylesheet_stump = []
 
     def _preprocess(self):
@@ -1078,7 +1079,7 @@ class StylePluginGenerator(DitaGenerator):
         """Generate plugin configuration file."""
         __root = ET.Element("catalog", prefer="system")
         ET.SubElement(__root, "uri", name="cfg:fo/attrs/custom.xsl", uri="fo/attrs/custom.xsl")
-        #ET.SubElement(__root, "uri", name="cfg:fo/xsl/custom.xsl", uri="fo/xsl/custom.xsl")
+        ET.SubElement(__root, "uri", name="cfg:fo/xsl/custom.xsl", uri="fo/xsl/custom.xsl")
         indent(__root)
         set_prefixes(__root, {"": "urn:oasis:names:tc:entity:xmlns:xml:catalog"})
         __d = ET.ElementTree(__root)
@@ -1086,15 +1087,110 @@ class StylePluginGenerator(DitaGenerator):
 
     def __generate_custom(self):
         """Generate plugin custom XSLT file."""
-        __root = ET.Element(NS_XSL + "stylesheet", version="2.0")
+        __root = ET.Element(NS_XSL + "stylesheet", {"version":"2.0", "exclude-result-prefixes": "e"})
+        
+        __dl_list_raw = """
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:fo="http://www.w3.org/1999/XSL/Format"
+                xmlns:e="com.example.print-pdf"
+                exclude-result-prefixes="e"
+                version="2.0">
+
+  <xsl:template match="*[contains(@class, ' topic/dl ')]">
+    <fo:list-block xsl:use-attribute-sets="ul">
+      <xsl:call-template name="commonattributes"/>
+      <xsl:apply-templates select="*[contains(@class, ' topic/dlentry ')]"/>
+    </fo:list-block>
+  </xsl:template>
+
+  <xsl:template match="*[contains(@class, ' topic/dlentry ')]">
+
+    <fo:list-item xsl:use-attribute-sets="ul.li">
+      <fo:list-item-label xsl:use-attribute-sets="ul.li__label">
+        <fo:block xsl:use-attribute-sets="ul.li__label__content">
+          <xsl:call-template name="commonattributes"/>
+          <xsl:call-template name="insertVariable">
+            <xsl:with-param name="theVariableID" select="'Unordered List bullet'"/>
+          </xsl:call-template>
+        </fo:block>
+      </fo:list-item-label>
+      <fo:list-item-body xsl:use-attribute-sets="ul.li__body">
+        <fo:block xsl:use-attribute-sets="ul.li__content">
+          <xsl:apply-templates select="*[contains(@class, ' topic/dt ')]"/>
+          <xsl:apply-templates select="*[contains(@class, ' topic/dd ')]"/>
+        </fo:block>
+      </fo:list-item-body>
+    </fo:list-item>
+  </xsl:template>
+
+  <xsl:template match="*[contains(@class, ' topic/dt ')]">
+    <fo:block xsl:use-attribute-sets="e:dlentry.dt__content">
+      <xsl:apply-templates/>
+    </fo:block>
+  </xsl:template>
+
+  <xsl:template match="*[contains(@class, ' topic/dd ')]">
+    <fo:block xsl:use-attribute-sets="e:dlentry.dd__content">
+      <xsl:apply-templates/>
+    </fo:block>
+  </xsl:template>
+
+</xsl:stylesheet>
+"""
+        __dl_html_raw = """
+<xsl:stylesheet  xmlns:e="com.example.print-pdf"
+                 xmlns:fo="http://www.w3.org/1999/XSL/Format"
+                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                 exclude-result-prefixes="e"
+                 version="2.0">
+  
+  <xsl:template match="*[contains(@class, &apos; topic/dl &apos;)]">
+    <fo:block>
+      <xsl:call-template name="commonattributes" />
+      <xsl:apply-templates select="*[contains(@class, &apos; topic/dlentry &apos;)]" />
+    </fo:block>
+  </xsl:template>
+  
+  <xsl:template match="*[contains(@class, &apos; topic/dlentry &apos;)]">
+      <fo:block>
+          <xsl:apply-templates select="*[contains(@class, &apos; topic/dt &apos;)]" />
+          <xsl:apply-templates select="*[contains(@class, &apos; topic/dd &apos;)]" />
+      </fo:block>
+  </xsl:template>
+  
+  <xsl:template match="*[contains(@class, &apos; topic/dt &apos;)]">
+    <fo:block xsl:use-attribute-sets="e:dlentry.dt__content">
+      <xsl:apply-templates />
+    </fo:block>
+  </xsl:template>
+  
+  <xsl:template match="*[contains(@class, &apos; topic/dd &apos;)]">
+    <fo:block xsl:use-attribute-sets="e:dlentry.dd__content">
+      <xsl:apply-templates />
+    </fo:block>
+  </xsl:template>
+
+</xsl:stylesheet>
+"""
+        __dl_raw = None
+        if self.dl == "list":
+            __dl_raw = __dl_list_raw
+        elif self.dl == "html":
+            __dl_raw = __dl_html_raw
+        if __dl_raw:
+            __dl = ET.fromstring(__dl_raw)
+            for __c in list(__dl):
+                __root.append(__c)
+        
         indent(__root)
-        set_prefixes(__root, {"xsl": "http://www.w3.org/1999/XSL/Transform", "fo": "http://www.w3.org/1999/XSL/Format"})
+        set_prefixes(__root, {"xsl": "http://www.w3.org/1999/XSL/Transform", "fo": "http://www.w3.org/1999/XSL/Format", "e": self.plugin_name})
+        
         __d = ET.ElementTree(__root)
         __d.write(self.out, "UTF-8")
 
     def __generate_custom_attr(self):
         """Generate plugin custom XSLT file."""
-        __root = ET.Element(NS_XSL + "stylesheet", version="2.0")
+        __root = ET.Element(NS_XSL + "stylesheet", {"version":"2.0", "exclude-result-prefixes": "e"})
         
         __root_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name="__fo__root")
         # font family
@@ -1122,6 +1218,15 @@ class StylePluginGenerator(DitaGenerator):
                 ET.SubElement(__link_attr, NS_XSL + "attribute", name=u"font-style").text = self.link_font_style
             if self.link_text_decoration:
                 ET.SubElement(__link_attr, NS_XSL + "attribute", name=u"text-decoration").text = self.link_text_decoration
+
+        # dl
+        if self.dl:
+            __dt_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name="e:dlentry.dt__content")
+            ET.SubElement(__dt_attr, NS_XSL + "attribute", name=u"font-weight").text = "bold"
+            ET.SubElement(__dt_attr, NS_XSL + "attribute", name=u"keep-with-next").text = "always"
+            __dd_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name="e:dlentry.dd__content")
+            if self.dl == "html":
+                ET.SubElement(__dd_attr, NS_XSL + "attribute", name=u"start-indent").text = "from-parent(start-indent) + 5mm"
 
         # page column count
         if self.body_column_count and self.ot_version >= Version("1.5.4"):
@@ -1165,7 +1270,7 @@ class StylePluginGenerator(DitaGenerator):
             ET.SubElement(__root, NS_XSL + "variable", name=u"tocMaximumLevel").text = self.toc_maximum_level
         
         indent(__root)
-        set_prefixes(__root, {"xsl": "http://www.w3.org/1999/XSL/Transform", "fo": "http://www.w3.org/1999/XSL/Format"})
+        set_prefixes(__root, {"xsl": "http://www.w3.org/1999/XSL/Transform", "fo": "http://www.w3.org/1999/XSL/Format", "e": self.plugin_name})
         __d = ET.ElementTree(__root)
         __d.write(self.out, "UTF-8")
 
@@ -1211,8 +1316,8 @@ class StylePluginGenerator(DitaGenerator):
 #                self._run_generation(__zip, self.__generate_font_mappings,
 #                                    "%s/cfg/fo/font-mappins.xml" % (self.plugin_name))
                 # custom XSLT
-#                self._run_generation(__zip, self.__generate_custom,
-#                                    "%s/cfg/fo/xsl/custom.xsl" % (self.plugin_name))
+                self._run_generation(__zip, self.__generate_custom,
+                                    "%s/cfg/fo/xsl/custom.xsl" % (self.plugin_name))
                 # custom XSLT attribute sets
                 self._run_generation(__zip, self.__generate_custom_attr,
                                     "%s/cfg/fo/attrs/custom.xsl" % (self.plugin_name))
