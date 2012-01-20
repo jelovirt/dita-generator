@@ -28,6 +28,22 @@
   <!-- page -->
   <div class="page">
     <h3>Page</h3>
+    <div class="example" id="pdf.page.example">
+      <div class="example-page even">
+        <table class="example-page-body">
+          <tr>
+            <td></td>
+          </tr>
+        </table>
+      </div>
+      <div class="example-page odd">
+        <table class="example-page-body">
+          <tr>
+            <td></td>
+          </tr>
+        </table>
+      </div>
+    </div>
     <fieldset>
       <p>
         <label for="pdf.page-size">Page size</label>
@@ -57,10 +73,26 @@
   <!-- margins -->
   <div class="page">
     <h3>Margins</h3>
+    <div class="example" id="pdf.margin.example">
+      <div class="example-page even">
+        <table class="example-page-body">
+          <tr>
+            <td></td>
+          </tr>
+        </table>
+      </div>
+      <div class="example-page odd">
+        <table class="example-page-body">
+          <tr>
+            <td></td>
+          </tr>
+        </table>
+      </div>
+    </div>
     <fieldset>
       <p>
         <label for="pdf.page-margin-top">Top</label>
-        <input name="pdf.page-margin-top" id="pdf.page-margin-top" placeholder="20mm">
+        <input name="pdf.page-margin-top" id="pdf.page-margin-top" placeholder="20mm" pattern="\d+(pt|mm|in|pc|cm)">
       </p>
       <p class="v1_5_3">
         <label for="pdf.page-margin-right">Right</label>
@@ -164,6 +196,17 @@
   <!-- paragraph -->
   <div class="page">
     <h3>Paragraph</h3>
+    <div class="example">
+      <div class="example-page">
+        <div><strong>Pangram</strong></div>
+        <div id="pdf.text-align.example">
+        The quick brown fox jumps over the lazy dog.
+        The quick brown fox jumps over the lazy dog.
+        The quick brown fox jumps over the lazy dog.
+        The quick brown fox jumps over the lazy dog.
+        </div>
+      </div>
+    </div>
     <fieldset>
       <p>
         <label for="pdf.side-col-width">Indentation</label>
@@ -191,8 +234,8 @@
     <h3>Font</h3>
     <fieldset>
       <p>
-        <label>Body</label>
-        <label for="pdf.font-family" class="inline">Font family</label>
+        <label>Body font</label>
+        <label for="pdf.font-family" class="inline">Family</label>
         <select name="pdf.font-family" id="pdf.font-family" title="Font family">
           {% if advanced %}
             <option value="">default</option>
@@ -201,7 +244,7 @@
           <option value="Sans">sans-serif</option>
           <!--option value="Monospaced">monospace</option-->
         </select>
-        <label for="pdf.default-font-size" class="inline">Font size</label>
+        <label for="pdf.default-font-size" class="inline">Size</label>
         <!--input name="pdf.default-font-size" id="pdf.default-font-size" placeholder="10pt"-->
         <select name="pdf.default-font-size" id="pdf.default-font-size">
           {% if advanced %}
@@ -238,6 +281,9 @@
       </p>
       <p class="help">Font family and size for the body content.</p>
     </fieldset>
+    <div class="example">
+      <p>The quick brown <span id="pdf.link-style.example">fox jumps</span> over the lazy dog.</p>
+    </div>
     <fieldset>
       <p>
         <label>Link</label>
@@ -324,6 +370,28 @@
   <!-- lists -->
   <div class="page">
     <h3>Lists</h3>
+    <div class="example">
+      <dl id="pdf.dl.example.html">
+        <dt><strong>Pangram</strong></dt>
+        <dd>The quick brown fox jumps over the lazy dog.</dd>
+        <dt><strong>XXX</strong></dt>
+        <dd>The quick brown fox jumps over the lazy dog.</dd>
+      </dl>
+      <table id="pdf.dl.example.table">
+        <tr>
+          <th><strong>Pangram</strong></th>
+          <td>The quick brown fox jumps over the lazy dog.</td>
+        </tr>
+        <tr>
+          <th><strong>XXX</strong></th>
+          <td>The quick brown fox jumps over the lazy dog.</td>
+        </tr>
+      </table>
+      <ul id="pdf.dl.example.list">
+        <li><strong>Pangram</strong><br>The quick brown fox jumps over the lazy dog.</li>
+        <li><strong>XXX</strong><br>The quick brown fox jumps over the lazy dog.</li>
+      </ul>
+    </div>
     <fieldset>
       <p>
         <label for="pdf.dl">Definition list</label>

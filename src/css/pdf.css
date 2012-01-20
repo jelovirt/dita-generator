@@ -28,3 +28,60 @@
   width: 60%;
   margin-bottom: 1px;
 }
+
+fieldset {
+  width: 500px;
+}
+
+.example {
+  width: 225px;
+  float: right;
+  font-size: 10px;
+  line-height: 10px;
+  border: solid 1px gray;
+  padding: 5px;
+}
+.example ul {
+  padding-left: 20px;
+}
+.example dd {
+  margin-left: 20px;
+}
+.example table {
+  border-collapse: collapse;
+}
+.example table, .example td, .example th {
+  border: solid 1px black;
+  margin: 0 auto;
+}
+.example-page {
+  /*height set dynamically*/
+  /*width set dynamically*/
+  border: solid 1px black;
+  box-shadow: 3px 3px 3px #ccc;
+  font-size: 6px;
+  line-height: 6px;
+  float: left;
+  margin: 2px;
+}
+.example-page-body {
+  overflow: hidden;
+  /*margin set dynamically*/
+  /*height set dynamically*/
+  /*width set dynamically*/
+}
+div.example-page-body {
+  background-color: silver;
+}
+table.example-page-body td {
+  background-color: silver;
+}
+table.example-page-body td.gap{
+  background-color: transparent;
+}
+
+.example-page table,
+.example-page table * {
+  border: none;
+  padding: 0px;
+}
