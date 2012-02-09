@@ -6,10 +6,13 @@ function toolkitVersionChangeHandler(event) {
     p.find("option").each(function() {
         var s = $(this).attr("value");
         var c = ".v" + s.replace(/\./g, "_");
+        $(c).addClass("disabled").find(":input").attr("disabled", true);
+    });
+    p.find("option").each(function() {
+        var s = $(this).attr("value");
+        var c = ".v" + s.replace(/\./g, "_");
         if (val == s) {
             $(c).removeClass("disabled").find(":input").removeAttr("disabled");
-        } else {
-            $(c).addClass("disabled").find(":input").attr("disabled", true);
         }
     });
 }
@@ -258,10 +261,10 @@ function textAlignHandler(event) {
 	var target = $(event.target);
 	var align = target.val();
 	switch (align) {
-	case "end":
+	case "start":
 		align = "left";
 		break;
-	case "start":
+	case "end":
 		align = "right";
 		break;
 	}

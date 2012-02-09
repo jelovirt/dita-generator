@@ -34,6 +34,8 @@ def main():
             elif sys.argv[i] == "-h" or sys.argv[i] == "--help":
                 raise None
             else:
+                if not sys.argv[i] in servers:
+                    raise None
                 server = servers[sys.argv[i]]
                 break
             i = i + 1
@@ -61,20 +63,20 @@ def get(server, handler):
             "pdf.mirror-page-margins": "true",
             "pdf.body-column-count": "2",
             "pdf.index-column-count": "4",
-            "pdf.column-gap": "16pt",
+            "pdf.column-gap": "10mm",
             "pdf.force-page-count": "auto",
             "pdf.chapter-layout": "BASIC",
             "pdf.bookmark-style": "EXPANDED",
             "pdf.toc-maximum-level": "3",
             "pdf.task-label": "YES",
             "pdf.include-related-links": "nofamily",
-            "pdf.font-family": "Serif",
+            "pdf.font-family": "Sans",
             "pdf.default-font-size": "10pt",
             "pdf.color": "black",
-            "pdf.side-col-width": "20pt",
+            "pdf.side-col-width": "0pt",
             "pdf.link-color": "inherit",
             "pdf.text-align": "justify",
-            "pdf.dl": "html",
+            "pdf.dl": "list",
             "id": "com.example.print-pdf",
             "transtype": "print-pdf",
             "plugin-version": "1.0.0"
