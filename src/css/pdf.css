@@ -38,9 +38,15 @@ fieldset {
   float: right;
   font-size: 10px;
   line-height: 10px;
-  border: solid 1px gray;
+  /*border: solid 1px gray;*/
   padding: 5px;
 }
+.example:before {
+  content: "Preview:";
+  display: block;
+  font-style: italic;
+}
+
 .example ul {
   padding-left: 20px;
 }
@@ -84,4 +90,12 @@ table.example-page-body td.gap{
 .example-page table * {
   border: none;
   padding: 0px;
+}
+
+.example-page-content-title {
+  margin-top: 5px;
+  font-weight: bold;
+}
+.example-page-content-para {
+  margin-bottom: 5px;
 }

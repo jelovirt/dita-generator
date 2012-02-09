@@ -89,6 +89,7 @@ table table tr {
 #controls {
   border-bottom: 1px solid gray;
   padding-bottom: 14px;
+  clear: both;
 }
 .prose {
   border-top: 1px solid gray;

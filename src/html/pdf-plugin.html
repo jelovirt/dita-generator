@@ -36,6 +36,7 @@
           </tr>
         </table>
       </div>
+      <!--
       <div class="example-page odd">
         <table class="example-page-body">
           <tr>
@@ -43,6 +44,7 @@
           </tr>
         </table>
       </div>
+      -->
     </div>
     <fieldset>
       <p>
@@ -197,14 +199,16 @@
   <div class="page">
     <h3>Paragraph</h3>
     <div class="example">
-      <div class="example-page">
-        <div><strong>Pangram</strong></div>
-        <div id="pdf.text-align.example">
+      <div class="example-page" id="pdf.side-col-width.example">
+      <div class="example-page-wrapper">
+        <div class="example-page-content-title">Pangram</div>
+        <div id="pdf.text-align.example" class="example-page-content-para">
         The quick brown fox jumps over the lazy dog.
         The quick brown fox jumps over the lazy dog.
         The quick brown fox jumps over the lazy dog.
         The quick brown fox jumps over the lazy dog.
         </div>
+      </div>
       </div>
     </div>
     <fieldset>
@@ -221,9 +225,9 @@
           {% if advanced %}
             <option value="">default</option>
           {% endif %}
-          <option value="end">left</option>
+          <option value="start" selected>left</option>
           <option value="center">center</option>
-          <option value="start" selected>right</option>
+          <option value="end">right</option>
           <option value="justify">justify</option>
         </select>
       </p>
