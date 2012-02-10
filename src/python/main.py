@@ -32,6 +32,7 @@ import ditagen.dtdgen
 import ditagen.dita.v1_1
 import ditagen.dita.v1_2
 import ditagen.generator
+import ditagen.pdf_generator
 from ditagen.generator import Version
 import re
 
@@ -321,7 +322,7 @@ class PluginGenerateHandler(webapp.RequestHandler):
             raise
 
         # run generator
-        __dita_gen = ditagen.generator.StylePluginGenerator()
+        __dita_gen = ditagen.pdf_generator.StylePluginGenerator()
         __dita_gen.out = self.response.out
         __dita_gen.owner = __owner
 
