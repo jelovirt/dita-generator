@@ -1014,6 +1014,7 @@ class StylePluginGenerator(DitaGenerator):
         self.mirror_page_margins = None
         self.text_align = None
         self.dl = None
+        self.title_numbering = None
         self._stylesheet_stump = []
 
     def _preprocess(self):
@@ -1181,9 +1182,53 @@ class StylePluginGenerator(DitaGenerator):
             __dl = ET.fromstring(__dl_raw)
             for __c in list(__dl):
                 __root.append(__c)
+   
+        __get_title_raw = """
+<xsl:stylesheet xmlns:fo="http://www.w3.org/1999/XSL/Format"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:e="raystation"
+                xmlns:opentopic="http://www.idiominc.com/opentopic"
+                exclude-result-prefixes="e opentopic"
+                version="2.0">
+  
+  <xsl:template match="*" mode="getTitle">
+    <xsl:variable name="topic" select="ancestor-or-self::*[contains(@class, ' topic/topic ')][1]"/>
+    <xsl:variable name="id" select="$topic/@id"/>
+    <xsl:variable name="mapTopics" select="key('map-id', $id)"/>
+    <fo:inline>
+      <xsl:for-each select="$mapTopics[1]">
+        <xsl:choose>
+          <xsl:when test="parent::opentopic:map"/>
+          <xsl:when test="ancestor-or-self::*[contains(@class, ' bookmap/frontmatter ') or
+                                              contains(@class, ' bookmap/backmatter ')]"/>
+          <xsl:when test="ancestor-or-self::*[contains(@class, ' bookmap/appendix ')]">
+            <xsl:number count="*[contains(@class, ' map/topicref ')]
+                                [ancestor-or-self::*[contains(@class, ' bookmap/appendix ')]]"
+                        level="multiple"
+                        format="A.1"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:number count="*[contains(@class, ' map/topicref ')]
+                                [not(ancestor-or-self::*[contains(@class, ' bookmap/frontmatter ')])]"
+                        level="multiple"
+                        format="1.1"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:for-each>
+    </fo:inline>
+    <xsl:text> </xsl:text>
+    <xsl:apply-templates/>
+  </xsl:template>
+  
+</xsl:stylesheet>
+"""
+        if self.title_numbering:
+            __get_title = ET.fromstring(__get_title_raw)
+            for __c in list(__get_title):
+                __root.append(__c)
         
         indent(__root)
-        set_prefixes(__root, {"xsl": "http://www.w3.org/1999/XSL/Transform", "fo": "http://www.w3.org/1999/XSL/Format", "e": self.plugin_name})
+        set_prefixes(__root, {"xsl": "http://www.w3.org/1999/XSL/Transform", "fo": "http://www.w3.org/1999/XSL/Format", "e": self.plugin_name, "opentopic": "http://www.idiominc.com/opentopic"})
         
         __d = ET.ElementTree(__root)
         __d.write(self.out, "UTF-8")
