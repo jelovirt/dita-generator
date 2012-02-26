@@ -76,20 +76,23 @@ $(document).ready(function() {
       ":input[name='pdf.page-margin-inside']," +
       ":input[name='pdf.page-margin-outside']," +
       ":input[name='pdf.body-column-count']," + 
-      ":input[name='pdf.column-gap'],").change(pageMarginHandler).change();
-    $(":input[name='pdf.page-margin-top']," +
-      ":input[name='pdf.page-margin-right']," +
-      ":input[name='pdf.page-margin-bottom']," +
-      ":input[name='pdf.page-margin-left']," +
-      ":input[name='pdf.page-margin-inside']," +
-      ":input[name='pdf.page-margin-outside']," +
-      ":input[name='pdf.column-gap']," +
-      ":input[name='pdf.side-col-width']").keydown(valueChangeHandler);
+      ":input[name='pdf.column-gap']").change(pageMarginHandler).change();
+    $(":input[name='pdf.spacing.before']," +
+      ":input[name='pdf.spacing.after']").change(function (event) { spacingHandler(event, "margin-top") } ).change();
+    $(":input.length-value").keydown(valueChangeHandler);
     $(":input[name='pdf.mirror-page-margins']").change(mirrorPageHandler).change();
     $(":input[name='pdf.dl']").change(definitionListHandler).change();
+    $(":input[name='pdf.title-numbering']").change(titleNumberingHandler).change();
 });
 
 // UI --------------------------------------------------------------------------
+
+function titleNumberingHandler(event) {
+	var target = $(event.target);
+	var preview = $("*[id='pdf.title-numbering.example']");
+	preview.children().hide();
+	$("*[id='pdf.title-numbering.example." + target.val() + "']").show();
+}
 
 function valueChangeHandler(event) {
 	switch (event.keyCode) {
@@ -121,6 +124,14 @@ function addToValue(target, add) {
 }
 
 // Preview ---------------------------------------------------------------------
+
+function spacingHandler(event, cls) {
+	var target = $(event.target);
+	var val = toPt(getVal(target));
+	var f = 0.3;
+	var v = String(val * f) + "px";
+	$(".example-page-content-para, .example-page-content-title").css(cls, v);
+}
 
 function mirrorPageHandler(event) {
 	var target = $(event.target);
@@ -243,7 +254,7 @@ function sideColWidthHandler(event) {
 	content.width((pageWidth - marginInside - marginOutside) * f);
 
 	var indent = toPt(getVal($(event.target)));
-	$("*[id='pdf.text-align.example']").css("margin-left", (indent * f) + "px");
+	$(".example-page-content-para").css("margin-left", (indent * f) + "px");
 //	var columns = new Number($(":input[name='pdf.body-column-count']").val());
 //	var columnWidth = toPt(getVal($(":input[name='pdf.column-gap']")))
 //	var tr = page.find(".example-page-body tr");
@@ -308,6 +319,9 @@ function toPt(val) {
         return value * 72;
     } else if (unit == "pc") {
         return value * 12;
+    } else if (unit == "em") {
+    	var val = $(":input[name='pdf.default-font-size']").val();
+    	return val.substring(0, val.length - 2) * value;  
     } else {
         return value;
     }

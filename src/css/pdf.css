@@ -31,6 +31,7 @@
 
 fieldset {
   width: 500px;
+  clear: none;
 }
 
 .example {
@@ -40,6 +41,7 @@ fieldset {
   line-height: 10px;
   /*border: solid 1px gray;*/
   padding: 5px;
+  clear: both;
 }
 .example:before {
   content: "Preview:";
@@ -61,8 +63,8 @@ fieldset {
   margin: 0 auto;
 }
 .example-page {
-  /*height set dynamically*/
-  /*width set dynamically*/
+  /* height set dynamically */
+  /* width set dynamically */
   border: solid 1px black;
   box-shadow: 3px 3px 3px #ccc;
   font-size: 6px;
@@ -72,9 +74,9 @@ fieldset {
 }
 .example-page-body {
   overflow: hidden;
-  /*margin set dynamically*/
-  /*height set dynamically*/
-  /*width set dynamically*/
+  /* margin set dynamically */
+  /* height set dynamically */
+  /* width set dynamically */
 }
 div.example-page-body {
   background-color: silver;
@@ -97,5 +99,17 @@ table.example-page-body td.gap{
   font-weight: bold;
 }
 .example-page-content-para {
+  /* margin-top set dynamically */
+  /* margin-bottom set dynamically */
+  margin-top: 5px;
   margin-bottom: 5px;
+}
+
+.example-text {
+  border: solid 1px black;
+  box-shadow: 3px 3px 3px #ccc;
+  padding: 5px;
+}
+.example-text p {
+  margin: 0 2px;
 }

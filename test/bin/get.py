@@ -77,6 +77,9 @@ def get(server, handler):
             "pdf.link-color": "inherit",
             "pdf.text-align": "justify",
             "pdf.dl": "list",
+            "pdf.title-numbering": "all",
+            "pdf.spacing.before": "10pt",
+            "pdf.spacing.after": "10pt",
             "id": "com.example.print-pdf",
             "transtype": "print-pdf",
             "plugin-version": "1.0.0"

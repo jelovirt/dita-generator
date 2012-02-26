@@ -90,6 +90,8 @@ class StylePluginGenerator(DitaGenerator):
         self.text_align = None
         self.dl = None
         self.title_numbering = None
+        self.spacing_before = None
+        self.spacing_after = None
         self._stylesheet_stump = []
 
     def _preprocess(self):
@@ -168,7 +170,7 @@ class StylePluginGenerator(DitaGenerator):
         __dl_list_raw = """
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:fo="http://www.w3.org/1999/XSL/Format"
-                xmlns:e="com.example.print-pdf"
+                xmlns:e="e"
                 exclude-result-prefixes="e"
                 version="2.0">
 
@@ -214,7 +216,7 @@ class StylePluginGenerator(DitaGenerator):
 </xsl:stylesheet>
 """
         __dl_html_raw = """
-<xsl:stylesheet  xmlns:e="com.example.print-pdf"
+<xsl:stylesheet  xmlns:e="e"
                  xmlns:fo="http://www.w3.org/1999/XSL/Format"
                  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                  exclude-result-prefixes="e"
@@ -261,7 +263,7 @@ class StylePluginGenerator(DitaGenerator):
         __get_title_raw = """
 <xsl:stylesheet xmlns:fo="http://www.w3.org/1999/XSL/Format"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:e="raystation"
+                xmlns:e="e"
                 xmlns:opentopic="http://www.idiominc.com/opentopic"
                 exclude-result-prefixes="e opentopic"
                 version="2.0">
@@ -280,7 +282,7 @@ class StylePluginGenerator(DitaGenerator):
             <xsl:number count="*[contains(@class, ' map/topicref ')]
                                 [ancestor-or-self::*[contains(@class, ' bookmap/appendix ')]]"
                         level="multiple"
-                        format="A.1"/>
+                        format="A.1.1"/>
           </xsl:when>
           <xsl:otherwise>
             <xsl:number count="*[contains(@class, ' map/topicref ')]
@@ -325,7 +327,7 @@ class StylePluginGenerator(DitaGenerator):
         # link
         link_attr_sets = []
         if self.ot_version >= Version("1.5.4"):
-            link_attr_sets.extend(["common.link"])
+            link_attr_sets.extend(["common.block"])
         else:
             link_attr_sets.extend(["link__content", "xref"])
         for n in link_attr_sets:
@@ -338,6 +340,20 @@ class StylePluginGenerator(DitaGenerator):
                 ET.SubElement(__link_attr, NS_XSL + "attribute", name=u"font-style").text = self.link_font_style
             if self.link_text_decoration:
                 ET.SubElement(__link_attr, NS_XSL + "attribute", name=u"text-decoration").text = self.link_text_decoration
+
+        # spacing
+        if self.spacing_before or self.spacing_after:
+            spacing_attr_sets = []
+            if self.ot_version >= Version("1.5.4"):
+                spacing_attr_sets.extend(["common.link"])
+            else:
+                spacing_attr_sets.extend(["section", "example", "p", "note", "note__table"])
+            for n in spacing_attr_sets:
+                __spacing_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name=n)
+                if self.spacing_before:
+                    ET.SubElement(__spacing_attr, NS_XSL + "attribute", name=u"space-before").text = self.spacing_before
+                if self.spacing_after:
+                    ET.SubElement(__spacing_attr, NS_XSL + "attribute", name=u"space-after").text = self.spacing_after
 
         # dl
         if self.dl:

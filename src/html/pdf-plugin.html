@@ -94,27 +94,27 @@
     <fieldset>
       <p>
         <label for="pdf.page-margin-top">Top</label>
-        <input name="pdf.page-margin-top" id="pdf.page-margin-top" placeholder="20mm" pattern="\d+(pt|mm|in|pc|cm)">
+        <input name="pdf.page-margin-top" id="pdf.page-margin-top" placeholder="20mm" pattern="\d+(pt|mm|in|pc|cm)" class="length-value">
       </p>
       <p class="v1_5_3">
         <label for="pdf.page-margin-right">Right</label>
-        <input name="pdf.page-margin-right" id="pdf.page-margin-right" placeholder="20mm">
+        <input name="pdf.page-margin-right" id="pdf.page-margin-right" placeholder="20mm" class="length-value">
       </p>
       <p class="v1_5_4 v1_6">
         <label for="pdf.page-margin-outside">Outside</label>
-        <input name="pdf.page-margin-outside" id="pdf.page-margin-outside" placeholder="20mm">
+        <input name="pdf.page-margin-outside" id="pdf.page-margin-outside" placeholder="20mm" class="length-value">
       </p>
       <p>
         <label for="pdf.page-margin-bottom">Bottom</label>
-        <input name="pdf.page-margin-bottom" id="pdf.page-margin-bottom" placeholder="20mm">
+        <input name="pdf.page-margin-bottom" id="pdf.page-margin-bottom" placeholder="20mm" class="length-value">
       </p>
       <p class="v1_5_3">
         <label for="pdf.page-margin-left">Left</label>
-        <input name="pdf.page-margin-left" id="pdf.page-margin-left" placeholder="20mm">
+        <input name="pdf.page-margin-left" id="pdf.page-margin-left" placeholder="20mm" class="length-value">
       </p>
       <p class="v1_5_4 v1_6">
         <label for="pdf.page-margin-inside">Inside</label>
-        <input name="pdf.page-margin-inside" id="pdf.page-margin-inside" placeholder="20mm">
+        <input name="pdf.page-margin-inside" id="pdf.page-margin-inside" placeholder="20mm" class="length-value">
       </p>
       <p class="instruction">Page margins.</p>
     </fieldset>
@@ -150,7 +150,7 @@
       </p>
       <p>
         <label for="pdf.column-gap">Column gap</label>
-        <input name="pdf.column-gap" id="pdf.column-gap" placeholder="12pt">
+        <input name="pdf.column-gap" id="pdf.column-gap" placeholder="12pt" class="length-value">
       </p>
     </fieldset>
   </div>
@@ -200,23 +200,42 @@
     <h3>Paragraph</h3>
     <div class="example">
       <div class="example-page" id="pdf.side-col-width.example">
-      <div class="example-page-wrapper">
+      <div class="example-page-wrapper" id="pdf.text-align.example">
         <div class="example-page-content-title">Pangram</div>
-        <div id="pdf.text-align.example" class="example-page-content-para">
+        <p class="example-page-content-para">
+        The quick brown fox jumps over the lazy dog.
+        The quick brown fox jumps over the lazy dog.
+        </p>
+        <p class="example-page-content-para">
         The quick brown fox jumps over the lazy dog.
         The quick brown fox jumps over the lazy dog.
         The quick brown fox jumps over the lazy dog.
+        </p>
+        <p class="example-page-content-para">
         The quick brown fox jumps over the lazy dog.
-        </div>
+        The quick brown fox jumps over the lazy dog.
+        </p>
       </div>
       </div>
     </div>
     <fieldset>
       <p>
         <label for="pdf.side-col-width">Indentation</label>
-        <input name="pdf.side-col-width" id="pdf.side-col-width" placeholder="25pt" size="5">
+        <input name="pdf.side-col-width" id="pdf.side-col-width" placeholder="25pt" size="5" class="length-value">
       </p>
       <p class="instruction">Amount the body text is indented relative to the left margin.</p>
+    </fieldset>
+    <fieldset>
+      <p>
+        <label for="pdf.spacing">Spacing before</label>
+        <input name="pdf.spacing.before" id="pdf.spacing.before" placeholder="0.6em" size="5" class="length-value">
+      </p>
+    </fieldset>
+    <fieldset>
+      <p>
+        <label for="pdf.spacing">Spacing after</label>
+        <input name="pdf.spacing.after" id="pdf.spacing.after" placeholder="0.6em" size="5" class="length-value">
+      </p>
     </fieldset>
     <fieldset>
       <p>
@@ -235,7 +254,7 @@
   </div>
   <!-- font -->
   <div class="page">
-    <h3>Font</h3>
+    <h3>Style</h3>
     <fieldset>
       <p>
         <label>Body font</label>
@@ -286,7 +305,9 @@
       <p class="help">Font family and size for the body content.</p>
     </fieldset>
     <div class="example">
-      <p>The quick brown <span id="pdf.link-style.example">fox jumps</span> over the lazy dog.</p>
+      <div class="example-text">
+        <p>The quick brown <span id="pdf.link-style.example">fox jumps</span> over the lazy dog.</p>
+      </div>
     </div>
     <fieldset>
       <p>
@@ -305,6 +326,37 @@
           <option value="#other">other…</option>
         </select>
         <input type="text" name="pdf.link-color.other" style="display:none" size="7"/>
+      </p>
+    </fieldset>
+    <div class="example" id="pdf.title-numbering.example">
+	    <div id="pdf.title-numbering.example.chapters" class="example-text">
+	      <p class="example-page-content-title"><strong>1</strong> Heading 1</p>
+	      <p class="example-page-content-para">The quick brown fox jumps over the lazy dog.</p>
+	      <p class="example-page-content-title"><strong></strong> Heading 2</p>
+	      <p class="example-page-content-para">The quick brown fox jumps over the lazy dog.</p>
+	      <p class="example-page-content-title"><strong></strong> Heading 3</p>
+	      <p class="example-page-content-para">The quick brown fox jumps over the lazy dog.</p>
+	      <p class="example-page-content-title"><strong>A</strong> Appendix</p>
+	      <p class="example-page-content-para">The quick brown fox jumps over the lazy dog.</p>
+	      </div>
+	    <div id="pdf.title-numbering.example.all" class="example-text">
+	      <p class="example-page-content-title"><strong>1</strong> Heading 1</p>
+	      <p class="example-page-content-para">The quick brown fox jumps over the lazy dog.</p>
+	      <p class="example-page-content-title"><strong>1.1</strong> Heading 2</p>
+	      <p class="example-page-content-para">The quick brown fox jumps over the lazy dog.</p>
+	      <p class="example-page-content-title"><strong>1.1.1</strong> Heading 3</p>
+	      <p class="example-page-content-para">The quick brown fox jumps over the lazy dog.</p>
+	      <p class="example-page-content-title"><strong>A</strong> Appendix</p>
+	      <p class="example-page-content-para">The quick brown fox jumps over the lazy dog.</p>
+	    </div>
+    </div>
+    <fieldset>
+      <p>
+        <label for="pdf.title-numbering">Title numbering</label>
+        <select name="pdf.title-numbering" id="pdf.title-numbering" title="Title numbering">
+          <option value="chapters">Chapters only</option>
+          <option value="all">All levels</option>
+        </select>
       </p>
     </fieldset>
   </div>

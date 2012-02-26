@@ -374,6 +374,10 @@ class PluginGenerateHandler(webapp.RequestHandler):
         __dita_gen.column_gap = self.request.get(u"pdf.column-gap")
         __dita_gen.mirror_page_margins = self.request.get(u"pdf.mirror-page-margins")
         __dita_gen.dl = self.request.get(u"pdf.dl")
+        __dita_gen.title_numbering = self.request.get(u"pdf.title-numbering")
+        __dita_gen.spacing_before = self.request.get(u"pdf.spacing.before")
+        __dita_gen.spacing_after = self.request.get(u"pdf.spacing.before")
+        
         if __plugin_name != None:
             __dita_gen.plugin_name = __plugin_name
         if __plugin_version != None:
