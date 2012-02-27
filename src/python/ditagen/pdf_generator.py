@@ -92,6 +92,7 @@ class StylePluginGenerator(DitaGenerator):
         self.title_numbering = None
         self.spacing_before = None
         self.spacing_after = None
+        self.generate_shell = None
         self._stylesheet_stump = []
 
     def _preprocess(self):

@@ -377,6 +377,7 @@ class PluginGenerateHandler(webapp.RequestHandler):
         __dita_gen.title_numbering = self.request.get(u"pdf.title-numbering")
         __dita_gen.spacing_before = self.request.get(u"pdf.spacing.before")
         __dita_gen.spacing_after = self.request.get(u"pdf.spacing.before")
+        __dita_gen.generate_shell = self.request.get(u"pdf.generate-shell")
         
         if __plugin_name != None:
             __dita_gen.plugin_name = __plugin_name
