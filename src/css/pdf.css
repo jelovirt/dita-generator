@@ -83,6 +83,7 @@ div.example-page-body {
 }
 table.example-page-body td {
   background-color: silver;
+  empty-cells: show;
 }
 table.example-page-body td.gap{
   background-color: transparent;

@@ -193,9 +193,9 @@ function updatePageExample(page) {
 	var buf = $("<tr></tr>");
 	for (var i = 0; i < columns; i++) {
 		if (i != 0) {
-			buf.append($("<td class='gap'></td>").width(columnWidth * factor));
+			buf.append($("<td class='gap'>&#xA0;</td>").width(columnWidth * factor));
 		}
-		buf.append($("<td></td>"));
+		buf.append($("<td>&#xA0;</td>"));
 	}
 	tr.html(buf.find("td"));
 }
