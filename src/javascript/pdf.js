@@ -29,7 +29,15 @@ function transtypeChangeHandler(event) {
 }
 
 function forcePageCountChangeHandler(event) {
-	//drawSequencePreview();
+	var target = $(event.target);
+	$(".pdf_force-page-count_example_auto, .pdf_force-page-count_example_odd, .pdf_force-page-count_example_even").each(function () {
+		var t = $(this);
+		if (t.is(".pdf_force-page-count_example_" + target.val())) {
+			t.show();
+		} else {
+			t.hide();
+		}
+	});
 }
 
 function otherChangeHandler(event) {
@@ -55,7 +63,7 @@ $(document).ready(function() {
     $(":input[name='ot.version']").change(toolkitVersionChangeHandler).change();
     $(":input[name='transtype']").change(transtypeChangeHandler);
     
-//    $(":input[name='pdf.force-page-count']").change(forcePageCountChangeHandler).change();
+    $(":input[name='pdf.force-page-count']").change(forcePageCountChangeHandler).change();
 //    $(":input[name='pdf.chapter-layout']").change(forcePageCountChangeHandler).change();
     
     $("option[value='#other']").parent().change(otherChangeHandler).change();
@@ -68,21 +76,22 @@ $(document).ready(function() {
       ":input[name='pdf.link-color']," +
       ":input[name='pdf.link-color.other']").change(linkStyleHandler).change();
     $(":input[name='pdf.page-size']," +
-      ":input[name='pdf.orientation']").change(pageHandler).change();
-    $(":input[name='pdf.page-margin-top']," +
+      ":input[name='pdf.orientation']," +
+      ":input[name='pdf.page-margin-top']," +
       ":input[name='pdf.page-margin-right']," +
       ":input[name='pdf.page-margin-bottom']," +
       ":input[name='pdf.page-margin-left']," +
       ":input[name='pdf.page-margin-inside']," +
       ":input[name='pdf.page-margin-outside']," +
       ":input[name='pdf.body-column-count']," + 
-      ":input[name='pdf.column-gap']").change(pageMarginHandler).change();
+      ":input[name='pdf.column-gap']").change(pageMarginHandler).first().change();
     $(":input[name='pdf.spacing.before']," +
-      ":input[name='pdf.spacing.after']").change(function (event) { spacingHandler(event, "margin-top") } ).change();
+      ":input[name='pdf.spacing.after']").change(function (event) { spacingHandler(event, "margin-top") } ).first().change();
     $(":input.length-value").keydown(valueChangeHandler);
     $(":input[name='pdf.mirror-page-margins']").change(mirrorPageHandler).change();
     $(":input[name='pdf.dl']").change(definitionListHandler).change();
     $(":input[name='pdf.title-numbering']").change(titleNumberingHandler).change();
+    $(":input[name='pdf.link-page-number']").change(linkPageNumberHandler).change();
 });
 
 // UI --------------------------------------------------------------------------
@@ -125,9 +134,24 @@ function addToValue(target, add) {
 
 // Preview ---------------------------------------------------------------------
 
+function linkPageNumberHandler(event) {
+	var target = $(event.target);
+	var e = $("*[id='pdf.link-page-number.example']");
+	if (target.is(":checked")) {
+		e.show();
+	} else {
+		e.hide();
+	}
+}
+
 function spacingHandler(event, cls) {
 	var target = $(event.target);
 	var val = toPt(getVal(target));
+	if (val == undefined) {
+		setError(target, $("<span>Invalid value</span>"), "Invalid XSL FO length value");
+	} else {
+		setOk(target);
+	}
 	var f = 0.3;
 	var v = String(val * f) + "px";
 	$(".example-page-content-para, .example-page-content-title").css(cls, v);
@@ -144,12 +168,14 @@ function mirrorPageHandler(event) {
 	pageMarginHandler(event);
 }
 
-function pageHandler(event) {
-	$("*[id='pdf.page.example'] .example-page, *[id='pdf.margin.example'] .example-page").each(function() { updatePageExample($(this)); });
-}
+//function pageHandler(event) {
+//	//*[id='pdf.page.example'] .example-page, 
+//	$("*[id='pdf.margin.example'] .example-page").each(function() { updatePageExample($(this)); });
+//}
 
 function pageMarginHandler(event) {
-	$("*[id='pdf.margin.example'] .example-page, *[id='pdf.page.example'] .example-page").each(function() { updatePageExample($(this)); });
+	//*[id='pdf.margin.example'] .example-page, *[id='pdf.margin.example']  
+	$(".example-page").each(function() { updatePageExample($(this)); });
 }
 
 /** Get page factor. */
@@ -169,10 +195,36 @@ function updatePageExample(page) {
 		pageWidth = toPt(pageSize[0]);
 		pageHeight = toPt(pageSize[1]);	
 	}
-	var marginTop = toPt(getVal($(":input[name='pdf.page-margin-top']")));
-	var marginOutside = toPt(getVal($(":input[name='pdf.page-margin-outside']")));
-	var marginBottom = toPt(getVal($(":input[name='pdf.page-margin-bottom']")));
-	var marginInside = toPt(getVal($(":input[name='pdf.page-margin-inside']")));
+	
+	var marginTopTarget = $(":input[name='pdf.page-margin-top']");
+	var marginOutsideTarget = $(":input[name='pdf.page-margin-outside']");
+	var marginBottomTarget = $(":input[name='pdf.page-margin-bottom']");
+	var marginInsideTarget = $(":input[name='pdf.page-margin-inside']");
+	
+	var marginTop = toPt(getVal(marginTopTarget));
+	if (marginTop == undefined) {
+		setError(marginTopTarget, $("<span>Invalid value</span>"), "Invalid XSL FO length value");
+	} else {
+		setOk(marginTopTarget);
+	}
+	var marginOutside = toPt(getVal(marginOutsideTarget));
+	if (marginOutside == undefined) {
+		setError(marginOutsideTarget, $("<span>Invalid value</span>"), "Invalid XSL FO length value");
+	} else {
+		setOk(marginOutsideTarget);
+	}
+	var marginBottom = toPt(getVal(marginBottomTarget));
+	if (marginBottom == undefined) {
+		setError(marginBottomTarget, $("<span>Invalid value</span>"), "Invalid XSL FO length value");
+	} else {
+		setOk(marginBottomTarget);
+	}
+	var marginInside = toPt(getVal(marginInsideTarget));
+	if (marginInside == undefined) {
+		setError(marginInsideTarget, $("<span>Invalid value</span>"), "Invalid XSL FO length value");
+	} else {
+		setOk(marginInsideTarget);
+	}
 	
 	//var factor = getFactor(page, pageWidth);
 	
@@ -193,11 +245,11 @@ function updatePageExample(page) {
 	var buf = $("<tr></tr>");
 	for (var i = 0; i < columns; i++) {
 		if (i != 0) {
-			buf.append($("<td class='gap'>&#xA0;</td>").width(columnWidth * factor));
+			buf.append($("<td class='gap'><span/></td>").width(columnWidth * factor));
 		}
-		buf.append($("<td>&#xA0;</td>"));
+		buf.append($("<td><div/></td>"));
 	}
-	tr.html(buf.find("td"));
+	tr.replaceWith(buf);
 }
 
 function definitionListHandler(event) {
@@ -254,6 +306,11 @@ function sideColWidthHandler(event) {
 	content.width((pageWidth - marginInside - marginOutside) * f);
 
 	var indent = toPt(getVal($(event.target)));
+	if (indent == undefined) {
+		setError($(event.target), $("<span>Invalid value</span>"), "Invalid XSL FO length value");
+	} else {
+		setOk($(event.target));
+	}
 	$(".example-page-content-para").css("margin-left", (indent * f) + "px");
 //	var columns = new Number($(":input[name='pdf.body-column-count']").val());
 //	var columnWidth = toPt(getVal($(":input[name='pdf.column-gap']")))
@@ -303,8 +360,10 @@ function toMm(val) {
         return value * 25.4 / 72;
     } else if (unit == "pc") {
         return value * 25.4 / 72 * 12;
-    } else {
+    } else if (unit == "mm") {
         return value;
+    } else {
+    	return undefined;
     }
 }
 
@@ -322,8 +381,10 @@ function toPt(val) {
     } else if (unit == "em") {
     	var val = $(":input[name='pdf.default-font-size']").val();
     	return val.substring(0, val.length - 2) * value;  
-    } else {
+    } else if (unit == "pt") {
         return value;
+    } else {
+    	return undefined;
     }
 }
 

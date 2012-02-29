@@ -61,6 +61,8 @@ class StylePluginGenerator(DitaGenerator):
             "SymbolsSuperscript": ["Courier", "20%", "smaller"]
             }
         }
+    
+    variable_languages = ["de", "en", "es", "fi", "fr", "he", "it", "ja", "nl", "ro", "ru", "sv", "zh_CN"]
 
     def __init__(self):
         DitaGenerator.__init__(self)
@@ -93,6 +95,7 @@ class StylePluginGenerator(DitaGenerator):
         self.spacing_before = None
         self.spacing_after = None
         self.generate_shell = None
+        self.link_pagenumber = None
         self._stylesheet_stump = []
 
     def _preprocess(self):
@@ -428,6 +431,15 @@ class StylePluginGenerator(DitaGenerator):
         __d = ET.ElementTree(__root)
         __d.write(self.out, "UTF-8")
 
+    def __generate_vars(self, lang):
+        """Generate variable file."""
+        __root = ET.Element(u"vars")
+        ET.SubElement(__root, u"variable", id=u"On the page")
+        ditagen.generator.indent(__root)
+        ditagen.generator.set_prefixes(__root, {"": "http://www.idiominc.com/opentopic/vars"})
+        __d = ET.ElementTree(__root)
+        __d.write(self.out, "UTF-8")
+
     def generate_plugin(self):
         """Generate ZIP file with specified stylesheets."""
         self._preprocess()
@@ -458,6 +470,14 @@ class StylePluginGenerator(DitaGenerator):
                 # custom XSLT attribute sets
                 self._run_generation(__zip, self.__generate_custom_attr,
                                     "%s/cfg/fo/attrs/custom.xsl" % (self.plugin_name))
+                if not self.link_pagenumber:
+                    for lang in self.variable_languages:
+                        self._run_generation(__zip, lambda: self.__generate_vars(lang),
+                                             "%s/cfg/common/vars/%s.xml" % (self.plugin_name, lang))
+#                if self.generate_shell:
+#                    # shell XSLT
+#                    self._run_generation(__zip, self.__generate_shell,
+#                                        "%s/xsl/fo/.xsl" % (self.plugin_name))
             except:
                 __failed = True
                 raise Exception("Failed to write plugin", sys.exc_info()[1]), None, sys.exc_info()[2]

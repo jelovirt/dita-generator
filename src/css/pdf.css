@@ -62,7 +62,7 @@ fieldset {
   border: solid 1px black;
   margin: 0 auto;
 }
-.example-page {
+.example-page, .example-page-fragment {
   /* height set dynamically */
   /* width set dynamically */
   border: solid 1px black;
@@ -82,8 +82,17 @@ div.example-page-body {
   background-color: silver;
 }
 table.example-page-body td {
-  background-color: silver;
+  /*background-color: silver;*/
+  height: 100%;
   empty-cells: show;
+}
+table.example-page-body td div {
+  background-color: silver;
+  height: 100%;
+  width: 100%;
+}
+table.cut-off td:last-child div {
+  height: 50%;
 }
 table.example-page-body td.gap{
   background-color: transparent;

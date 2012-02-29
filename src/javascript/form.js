@@ -349,7 +349,7 @@ function setMessage(input, level, text, tip) {
     }
     msg.removeClass().addClass("msg " + level);
     if (text != undefined) {
-        msg.append(text);
+        msg.html(text);
     } else {
         msg.empty();
     }

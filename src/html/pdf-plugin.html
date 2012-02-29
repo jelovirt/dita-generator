@@ -8,8 +8,6 @@
   <div class="page">
     <p class="help">A PDF customisation plug-in defines a new DITA-OT
       transformation type based on the built-in PDF conversion.</p>
-  </div>
-  <div class="page">
     <fieldset>
       <p>
         <label for="ot.version" class="required">DITA-OT version</label>
@@ -37,24 +35,15 @@
   <!-- page -->
   <div class="page">
     <h3>Page</h3>
-    <div class="example" id="pdf.page.example">
+    <!--div class="example" id="pdf.page.example">
       <div class="example-page even">
         <table class="example-page-body">
           <tr>
-            <td></td>
+            <td><div></div></td>
           </tr>
         </table>
       </div>
-      <!--
-      <div class="example-page odd">
-        <table class="example-page-body">
-          <tr>
-            <td></td>
-          </tr>
-        </table>
-      </div>
-      -->
-    </div>
+    </div-->
     <fieldset>
       <p>
         <label for="pdf.page-size">Page size</label>
@@ -80,22 +69,23 @@
         </select>
       </p>
     </fieldset>
+    <!--
   </div>
-  <!-- margins -->
   <div class="page">
+    -->
     <h3>Margins</h3>
     <div class="example" id="pdf.margin.example">
-      <div class="example-page even">
+      <div class="example-page even" title="Even page">
         <table class="example-page-body">
           <tr>
-            <td></td>
+            <td><div></div></td>
           </tr>
         </table>
       </div>
-      <div class="example-page odd">
+      <div class="example-page odd" title="Odd page">
         <table class="example-page-body">
           <tr>
-            <td></td>
+            <td><div></div></td>
           </tr>
         </table>
       </div>
@@ -103,27 +93,27 @@
     <fieldset>
       <p>
         <label for="pdf.page-margin-top">Top</label>
-        <input name="pdf.page-margin-top" id="pdf.page-margin-top" placeholder="20mm" pattern="\d+(pt|mm|in|pc|cm)" class="length-value">
+        <input name="pdf.page-margin-top" id="pdf.page-margin-top" placeholder="20mm" pattern="\d+(\.\d+)?(pt|mm|in|pc|cm|em)" class="length-value">
       </p>
       <p class="v1_5_3">
         <label for="pdf.page-margin-right">Right</label>
-        <input name="pdf.page-margin-right" id="pdf.page-margin-right" placeholder="20mm" class="length-value">
+        <input name="pdf.page-margin-right" id="pdf.page-margin-right" placeholder="20mm" pattern="\d+(\.\d+)?(pt|mm|in|pc|cm|em)" class="length-value">
       </p>
       <p class="v1_5_4 v1_6">
         <label for="pdf.page-margin-outside">Outside</label>
-        <input name="pdf.page-margin-outside" id="pdf.page-margin-outside" placeholder="20mm" class="length-value">
+        <input name="pdf.page-margin-outside" id="pdf.page-margin-outside" placeholder="20mm" pattern="\d+(\.\d+)?(pt|mm|in|pc|cm|em)" class="length-value">
       </p>
       <p>
         <label for="pdf.page-margin-bottom">Bottom</label>
-        <input name="pdf.page-margin-bottom" id="pdf.page-margin-bottom" placeholder="20mm" class="length-value">
+        <input name="pdf.page-margin-bottom" id="pdf.page-margin-bottom" placeholder="20mm" pattern="\d+(\.\d+)?(pt|mm|in|pc|cm|em)" class="length-value">
       </p>
       <p class="v1_5_3">
         <label for="pdf.page-margin-left">Left</label>
-        <input name="pdf.page-margin-left" id="pdf.page-margin-left" placeholder="20mm" class="length-value">
+        <input name="pdf.page-margin-left" id="pdf.page-margin-left" placeholder="20mm" pattern="\d+(\.\d+)?(pt|mm|in|pc|cm|em)" class="length-value">
       </p>
       <p class="v1_5_4 v1_6">
         <label for="pdf.page-margin-inside">Inside</label>
-        <input name="pdf.page-margin-inside" id="pdf.page-margin-inside" placeholder="20mm" class="length-value">
+        <input name="pdf.page-margin-inside" id="pdf.page-margin-inside" placeholder="20mm" pattern="\d+(\.\d+)?(pt|mm|in|pc|cm|em)" class="length-value">
       </p>
       <p class="instruction">Page margins.</p>
     </fieldset>
@@ -134,6 +124,7 @@
                value="true">
       </p>
     </fieldset>
+    <h3 class="v1_5_4 v1_6">Columns</h3>
     <fieldset class="v1_5_4 v1_6">
       <p>
         <label for="pdf.body-column-count">Body column count</label>
@@ -159,11 +150,10 @@
       </p>
       <p>
         <label for="pdf.column-gap">Column gap</label>
-        <input name="pdf.column-gap" id="pdf.column-gap" placeholder="12pt" class="length-value">
+        <input name="pdf.column-gap" id="pdf.column-gap" placeholder="12pt" pattern="\d+(\.\d+)?(pt|mm|in|pc|cm|em)" class="length-value">
       </p>
     </fieldset>
   </div>
-  <!-- layout -->
   <div class="page">
     <h3>Layout</h3>
     <!--
@@ -172,6 +162,96 @@
       <canvas id="preview.sequence" height="250" width="250"></canvas>
     </div>
     -->
+    <div class="example pdf_force-page-count_example_auto">
+      <div class="example-page even" title="Even page">
+        <table class="example-page-body">
+          <tr>
+            <td><div></div></td>
+          </tr>
+        </table>
+      </div>
+      <div class="example-page odd" title="Even odd, last page of chapter">
+        <table class="example-page-body cut-off">
+          <tr>
+            <td><div></div></td>
+          </tr>
+        </table>
+      </div>
+      <div class="example-page even" title="Even page, first page of chapter">
+        <table class="example-page-body">
+          <tr>
+            <td><div></div></td>
+          </tr>
+        </table>
+      </div>
+      <div class="example-page odd" title="Odd page">
+        <table class="example-page-body">
+          <tr>
+            <td><div></div></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="example pdf_force-page-count_example_even">
+      <div class="example-page even" title="Even page">
+        <table class="example-page-body">
+          <tr>
+            <td><div></div></td>
+          </tr>
+        </table>
+      </div>
+      <div class="example-page odd" title="Odd page, last page of chapter">
+        <table class="example-page-body cut-off">
+          <tr>
+            <td><div></div></td>
+          </tr>
+        </table>
+      </div>
+      <div class="example-page even" title="Even page, blank page">
+        <table class="example-page-body-empty">
+          <tr>
+            <td><div></div></td>
+          </tr>
+        </table>
+      </div>
+      <div class="example-page odd" title="Odd page, first page of chapter">
+        <table class="example-page-body">
+          <tr>
+            <td><div></div></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="example pdf_force-page-count_example_odd">
+      <div class="example-page even" title="Even page, last page of chapter">
+        <table class="example-page-body cut-off">
+          <tr>
+            <td><div></div></td>
+          </tr>
+        </table>
+      </div>
+      <div class="example-page odd" title="Odd page, blank page">
+        <table class="example-page-body-empty">
+          <tr>
+            <td><div></div></td>
+          </tr>
+        </table>
+      </div>
+      <div class="example-page even" title="Even page, first page of chapter">
+        <table class="example-page-body">
+          <tr>
+            <td><div></div></td>
+          </tr>
+        </table>
+      </div>
+      <div class="example-page odd" title="Odd page">
+        <table class="example-page-body">
+          <tr>
+            <td><div></div></td>
+          </tr>
+        </table>
+      </div>
+    </div>
     <fieldset>
       <p>
         <label for="pdf.force-page-count">Section start<!--Chapter page--></label>
@@ -203,12 +283,10 @@
       <p class="instruction">Chapters can start with a table of chapter contents on a separate chapter cover page.</p>
     </fieldset>
   </div>
-  
-  <!-- paragraph -->
   <div class="page">
     <h3>Paragraph</h3>
     <div class="example">
-      <div class="example-page" id="pdf.side-col-width.example">
+      <div class="example-page-fragment" id="pdf.side-col-width.example">
       <div class="example-page-wrapper" id="pdf.text-align.example">
         <div class="example-page-content-title">Pangram</div>
         <p class="example-page-content-para">
@@ -230,20 +308,20 @@
     <fieldset>
       <p>
         <label for="pdf.side-col-width">Indentation</label>
-        <input name="pdf.side-col-width" id="pdf.side-col-width" placeholder="25pt" size="5" class="length-value">
+        <input name="pdf.side-col-width" id="pdf.side-col-width" placeholder="25pt" pattern="\d+(\.\d+)?(pt|mm|in|pc|cm|em)" size="5" class="length-value">
       </p>
       <p class="instruction">Amount the body text is indented relative to the left margin.</p>
     </fieldset>
     <fieldset>
       <p>
         <label for="pdf.spacing">Spacing before</label>
-        <input name="pdf.spacing.before" id="pdf.spacing.before" placeholder="0.6em" size="5" class="length-value">
+        <input name="pdf.spacing.before" id="pdf.spacing.before" placeholder="0.6em" pattern="\d+(\.\d+)?(pt|mm|in|pc|cm|em)" size="5" class="length-value">
       </p>
     </fieldset>
     <fieldset>
       <p>
         <label for="pdf.spacing">Spacing after</label>
-        <input name="pdf.spacing.after" id="pdf.spacing.after" placeholder="0.6em" size="5" class="length-value">
+        <input name="pdf.spacing.after" id="pdf.spacing.after" placeholder="0.6em" pattern="\d+(\.\d+)?(pt|mm|in|pc|cm|em)" size="5" class="length-value">
       </p>
     </fieldset>
     <fieldset>
@@ -260,10 +338,11 @@
         </select>
       </p>
     </fieldset>
+    <!--
   </div>
-  <!-- font -->
   <div class="page">
-    <h3>Style</h3>
+    -->
+    <h3>Font</h3>
     <fieldset>
       <p>
         <label>Body font</label>
@@ -315,12 +394,12 @@
     </fieldset>
     <div class="example">
       <div class="example-text">
-        <p>The quick brown <span id="pdf.link-style.example">fox jumps</span> over the lazy dog.</p>
+        <p>The quick brown <span id="pdf.link-style.example">fox jumps</span><span id="pdf.link-page-number.example"> on page 42</span> over the lazy dog.</p>
       </div>
     </div>
     <fieldset>
       <p>
-        <label>Link</label>
+        <label>Link font</label>
         <label for="pdf.link-font-weight" class="inline">Bold</label><input name="pdf.link-font-weight" type="checkbox" value="bold"/>
         <label for="pdf.link-font-style" class="inline">Italic</label><input name="pdf.link-font-style" type="checkbox" checked value="italic"/>
         <label for="pdf.link-text-decoration" class="inline">Underline</label><input name="pdf.link-text-decoration" type="checkbox" value="underline"/>
@@ -337,27 +416,37 @@
         <input type="text" name="pdf.link-color.other" style="display:none" size="7"/>
       </p>
     </fieldset>
-    <div class="example" id="pdf.title-numbering.example">
-	    <div id="pdf.title-numbering.example.chapters" class="example-text">
-	      <p class="example-page-content-title"><strong>1</strong> Heading 1</p>
-	      <p class="example-page-content-para">The quick brown fox jumps over the lazy dog.</p>
-	      <p class="example-page-content-title"><strong></strong> Heading 2</p>
-	      <p class="example-page-content-para">The quick brown fox jumps over the lazy dog.</p>
-	      <p class="example-page-content-title"><strong></strong> Heading 3</p>
-	      <p class="example-page-content-para">The quick brown fox jumps over the lazy dog.</p>
-	      <p class="example-page-content-title"><strong>A</strong> Appendix</p>
-	      <p class="example-page-content-para">The quick brown fox jumps over the lazy dog.</p>
-	      </div>
-	    <div id="pdf.title-numbering.example.all" class="example-text">
-	      <p class="example-page-content-title"><strong>1</strong> Heading 1</p>
-	      <p class="example-page-content-para">The quick brown fox jumps over the lazy dog.</p>
-	      <p class="example-page-content-title"><strong>1.1</strong> Heading 2</p>
-	      <p class="example-page-content-para">The quick brown fox jumps over the lazy dog.</p>
-	      <p class="example-page-content-title"><strong>1.1.1</strong> Heading 3</p>
-	      <p class="example-page-content-para">The quick brown fox jumps over the lazy dog.</p>
-	      <p class="example-page-content-title"><strong>A</strong> Appendix</p>
-	      <p class="example-page-content-para">The quick brown fox jumps over the lazy dog.</p>
-	    </div>
+    <fieldset>
+      <p>
+        <label for="pdf.link-page-number">Page number on links</label>
+        <input name="pdf.link-page-number" type="checkbox" value="true" checked/>
+      </p>
+      <p class="instruction">Add page number to links.</p>
+    </fieldset>
+  </div>
+  <div class="page">
+      <h3>Titles</h3>
+      <div class="example" id="pdf.title-numbering.example">
+        <div id="pdf.title-numbering.example.chapters" class="example-text">
+          <p class="example-page-content-title"><strong>1</strong> Heading 1</p>
+          <p class="example-page-content-para">The quick brown fox jumps over the lazy dog.</p>
+          <p class="example-page-content-title"><strong></strong> Heading 2</p>
+          <p class="example-page-content-para">The quick brown fox jumps over the lazy dog.</p>
+          <p class="example-page-content-title"><strong></strong> Heading 3</p>
+          <p class="example-page-content-para">The quick brown fox jumps over the lazy dog.</p>
+          <p class="example-page-content-title"><strong>A</strong> Appendix</p>
+          <p class="example-page-content-para">The quick brown fox jumps over the lazy dog.</p>
+          </div>
+        <div id="pdf.title-numbering.example.all" class="example-text">
+          <p class="example-page-content-title"><strong>1</strong> Heading 1</p>
+          <p class="example-page-content-para">The quick brown fox jumps over the lazy dog.</p>
+          <p class="example-page-content-title"><strong>1.1</strong> Heading 2</p>
+          <p class="example-page-content-para">The quick brown fox jumps over the lazy dog.</p>
+          <p class="example-page-content-title"><strong>1.1.1</strong> Heading 3</p>
+          <p class="example-page-content-para">The quick brown fox jumps over the lazy dog.</p>
+          <p class="example-page-content-title"><strong>A</strong> Appendix</p>
+          <p class="example-page-content-para">The quick brown fox jumps over the lazy dog.</p>
+        </div>
     </div>
     <fieldset>
       <p>
@@ -368,9 +457,6 @@
         </select>
       </p>
     </fieldset>
-  </div>
-  <!-- TOC and bookmarks -->
-  <div class="page">
     <h3>Table of Contents</h3>
     <fieldset>
       <p>
@@ -387,6 +473,7 @@
       </p>
       <p class="instruction">Number of levels displayed on table of contents page.</p>
     </fieldset>
+    <h3>PDF Bookmarks</h3>
     <fieldset>
       <p>
         <label for="pdf.bookmark-style">Bookmarks state</label>
@@ -400,9 +487,10 @@
       </p>
       <p class="instruction">PDF bookmark node initial state.</p>
     </fieldset>
+    <!--
   </div>
-  <!-- task -->
   <div class="page">
+    -->
     <h3>Labels</h3>
     <fieldset>
       <p>
@@ -417,6 +505,7 @@
       </p>
       <p class="instruction">Generate titles for task steps.</p>
     </fieldset>
+    <h3>Linking</h3>
     <fieldset>
       <p>
         <label for="pdf.include-related-links">Related links</label>
@@ -431,9 +520,10 @@
       </p>
       <p class="instruction">Related links generated for topics.</p>
     </fieldset>
+    <!--
   </div>
-  <!-- lists -->
   <div class="page">
+    -->
     <h3>Lists</h3>
     <div class="example">
       <dl id="pdf.dl.example.html">
@@ -477,19 +567,20 @@
         <label for="id" class="required">Plug-in ID</label>
         <input type="text" name="id" id="id" class="required" required
                title="ID of the new topic type or shell">
-        <span class="instruction">ID must conform to plug-in ID syntax rules.</span>
       </p>
-      <p class="help">Plug-in ID is used to identify the DITA-OT plug-in.</p>
+      <p class="instruction">Plug-in ID is used to identify the DITA-OT plug-in.</p>
+      <p class="help">ID must conform to plug-in ID syntax rules.</p>
     </fieldset>
     <fieldset>
       <p>
         <label for="transtype" class="required">Transtype</label>
         <input name="transtype" id="transtype" class="required" required
                title="Transtype">
-        <span class="instruction">Transtype name must conform to same syntax
-          rules as plug-in ID.</span>
+        
       </p>
-      <p class="help">Plug-in ID is used to identify the DITA-OT plug-in.</p>
+      <p class="instruction">Name of the new transformation type.</p>
+      <p class="help">Transtype name must conform to same syntax
+          rules as plug-in ID.</p>
     </fieldset>
     <!--fieldset>
       <p>
