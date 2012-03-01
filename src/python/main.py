@@ -379,6 +379,8 @@ class PluginGenerateHandler(webapp.RequestHandler):
         __dita_gen.spacing_after = self.request.get(u"pdf.spacing.before")
         __dita_gen.generate_shell = self.request.get(u"pdf.generate-shell")
         __dita_gen.link_pagenumber = self.request.get(u"pdf.link-page-number")
+        __dita_gen.table_continued = self.request.get(u"pdf.table-continued")
+        __dita_gen.formatter = self.request.get(u"pdf.formatter")
         
         if __plugin_name != None:
             __dita_gen.plugin_name = __plugin_name

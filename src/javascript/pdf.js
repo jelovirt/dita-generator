@@ -1,16 +1,36 @@
 var factor = 0.12;
 
 function toolkitVersionChangeHandler(event) {
-    var p = $(event.target);
-    var val = p.val();
+	toggleByClass($(event.target), "v");
+}
+
+function formatterHandler(event) {
+    toggleByClass($(event.target), "f");
+//    var val = p.val();
+//    p.find("option").each(function() {
+//        var s = $(this).attr("value");
+//        var c = ".v" + s.replace(/\./g, "_");
+//        $(c).addClass("disabled").find(":input").attr("disabled", true);
+//    });
+//    p.find("option").each(function() {
+//        var s = $(this).attr("value");
+//        var c = ".v" + s.replace(/\./g, "_");
+//        if (val == s) {
+//            $(c).removeClass("disabled").find(":input").removeAttr("disabled");
+//        }
+//    });
+}
+
+function toggleByClass(p, prefix) {
+	var val = p.val();
     p.find("option").each(function() {
         var s = $(this).attr("value");
-        var c = ".v" + s.replace(/\./g, "_");
+        var c = "." + prefix + s.replace(/\./g, "_");
         $(c).addClass("disabled").find(":input").attr("disabled", true);
     });
     p.find("option").each(function() {
         var s = $(this).attr("value");
-        var c = ".v" + s.replace(/\./g, "_");
+        var c = "." + prefix + s.replace(/\./g, "_");
         if (val == s) {
             $(c).removeClass("disabled").find(":input").removeAttr("disabled");
         }
@@ -61,6 +81,7 @@ function columnChangeHandler(event) {
 
 $(document).ready(function() {
     $(":input[name='ot.version']").change(toolkitVersionChangeHandler).change();
+    $(":input[name='pdf.formatter']").change(formatterHandler).change();
     $(":input[name='transtype']").change(transtypeChangeHandler);
     
     $(":input[name='pdf.force-page-count']").change(forcePageCountChangeHandler).change();

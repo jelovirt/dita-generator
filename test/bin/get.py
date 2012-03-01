@@ -81,6 +81,7 @@ def get(server, handler):
             "pdf.spacing.before": "10pt",
             "pdf.spacing.after": "10pt",
             #"pdf.link-page-number": "true",
+            "pdf.table-continued": "true",
             "id": "com.example.print-pdf",
             "transtype": "print-pdf",
             "plugin-version": "1.0.0"

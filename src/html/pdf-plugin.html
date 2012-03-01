@@ -19,9 +19,21 @@
         </select>
       </p>
       <p class="instruction">Version of DITA-OT for which the plug-in is
-        installed into. Note that customisation features available are dependent
-        on the target DITA-OT version.</p>
+        installed into.</p>
     </fieldset>
+    <fieldset>
+      <p>
+        <label for="pdf.formatter" class="required">XSL formatter</label>
+        <select name="pdf.formatter" id="pdf.formatter" title="XSL formatter">
+          <option value="fop" selected>FOP</option>
+          <option value="ah">AntennaHouse Formatter</option>
+          <option value="xep">RenderX XEP</option>
+        </select>
+      </p>
+      <p class="instruction">XSL formatter used to generate PDF output. DITA-OT comes with open source FOP formatter.</p>
+    </fieldset>
+     <p class="instruction">Note that customisation features available are dependent
+        on the target DITA-OT and XSL formatter.</p>
     <!--fieldset>
       <p>
         <label for="pdf.generate-shell" class="required">Generate shell</label>
@@ -495,15 +507,16 @@
     <fieldset>
       <p>
         <label for="pdf.task-label">Task labels</label>
-        <select name="pdf.task-label" id="pdf.task-label" title="Task labels">
-          {% if advanced %}
-            <option value="">default</option>
-          {% endif %}
-          <option value="YES">yes</option>
-          <option value="NO" selected>no</option>
-        </select>
+        <input type="checkbox" name="pdf.task-label" id="pdf.task-label" value="true" title="Task labels"/>
       </p>
-      <p class="instruction">Generate titles for task steps.</p>
+      <p class="instruction">Generate titles for task steps and sections.</p>
+    </fieldset>
+    <fieldset class="fah">
+      <p>
+        <label for="pdf.table-continued">Table continued</label>
+        <input type="checkbox" name="pdf.table-continued" id="pdf.table-continued" value="true" title="Mark continued table"/>
+      </p>
+      <p class="instruction">Generate "Table continued…" to table footer when table is broken to multiple pages.</p>
     </fieldset>
     <h3>Linking</h3>
     <fieldset>
@@ -526,13 +539,16 @@
     -->
     <h3>Lists</h3>
     <div class="example">
-      <dl id="pdf.dl.example.html">
+      <div id="pdf.dl.example.html" class="example-text">
+      <dl>
         <dt><strong>Pangram</strong></dt>
         <dd>The quick brown fox jumps over the lazy dog.</dd>
         <dt><strong>XXX</strong></dt>
         <dd>The quick brown fox jumps over the lazy dog.</dd>
       </dl>
-      <table id="pdf.dl.example.table">
+      </div>
+      <div id="pdf.dl.example.table" class="example-text">
+      <table>
         <tr>
           <th><strong>Pangram</strong></th>
           <td>The quick brown fox jumps over the lazy dog.</td>
@@ -542,10 +558,13 @@
           <td>The quick brown fox jumps over the lazy dog.</td>
         </tr>
       </table>
-      <ul id="pdf.dl.example.list">
+      </div>
+      <div id="pdf.dl.example.list" class="example-text">
+      <ul>
         <li><strong>Pangram</strong><br>The quick brown fox jumps over the lazy dog.</li>
         <li><strong>XXX</strong><br>The quick brown fox jumps over the lazy dog.</li>
       </ul>
+      </div>
     </div>
     <fieldset>
       <p>

@@ -96,7 +96,9 @@ class StylePluginGenerator(DitaGenerator):
         self.spacing_after = None
         self.generate_shell = None
         self.link_pagenumber = None
-        self._stylesheet_stump = []
+        self.table_continued = None
+        self.formatter = None
+        #self._stylesheet_stump = []
 
     def _preprocess(self):
         """Preprocess arguments."""
@@ -127,6 +129,7 @@ class StylePluginGenerator(DitaGenerator):
                 "value": self.bookmark_style
                 })
         if self.task_label:
+            __t = ""
             ET.SubElement(__init, "property", {
                 "name": "args.gen.task.lbl",
                 "value": self.task_label
@@ -169,7 +172,7 @@ class StylePluginGenerator(DitaGenerator):
 
     def __generate_custom(self):
         """Generate plugin custom XSLT file."""
-        __root = ET.Element(NS_XSL + "stylesheet", {"version":"2.0", "exclude-result-prefixes": "e"})
+        __root = ET.Element(NS_XSL + "stylesheet", {"version":"2.0", "exclude-result-prefixes": "e opentopic"})
         
         __dl_list_raw = """
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -304,9 +307,94 @@ class StylePluginGenerator(DitaGenerator):
 </xsl:stylesheet>
 """
         if self.title_numbering:
-            __get_title = ET.fromstring(__get_title_raw)
-            for __c in list(__get_title):
+            for __c in list(ET.fromstring(__get_title_raw)):
                 __root.append(__c)
+        
+        __table_footer_raw = """
+<xsl:stylesheet xmlns:fo="http://www.w3.org/1999/XSL/Format"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:e="e"
+                exclude-result-prefixes="e"
+                version="2.0">
+                
+  <xsl:template match="*[contains(@class, ' topic/tbody ')]" name="topic.tbody">
+    <fo:table-footer xsl:use-attribute-sets="tgroup.tfoot">
+      <fo:table-row>
+        <fo:table-cell number-columns-spanned="{../@cols}"/>
+      </fo:table-row>
+    </fo:table-footer>
+    <fo:table-body xsl:use-attribute-sets="tgroup.tbody">
+      <xsl:call-template name="commonattributes"/>
+      <xsl:apply-templates/>
+    </fo:table-body>
+  </xsl:template>
+                
+</xsl:stylesheet>
+"""
+        __table_continued_raw = """
+<xsl:stylesheet xmlns:fo="http://www.w3.org/1999/XSL/Format"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:e="e"
+                exclude-result-prefixes="e"
+                version="2.0">
+                
+  <xsl:variable name="table.frame-default" select="'all'"/>
+                
+  <xsl:template match="*[contains(@class, ' topic/tbody ')]" name="topic.tbody">
+    <fo:table-footer xsl:use-attribute-sets="tgroup.tfoot table__tableframe__top">
+      <fo:retrieve-table-marker retrieve-class-name="e:continued" retrieve-position-within-table="last-ending" retrieve-boundary-within-table="table-fragment"/>
+    </fo:table-footer>
+    <fo:table-body xsl:use-attribute-sets="tgroup.tbody">
+      <xsl:call-template name="commonattributes"/>
+      <fo:marker marker-class-name="e:continued">
+        <fo:table-row>
+          <fo:table-cell xsl:use-attribute-sets="e:tfoot.row.entry.continued" number-columns-spanned="{../@cols}">
+            <xsl:variable name="frame">
+              <xsl:choose>
+                <xsl:when test="../../@frame">
+                  <xsl:value-of select="../../@frame"/>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:value-of select="$table.frame-default"/>
+                </xsl:otherwise>
+              </xsl:choose>
+            </xsl:variable>
+            <xsl:if test="$frame = 'all' or $frame = 'topbot' or $frame = 'bottom'">
+              <xsl:call-template name="processAttrSetReflection">
+                <xsl:with-param name="attrSet" select="'__tableframe__top'"/>
+                <xsl:with-param name="path" select="$tableAttrs"/>
+              </xsl:call-template>
+            </xsl:if>
+            <fo:block>
+              <xsl:call-template name="insertVariable">
+                <xsl:with-param name="theVariableID" select="'#table-continued'"/>
+              </xsl:call-template>
+            </fo:block>
+          </fo:table-cell>
+        </fo:table-row>
+      </fo:marker>
+      <xsl:apply-templates/>
+    </fo:table-body>
+  </xsl:template>
+  
+  <xsl:template match="*[contains(@class, ' topic/tbody ')]/*[contains(@class, ' topic/row ')]" name="topic.tbody_row">
+    <fo:table-row xsl:use-attribute-sets="tbody.row">
+      <xsl:call-template name="commonattributes"/>
+      <xsl:if test="not(following-sibling::*)">
+        <fo:marker marker-class-name="e:continued"/>
+      </xsl:if>
+      <xsl:apply-templates/>
+    </fo:table-row>
+  </xsl:template>
+                
+</xsl:stylesheet>
+"""
+
+        __table_raw = __table_footer_raw
+        if self.table_continued:
+            __table_raw = __table_continued_raw
+        for __c in list(ET.fromstring(__table_raw)):
+            __root.append(__c)
         
         ditagen.generator.indent(__root)
         ditagen.generator.set_prefixes(__root, {"xsl": "http://www.w3.org/1999/XSL/Transform", "fo": "http://www.w3.org/1999/XSL/Format", "e": self.plugin_name, "opentopic": "http://www.idiominc.com/opentopic"})
@@ -408,6 +496,13 @@ class StylePluginGenerator(DitaGenerator):
         # toc
         if self.toc_maximum_level:
             ET.SubElement(__root, NS_XSL + "variable", name=u"tocMaximumLevel").text = self.toc_maximum_level
+        # table continued
+        if self.table_continued:
+            __table_continued_attr = ET.SubElement(__root, NS_XSL + "attribute-set", { "name": "e:tfoot.row.entry.continued" })
+            ET.SubElement(__table_continued_attr, NS_XSL + "attribute", name=u"border-right-style").text = "hidden"
+            ET.SubElement(__table_continued_attr, NS_XSL + "attribute", name=u"border-left-style").text = "hidden"
+            ET.SubElement(__table_continued_attr, NS_XSL + "attribute", name=u"text-align").text = "end"
+            ET.SubElement(__table_continued_attr, NS_XSL + "attribute", name=u"font-style").text = "italic"
         
         ditagen.generator.indent(__root)
         ditagen.generator.set_prefixes(__root, {"xsl": "http://www.w3.org/1999/XSL/Transform", "fo": "http://www.w3.org/1999/XSL/Format", "e": self.plugin_name})
@@ -435,10 +530,13 @@ class StylePluginGenerator(DitaGenerator):
         """Generate variable file."""
         __root = ET.Element(u"vars")
         ET.SubElement(__root, u"variable", id=u"On the page")
+        if self.table_continued:
+            ET.SubElement(__root, u"variable", id=u"#table-continued").text = u"Table continued\u2026"
         ditagen.generator.indent(__root)
         ditagen.generator.set_prefixes(__root, {"": "http://www.idiominc.com/opentopic/vars"})
         __d = ET.ElementTree(__root)
-        __d.write(self.out, "UTF-8")
+        # Write output in ASCII because ZIP writer will re-encode into UTF-8
+        __d.write(self.out, "ASCII")
 
     def generate_plugin(self):
         """Generate ZIP file with specified stylesheets."""
@@ -470,7 +568,7 @@ class StylePluginGenerator(DitaGenerator):
                 # custom XSLT attribute sets
                 self._run_generation(__zip, self.__generate_custom_attr,
                                     "%s/cfg/fo/attrs/custom.xsl" % (self.plugin_name))
-                if not self.link_pagenumber:
+                if not self.link_pagenumber or self.table_continued:
                     for lang in self.variable_languages:
                         self._run_generation(__zip, lambda: self.__generate_vars(lang),
                                              "%s/cfg/common/vars/%s.xml" % (self.plugin_name, lang))
