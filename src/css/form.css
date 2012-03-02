@@ -1,5 +1,6 @@
 body {
   font-family: "Gill Sans", sans-serif;
+  font-size: 14px;
   margin: 0;
   padding: 0;
   width: 100%;
@@ -103,20 +104,26 @@ fieldset p.controller,
 #controls {
     padding-left: 150px;
 }
-.help {
-    /*font-size: small;*/
-}
-.instruction {
-  /*
-    font-size: small;
-    color: green;
-    */
+/*.help {
+}*/
+fieldset .instruction, fieldset .help {
+  font-size: 12px;
 }
 #controls {
   margin-top: 1em;
 }
 .disabled {
   display: none;
+}
+.disabled.visible-when-disabled {
+  display: block;
+  color: silver;
+}
+.not-available {
+  display: none;
+}
+.disabled .not-available {
+  display: block !important;
 }
 .legend {
   font-size: small;

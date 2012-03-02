@@ -45,10 +45,15 @@ def main():
     get(server, handler)
 
 def help():
-    sys.stderr.write("""Usage: get.py [options] environment\n
+    sys.stderr.write("""Usage: get.py [options] environment
+
 Options:
   -o DIR      output files to plug-ins directory
-  -h, --help  print help\n""")
+  -h, --help  print help
+Environments:
+  localhost   localhost
+  production  dita-generator.appspot.com
+""")
 
 def get(server, handler):
     params = {

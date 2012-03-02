@@ -97,6 +97,7 @@ class MainHandler(webapp.RequestHandler):
         
         path = os.path.join(os.path.dirname(__file__), template_file)
         self.response.out.write(template.render(path, template_values))
+        #path = os.path.join(os.path.split(__file__)[0], 'app.yaml')
 
 
 class GenerateHandler(webapp.RequestHandler):

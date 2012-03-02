@@ -113,6 +113,7 @@ $(document).ready(function() {
     $(":input[name='pdf.dl']").change(definitionListHandler).change();
     $(":input[name='pdf.title-numbering']").change(titleNumberingHandler).change();
     $(":input[name='pdf.link-page-number']").change(linkPageNumberHandler).change();
+    $(":input[name='pdf.task-label']").change(taskLabelHandler).change();
 });
 
 // UI --------------------------------------------------------------------------
@@ -154,6 +155,16 @@ function addToValue(target, add) {
 }
 
 // Preview ---------------------------------------------------------------------
+
+function taskLabelHandler(event) {
+	var target = $(event.target);
+	var e = $(".example-task-label");
+	if (target.is(":checked")) {
+		e.show();
+	} else {
+		e.hide();
+	}
+}
 
 function linkPageNumberHandler(event) {
 	var target = $(event.target);

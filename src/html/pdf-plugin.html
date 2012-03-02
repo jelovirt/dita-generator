@@ -32,7 +32,7 @@
       </p>
       <p class="instruction">XSL formatter used to generate PDF output. DITA-OT comes with open source FOP formatter.</p>
     </fieldset>
-     <p class="instruction">Note that customisation features available are dependent
+     <p class="help">Note that customisation features available are dependent
         on the target DITA-OT and XSL formatter.</p>
     <!--fieldset>
       <p>
@@ -63,7 +63,19 @@
           {% if advanced %}
             <option value="">default</option>
           {% endif %}
-          <option value="210mm 297mm">A4</option>
+          <option value="210mm 297mm">A3</option>
+          <option value="210mm 297mm" selected>A4</option>
+          <option value="210mm 297mm">A5</option>
+          <!--
+          <option value="">Envelope #10</option>
+          <option value="">Envelope B5</option>
+          <option value="">Envelope C5</option>
+          <option value="">Envelope DL</option>
+          <option value="">Envelope Monarch</option>
+          -->
+          <option value="184.1mm 266.7mm">Executive</option>
+          <option value="182mm  257mm">JIS B5</option>
+          <option value="431.8mm 279.4mm">Tabloid</option>
           <option value="8.5in 14in">US Legal</option>
           <option value="8.5in 11in" selected>US Letter</option>
         </select>
@@ -129,15 +141,17 @@
       </p>
       <p class="instruction">Page margins.</p>
     </fieldset>
-    <fieldset class="v1_5_4 v1_6">
+    <fieldset class="v1_5_4 v1_6 visible-when-disabled">
+      <p class="not-available">Not available for DITA-OT older than 1.5.4</p>
       <p>
         <label for="pdf.mirror-page-margins">Mirror margins</label>
         <input type="checkbox" name="pdf.mirror-page-margins" id="pdf.mirror-page-margins"
                value="true">
       </p>
     </fieldset>
-    <h3 class="v1_5_4 v1_6">Columns</h3>
-    <fieldset class="v1_5_4 v1_6">
+    <h3 class="v1_5_4 v1_6 visible-when-disabled">Columns</h3>
+    <fieldset class="v1_5_4 v1_6 visible-when-disabled">
+      <p class="not-available">Not available for DITA-OT older than 1.5.4</p>
       <p>
         <label for="pdf.body-column-count">Body column count</label>
         <select name="pdf.body-column-count" id="pdf.body-column-count">
@@ -504,6 +518,16 @@
   <div class="page">
     -->
     <h3>Labels</h3>
+    <div class="example">
+      <div class="example-text">
+        <p class="example-page-content-para example-task-label"><strong>About this task</strong></p>
+        <p class="example-page-content-para">Learn how to add nails to walls.</p>
+        <p class="example-page-content-para example-task-label"><strong>Before you start</strong></p>
+        <p class="example-page-content-para">Buy a hammer and a nail.</p>
+        <p class="example-page-content-para example-task-label"><strong>Procedure</strong></p>
+        <p class="example-page-content-para">1. Hammer in the nail.</p>
+      </div>
+    </div>
     <fieldset>
       <p>
         <label for="pdf.task-label">Task labels</label>
@@ -511,7 +535,8 @@
       </p>
       <p class="instruction">Generate titles for task steps and sections.</p>
     </fieldset>
-    <fieldset class="fah">
+    <fieldset class="fah visible-when-disabled">
+      <p class="not-available">Not available for FOP and RenderX XEP</p>
       <p>
         <label for="pdf.table-continued">Table continued</label>
         <input type="checkbox" name="pdf.table-continued" id="pdf.table-continued" value="true" title="Mark continued table"/>
