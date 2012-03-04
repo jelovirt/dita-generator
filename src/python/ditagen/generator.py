@@ -24,6 +24,7 @@ from ditagen.dtdgen import Attribute as Attribute
 from ditagen.dtdgen import ParameterEntity as ParameterEntity
 import StringIO
 from zipfile import ZipFile, ZipInfo
+from datetime import datetime
 from xml.etree import ElementTree as ET
 
 NS_XSL = "{http://www.w3.org/1999/XSL/Transform}"
@@ -509,7 +510,8 @@ PUBLIC "%s"
     def _run_generation(self, __zip, func, filename):
         """Run a file generation."""
         __buf = None
-        __zipinfo = ZipInfo(filename.encode("UTF-8"))
+        __dt = datetime.now()
+        __zipinfo = ZipInfo(filename.encode("UTF-8"), (__dt.year, __dt.month, __dt.day, __dt.hour, __dt.minute, __dt.second))
         try:
             __buf = StringIO.StringIO()
             self.out = __buf
