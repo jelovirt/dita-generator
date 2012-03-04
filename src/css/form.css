@@ -112,11 +112,10 @@ fieldset .instruction, fieldset .help {
 #controls {
   margin-top: 1em;
 }
-.disabled {
+.disabled.hidden-when-disabled {
   display: none;
 }
-.disabled.visible-when-disabled {
-  display: block;
+.disabled {
   color: silver;
 }
 .not-available {

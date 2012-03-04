@@ -191,7 +191,7 @@ function spacingHandler(event, cls) {
 
 function mirrorPageHandler(event) {
 	var target = $(event.target);
-	var evenPage = $("*[id='pdf.margin.example'] .even");
+	var evenPage = $(".even");
 	if (target.prop("checked")) {
 		evenPage.show();
 	} else {

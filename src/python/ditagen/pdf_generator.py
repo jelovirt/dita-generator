@@ -98,6 +98,9 @@ class StylePluginGenerator(DitaGenerator):
         self.link_pagenumber = None
         self.table_continued = None
         self.formatter = None
+        self.header_even = None
+        self.header_odd = None
+        self.drop_folio = None
         #self._stylesheet_stump = []
 
     def _preprocess(self):
@@ -526,14 +529,68 @@ class StylePluginGenerator(DitaGenerator):
         __d = ET.ElementTree(__root)
         __d.write(self.out, "UTF-8")
 
+    __headers = ["Body first header",
+                 "Body odd header",
+                 "Body even header",
+                 "Preface odd header",
+                 "Preface even header",
+                 "Preface first header",
+                 "Toc odd header",
+                 "Toc even header",
+                 "Index odd header",
+                 "Index even header",
+                 "Glossary odd header",
+                 "Glossary even header"]
+    __footers = ["Body odd footer",
+                 "Body even footer",
+                 "Body first footer",
+                 "Preface odd footer",
+                 "Preface even footer",
+                 "Preface first footer",
+                 "Toc odd footer",
+                 "Toc even footer",
+                 "Index odd footer",
+                 "Index even footer",
+                 "Glossary odd footer",
+                 "Glossary even footer"]
+
     def __generate_vars(self, lang):
         """Generate variable file."""
         __root = ET.Element(u"vars")
+        
+        # page number reference
         if not self.link_pagenumber:
             ET.SubElement(__root, u"variable", id=u"On the page")
+        # table continued
         if self.table_continued:
             ET.SubElement(__root, u"variable", id=u"#table-continued").text = u"Table continued\u2026"
-        ditagen.generator.indent(__root)
+        # headers
+        for id in self.__headers:
+            vars = []
+            is_even = "even" in id
+            if is_even and self.header_even:
+                vars.append(ET.Element(u"param", { "ref-name": "heading" }))
+            elif not is_even and self.header_odd:
+                vars.append(ET.Element(u"param", { "ref-name": "heading" }))
+            if not self.drop_folio:
+                vars.append(ET.Element(u"param", { "ref-name": "pagenum" }))
+            if is_even:
+                vars.reverse()
+            f = ET.SubElement(__root, u"variable", id=id)
+            i = 1
+            for v in vars:
+                if i < len(vars):
+                    v.tail = " | "
+                f.append(v)
+                i = i + 1
+        
+        # footers
+        for id in self.__footers:
+            f = ET.SubElement(__root, u"variable", id=id)
+            if self.drop_folio:
+                ET.SubElement(f, u"param", { "ref-name": "pagenum" })
+        
+        ditagen.generator.indent(__root, max=1)
         ditagen.generator.set_prefixes(__root, {"": "http://www.idiominc.com/opentopic/vars"})
         __d = ET.ElementTree(__root)
         # Write output in ASCII because ZIP writer will re-encode into UTF-8
@@ -569,10 +626,10 @@ class StylePluginGenerator(DitaGenerator):
                 # custom XSLT attribute sets
                 self._run_generation(__zip, self.__generate_custom_attr,
                                     "%s/cfg/fo/attrs/custom.xsl" % (self.plugin_name))
-                if not self.link_pagenumber or self.table_continued:
-                    for lang in self.variable_languages:
-                        self._run_generation(__zip, lambda: self.__generate_vars(lang),
-                                             "%s/cfg/common/vars/%s.xml" % (self.plugin_name, lang))
+#                if not self.link_pagenumber or self.table_continued:
+                for lang in self.variable_languages:
+                    self._run_generation(__zip, lambda: self.__generate_vars(lang),
+                                         "%s/cfg/common/vars/%s.xml" % (self.plugin_name, lang))
 #                if self.generate_shell:
 #                    # shell XSLT
 #                    self._run_generation(__zip, self.__generate_shell,

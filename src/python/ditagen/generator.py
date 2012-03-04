@@ -1093,16 +1093,18 @@ def isinstancetype(__type, type_class):
 #ent -> "ENTITIES"
 #dtd
 
-def indent(elem, level=0):
+def indent(elem, level=0, max=100):
     """XML pretty-printer."""
     i = "\n" + level*"  "
     if len(elem):
-        if not elem.text or not elem.text.strip():
-            elem.text = i + "  "
+        if level < max:
+            if not elem.text or not elem.text.strip():
+                elem.text = i + "  "
         if not elem.tail or not elem.tail.strip():
             elem.tail = i
-        for elem in elem:
-            indent(elem, level+1)
+        if level < max:
+            for elem in elem:
+                indent(elem, level+1, max)
         if not elem.tail or not elem.tail.strip():
             elem.tail = i
     else:

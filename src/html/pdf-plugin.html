@@ -119,11 +119,11 @@
         <label for="pdf.page-margin-top">Top</label>
         <input name="pdf.page-margin-top" id="pdf.page-margin-top" placeholder="20mm" pattern="\d+(\.\d+)?(pt|mm|in|pc|cm|em)" class="length-value">
       </p>
-      <p class="v1_5_3">
+      <p class="v1_5_3 hidden-when-disabled">
         <label for="pdf.page-margin-right">Right</label>
         <input name="pdf.page-margin-right" id="pdf.page-margin-right" placeholder="20mm" pattern="\d+(\.\d+)?(pt|mm|in|pc|cm|em)" class="length-value">
       </p>
-      <p class="v1_5_4 v1_6">
+      <p class="v1_5_4 v1_6 hidden-when-disabled">
         <label for="pdf.page-margin-outside">Outside</label>
         <input name="pdf.page-margin-outside" id="pdf.page-margin-outside" placeholder="20mm" pattern="\d+(\.\d+)?(pt|mm|in|pc|cm|em)" class="length-value">
       </p>
@@ -131,17 +131,17 @@
         <label for="pdf.page-margin-bottom">Bottom</label>
         <input name="pdf.page-margin-bottom" id="pdf.page-margin-bottom" placeholder="20mm" pattern="\d+(\.\d+)?(pt|mm|in|pc|cm|em)" class="length-value">
       </p>
-      <p class="v1_5_3">
+      <p class="v1_5_3 hidden-when-disabled">
         <label for="pdf.page-margin-left">Left</label>
         <input name="pdf.page-margin-left" id="pdf.page-margin-left" placeholder="20mm" pattern="\d+(\.\d+)?(pt|mm|in|pc|cm|em)" class="length-value">
       </p>
-      <p class="v1_5_4 v1_6">
+      <p class="v1_5_4 v1_6 hidden-when-disabled">
         <label for="pdf.page-margin-inside">Inside</label>
         <input name="pdf.page-margin-inside" id="pdf.page-margin-inside" placeholder="20mm" pattern="\d+(\.\d+)?(pt|mm|in|pc|cm|em)" class="length-value">
       </p>
       <p class="instruction">Page margins.</p>
     </fieldset>
-    <fieldset class="v1_5_4 v1_6 visible-when-disabled">
+    <fieldset class="v1_5_4 v1_6">
       <p class="not-available">Not available for DITA-OT older than 1.5.4</p>
       <p>
         <label for="pdf.mirror-page-margins">Mirror margins</label>
@@ -149,8 +149,8 @@
                value="true">
       </p>
     </fieldset>
-    <h3 class="v1_5_4 v1_6 visible-when-disabled">Columns</h3>
-    <fieldset class="v1_5_4 v1_6 visible-when-disabled">
+    <h3 class="v1_5_4 v1_6">Columns</h3>
+    <fieldset class="v1_5_4 v1_6">
       <p class="not-available">Not available for DITA-OT older than 1.5.4</p>
       <p>
         <label for="pdf.body-column-count">Body column count</label>
@@ -181,6 +181,51 @@
     </fieldset>
   </div>
   <div class="page">
+    <h3 class="v1_6">Header and footer</h3>
+    <fieldset class="v1_6">
+      <p class="not-available">Not available for DITA-OT older than 1.6</p>
+      <p>
+        <label for="pdf.header">Header</label>
+        <table>
+          <thead class="even">
+            <tr>
+              <td><label for="pdf.header.even">even</label></td>
+              <td><label for="pdf.header.odd">odd</label></td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="even">
+                <select for="pdf.header.even">
+                  <option value=""></option>
+                  <!--option value="part">Part title</option-->
+                  <!--option value="number">Chapter number</option-->
+                  <option value="chapter" selected>Chapter title</option>
+                  <!--option value="subhead">Subhead</option-->
+                  <!-->option value="author">Author</option-->
+                </select>
+              </td>
+              <td>
+                <select for="pdf.header.odd">
+                  <option value=""></option>
+                  <option value="chapter" selected>Chapter title</option>
+                  <!--option value="subhead">Subhead</option-->
+                  <!--option value="subchapter">Chapter subtitle</option-->
+                </select>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </p>
+      <p class="instruction">Page header contents.</p>
+    </fieldset>
+    <fieldset class="v1_6">
+      <p>
+        <label for="pdf.drop-folio">Drop folio</label>
+        <input type="checkbox" name="pdf.drop-folio" id="pdf.drop-folio" value="true">
+      </p>
+      <p class="instruction">Place page number in footer.</p>
+    </fieldset>
     <h3>Layout</h3>
     <!--
     <div id="page-preview" class="preview" style="float: right; width: 130px;">
@@ -535,7 +580,7 @@
       </p>
       <p class="instruction">Generate titles for task steps and sections.</p>
     </fieldset>
-    <fieldset class="fah visible-when-disabled">
+    <fieldset class="fah">
       <p class="not-available">Not available for FOP and RenderX XEP</p>
       <p>
         <label for="pdf.table-continued">Table continued</label>

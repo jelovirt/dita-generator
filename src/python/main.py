@@ -382,6 +382,10 @@ class PluginGenerateHandler(webapp.RequestHandler):
         __dita_gen.link_pagenumber = self.request.get(u"pdf.link-page-number")
         __dita_gen.table_continued = self.request.get(u"pdf.table-continued")
         __dita_gen.formatter = self.request.get(u"pdf.formatter")
+        __dita_gen.header_even = self.request.get(u"pdf.header.even")
+        __dita_gen.header_odd = self.request.get(u"pdf.header.odd")
+        __dita_gen.drop_folio = self.request.get(u"pdf.drop-folio")
+        
         
         if __plugin_name != None:
             __dita_gen.plugin_name = __plugin_name
