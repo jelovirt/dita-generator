@@ -512,6 +512,7 @@ PUBLIC "%s"
         __buf = None
         __dt = datetime.now()
         __zipinfo = ZipInfo(filename.encode("UTF-8"), (__dt.year, __dt.month, __dt.day, __dt.hour, __dt.minute, __dt.second))
+        __zipinfo.external_attr = 0755 << 16L # give full access to included file
         try:
             __buf = StringIO.StringIO()
             self.out = __buf
