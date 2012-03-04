@@ -529,7 +529,8 @@ class StylePluginGenerator(DitaGenerator):
     def __generate_vars(self, lang):
         """Generate variable file."""
         __root = ET.Element(u"vars")
-        ET.SubElement(__root, u"variable", id=u"On the page")
+        if not self.link_pagenumber:
+            ET.SubElement(__root, u"variable", id=u"On the page")
         if self.table_continued:
             ET.SubElement(__root, u"variable", id=u"#table-continued").text = u"Table continued\u2026"
         ditagen.generator.indent(__root)
