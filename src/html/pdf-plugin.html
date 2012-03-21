@@ -37,7 +37,7 @@
     <!--fieldset>
       <p>
         <label for="pdf.generate-shell" class="required">Generate shell</label>
-        <input type="checkbox" name="pdf.generate-shell" value="true" id="pdf.generate-shell" title="Generate shell"/>
+        <input type="checkbox" name="pdf.generate-shell" value="true" id="pdf.generate-shell" title="Generate shell">
       </p>
       <p class="instruction">Generate an XSLT shell stylesheet.</p>
       <p class="help">A custom XSLT shell stylesheet will allow more customization
@@ -60,9 +60,7 @@
       <p>
         <label for="pdf.page-size">Page size</label>
         <select name="pdf.page-size" id="pdf.page-size" title="Page size">
-          {% if advanced %}
-            <option value="">default</option>
-          {% endif %}
+          {% if advanced %}<option value="">default</option>{% endif %}
           <option value="210mm 297mm">A3</option>
           <option value="210mm 297mm" selected>A4</option>
           <option value="210mm 297mm">A5</option>
@@ -85,9 +83,7 @@
       <p>
         <label for="pdf.orientation">Orientation</label>
         <select name="pdf.orientation" id="pdf.orientation">
-          {% if advanced %}
-            <option value="">default</option>
-          {% endif %}
+          {% if advanced %}<option value="">default</option>{% endif %}
           <option value="portrait" selected>portrait</option>
           <option value="landscape">landscape</option>
         </select>
@@ -155,9 +151,7 @@
       <p>
         <label for="pdf.body-column-count">Body column count</label>
         <select name="pdf.body-column-count" id="pdf.body-column-count">
-          {% if advanced %}
-            <option value="">default</option>
-          {% endif %}
+          {% if advanced %}<option value="">default</option>{% endif %}
           <option value="1" selected>1</option>
           <option value="2">2</option>
         </select>
@@ -165,9 +159,7 @@
       <p>
         <label for="pdf.index-column-count">Index column count</label>
         <select name="pdf.index-column-count" id="pdf.index-column-count">
-          {% if advanced %}
-            <option value="">default</option>
-          {% endif %}
+          {% if advanced %}<option value="">default</option>{% endif %}
           <option value="1">1</option>
           <option value="2" selected>2</option>
           <option value="3">3</option>
@@ -327,9 +319,7 @@
       <p>
         <label for="pdf.force-page-count">Section start<!--Chapter page--></label>
         <select name="pdf.force-page-count" id="pdf.force-page-count" title="Force page count">
-          {% if advanced %}
-            <option value="">default</option>
-          {% endif %}
+          {% if advanced %}<option value="">default</option>{% endif %}
           <option value="auto">new page</option>
           <option value="even" selected>odd page</option>
           <option value="odd">even page</option>
@@ -344,9 +334,7 @@
       <p>
         <label for="pdf.chapter-layout" >Chapter layout</label>
         <select name="pdf.chapter-layout" id="pdf.chapter-layout" title="Chapter page layout">
-          {% if advanced %}
-            <option value="">default</option>
-          {% endif %}
+          {% if advanced %}<option value="">default</option>{% endif %}
           <option value="MINITOC" selected>chapter TOC</option>
           <option value="BASIC">no chapter TOC</option>
         </select>
@@ -399,9 +387,7 @@
       <p>
         <label for="pdf.text-align">Text alignment</label>
         <select name="pdf.text-align" id="pdf.text-align">
-          {% if advanced %}
-            <option value="">default</option>
-          {% endif %}
+          {% if advanced %}<option value="">default</option>{% endif %}
           <option value="start" selected>left</option>
           <option value="center">center</option>
           <option value="end">right</option>
@@ -415,54 +401,95 @@
     -->
     <h3>Font</h3>
     <fieldset>
-      <p>
-        <label>Body font</label>
-        <label for="pdf.font-family" class="inline">Family</label>
-        <select name="pdf.font-family" id="pdf.font-family" title="Font family">
-          {% if advanced %}
-            <option value="">default</option>
-          {% endif %}
-          <option value="Serif" selected>serif</option>
-          <option value="Sans">sans-serif</option>
-          <!--option value="Monospaced">monospace</option-->
+      <input type="hidden" id="pdf-style-selector-current">    
+      <input type="hidden" name="pdf.font-family.body" value="Serif">
+      <input type="hidden" name="pdf.font-size.body" value="10pt">
+      <input type="hidden" name="pdf.color.body" value="black">
+      <input type="hidden" name="pdf.font-weight.body" value="bold" disabled>
+      <input type="hidden" name="pdf.font-style.body" value="italic" disabled>
+      <input type="hidden" name="pdf.font-family.topic" value="Sans">
+      <input type="hidden" name="pdf.font-size.topic" value="18pt">
+      <input type="hidden" name="pdf.color.topic" value="black">
+      <input type="hidden" name="pdf.font-weight.topic" value="bold">
+      <input type="hidden" name="pdf.font-style.topic" value="italic" disabled>
+      <input type="hidden" name="pdf.font-family.topic.topic" value="Sans">
+      <input type="hidden" name="pdf.font-size.topic.topic" value="14pt">
+      <input type="hidden" name="pdf.color.topic.topic" value="black">
+      <input type="hidden" name="pdf.font-weight.topic.topic" value="bold">
+      <input type="hidden" name="pdf.font-style.topic.topic" value="italic" disabled>
+      <input type="hidden" name="pdf.font-family.topic.topic.topic" value="Sans">
+      <input type="hidden" name="pdf.font-size.topic.topic.topic" value="12pt">
+      <input type="hidden" name="pdf.color.topic.topic.topic" value="green">
+      <input type="hidden" name="pdf.font-weight.topic.topic.topic" value="bold">
+      <input type="hidden" name="pdf.font-style.topic.topic.topic" value="italic" disabled>
+      <div>
+        <select id="pdf-style-selector" class="label">
+          <option value="body" selected>Body</option>
+          <!--
+          <option value="topic">Heading 1</option>
+          <option value="topic.topic">Heading 2</option>
+          <option value="topic.topic.topic">Heading 3</option>
+          -->
+          <!--
+          <option value="topic.topic.topic.topic">Heading 4</option>
+          <option value="topic.topic.topic.topic.topic">Heading 5</option>
+          <option value="topic.topic.topic.topic.topic.topic">Heading 6</option>
+          -->
         </select>
-        <label for="pdf.default-font-size" class="inline">Size</label>
-        <!--input name="pdf.default-font-size" id="pdf.default-font-size" placeholder="10pt"-->
-        <select name="pdf.default-font-size" id="pdf.default-font-size">
-          {% if advanced %}
-            <option value="">default</option>
-          {% endif %}
-          <option value="8pt">8</option>
-          <option value="9pt">9</option>
-          <option value="10pt" selected>10</option>
-          <option value="11pt">11</option>
-          <option value="12pt">12</option>
-          <option value="14pt">14</option>
-          <option value="16pt">16</option>
-          <option value="18pt">18</option>
-          <option value="20pt">20</option>
-          <option value="22pt">22</option>
-          <option value="24pt">24</option>
-          <option value="26pt">26</option>
-          <option value="28pt">28</option>
-          <option value="36pt">36</option>
-          <option value="48pt">48</option>
-          <option value="72pt">72</option>
-          <!--option value="inherit">inherit</option-->
-        </select>
-        <label for="pdf.color" class="inline">Color</label>
-        <select name="pdf.color" id="pdf.color" title="Color">
-          {% if advanced %}
-            <option value="">default</option>
-          {% endif %}
-          <option value="black" selected>black</option>
-          <!--option value="inherit">inherit</option-->
-          <option value="#other">other…</option>
-        </select>
-        <input type="text" name="pdf.color.other" style="display:none" size="7"/>
-      </p>
-      <p class="help">Font family and size for the body content.</p>
+        <table>
+	        <tr>
+	          <td>
+		        <label for="pdf.font-family" class="inline">Family</label>
+		        <select id="pdf.font-family" title="Font family">
+		          {% if advanced %}<option value="">default</option>{% endif %}
+		          <option value="Serif">serif</option>
+		          <option value="Sans">sans-serif</option>
+		          <!--option value="Monospaced">monospace</option-->
+		        </select>
+		        <label for="pdf.font-size" class="inline">Size</label>
+		        <select id="pdf.font-size">
+		          {% if advanced %}<option value="">default</option>{% endif %}
+		          <option value="8pt">8</option>
+		          <option value="9pt">9</option>
+		          <option value="10pt">10</option>
+		          <option value="11pt">11</option>
+		          <option value="12pt">12</option>
+		          <option value="14pt">14</option>
+		          <option value="16pt">16</option>
+		          <option value="18pt">18</option>
+		          <option value="20pt">20</option>
+		          <option value="22pt">22</option>
+		          <option value="24pt">24</option>
+		          <option value="26pt">26</option>
+		          <option value="28pt">28</option>
+		          <option value="36pt">36</option>
+		          <option value="48pt">48</option>
+		          <option value="72pt">72</option>
+		          <!--option value="inherit">inherit</option-->
+		        </select>
+	          </td>
+	        </tr>
+	        <tr>
+	          <td>
+		        <label for="pdf.font-weight" class="inline">Bold</label> <input id="pdf.font-weight" type="checkbox" value="bold">
+		        <label for="pdf.font-style" class="inline">Italic</label> <input id="pdf.font-style" type="checkbox" checked value="italic">
+		        <!--label for="pdf.text-decoration" class="inline">Underline</label> <input id="pdf.text-decoration" type="checkbox" value="underline"-->
+		        <label for="pdf.color" class="inline">Color</label>
+		        <input type="hidden" id="pdf.color" class="editable-list">
+		        <select id="pdf.color.list" title="Color">
+		          {% if advanced %}<option value="">default</option>{% endif %}
+		          <option value="black">black</option>
+		          <!--option value="inherit">inherit</option-->
+		          <option value="#other">other…</option>
+		        </select>
+		        <input type="text" id="pdf.color.other" style="display:none" size="7">
+			  </td>
+			</tr>
+        </table>
+      </div>
+      <!--p class="help">Style definition.</p-->
     </fieldset>
+    <h3>Link</h3>
     <div class="example">
       <div class="example-text">
         <p>The quick brown <span id="pdf.link-style.example">fox jumps</span><span id="pdf.link-page-number.example"> on page 42</span> over the lazy dog.</p>
@@ -471,26 +498,25 @@
     <fieldset>
       <p>
         <label>Link font</label>
-        <label for="pdf.link-font-weight" class="inline">Bold</label><input name="pdf.link-font-weight" type="checkbox" value="bold"/>
-        <label for="pdf.link-font-style" class="inline">Italic</label><input name="pdf.link-font-style" type="checkbox" checked value="italic"/>
-        <label for="pdf.link-text-decoration" class="inline">Underline</label><input name="pdf.link-text-decoration" type="checkbox" value="underline"/>
+        <label for="pdf.link-font-weight" class="inline">Bold</label><input name="pdf.link-font-weight" type="checkbox" value="bold">
+        <label for="pdf.link-font-style" class="inline">Italic</label><input name="pdf.link-font-style" type="checkbox" checked value="italic">
+        <label for="pdf.link-text-decoration" class="inline">Underline</label><input name="pdf.link-text-decoration" type="checkbox" value="underline">
         <label for="pdf.link-color" class="inline">Color</label>
-        <select name="pdf.link-color" id="pdf.link-color" title="Link color">
-          {% if advanced %}
-            <option value="">default</option>
-          {% endif %}
+        <input type="hidden" name="pdf.link-color" class="editable-list">
+        <select id="pdf.link-color.list" title="Link color">
+          {% if advanced %}<option value="">default</option>{% endif %}
           <option value="blue" selected>blue</option>
           <option value="black">black</option>
           <option value="inherit">inherit</option>
           <option value="#other">other…</option>
         </select>
-        <input type="text" name="pdf.link-color.other" style="display:none" size="7"/>
+        <input type="text" id="pdf.link-color.other" style="display:none" size="7">
       </p>
     </fieldset>
     <fieldset>
       <p>
         <label for="pdf.link-page-number">Page number on links</label>
-        <input name="pdf.link-page-number" type="checkbox" value="true" checked/>
+        <input name="pdf.link-page-number" type="checkbox" value="true" checked>
       </p>
       <p class="instruction">Add page number to links.</p>
     </fieldset>
@@ -533,9 +559,7 @@
       <p>
         <label for="pdf.toc-maximum-level">Show level</label>
         <select name="pdf.toc-maximum-level" id="pdf.toc-maximum-level">
-          {% if advanced %}
-            <option value="">default</option>
-          {% endif %}
+          {% if advanced %}<option value="">default</option>{% endif %}
           <option value="2">1</option>
           <option value="3">2</option>
           <option value="4" selected>3</option>
@@ -549,9 +573,7 @@
       <p>
         <label for="pdf.bookmark-style">Bookmarks state</label>
         <select name="pdf.bookmark-style" id="pdf.bookmark-style" title="Bookmark initial state">
-          {% if advanced %}
-            <option value="">default</option>
-          {% endif %}
+          {% if advanced %}<option value="">default</option>{% endif %}
           <option value="COLLAPSED" selected>collapsed</option>
           <option value="EXPANDED">expanded</option>
         </select>
@@ -576,7 +598,7 @@
     <fieldset>
       <p>
         <label for="pdf.task-label">Task labels</label>
-        <input type="checkbox" name="pdf.task-label" id="pdf.task-label" value="true" title="Task labels"/>
+        <input type="checkbox" name="pdf.task-label" id="pdf.task-label" value="true" title="Task labels">
       </p>
       <p class="instruction">Generate titles for task steps and sections.</p>
     </fieldset>
@@ -584,7 +606,7 @@
       <p class="not-available">Not available for FOP and RenderX XEP</p>
       <p>
         <label for="pdf.table-continued">Table continued</label>
-        <input type="checkbox" name="pdf.table-continued" id="pdf.table-continued" value="true" title="Mark continued table"/>
+        <input type="checkbox" name="pdf.table-continued" id="pdf.table-continued" value="true" title="Mark continued table">
       </p>
       <p class="instruction">Generate "Table continued…" to table footer when table is broken to multiple pages.</p>
     </fieldset>
@@ -593,9 +615,7 @@
       <p>
         <label for="pdf.include-related-links">Related links</label>
         <select name="pdf.include-related-links" id="pdf.include-related-links" title="Task labels">
-          {% if advanced %}
-            <option value="">default</option>
-          {% endif %}
+          {% if advanced %}<option value="">default</option>{% endif %}
           <option value="none" selected>none</option>
           <option value="nofamily">no family</option>
           <option value="all">all</option>

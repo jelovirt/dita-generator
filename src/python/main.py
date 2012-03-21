@@ -355,9 +355,12 @@ class PluginGenerateHandler(webapp.RequestHandler):
                 "page-margin-left": self.request.get(u"pdf.page-margin-left")
             }
         __dita_gen.text_align = self.request.get(u"pdf.text-align")
-        __dita_gen.default_font_size = self.request.get(u"pdf.default-font-size")
-        __dita_gen.font_family = self.request.get(u"pdf.font-family")
-        __dita_gen.color = self.request.get(u"pdf.color.other") or self.request.get(u"pdf.color")
+        
+        for type in ["body", "topic", "topic.topic", "topic.topic.topic"]:
+            v = {}
+            for property in ["font-family", "font-size", "color", "font-weight", "font-style"]:
+                v[property] = self.request.get(u"pdf." + property + "." + type)
+            __dita_gen.style[type] = v
         __dita_gen.link_font_weight = self.request.get(u"pdf.link-font-weight") or "normal"
         __dita_gen.link_font_style = self.request.get(u"pdf.link-font-style") or "normal"
         __dita_gen.link_text_decoration = self.request.get(u"pdf.link-text-decoration") or "none"

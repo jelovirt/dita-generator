@@ -60,16 +60,6 @@ function forcePageCountChangeHandler(event) {
 	});
 }
 
-function otherChangeHandler(event) {
-	var target = $(event.target);
-	var other = $(":input[name='" + target.attr("name") + ".other']");
-	if (target.val() == "#other") {
-		other.show().prop("disabled", false).focus();
-	} else {
-		other.hide().prop("disabled", true);
-	}
-}
-
 function columnChangeHandler(event) {
 	var target = $(event.target);
 	if (target.val() == 1) {
@@ -80,22 +70,42 @@ function columnChangeHandler(event) {
 }
 
 $(document).ready(function() {
-    $(":input[name='ot.version']").change(toolkitVersionChangeHandler).change();
+	// widget initialization
+	$(":input.editable-list").each(function() {
+		var s = $(this);
+		var id = s.attr("name") != undefined ? s.attr("name") : s.attr("id");
+		var l = $(":input[id='" + id + ".list']");
+		var o = $(":input[id='" + id + ".other']");
+		s.change(editableHandler);
+		o.change(function(event){editableOtherHandler(s, l, o);});
+		l.change(function(event){editableListHandler(s, l, o);});
+		editableListHandler(s, l, o);
+	});
+	
+	// form initialization
+	$(":input[name='ot.version']").change(toolkitVersionChangeHandler).change();
     $(":input[name='pdf.formatter']").change(formatterHandler).change();
     $(":input[name='transtype']").change(transtypeChangeHandler);
     
     $(":input[name='pdf.force-page-count']").change(forcePageCountChangeHandler).change();
-//    $(":input[name='pdf.chapter-layout']").change(forcePageCountChangeHandler).change();
-    
-    $("option[value='#other']").parent().change(otherChangeHandler).change();
+//    $(":input[name='pdf.chapter-layout']").change(forcePageCountChangeHandler).change();      
+//    $("option[value='#other']").parent().change(otherChangeHandler).change();
     $(":input[name='pdf.body-column-count']").change(columnChangeHandler).change();
     $(":input[name='pdf.side-col-width']").change(sideColWidthHandler).change();
     $(":input[name='pdf.text-align']").change(textAlignHandler).change();
+    $("#pdf-style-selector").change(styleHandler);
+	readFromStore("body");
+	$("#pdf-style-selector-current").val("body");
+	$(":input[id='pdf.font-family']," +
+      ":input[id='pdf.font-size']," +
+      ":input[id='pdf.font-weight']," +
+      ":input[id='pdf.font-style']," +
+      ":input[id='pdf.text-decoration']," +
+      ":input[id='pdf.color']").change(styleEditorHandler);
     $(":input[name='pdf.link-font-weight']," +
       ":input[name='pdf.link-font-style']," +
       ":input[name='pdf.link-text-decoration']," +
-      ":input[name='pdf.link-color']," +
-      ":input[name='pdf.link-color.other']").change(linkStyleHandler).change();
+      ":input[name='pdf.link-color']").change(linkStyleHandler).change();
     $(":input[name='pdf.page-size']," +
       ":input[name='pdf.orientation']," +
       ":input[name='pdf.page-margin-top']," +
@@ -117,6 +127,32 @@ $(document).ready(function() {
 });
 
 // UI --------------------------------------------------------------------------
+
+function editableHandler(event) {
+	var target = $(event.target);
+	console.info("editable changed, don't do anything");
+}
+function editableListHandler(store, list, other) {
+console.info("Change list");
+	if (list.val() == "#other") {
+		other.show().prop("disabled", false).focus();
+		store.val(other.val());
+	} else {
+		other.hide().prop("disabled", true);
+		store.val(list.val());
+	}
+}
+function editableOtherHandler(store, list, other) {
+console.info("Change other");
+	if (list.find("option[value='" + other.val() + "']").length != 0) {
+		other.hide().prop("disabled", true);
+		list.val(other.val());
+		store.val(list.val());
+	} else {
+		other.show().prop("disabled", false).focus();
+		store.val(other.val());
+	}
+}
 
 function titleNumberingHandler(event) {
 	var target = $(event.target);
@@ -152,6 +188,69 @@ function addToValue(target, add) {
 	var num = new Number(val.substring(0, val.length - 2));
 	var unit = val.substring(val.length - 2);
 	target.val((num + add).toString() + unit);
+}
+
+/**
+ * Change which style to edit
+ * @param event UI change event
+ */
+function styleHandler(event) {
+	var target = $(event.target);
+	var current = $("#pdf-style-selector-current");
+	writeToStore(current.val());
+	readFromStore(target.val());
+	current.val(target.val());
+}
+var storeFields = ["font-family", "font-size", "color", "font-weight", "font-style", "color"];
+function readFromStore(type) {
+	for (var i = 0; i < storeFields.length; i++) {
+		var s = $(":input[name='pdf." + storeFields[i] + "." + type + "']");
+		var ui = $(":input[id='pdf." + storeFields[i] + "']");
+		if (ui.is(":checkbox")) {
+			if (s.is(":disabled")) {
+				ui.removeAttr("checked");
+			} else {
+				ui.attr("checked", true);
+			}
+		} else if (ui.is(".editable-list")) {
+			var id = ui.attr("name") != undefined ? ui.attr("name") : ui.attr("id");
+			var other = $(":input[id='" + id + ".other']");
+			other.val(s.val()).change();
+		} else {
+			ui.val(s.val());
+		}
+	}
+}
+function writeToStore(type) {
+	for (var i = 0; i < storeFields.length; i++) {
+		writeFieldToStore(storeFields[i], type);
+	}
+}
+function writeFieldToStore(field, type) {
+	var ui = $(":input[id='pdf." + field + "']");
+	var s = $(":input[name='pdf." + field + "." + type + "']");
+	if (ui.is(":checkbox")) {
+		if (ui.is(":checked")) {
+			s.removeAttr("disabled");
+		} else {
+			s.attr("disabled", true);
+		}
+	} else if (ui.is(".editable-list")) {
+		s.val(ui.val());
+	} else {
+		s.val(ui.val());
+	}		
+}
+/**
+ * Update store when UI changes
+ * @param event UI change event
+ */
+function styleEditorHandler(event) {
+	var ui = $(event.target);
+	var type = $("#pdf-style-selector-current").val();
+	var field = ui.attr("id");
+	field = field.substring(field.indexOf(".") + 1);
+	writeFieldToStore(field, type);
 }
 
 // Preview ---------------------------------------------------------------------
@@ -411,7 +510,7 @@ function toPt(val) {
     } else if (unit == "pc") {
         return value * 12;
     } else if (unit == "em") {
-    	var val = $(":input[name='pdf.default-font-size']").val();
+    	var val = $(":input[name='pdf.font-size.body']").val();
     	return val.substring(0, val.length - 2) * value;  
     } else if (unit == "pt") {
         return value;

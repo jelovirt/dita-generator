@@ -71,9 +71,11 @@ class StylePluginGenerator(DitaGenerator):
         self.plugin_name = None
         self.plugin_version = None
         self.page_size = None
+        self.style = {}
         self.page_margins = None
-        self.font_family = None
-        self.color = None
+        #self.font_family = None
+        #self.font_size = None
+        #self.color = None
         self.link_font_weight = None
         self.link_font_style = None
         self.link_color = None
@@ -411,11 +413,12 @@ class StylePluginGenerator(DitaGenerator):
         
         __root_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name="__fo__root")
         # font family
-        if self.font_family:
-            ET.SubElement(__root_attr, NS_XSL + "attribute", name=u"font-family").text = self.font_family
+        style_body = self.style["body"]
+        if self.style["body"]["font-family"]:
+            ET.SubElement(__root_attr, NS_XSL + "attribute", name=u"font-family").text = self.style["body"]["font-family"]
         # font color
-        if self.color:
-            ET.SubElement(__root_attr, NS_XSL + "attribute", name=u"color").text = self.color
+        if self.style["body"]["color"]:
+            ET.SubElement(__root_attr, NS_XSL + "attribute", name=u"color").text = self.style["body"]["color"]
         # text alignment
         if self.text_align:
             ET.SubElement(__root_attr, NS_XSL + "attribute", name=u"text-align").text = self.text_align
@@ -491,8 +494,8 @@ class StylePluginGenerator(DitaGenerator):
             if v:
                 ET.SubElement(__root, NS_XSL + "variable", name=k).text = v
         # font size
-        if self.default_font_size:
-            ET.SubElement(__root, NS_XSL + "variable", name=u"default-font-size").text = self.default_font_size
+        if self.style["body"]["font-size"]:
+            ET.SubElement(__root, NS_XSL + "variable", name=u"default-font-size").text = self.style["body"]["font-size"]
         # body indent
         if self.side_col_width:
             ET.SubElement(__root, NS_XSL + "variable", name=u"side-col-width").text = self.side_col_width

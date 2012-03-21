@@ -28,13 +28,15 @@ fieldset {
 fieldset:first-child {
     /*border-top: 1px solid gray;*/
 }
-fieldset label {
-    width: 150px;
+fieldset label, fieldset select.label {
+    width: 140px;
+    margin-right: 10px;
     float: left;
     display: block;
 }
 label.inline {
     width: auto;
+    margin-right: 0px;
     float: none;
     display: inline;
 }
