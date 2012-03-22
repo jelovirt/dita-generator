@@ -422,6 +422,12 @@ class StylePluginGenerator(DitaGenerator):
         # text alignment
         if self.text_align:
             ET.SubElement(__root_attr, NS_XSL + "attribute", name=u"text-align").text = self.text_align
+        # titles
+        for (k, e) in self.style.items():
+            if k.startswith("topic"):
+                __title_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name=k + ".title")
+                for (p, v) in e.items():
+                    ET.SubElement(__title_attr, NS_XSL + "attribute", name=p).text = v
         # link
         link_attr_sets = []
         if self.ot_version >= Version("1.5.4"):

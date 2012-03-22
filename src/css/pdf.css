@@ -104,15 +104,33 @@ table.example-page-body td.gap{
   padding: 0px;
 }
 
-.example-page-content-title {
-  margin-top: 5px;
-  font-weight: bold;
+
+
+.example-block {
+  width: 100%;
+  border: solid 1px black;
+  box-shadow: 3px 3px 3px #ccc;
+  padding: 15px;
+  clear: both;
 }
-.example-page-content-para {
+.example-block-page {
+  border: solid 1px black;
+  box-shadow: 3px 3px 3px #ccc;
+}
+
+
+.example-page-wrapper {
+  line-height: 1.2 !important;
+}
+.example-page-content-topic {
+  /* margin-top: 5px; set dynamically */
+  /* font-weight: bold; set dynamically */
+}
+.example-page-content-body {
   /* margin-top set dynamically */
   /* margin-bottom set dynamically */
-  margin-top: 5px;
-  margin-bottom: 5px;
+  /*margin-top: 5px;
+  margin-bottom: 5px;*/
 }
 
 .example-text {

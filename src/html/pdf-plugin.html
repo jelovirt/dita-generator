@@ -1,6 +1,8 @@
 {% extends "form.html" %}
 
 {% block form %}
+  <script type="text/javascript" src="/js/pdf.js"></script>
+  <script type="text/javascript" src="/js/pdf-preview.js"></script>
   {% if not advanced %}
     <!--input type="hidden" name="file" value="plugin"-->
   {% endif %}
@@ -344,26 +346,28 @@
   </div>
   <div class="page">
     <h3>Paragraph</h3>
-    <div class="example">
+    <!--div class="example">
       <div class="example-page-fragment" id="pdf.side-col-width.example">
       <div class="example-page-wrapper" id="pdf.text-align.example">
-        <div class="example-page-content-title">Pangram</div>
-        <p class="example-page-content-para">
+        <div class="example-page-content-topic">Heading 1</div>
+        <div class="example-page-content-topic.topic">Heading 2</div>
+        <p class="example-page-content-body">
         The quick brown fox jumps over the lazy dog.
         The quick brown fox jumps over the lazy dog.
         </p>
-        <p class="example-page-content-para">
+        <p class="example-page-content-body">
         The quick brown fox jumps over the lazy dog.
         The quick brown fox jumps over the lazy dog.
         The quick brown fox jumps over the lazy dog.
         </p>
-        <p class="example-page-content-para">
+        <div class="example-page-content-topic.topic.topic">Heading 3</div>
+        <p class="example-page-content-body">
         The quick brown fox jumps over the lazy dog.
         The quick brown fox jumps over the lazy dog.
         </p>
       </div>
       </div>
-    </div>
+    </div-->
     <fieldset>
       <p>
         <label for="pdf.side-col-width">Indentation</label>
@@ -371,6 +375,7 @@
       </p>
       <p class="instruction">Amount the body text is indented relative to the left margin.</p>
     </fieldset>
+    <!--
     <fieldset>
       <p>
         <label for="pdf.spacing">Spacing before</label>
@@ -383,6 +388,7 @@
         <input name="pdf.spacing.after" id="pdf.spacing.after" placeholder="0.6em" pattern="\d+(\.\d+)?(pt|mm|in|pc|cm|em)" size="5" class="length-value">
       </p>
     </fieldset>
+    -->
     <fieldset>
       <p>
         <label for="pdf.text-align">Text alignment</label>
@@ -399,51 +405,69 @@
   </div>
   <div class="page">
     -->
-    <h3>Font</h3>
+    <h3>Style</h3>
     <fieldset>
       <input type="hidden" id="pdf-style-selector-current">    
-      <input type="hidden" name="pdf.font-family.body" value="Serif">
+      <input type="hidden" name="pdf.font-family.body" value="serif">
       <input type="hidden" name="pdf.font-size.body" value="10pt">
       <input type="hidden" name="pdf.color.body" value="black">
-      <input type="hidden" name="pdf.font-weight.body" value="bold" disabled>
-      <input type="hidden" name="pdf.font-style.body" value="italic" disabled>
-      <input type="hidden" name="pdf.font-family.topic" value="Sans">
+      <input type="hidden" name="pdf.font-weight.body" value="normal">
+      <input type="hidden" name="pdf.font-style.body" value="normal">
+      <input type="hidden" name="pdf.space-before.body" value="6pt"><!--0.6em-->
+      <input type="hidden" name="pdf.space-after.body" value="6pt"><!--0.6em-->
+      
+      <input type="hidden" name="pdf.font-family.topic" value="sans-serif">
       <input type="hidden" name="pdf.font-size.topic" value="18pt">
-      <input type="hidden" name="pdf.color.topic" value="black">
+      <input type="hidden" name="pdf.color.topic" value="black" class="inherit-from-body">
       <input type="hidden" name="pdf.font-weight.topic" value="bold">
-      <input type="hidden" name="pdf.font-style.topic" value="italic" disabled>
-      <input type="hidden" name="pdf.font-family.topic.topic" value="Sans">
+      <input type="hidden" name="pdf.font-style.topic" value="normal">
+      <input type="hidden" name="pdf.space-before.topic" value="0pt">
+      <input type="hidden" name="pdf.space-after.topic" value="16.8pt">
+      
+      <input type="hidden" name="pdf.font-family.topic.topic" value="sans-serif">
       <input type="hidden" name="pdf.font-size.topic.topic" value="14pt">
-      <input type="hidden" name="pdf.color.topic.topic" value="black">
+      <input type="hidden" name="pdf.color.topic.topic" value="black" class="inherit-from-body">
       <input type="hidden" name="pdf.font-weight.topic.topic" value="bold">
-      <input type="hidden" name="pdf.font-style.topic.topic" value="italic" disabled>
-      <input type="hidden" name="pdf.font-family.topic.topic.topic" value="Sans">
+      <input type="hidden" name="pdf.font-style.topic.topic" value="normal">
+      <input type="hidden" name="pdf.space-before.topic.topic" value="12pt">
+      <input type="hidden" name="pdf.space-after.topic.topic" value="5pt">
+      
+      <input type="hidden" name="pdf.font-family.topic.topic.topic" value="sans-serif">
       <input type="hidden" name="pdf.font-size.topic.topic.topic" value="12pt">
-      <input type="hidden" name="pdf.color.topic.topic.topic" value="green">
+      <input type="hidden" name="pdf.color.topic.topic.topic" value="black" class="inherit-from-body">
       <input type="hidden" name="pdf.font-weight.topic.topic.topic" value="bold">
-      <input type="hidden" name="pdf.font-style.topic.topic.topic" value="italic" disabled>
+      <input type="hidden" name="pdf.font-style.topic.topic.topic" value="normal">
+      <input type="hidden" name="pdf.space-before.topic.topic.topic" value="12pt">
+      <input type="hidden" name="pdf.space-after.topic.topic.topic" value="2pt">
+      
+      <input type="hidden" name="pdf.font-family.topic.topic.topic.topic" value="serif" class="inherit-from-body">
+      <input type="hidden" name="pdf.font-size.topic.topic.topic.topic" value="10pt" class="inherit-from-body">
+      <input type="hidden" name="pdf.color.topic.topic.topic.topic" value="black" class="inherit-from-body">
+      <input type="hidden" name="pdf.font-weight.topic.topic.topic.topic" value="bold">
+      <input type="hidden" name="pdf.font-style.topic.topic.topic.topic" value="normal">
+      <input type="hidden" name="pdf.space-before.topic.topic.topic.topic" value="12pt">
+      <input type="hidden" name="pdf.space-after.topic.topic.topic.topic" value="0pt">
       <div>
         <select id="pdf-style-selector" class="label">
-          <option value="body" selected>Body</option>
-          <!--
+          <option value="body" selected>Normal</option>
           <option value="topic">Heading 1</option>
           <option value="topic.topic">Heading 2</option>
           <option value="topic.topic.topic">Heading 3</option>
-          -->
-          <!--
           <option value="topic.topic.topic.topic">Heading 4</option>
+          <!--
           <option value="topic.topic.topic.topic.topic">Heading 5</option>
           <option value="topic.topic.topic.topic.topic.topic">Heading 6</option>
           -->
         </select>
         <table>
+        <tr><th colspan="2"><label class="inline">Formatting</label></th></tr>
 	        <tr>
-	          <td>
+	          <td colspan="2">
 		        <label for="pdf.font-family" class="inline">Family</label>
 		        <select id="pdf.font-family" title="Font family">
 		          {% if advanced %}<option value="">default</option>{% endif %}
-		          <option value="Serif">serif</option>
-		          <option value="Sans">sans-serif</option>
+		          <option value="serif">serif</option>
+		          <option value="sans-serif">sans-serif</option>
 		          <!--option value="Monospaced">monospace</option-->
 		        </select>
 		        <label for="pdf.font-size" class="inline">Size</label>
@@ -470,7 +494,7 @@
 	          </td>
 	        </tr>
 	        <tr>
-	          <td>
+	          <td colspan="2">
 		        <label for="pdf.font-weight" class="inline">Bold</label> <input id="pdf.font-weight" type="checkbox" value="bold">
 		        <label for="pdf.font-style" class="inline">Italic</label> <input id="pdf.font-style" type="checkbox" checked value="italic">
 		        <!--label for="pdf.text-decoration" class="inline">Underline</label> <input id="pdf.text-decoration" type="checkbox" value="underline"-->
@@ -485,10 +509,47 @@
 		        <input type="text" id="pdf.color.other" style="display:none" size="7">
 			  </td>
 			</tr>
+	      <tr><th colspan="2"><label class="inline">Spacing</label></th></tr>
+		  <tr>
+		    <td>
+              <label for="pdf.space-before" class="inline">before</label>
+              <input id="pdf.space-before" placeholder="0.6em" pattern="\d+(\.\d+)?(pt|mm|in|pc|cm|em)" size="5" class="length-value">
+            </td>
+		  </tr>
+		  <tr>
+		    <td>
+		      <label for="pdf.space-after" class="inline">after</label>
+		      <input id="pdf.space-after" placeholder="0.6em" pattern="\d+(\.\d+)?(pt|mm|in|pc|cm|em)" size="5" class="length-value">
+		    </td>
+		  </tr>
         </table>
       </div>
       <!--p class="help">Style definition.</p-->
     </fieldset>
+    <h4>Formatting preview</h4>
+    <div class="example-block">
+      <div class="example-block-page" id="pdf.side-col-width.examplex">
+	      <div class="example-page-content" id="pdf.text-align.examplex">
+	        <div class="example-page-content-topic">Heading 1</div>
+	        <div class="example-page-content-topic.topic">Heading 2</div>
+	        <p class="example-page-content-body">
+	        The quick brown fox jumps over the lazy dog.
+	        The quick brown fox jumps over the lazy dog.
+	        </p>
+	        <p class="example-page-content-body">
+	        The quick brown fox jumps over the lazy dog.
+	        The quick brown fox jumps over the lazy dog.
+	        The quick brown fox jumps over the lazy dog.
+	        </p>
+	        <div class="example-page-content-topic.topic.topic">Heading 3</div>
+	        <p class="example-page-content-body">
+	        The quick brown fox jumps over the lazy dog.
+	        The quick brown fox jumps over the lazy dog.
+	        </p>
+	      </div>
+      </div>
+    </div>
+    
     <h3>Link</h3>
     <div class="example">
       <div class="example-text">

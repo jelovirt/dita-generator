@@ -357,10 +357,12 @@ class PluginGenerateHandler(webapp.RequestHandler):
         __dita_gen.text_align = self.request.get(u"pdf.text-align")
         
         for type in ["body", "topic", "topic.topic", "topic.topic.topic"]:
-            v = {}
-            for property in ["font-family", "font-size", "color", "font-weight", "font-style"]:
-                v[property] = self.request.get(u"pdf." + property + "." + type)
-            __dita_gen.style[type] = v
+            group = {}
+            for property in ["font-family", "font-size", "color", "font-weight", "font-style", "space-before", "space-after"]:
+                v = self.request.get(u"pdf." + property + "." + type)
+                if v:
+                    group[property] = v 
+            __dita_gen.style[type] = group
         __dita_gen.link_font_weight = self.request.get(u"pdf.link-font-weight") or "normal"
         __dita_gen.link_font_style = self.request.get(u"pdf.link-font-style") or "normal"
         __dita_gen.link_text_decoration = self.request.get(u"pdf.link-text-decoration") or "none"

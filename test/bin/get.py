@@ -75,9 +75,18 @@ def get(server, handler):
             "pdf.toc-maximum-level": "3",
             "pdf.task-label": "YES",
             "pdf.include-related-links": "nofamily",
+            
             "pdf.font-family.body": "Sans",
             "pdf.font-size.body": "12pt",
             "pdf.color.body": "gray",
+            
+            "pdf.font-family.topic": "Serif",
+            "pdf.font-size.topic": "18pt",
+            "pdf.color.topic": "blue",
+            "pdf.font-weight.topic": "bold",
+            
+            "pdf.font-style.topic.topic.topic": "italic",
+            
             "pdf.side-col-width": "0pt",
             "pdf.link-color": "inherit",
             "pdf.text-align": "justify",
