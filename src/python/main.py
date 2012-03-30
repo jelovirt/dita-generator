@@ -356,9 +356,9 @@ class PluginGenerateHandler(webapp.RequestHandler):
             }
         __dita_gen.text_align = self.request.get(u"pdf.text-align")
         
-        for type in ["body", "topic", "topic.topic", "topic.topic.topic"]:
+        for type in ["body", "topic", "topic.topic", "topic.topic.topic", "topic.topic.topic.topic", "link"]:
             group = {}
-            for property in ["font-family", "font-size", "color", "font-weight", "font-style", "space-before", "space-after"]:
+            for property in ["font-family", "font-size", "color", "font-weight", "font-style", "space-before", "space-after", "start-indent", "text-decoration", "text-align"]:
                 v = self.request.get(u"pdf." + property + "." + type)
                 if v:
                     group[property] = v 
@@ -374,7 +374,7 @@ class PluginGenerateHandler(webapp.RequestHandler):
         __dita_gen.toc_maximum_level = self.request.get(u"pdf.toc-maximum-level")
         __dita_gen.task_label = self.request.get(u"pdf.task-label")
         __dita_gen.include_related_links = self.request.get(u"pdf.include-related-links")
-        __dita_gen.side_col_width = self.request.get(u"pdf.side-col-width")
+        #__dita_gen.side_col_width = self.request.get(u"pdf.side-col-width")
         __dita_gen.body_column_count = self.request.get(u"pdf.body-column-count")
         __dita_gen.index_column_count = self.request.get(u"pdf.index-column-count")
         __dita_gen.column_gap = self.request.get(u"pdf.column-gap")

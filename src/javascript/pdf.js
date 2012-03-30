@@ -4,19 +4,6 @@ function toolkitVersionChangeHandler(event) {
 
 function formatterHandler(event) {
     toggleByClass($(event.target), "f");
-//    var val = p.val();
-//    p.find("option").each(function() {
-//        var s = $(this).attr("value");
-//        var c = ".v" + s.replace(/\./g, "_");
-//        $(c).addClass("disabled").find(":input").attr("disabled", true);
-//    });
-//    p.find("option").each(function() {
-//        var s = $(this).attr("value");
-//        var c = ".v" + s.replace(/\./g, "_");
-//        if (val == s) {
-//            $(c).removeClass("disabled").find(":input").removeAttr("disabled");
-//        }
-//    });
 }
 
 function toggleByClass(p, prefix) {
@@ -84,13 +71,13 @@ $(document).ready(function() {
       ":input[id='pdf.text-decoration']," +
       ":input[id='pdf.space-before']," +
       ":input[id='pdf.space-after']," +
-      ":input[id='pdf.side-col-width']," +
+      ":input[id='pdf.start-indent']," +
       ":input[id='pdf.color']," +
       ":input[id='pdf.text-align']").change(styleEditorHandler);
     $("#pdf-style-selector").change(styleHandler);
     readFromModel("body");// initialize style dialog
 	pdfStyleSelectorCurrent = "body";
-	$(":input.length-value").keydown(valueChangeHandler);
+	$(":input.length-value").keydown(valueChangeHandler).change(validateLength);
 });
 
 // Model -----------------------------------------------------------------------
@@ -104,6 +91,16 @@ $(document).ready(function() {
 //}
 
 // UI --------------------------------------------------------------------------
+
+function validateLength(event) {
+	var target = $(event.target);
+	var val = toPt(getVal(target));
+	if (val == undefined) {
+		setError(target, $("<span>Invalid value</span>"), "Invalid XSL FO length value");
+	} else {
+		setOk(target);
+	}
+}
 
 var pdfStyleSelectorCurrent;
 
@@ -216,7 +213,7 @@ function styleHandler(event) {
 	pdfStyleSelectorCurrent = target.val();
 	readFromModel(target.val());
 }
-var storeFields = ["font-family", "font-size", "font-weight", "font-style", "color", "space-before", "space-after", "side-col-width", "text-align", "text-decoration"];
+var storeFields = ["font-family", "font-size", "font-weight", "font-style", "color", "space-before", "space-after", "start-indent", "text-align", "text-decoration"];
 /**
  * Read fields from model to UI.
  * @param type
@@ -277,6 +274,16 @@ function writeFieldToModel(field, type) {
 			//model.val(undefined);
 			//return;
 		}
+    // update inheriting model fields
+	} else if (type == "body") {
+		$(".inherit-from-body").each(function() {
+			var m = $(this);
+			if (m.is("*[name^='pdf." + field + "']")) {
+				if (m.val() == undefined || m.val() == "" || m.val() == oldValue) {
+					m.val(newValue);
+				}
+			}
+		});
 	}
 
 	model.val(newValue);
@@ -290,6 +297,5 @@ function writeFieldToModel(field, type) {
 function styleEditorHandler(event) {
 	var ui = $(event.target);
 	var field = ui.attr("id").split(".")[1];
-	//field = field.substring(field.indexOf(".") + 1);
 	writeFieldToModel(field, pdfStyleSelectorCurrent);
 }

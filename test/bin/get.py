@@ -79,6 +79,8 @@ def get(server, handler):
             "pdf.font-family.body": "Sans",
             "pdf.font-size.body": "12pt",
             "pdf.color.body": "gray",
+            "pdf.start-indent.body": "25pt",
+            "pdf.text-align.body": "justify",
             
             "pdf.font-family.topic": "Serif",
             "pdf.font-size.topic": "18pt",
@@ -86,8 +88,8 @@ def get(server, handler):
             "pdf.font-weight.topic": "bold",
             
             "pdf.font-style.topic.topic.topic": "italic",
+            "pdf.start-indent.topic.topic.topic" : "5pt",
             
-            "pdf.side-col-width": "0pt",
             "pdf.link-color": "inherit",
             "pdf.text-align": "justify",
             "pdf.dl": "list",

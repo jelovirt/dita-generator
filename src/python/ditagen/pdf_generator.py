@@ -88,7 +88,7 @@ class StylePluginGenerator(DitaGenerator):
         self.toc_maximum_level = None
         self.task_label = None
         self.include_related_links = None
-        self.side_col_width = None
+        #self.side_col_width = None
         self.column_gap = None
         self.mirror_page_margins = None
         self.text_align = None
@@ -414,10 +414,10 @@ class StylePluginGenerator(DitaGenerator):
         __root_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name="__fo__root")
         # font family
         style_body = self.style["body"]
-        if self.style["body"]["font-family"]:
+        if "font-family" in self.style["body"]:
             ET.SubElement(__root_attr, NS_XSL + "attribute", name=u"font-family").text = self.style["body"]["font-family"]
         # font color
-        if self.style["body"]["color"]:
+        if "color" in self.style["body"]:
             ET.SubElement(__root_attr, NS_XSL + "attribute", name=u"color").text = self.style["body"]["color"]
         # text alignment
         if self.text_align:
@@ -500,11 +500,11 @@ class StylePluginGenerator(DitaGenerator):
             if v:
                 ET.SubElement(__root, NS_XSL + "variable", name=k).text = v
         # font size
-        if self.style["body"]["font-size"]:
+        if "font-size" in self.style["body"]:
             ET.SubElement(__root, NS_XSL + "variable", name=u"default-font-size").text = self.style["body"]["font-size"]
         # body indent
-        if self.side_col_width:
-            ET.SubElement(__root, NS_XSL + "variable", name=u"side-col-width").text = self.side_col_width
+        if "start-indent" in self.style["body"]:
+            ET.SubElement(__root, NS_XSL + "variable", name=u"side-col-width").text = self.style["body"]["start-indent"]
         # toc
         if self.toc_maximum_level:
             ET.SubElement(__root, NS_XSL + "variable", name=u"tocMaximumLevel").text = self.toc_maximum_level

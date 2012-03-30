@@ -417,7 +417,7 @@
       <input type="hidden" name="pdf.space-before.body" value="6pt">
       <input type="hidden" name="pdf.space-after.body" value="6pt">
       <input type="hidden" name="pdf.text-align.body" value="start">
-      <input type="hidden" name="pdf.side-col-width.body" value="25pt"/>
+      <input type="hidden" name="pdf.start-indent.body" value="25pt"/>
       
       <input type="hidden" name="pdf.font-family.topic" value="sans-serif">
       <input type="hidden" name="pdf.font-size.topic" value="18pt">
@@ -428,7 +428,7 @@
       <input type="hidden" name="pdf.space-before.topic" value="0pt">
       <input type="hidden" name="pdf.space-after.topic" value="16.8pt">
       <input type="hidden" name="pdf.text-align.topic" value="start">
-      <input type="hidden" name="pdf.side-col-width.topic" value="0pt"/>
+      <input type="hidden" name="pdf.start-indent.topic" value="0pt"/>
       
       <input type="hidden" name="pdf.font-family.topic.topic" value="sans-serif">
       <input type="hidden" name="pdf.font-size.topic.topic" value="14pt">
@@ -439,7 +439,7 @@
       <input type="hidden" name="pdf.space-before.topic.topic" value="12pt">
       <input type="hidden" name="pdf.space-after.topic.topic" value="5pt">
       <input type="hidden" name="pdf.text-align.topic.topic" value="start">
-      <input type="hidden" name="pdf.side-col-width.topic.topic" value="0pt"/>
+      <input type="hidden" name="pdf.start-indent.topic.topic" value="0pt"/>
       
       <input type="hidden" name="pdf.font-family.topic.topic.topic" value="sans-serif">
       <input type="hidden" name="pdf.font-size.topic.topic.topic" value="12pt">
@@ -450,7 +450,7 @@
       <input type="hidden" name="pdf.space-before.topic.topic.topic" value="12pt">
       <input type="hidden" name="pdf.space-after.topic.topic.topic" value="2pt">
       <input type="hidden" name="pdf.text-align.topic.topic.topic" value="start">
-      <input type="hidden" name="pdf.side-col-width.topic.topic.topic" value="0pt"/>
+      <input type="hidden" name="pdf.start-indent.topic.topic.topic" value="0pt"/>
       
       <input type="hidden" name="pdf.font-family.topic.topic.topic.topic" value="serif" class="inherit-from-body">
       <input type="hidden" name="pdf.font-size.topic.topic.topic.topic" value="10pt" class="inherit-from-body">
@@ -461,7 +461,7 @@
       <input type="hidden" name="pdf.space-before.topic.topic.topic.topic" value="12pt">
       <input type="hidden" name="pdf.space-after.topic.topic.topic.topic" value="0pt">
       <input type="hidden" name="pdf.text-align.topic.topic.topic.topic" value="start">
-      <input type="hidden" name="pdf.side-col-width.topic.topic.topic.topic" value="" class="inherit-from-body"/>
+      <input type="hidden" name="pdf.start-indent.topic.topic.topic.topic" value="" class="inherit-from-body"/>
       
       <input type="hidden" name="pdf.font-family.link" value="" class="inherit-from-body">
       <input type="hidden" name="pdf.font-size.link" value="" class="inherit-from-body">
@@ -472,6 +472,7 @@
       <input type="hidden" name="pdf.space-before.link" value="">
       <input type="hidden" name="pdf.space-after.link" value="">
       <input type="hidden" name="pdf.text-align.link" value="">
+      <input type="hidden" name="pdf.start-indent.link" value=""/>
       </fieldset>
       
       <input type="hidden" id="pdf-style-selector-current">
@@ -540,7 +541,7 @@
               <!--label for="pdf.text-decoration" class="inline">Underline</label> <input id="pdf.text-decoration" type="checkbox" value="underline"-->
               <br>
               <label for="pdf.color" class="inline">Color</label>:
-              <input type="input" style="silver" id="pdf.color" class="editable-list">
+              <input type="hidden" id="pdf.color" class="editable-list">
               <select id="pdf.color.list" title="Color">
                 {% if advanced %}<option value="">default</option>{% endif %}
                 <option value="black">black</option>
@@ -592,10 +593,10 @@
               <table>
                 <tr class="pdf-style-selector-block">
                   <th>
-                    <label for="pdf.side-col-width" class="inline">Left</label>:
+                    <label for="pdf.start-indent" class="inline">Left</label>:
                   </th>
                   <td>
-                    <input id="pdf.side-col-width" pattern="\d+(\.\d+)?(pt|mm|in|pc|cm|em)" size="5" class="length-value">
+                    <input id="pdf.start-indent" pattern="\d+(\.\d+)?(pt|mm|in|pc|cm|em)" size="5" class="length-value">
                   </td>
                 </tr>
               </table>
@@ -609,33 +610,40 @@
     </fieldset>
     
     <!-- Style preview -->
-    <h4>Formatting preview</h4>
-    <div class="example-block">
-      <div class="example-block-page" id="pdf.side-col-width.examplex">
+    <!--h4>Formatting preview</h4-->
+    <div class="example-block" id="example-pdf-style">
+      <div class="example-block-page" id="pdf.start-indent.examplex">
         <div class="example-page-content" id="pdf.text-align.examplex">
           <div class="example-page-content-topic">Heading 1</div>
           <div class="example-page-content-topic.topic">Heading 2</div>
           <p class="example-page-content-body">
-          The quick brown fox jumps over the lazy dog.
-          The quick brown fox jumps over the lazy dog.
-          The quick brown fox jumps over the lazy dog.
+            The quick brown fox jumps over the lazy dog.
+            The quick brown fox jumps over the lazy dog.
+            The quick brown fox jumps over the lazy dog.
             The quick brown fox jumps over the lazy dog.
           </p>
           <p class="example-page-content-body">
-          The quick brown fox jumps over the lazy dog.
-          The quick brown fox jumps over the lazy dog.
-          The quick brown fox jumps over the lazy dog.
-          The quick brown fox jumps over the lazy dog.
+            The quick brown fox jumps over the lazy dog.
+            The quick brown fox jumps over the lazy dog.
+            The quick brown fox jumps over the lazy dog.
+            The quick brown fox jumps over the lazy dog.
             The quick brown fox jumps over the lazy dog.
           </p>
           <p class="example-page-content-body">
-          The quick brown <span class="example-page-content-link">fox jumps</span><span id="pdf.link-page-number.example"> on page 42</span> over the lazy dog.
+            The quick brown <span class="example-page-content-link">fox jumps</span><span id="pdf.link-page-number.example"> on page 42</span> over the lazy dog.
           </p>
           <div class="example-page-content-topic.topic.topic">Heading 3</div>
           <p class="example-page-content-body">
-          The quick brown fox jumps over the lazy dog.
-          The quick brown fox jumps over the lazy dog.
-          The quick brown fox jumps over the lazy dog.
+            The quick brown fox jumps over the lazy dog.
+            The quick brown fox jumps over the lazy dog.
+            The quick brown fox jumps over the lazy dog.
+            The quick brown fox jumps over the lazy dog.
+          </p>
+          <div class="example-page-content-topic.topic.topic.topic">Heading 4</div>
+          <p class="example-page-content-body">
+            The quick brown fox jumps over the lazy dog.
+            The quick brown fox jumps over the lazy dog.
+            The quick brown fox jumps over the lazy dog.
             The quick brown fox jumps over the lazy dog.
           </p>
         </div>
