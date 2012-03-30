@@ -1,3 +1,7 @@
+fieldset.model {
+  display: none;
+}
+
 .preview .preview-page {
   width: 50px;
   height: 75px;

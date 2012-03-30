@@ -18,6 +18,10 @@ h1 a {
   text-decoration: none;
 }
 
+h4 {
+  margin: 0;
+}
+
 fieldset {
     margin: 0px;
     padding: 0px;
@@ -68,6 +72,11 @@ th {
   text-align: left;
   padding-right: 10px;
   vertical-align: top;
+  font-weight: bold;
+}
+table table th {
+  font-weight: normal;
+  padding-left: 10px;
 }
 td {
   text-align: left;
