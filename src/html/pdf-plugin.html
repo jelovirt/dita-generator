@@ -408,73 +408,18 @@
     <fieldset>
       <!-- Style model -->
       <fieldset id="style-model" class="model">
-      <input type="hidden" name="pdf.font-family.body" value="serif">
-      <input type="hidden" name="pdf.font-size.body" value="10pt">
-      <input type="hidden" name="pdf.color.body" value="black">
-      <input type="hidden" name="pdf.font-weight.body" value="normal">
-      <input type="hidden" name="pdf.font-style.body" value="normal">
-      <input type="hidden" name="pdf.text-decoration.body" value="none">
-      <input type="hidden" name="pdf.space-before.body" value="6pt">
-      <input type="hidden" name="pdf.space-after.body" value="6pt">
-      <input type="hidden" name="pdf.text-align.body" value="start">
-      <input type="hidden" name="pdf.start-indent.body" value="25pt"/>
-      
-      <input type="hidden" name="pdf.font-family.topic" value="sans-serif">
-      <input type="hidden" name="pdf.font-size.topic" value="18pt">
-      <input type="hidden" name="pdf.color.topic" value="black" class="inherit-from-body">
-      <input type="hidden" name="pdf.font-weight.topic" value="bold">
-      <input type="hidden" name="pdf.font-style.topic" value="normal">
-      <input type="hidden" name="pdf.text-decoration.topic" value="none" class="inherit-from-body">
-      <input type="hidden" name="pdf.space-before.topic" value="0pt">
-      <input type="hidden" name="pdf.space-after.topic" value="16.8pt">
-      <input type="hidden" name="pdf.text-align.topic" value="start">
-      <input type="hidden" name="pdf.start-indent.topic" value="0pt"/>
-      
-      <input type="hidden" name="pdf.font-family.topic.topic" value="sans-serif">
-      <input type="hidden" name="pdf.font-size.topic.topic" value="14pt">
-      <input type="hidden" name="pdf.color.topic.topic" value="black" class="inherit-from-body">
-      <input type="hidden" name="pdf.font-weight.topic.topic" value="bold">
-      <input type="hidden" name="pdf.font-style.topic.topic" value="normal">
-      <input type="hidden" name="pdf.text-decoration.topic.topic" value="none" class="inherit-from-body">
-      <input type="hidden" name="pdf.space-before.topic.topic" value="12pt">
-      <input type="hidden" name="pdf.space-after.topic.topic" value="5pt">
-      <input type="hidden" name="pdf.text-align.topic.topic" value="start">
-      <input type="hidden" name="pdf.start-indent.topic.topic" value="0pt"/>
-      
-      <input type="hidden" name="pdf.font-family.topic.topic.topic" value="sans-serif">
-      <input type="hidden" name="pdf.font-size.topic.topic.topic" value="12pt">
-      <input type="hidden" name="pdf.color.topic.topic.topic" value="black" class="inherit-from-body">
-      <input type="hidden" name="pdf.font-weight.topic.topic.topic" value="bold">
-      <input type="hidden" name="pdf.font-style.topic.topic.topic" value="normal">
-      <input type="hidden" name="pdf.text-decoration.topic.topic.topic" value="none" class="inherit-from-body">
-      <input type="hidden" name="pdf.space-before.topic.topic.topic" value="12pt">
-      <input type="hidden" name="pdf.space-after.topic.topic.topic" value="2pt">
-      <input type="hidden" name="pdf.text-align.topic.topic.topic" value="start">
-      <input type="hidden" name="pdf.start-indent.topic.topic.topic" value="0pt"/>
-      
-      <input type="hidden" name="pdf.font-family.topic.topic.topic.topic" value="serif" class="inherit-from-body">
-      <input type="hidden" name="pdf.font-size.topic.topic.topic.topic" value="10pt" class="inherit-from-body">
-      <input type="hidden" name="pdf.color.topic.topic.topic.topic" value="black" class="inherit-from-body">
-      <input type="hidden" name="pdf.font-weight.topic.topic.topic.topic" value="bold">
-      <input type="hidden" name="pdf.font-style.topic.topic.topic.topic" value="normal">
-      <input type="hidden" name="pdf.text-decoration.topic.topic.topic.topic" value="none" class="inherit-from-body">
-      <input type="hidden" name="pdf.space-before.topic.topic.topic.topic" value="12pt">
-      <input type="hidden" name="pdf.space-after.topic.topic.topic.topic" value="0pt">
-      <input type="hidden" name="pdf.text-align.topic.topic.topic.topic" value="start">
-      <input type="hidden" name="pdf.start-indent.topic.topic.topic.topic" value="" class="inherit-from-body"/>
-      
-      <input type="hidden" name="pdf.font-family.link" value="" class="inherit-from-body">
-      <input type="hidden" name="pdf.font-size.link" value="" class="inherit-from-body">
-      <input type="hidden" name="pdf.color.link" value="blue">
-      <input type="hidden" name="pdf.font-weight.link" value="" class="inherit-from-body">
-      <input type="hidden" name="pdf.font-style.link" value="" class="inherit-from-body">
-      <input type="hidden" name="pdf.text-decoration.link" value="" class="inherit-from-body">
-      <input type="hidden" name="pdf.space-before.link" value="">
-      <input type="hidden" name="pdf.space-after.link" value="">
-      <input type="hidden" name="pdf.text-align.link" value="">
-      <input type="hidden" name="pdf.start-indent.link" value=""/>
+        {% for s in styles %}
+          <input type="hidden" name="pdf.{{ s.property }}.{{ s.type }}" value="{{ s.value|default_if_none:"" }}" {% if s.inherit %} class="inherit-from-body" {% endif %}>
+        {% endfor %}
       </fieldset>
-      
+      <script type="text/javascript">
+        // var storeFields = [
+        {% regroup styles by property as properties %}
+        {% for style in properties %}
+        // "{{ style.grouper }}",
+        {% endfor %}
+        // ]
+      </script>
       <input type="hidden" id="pdf-style-selector-current">
       <!-- Style UI -->
       <div>
@@ -485,6 +430,9 @@
             <option value="topic.topic">Heading 2</option>
             <option value="topic.topic.topic">Heading 3</option>
             <option value="topic.topic.topic.topic">Heading 4</option>
+            <option value="section">Section title</option>
+            <option value="note">Note</option>
+            <option value="pre">Preformatted</option>
             <!--
             <option value="topic.topic.topic.topic.topic">Heading 5</option>
             <option value="topic.topic.topic.topic.topic.topic">Heading 6</option>
@@ -505,7 +453,7 @@
               {% if advanced %}<option value="">default</option>{% endif %}
               <option value="serif">serif</option>
               <option value="sans-serif">sans-serif</option>
-              <!--option value="Monospaced">monospace</option-->
+              <option value="monospace">monospace</option>
             </select>
             <label for="pdf.font-size" class="inline">Size</label>:
             <select id="pdf.font-size">
@@ -622,6 +570,9 @@
             The quick brown fox jumps over the lazy dog.
             The quick brown fox jumps over the lazy dog.
           </p>
+          <p class="example-page-content-note">
+            <strong class="example-page-content-note-label">Note:</strong> The quick brown fox jumps over the lazy dog. 
+          </p>
           <p class="example-page-content-body">
             The quick brown fox jumps over the lazy dog.
             The quick brown fox jumps over the lazy dog.
@@ -630,7 +581,7 @@
             The quick brown fox jumps over the lazy dog.
           </p>
           <p class="example-page-content-body">
-            The quick brown <span class="example-page-content-link">fox jumps</span><span id="pdf.link-page-number.example"> on page 42</span> over the lazy dog.
+            The quick brown <span class="example-page-content-link">fox jumps</span><span class="link-page-number-example"> on page 42</span> over the lazy dog.
           </p>
           <div class="example-page-content-topic.topic.topic">Heading 3</div>
           <p class="example-page-content-body">
@@ -649,11 +600,11 @@
         </div>
       </div>
     </div>
-    
+    <!--
     <h3>Link</h3>
-    <!--div class="example">
+    <div class="example">
       <div class="example-text">
-        <p>The quick brown <span id="pdf.link-style.example">fox jumps</span><span id="pdf.link-page-number.example"> on page 42</span> over the lazy dog.</p>
+        <p>The quick brown <span id="pdf.link-style.example">fox jumps</span><span class="link-page-number-example"> on page 42</span> over the lazy dog.</p>
       </div>
     </div>
     <fieldset>
@@ -673,7 +624,7 @@
         </select>
         <input type="text" id="pdf.link-color.other" style="display:none" size="7">
       </p>
-    </fieldset-->
+    </fieldset>
     <fieldset>
       <p>
         <label for="pdf.link-page-number">Page number on links</label>
@@ -681,6 +632,7 @@
       </p>
       <p class="instruction">Add page number to links.</p>
     </fieldset>
+    -->
   </div>
   <div class="page">
       <h3>Titles</h3>
@@ -772,10 +724,24 @@
       <p class="instruction">Generate "Table continued…" to table footer when table is broken to multiple pages.</p>
     </fieldset>
     <h3>Linking</h3>
+    <div class="example">
+      <div class="example-text">
+        <p>The quick brown <span class="example-page-content-link">fox jumps</span><span class="link-page-number-example"> on page 42</span> over the lazy dog.</p>
+      </div>
+      <!--div class="example-heading">Related links</div>
+      </div-->
+    </div>
+    <fieldset>
+      <p>
+        <label for="pdf.link-page-number">Page number on links</label>
+        <input name="pdf.link-page-number" type="checkbox" value="true" checked>
+      </p>
+      <p class="instruction">Add page number to links.</p>
+    </fieldset>
     <fieldset>
       <p>
         <label for="pdf.include-related-links">Related links</label>
-        <select name="pdf.include-related-links" id="pdf.include-related-links" title="Task labels">
+        <select name="pdf.include-related-links" id="pdf.include-related-links" title="Related links">
           {% if advanced %}<option value="">default</option>{% endif %}
           <option value="none" selected>none</option>
           <option value="nofamily">no family</option>

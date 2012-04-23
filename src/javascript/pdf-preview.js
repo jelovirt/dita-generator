@@ -27,11 +27,15 @@ function linkStyleHandler(event) {
 function previewSpaceHandler(event) {
 	var model = $(event.target);
 	var id = model.attr("name");
-	
 	var first = id.indexOf(".");
 	var second = id.indexOf(".", first + 1);
 	var field = id.substring(first + 1, second)
 	var type = id.substring(second + 1);
+	
+	var v = getVal(model);
+	if (v == undefined && model.hasClass("inherit-from-body")) {
+		v = getVal($(":input[name='pdf." + field + ".body']"));
+	}
 	
 	var isLength = false;
 	var cls;
@@ -67,6 +71,17 @@ function previewSpaceHandler(event) {
 		cls = "font-size";
 		isLength = true;
 		break;
+	case "text-align":
+		cls = "text-align";
+		switch (v) {
+		case "start":
+			v = "left";
+			break;
+		case "end":
+			v = "right";
+			break;
+		}
+		break;
 	default:
 		cls = field;
 		break;
@@ -74,28 +89,15 @@ function previewSpaceHandler(event) {
 	//$("#pdf-style-selector option").each(function() {
 	//	var type = $(this).attr("value");
 //		var model = $(":input[name='" + id + "." + type + "']");
-		var v;
 		if (isLength) {
-			val = getVal(model);
-			if (val == undefined) { // support undefined values
+			if (v == undefined) { // support undefined values
 				return true;
 			}
-			val = toPt(val);
+			v= toPt(v);
 			var f = 0.9;
-			v = String(val * f) + "px";
-		} else {
-			v = getVal(model);
-			if (id == "text-align") {
-				switch (v) {
-				case "start":
-					align = "left";
-					break;
-				case "end":
-					align = "right";
-					break;
-				}
-			}
+			v = String(v * f) + "px";
 		}
+		//console.info("css " + type + " = " + cls + ":" + v);
 		$("*[class~='example-page-content-" + type + "']").css(cls, v);
 	//});
 }
@@ -256,11 +258,11 @@ function definitionListHandler(event) {
 
 function linkPageNumberHandler(event) {
 	var target = $(event.target);
-	var e = $("*[id='pdf.link-page-number.example']");
+	var view = $(".link-page-number-example");
 	if (target.is(":checked")) {
-		e.show();
+		view.show();
 	} else {
-		e.hide();
+		view.hide();
 	}
 }
 

@@ -281,6 +281,7 @@ function writeFieldToModel(field, type) {
 			if (m.is("*[name^='pdf." + field + "']")) {
 				if (m.val() == undefined || m.val() == "" || m.val() == oldValue) {
 					m.val(newValue);
+					m.change();
 				}
 			}
 		});

@@ -58,7 +58,7 @@ Environments:
 def get(server, handler):
     params = {
             "output": "pdf-plugin",
-            "ot.version": "1.5.4",
+            "ot.version": "1.6",
             "pdf.page-size": "210mm 297mm",
             #"pdf.orientation": "landscape",
             "pdf.page-margin-top": "20mm",
@@ -78,7 +78,7 @@ def get(server, handler):
             
             "pdf.font-family.body": "Sans",
             "pdf.font-size.body": "12pt",
-            "pdf.color.body": "gray",
+            "pdf.color.body": "black",
             "pdf.start-indent.body": "25pt",
             "pdf.text-align.body": "justify",
             
@@ -90,7 +90,16 @@ def get(server, handler):
             "pdf.font-style.topic.topic.topic": "italic",
             "pdf.start-indent.topic.topic.topic" : "5pt",
             
-            "pdf.link-color": "inherit",
+            "pdf.font-style.section": "italic",
+            "pdf.start-indent.section" : "5pt",
+            
+            "pdf.color.link": "black",
+            "pdf.font-style.link": "italic",
+            
+            "pdf.font-size.note": "10pt",
+            "pdf.color.note": "gray",
+            "pdf.start-indent.note": "50pt",
+            
             "pdf.text-align": "justify",
             "pdf.dl": "list",
             "pdf.title-numbering": "all",

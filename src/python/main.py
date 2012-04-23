@@ -79,6 +79,7 @@ class MainHandler(webapp.RequestHandler):
                     template_values["title"] = "DITA-OT %s" % self.titles[path_args[__idx]]
                     template_values["output_title"] = self.titles[path_args[__idx]].lower()
                     template_values["generate_url"] = "/generate-plugin"
+                    template_values["styles"] = ditagen.pdf_generator.styles
                     template_file = a + ".html"
                 else:
                     self.response.set_status(404)
@@ -354,19 +355,18 @@ class PluginGenerateHandler(webapp.RequestHandler):
                 "page-margin-bottom": self.request.get(u"pdf.page-margin-bottom"),
                 "page-margin-left": self.request.get(u"pdf.page-margin-left")
             }
-        __dita_gen.text_align = self.request.get(u"pdf.text-align")
-        
-        for type in ["body", "topic", "topic.topic", "topic.topic.topic", "topic.topic.topic.topic", "link"]:
+        #__dita_gen.text_align = self.request.get(u"pdf.text-align")
+        for type in set([f["type"] for f in ditagen.pdf_generator.styles]):
             group = {}
-            for property in ["font-family", "font-size", "color", "font-weight", "font-style", "space-before", "space-after", "start-indent", "text-decoration", "text-align"]:
+            for property in set([f["property"] for f in ditagen.pdf_generator.styles]):
                 v = self.request.get(u"pdf." + property + "." + type)
                 if v:
                     group[property] = v 
             __dita_gen.style[type] = group
-        __dita_gen.link_font_weight = self.request.get(u"pdf.link-font-weight") or "normal"
-        __dita_gen.link_font_style = self.request.get(u"pdf.link-font-style") or "normal"
-        __dita_gen.link_text_decoration = self.request.get(u"pdf.link-text-decoration") or "none"
-        __dita_gen.link_color = self.request.get(u"pdf.link-color.other") or self.request.get(u"pdf.link-color")
+        #__dita_gen.link_font_weight = self.request.get(u"pdf.link-font-weight") or "normal"
+        #__dita_gen.link_font_style = self.request.get(u"pdf.link-font-style") or "normal"
+        #__dita_gen.link_text_decoration = self.request.get(u"pdf.link-text-decoration") or "none"
+        #__dita_gen.link_color = self.request.get(u"pdf.link-color.other") or self.request.get(u"pdf.link-color")
         __dita_gen.transtype = self.request.get(u"transtype")
         __dita_gen.force_page_count = self.request.get(u"pdf.force-page-count")
         __dita_gen.chapter_layout = self.request.get(u"pdf.chapter-layout")

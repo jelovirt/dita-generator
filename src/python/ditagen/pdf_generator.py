@@ -30,6 +30,108 @@ from xml.etree import ElementTree as ET
 NS_XSL = "{http://www.w3.org/1999/XSL/Transform}"
 NS_FO = "{http://www.w3.org/1999/XSL/Format}"
 
+styles = [{ "property": f[0], "type": f[1], "value": f[2], "inherit": f[3] } for f in [
+    ("font-family", "body", "serif", False),
+    ("font-size", "body", "10pt", False),
+    ("color", "body", "black", False),
+    ("font-weight", "body", "normal", False),
+    ("font-style", "body", "normal", False),
+    ("text-decoration", "body", "none", False),
+    ("space-before", "body", "6pt", False),
+    ("space-after", "body", "6pt", False),
+    ("text-align", "body", "start", False),
+    ("start-indent", "body", "25pt", False),
+    
+    ("font-family", "topic", "sans-serif", False),
+    ("font-size", "topic", "18pt", False),
+    ("color", "topic", "black", True),
+    ("font-weight", "topic", "bold", False),
+    ("font-style", "topic", "normal", False),
+    ("text-decoration", "topic", "none", True),
+    ("space-before", "topic", "0pt", False),
+    ("space-after", "topic", "16.8pt", False),
+    ("text-align", "topic", "start", False),
+    ("start-indent", "topic", "0pt", False),
+    
+    ("font-family", "topic.topic", "sans-serif", False),
+    ("font-size", "topic.topic", "14pt", False),
+    ("color", "topic.topic", "black", True),
+    ("font-weight", "topic.topic", "bold", False),
+    ("font-style", "topic.topic", "normal", False),
+    ("text-decoration", "topic.topic", "none", True),
+    ("space-before", "topic.topic", "12pt", False),
+    ("space-after", "topic.topic", "5pt", False),
+    ("text-align", "topic.topic", "start", False),
+    ("start-indent", "topic.topic", "0pt", False),
+    
+    ("font-family", "topic.topic.topic", "sans-serif", False),
+    ("font-size", "topic.topic.topic", "12pt", False),
+    ("color", "topic.topic.topic", "black", True),
+    ("font-weight", "topic.topic.topic", "bold", False),
+    ("font-style", "topic.topic.topic", "normal", False),
+    ("text-decoration", "topic.topic.topic", "none", True),
+    ("space-before", "topic.topic.topic", "12pt", False),
+    ("space-after", "topic.topic.topic", "2pt", False),
+    ("text-align", "topic.topic.topic", "start", False),
+    ("start-indent", "topic.topic.topic", "0pt", False),
+    
+    ("font-family", "topic.topic.topic.topic", "serif", True),
+    ("font-size", "topic.topic.topic.topic", "10pt", True),
+    ("color", "topic.topic.topic.topic", "black", True),
+    ("font-weight", "topic.topic.topic.topic", "bold", False),
+    ("font-style", "topic.topic.topic.topic", "normal", False),
+    ("text-decoration", "topic.topic.topic.topic", "none", True),
+    ("space-before", "topic.topic.topic.topic", "12pt", False),
+    ("space-after", "topic.topic.topic.topic", "0pt", False),
+    ("text-align", "topic.topic.topic.topic", "start", False),
+    ("start-indent", "topic.topic.topic.topic", None, True),
+
+    ("font-family", "section", "sans-serif", False),
+    ("font-size", "section", None, True),
+    ("color", "section", None, True),
+    ("font-weight", "section", None, True),
+    ("font-style", "section", None, True),
+    ("text-decoration", "section", None, True),
+    ("space-before", "section", "15pt", False),
+    ("space-after", "section", None, True),
+    ("text-align", "section", None, True),
+    ("start-indent", "section", None, True),
+    
+    ("font-family", "note", None, True),
+    ("font-size", "note", None, True),
+    ("color", "note", None, True),
+    ("font-weight", "note", None, True),
+    ("font-style", "note", None, True),
+    ("text-decoration", "note", None, True),
+    ("space-before", "note", None, True),
+    ("space-after", "note", None, True),
+    ("text-align", "note", None, True),
+    ("start-indent", "note", None, True),
+    
+    ("font-family", "pre", "monospace", False),
+    ("font-size", "pre", None, True),
+    ("color", "pre", None, True),
+    ("font-weight", "pre", None, True),
+    ("font-style", "pre", None, True),
+    ("text-decoration", "pre", None, True),
+    ("space-before", "pre", "15pt", False),
+    ("space-after", "pre", None, True),
+    ("text-align", "pre", None, True),
+    ("start-indent", "pre", None, True),
+    
+    
+    ("font-family", "link", None, True),
+    ("font-size", "link", None, True),
+    ("color", "link", "blue", False),
+    ("font-weight", "link", None, True),
+    ("font-style", "link", None, True),
+    ("text-decoration", "link", None, True),
+    ("space-before", "link", None, False),
+    ("space-after", "link", None, False),
+    ("text-align", "link", None, False),
+    ("start-indent", "link", None, False)
+    ]]
+
 class StylePluginGenerator(DitaGenerator):
     """Generator for a DITA-OT style plug-in."""
 
@@ -70,16 +172,16 @@ class StylePluginGenerator(DitaGenerator):
         self.transtype = None
         self.plugin_name = None
         self.plugin_version = None
-        self.page_size = None
+        self.page_size = ()
         self.style = {}
         self.page_margins = None
         #self.font_family = None
         #self.font_size = None
         #self.color = None
-        self.link_font_weight = None
-        self.link_font_style = None
-        self.link_color = None
-        self.link_text_decoration = None
+        #self.link_font_weight = None
+        #self.link_font_style = None
+        #self.link_color = None
+        #self.link_text_decoration = None
         self.force_page_count = None
         self.chapter_layout = None
         self.body_column_count = None
@@ -91,11 +193,11 @@ class StylePluginGenerator(DitaGenerator):
         #self.side_col_width = None
         self.column_gap = None
         self.mirror_page_margins = None
-        self.text_align = None
+        #self.text_align = None
         self.dl = None
         self.title_numbering = None
-        self.spacing_before = None
-        self.spacing_after = None
+        #self.spacing_before = None
+        #self.spacing_after = None
         self.generate_shell = None
         self.link_pagenumber = None
         self.table_continued = None
@@ -413,51 +515,55 @@ class StylePluginGenerator(DitaGenerator):
         
         __root_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name="__fo__root")
         # font family
-        style_body = self.style["body"]
-        if "font-family" in self.style["body"]:
-            ET.SubElement(__root_attr, NS_XSL + "attribute", name=u"font-family").text = self.style["body"]["font-family"]
-        # font color
-        if "color" in self.style["body"]:
-            ET.SubElement(__root_attr, NS_XSL + "attribute", name=u"color").text = self.style["body"]["color"]
-        # text alignment
-        if self.text_align:
-            ET.SubElement(__root_attr, NS_XSL + "attribute", name=u"text-align").text = self.text_align
+        for p in ["font-family", "color", "text-align"]:
+            if p in self.style["body"]:
+                ET.SubElement(__root_attr, NS_XSL + "attribute", name=p).text = self.style["body"][p]
         # titles
         for (k, e) in self.style.items():
-            if k.startswith("topic"):
+            if k.startswith("topic") or k.startswith("section"):
                 __title_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name=k + ".title")
                 for (p, v) in e.items():
                     ET.SubElement(__title_attr, NS_XSL + "attribute", name=p).text = v
         # link
         link_attr_sets = []
         if self.ot_version >= Version("1.5.4"):
-            link_attr_sets.extend(["common.block"])
+            link_attr_sets.extend(["common.link"])
         else:
             link_attr_sets.extend(["link__content", "xref"])
         for n in link_attr_sets:
             __link_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name=n)
-            if self.link_color:
-                ET.SubElement(__link_attr, NS_XSL + "attribute", name=u"color").text = self.link_color
-            if self.link_font_weight:
-                ET.SubElement(__link_attr, NS_XSL + "attribute", name=u"font-weight").text = self.link_font_weight
-            if self.link_font_style:
-                ET.SubElement(__link_attr, NS_XSL + "attribute", name=u"font-style").text = self.link_font_style
-            if self.link_text_decoration:
-                ET.SubElement(__link_attr, NS_XSL + "attribute", name=u"text-decoration").text = self.link_text_decoration
+            for k, v in self.style["link"].items():
+                ET.SubElement(__link_attr, NS_XSL + "attribute", name=k).text = v
+#            if self.link_color:
+#                ET.SubElement(__link_attr, NS_XSL + "attribute", name=u"color").text = self.link_color
+#            if self.link_font_weight:
+#                ET.SubElement(__link_attr, NS_XSL + "attribute", name=u"font-weight").text = self.link_font_weight
+#            if self.link_font_style:
+#                ET.SubElement(__link_attr, NS_XSL + "attribute", name=u"font-style").text = self.link_font_style
+#            if self.link_text_decoration:
+#                ET.SubElement(__link_attr, NS_XSL + "attribute", name=u"text-decoration").text = self.link_text_decoration
 
-        # spacing
-        if self.spacing_before or self.spacing_after:
-            spacing_attr_sets = []
-            if self.ot_version >= Version("1.5.4"):
-                spacing_attr_sets.extend(["common.link"])
-            else:
-                spacing_attr_sets.extend(["section", "example", "p", "note", "note__table"])
-            for n in spacing_attr_sets:
-                __spacing_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name=n)
-                if self.spacing_before:
-                    ET.SubElement(__spacing_attr, NS_XSL + "attribute", name=u"space-before").text = self.spacing_before
-                if self.spacing_after:
-                    ET.SubElement(__spacing_attr, NS_XSL + "attribute", name=u"space-after").text = self.spacing_after
+        # normal block
+        spacing_attr_sets = []
+        if self.ot_version >= Version("1.5.4"):
+            spacing_attr_sets.extend(["common.block"])
+        else:
+            spacing_attr_sets.extend(["section", "example", "p"])#"note", "note__table"
+        for n in spacing_attr_sets:
+            __spacing_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name=n)
+            for k, v in self.style["body"].items():
+                if k != "start-indent":
+                    ET.SubElement(__spacing_attr, NS_XSL + "attribute", name=k).text = v
+
+        # note
+        __note_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name=u"note__table")
+        for k, v in self.style["note"].items():
+            ET.SubElement(__note_attr, NS_XSL + "attribute", name=k).text = v
+            
+        # pre
+        __pre_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name=u"pre")
+        for k, v in self.style["pre"].items():
+            ET.SubElement(__note_attr, NS_XSL + "attribute", name=k).text = v
 
         # dl
         if self.dl:
