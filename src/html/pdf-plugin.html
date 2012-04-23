@@ -64,7 +64,7 @@
         <select name="pdf.page-size" id="pdf.page-size" title="Page size">
           {% if advanced %}<option value="">default</option>{% endif %}
           <option value="210mm 297mm">A3</option>
-          <option value="210mm 297mm" selected>A4</option>
+          <option value="210mm 297mm">A4</option>
           <option value="210mm 297mm">A5</option>
           <!--
           <option value="">Envelope #10</option>
@@ -78,6 +78,7 @@
           <option value="431.8mm 279.4mm">Tabloid</option>
           <option value="8.5in 14in">US Legal</option>
           <option value="8.5in 11in" selected>US Letter</option>
+          <option value="210mm 280mm">PA4</option>
         </select>
       </p>
     </fieldset>
@@ -191,7 +192,7 @@
             <tr>
               <td class="even">
                 <select for="pdf.header.even">
-                  <option value=""></option>
+                  <option value="">empty</option>
                   <!--option value="part">Part title</option-->
                   <!--option value="number">Chapter number</option-->
                   <option value="chapter" selected>Chapter title</option>
@@ -201,7 +202,7 @@
               </td>
               <td>
                 <select for="pdf.header.odd">
-                  <option value=""></option>
+                  <option value="">empty</option>
                   <option value="chapter" selected>Chapter title</option>
                   <!--option value="subhead">Subhead</option-->
                   <!--option value="subchapter">Chapter subtitle</option-->
