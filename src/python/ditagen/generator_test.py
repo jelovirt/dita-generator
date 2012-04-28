@@ -28,8 +28,8 @@ class DtdGeneratorTestCase(unittest.TestCase):
     def tearDown(self):
         self.generator = None
 
-    def test_generate_pfi(self):
-        self.assertEqual(self.generator.generate_pfi(u"owner", u"description"),
+    def test_generate_pi(self):
+        self.assertEqual(self.generator.generate_pi(u"owner", u"description"),
                          u"-//owner//description//EN")
 
     def test_external_general_entity_system(self):

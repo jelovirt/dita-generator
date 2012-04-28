@@ -21,6 +21,7 @@ import inspect
 import ditagen.dita
 import ditagen.dita.v1_1
 import ditagen.dita.v1_2
+import ditagen.dita.d4p
 
 OUTPUT_MAP = {
     "specialization": ditagen.dita.SpecializationType,
@@ -94,14 +95,17 @@ def find_subclasses(module, clazz):
     return [cls for name, cls in inspect.getmembers(module)
             if cls not in clazz and inspect.isclass(cls) and
                 [i for i in clazz if issubclass(cls, i)]]
-def get_map(module, clazz):
-    return dict([(cls().id, cls) for cls in find_subclasses(module, clazz)])
+def get_map(modules, clazz):
+    result = {}
+    for module in modules:
+        result.update(dict([(cls().id, cls) for cls in find_subclasses(module, clazz)]))
+    return result
 
 DOMAIN_MAP = {
-    "1.1": get_map(ditagen.dita.v1_1, [ditagen.dita.Domain]),
-    "1.2": get_map(ditagen.dita.v1_2, [ditagen.dita.Domain, ditagen.dita.v1_2.Constraints]),
+    "1.1": get_map([ditagen.dita.v1_1], [ditagen.dita.Domain]),
+    "1.2": get_map([ditagen.dita.v1_2, ditagen.dita.d4p], [ditagen.dita.Domain, ditagen.dita.v1_2.Constraints, ditagen.dita.v1_2.AttributeDomain]),
 }
 TOPIC_MAP = {
-    "1.1": get_map(ditagen.dita.v1_1, [ditagen.dita.Type]),
-    "1.2": get_map(ditagen.dita.v1_2, [ditagen.dita.Type]),
+    "1.1": get_map([ditagen.dita.v1_1], [ditagen.dita.Type]),
+    "1.2": get_map([ditagen.dita.v1_2, ditagen.dita.d4p], [ditagen.dita.Type]),
 }

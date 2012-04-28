@@ -26,7 +26,9 @@ class Type(object):
     """DITA topic type base."""
     id = None
     file = None
-    title = None #TODO: Remove in favor of outside title
+    pi_entity = None
+    pi_module = None
+    title = None #TODO: Remove in favour of outside title
     parent = None
     root = None
     owner = u"OASIS"
@@ -76,10 +78,13 @@ class DomainBase(object):
     title = None
     _file = None
     file_suffix = None
-    elements = None
+    #elements = None
     parent = []
+    # Required domains which are not integrated themselves
     required_domains = []
     _att_id = None
+    pi_module = None
+    pi_entity = None
     def get_file(self):
         """Get domain file name."""
         return self._file + self.file_suffix
@@ -101,6 +106,7 @@ class Domain(DomainBase):
     """Base class for domains."""
     file_suffix = u""
     fpi_suffix = u" Domain"
+    elements = []
     def get_file_name(self, extension):
         return self._file + self._file_suffix + "." + extension
 

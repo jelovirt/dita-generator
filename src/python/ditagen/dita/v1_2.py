@@ -289,6 +289,7 @@ class TopicType(ditagen.dita.Type):
     """Topic topic type."""
     id = u"topic"
     file = u"base/dtd/topic" # the .dtd file is at technicalContent
+    pi_module = u"-//OASIS//ELEMENTS DITA 1.2 Topic//EN"
     title = u"Topic"
     parent = None
     root = TopicElement()
@@ -296,6 +297,8 @@ class ConceptType(TopicType):
     """Concept topic type."""
     id = u"concept"
     file = u"technicalContent/dtd/concept"
+    pi_entity = u"-//OASIS//ENTITIES DITA 1.2 Concept//EN"
+    pi_module = u"-//OASIS//ELEMENTS DITA 1.2 Concept//EN"
     title = u"Concept"
     parent = TopicType()
     root = ConceptElement()
@@ -303,6 +306,8 @@ class TaskType(TopicType):
     """Task topic type."""
     id = u"task"
     file = u"technicalContent/dtd/task"
+    pi_entity = u"-//OASIS//ENTITIES DITA 1.2 Task//EN"
+    pi_module = u"-//OASIS//ELEMENTS DITA 1.2 Task//EN"
     title = u"Task"
     parent = TopicType()
     root = TaskElement()
@@ -318,6 +323,8 @@ class ReferenceType(TopicType):
     """Reference topic type."""
     id = u"reference"
     file = u"technicalContent/dtd/reference"
+    pi_entity = u"-//OASIS//ENTITIES DITA 1.2 Reference//EN"
+    pi_module = u"-//OASIS//ELEMENTS DITA 1.2 Reference//EN"
     title = u"Reference"
     parent = TopicType()
     root = ReferenceElement()
@@ -325,6 +332,8 @@ class MapType(ditagen.dita.Type):
     """Map topic type."""
     id = u"map"
     file = u"base/dtd/map" # the .dtd file is at technicalContent
+    pi_entity = u"-//OASIS//ENTITIES DITA 1.2 Map//EN"
+    pi_module = u"-//OASIS//ELEMENTS DITA 1.2 Map//EN"
     title = u"Map"
     parent = None
     root = MapElement()
@@ -333,6 +342,8 @@ class BookMapType(MapType):
     """BookMap topic type."""
     id = u"bookmap"
     file = u"bookmap/dtd/bookmap"
+    pi_entity = u"-//OASIS//ENTITIES DITA 1.2 BookMap//EN"
+    pi_module = u"-//OASIS//ELEMENTS DITA 1.2 BookMap//EN"
     title = u"BookMap"
     parent = MapType()
     root = BookMapElement()
@@ -347,6 +358,8 @@ class LearningBaseType(TopicType):
     """Learning Base topic type."""
     id = u"learningBase"
     file = u"learning/dtd/learningBase"
+    pi_entity = u"-//OASIS//ENTITIES DITA 1.2 Learning Base//EN"
+    pi_module = u"-//OASIS//ELEMENTS DITA 1.2 Learning Base//EN"
     title = u"Learning Base"
     parent = TopicType()
     root = LearningBaseElement()
@@ -354,6 +367,8 @@ class LearningAssessmentType(LearningBaseType):
     """Learning Assessment topic type."""
     id = u"learningAssessment"
     file = u"learning/dtd/learningAssessment"
+    pi_entity = u"-//OASIS//ENTITIES DITA 1.2 Learning Assessment//EN"
+    pi_module = u"-//OASIS//ELEMENTS DITA 1.2 Learning Assessment//EN"
     title = u"Learning Assessment"
     parent = LearningBaseType()
     root = LearningAssessmentElement()
@@ -361,6 +376,8 @@ class LearningOverviewType(LearningBaseType):
     """Learning Overview topic type."""
     id = u"learningOverview"
     file = u"learning/dtd/learningOverview"
+    pi_entity = u"-//OASIS//ENTITIES DITA 1.2 Learning Overview//EN"
+    pi_module = u"-//OASIS//ELEMENTS DITA 1.2 Learning Overview//EN"
     title = u"Learning Overview"
     parent = LearningBaseType()
     root = LearningOverviewElement()
@@ -368,6 +385,8 @@ class LearningPlanType(LearningBaseType):
     """Learning Plan topic type."""
     id = u"learningPlan"
     file = u"learning/dtd/learningPlan"
+    pi_entity = u"-//OASIS//ENTITIES DITA 1.2 Learning Plan//EN"
+    pi_module = u"-//OASIS//ELEMENTS DITA 1.2 Learning Plan//EN"
     title = u"Learning Plan"
     parent = LearningBaseType()
     root = LearningPlanElement()
@@ -375,6 +394,8 @@ class LearningSummaryType(LearningBaseType):
     """Learning Summary topic type."""
     id = u"learningSummary"
     file = u"learning/dtd/learningSummary"
+    pi_entity = u"-//OASIS//ENTITIES DITA 1.2 Learning Summary//EN"
+    pi_module = u"-//OASIS//ELEMENTS DITA 1.2 Learning Summary//EN"
     title = u"Learning Summary"
     parent = LearningBaseType()
     root = LearningSummaryElement()
@@ -382,12 +403,14 @@ class LearningContentType(LearningBaseType):
     """Learning Content topic type."""
     id = u"learningContent"
     file = u"learning/dtd/learningContent"
+    pi_entity = u"-//OASIS//ENTITIES DITA 1.2 Learning Content//EN"
+    pi_module = u"-//OASIS//ELEMENTS DITA 1.2 Learning Content//EN"
     title = u"Learning Content"
     parent = LearningBaseType()
     root = LearningContentElement()
     def __init__(self):
         super(LearningContentType, self).__init__()
-        self.required_types = [TaskType(), ConceptType(), ReferenceType(), LearningSummaryType(), LearningAssessmentType()]
+        self.required_types = [TaskType, ConceptType, ReferenceType, LearningSummaryType, LearningAssessmentType]
 class LearningMapType(ditagen.dita.ShellType):
     """Learning Map topic type."""
     def __init__(self):
@@ -424,12 +447,23 @@ class Constraints(ditagen.dita.DomainBase):
     def get_file_name(self, extension):
         return self.file + self.file_suffix + "." + extension
 
+class AttributeDomain(ditagen.dita.DomainBase):
+    """Base class for attribute domains."""
+    file_suffix = u"Att"
+    fpi_suffix = u" Attribute Domain"
+    #elements = []
+    attributes = []
+    def get_file_name(self, extension):
+        return self.file + self.file_suffix + "." + extension
+
 # Domains
 
 class UiDomain(ditagen.dita.Domain):
     """User interface domain."""
     id = u"ui-d"
     _file = u"technicalContent/dtd/uiDomain"
+    pi_entity = u"-//OASIS//ENTITIES DITA 1.2 User Interface Domain//EN"
+    pi_module = u"-//OASIS//ELEMENTS DITA 1.2 User Interface Domain//EN"
     title = u"User Interface"
     elements = [u"pre", u"keyword", u"ph"]
     parent = [TopicType]
@@ -437,6 +471,8 @@ class HiDomain(ditagen.dita.Domain):
     """Hilight domain."""
     id = u"hi-d"
     _file = u"base/dtd/highlightDomain"
+    pi_entity = u"-//OASIS//ENTITIES DITA 1.2 Highlight Domain//EN"
+    pi_module = u"-//OASIS//ELEMENTS DITA 1.2 Highlight Domain//EN"
     title = u"Highlight"
     elements = [u"ph"]
     parent = [TopicType]
@@ -444,6 +480,8 @@ class PrDomain(ditagen.dita.Domain):
     """Programmign domain."""
     id = u"pr-d"
     _file = u"technicalContent/dtd/programmingDomain"
+    pi_entity = u"-//OASIS//ENTITIES DITA 1.2 Programming Domain//EN"
+    pi_module = u"-//OASIS//ELEMENTS DITA 1.2 Programming Domain//EN"
     title = u"Programming"
     elements = [u"pre", u"keyword", u"ph", u"fig", u"dl"]
     parent = [TopicType]
@@ -451,6 +489,8 @@ class SwDomain(ditagen.dita.Domain):
     """Software development domain."""
     id = u"sw-d"
     _file = u"technicalContent/dtd/softwareDomain"
+    pi_entity = u"-//OASIS//ENTITIES DITA 1.2 Software Domain//EN"
+    pi_module = u"-//OASIS//ELEMENTS DITA 1.2 Software Domain//EN"
     title = u"Software"
     elements = [u"pre", u"keyword", u"ph"]
     parent = [TopicType]
@@ -458,6 +498,8 @@ class UtDomain(ditagen.dita.Domain):
     """Utilities domain."""
     id = u"ut-d"
     _file = u"base/dtd/utilitiesDomain"
+    pi_entity = u"-//OASIS//ENTITIES DITA 1.2 Utilities Domain//EN"
+    pi_module = u"-//OASIS//ELEMENTS DITA 1.2 Utilities Domain//EN"
     title = u"Utilities"
     elements = [u"fig"]
     parent = [TopicType]
@@ -465,6 +507,8 @@ class IndexingDomain(ditagen.dita.Domain):
     """Indexing domain."""
     id = u"indexing-d"
     _file = u"base/dtd/indexingDomain"
+    pi_entity = u"-//OASIS//ENTITIES DITA 1.2 Indexing Domain//EN"
+    pi_module = u"-//OASIS//ELEMENTS DITA 1.2 Indexing Domain//EN"
     title = u"Indexing"
     elements = [u"index-base"]
     parent = [TopicType, MapType]
@@ -472,6 +516,8 @@ class LearningDomain(ditagen.dita.Domain):
     """Learning domain."""
     id = u"learning-d"
     _file = u"learning/dtd/learningDomain"
+    pi_entity = u"-//OASIS//ENTITIES DITA 1.2 Learning Domain//EN"
+    pi_module = u"-//OASIS//ELEMENTS DITA 1.2 Learning Domain//EN"
     title = u"Learning"
     elements = [u"note", u"fig"]
     # XXX: This builds on 
@@ -481,6 +527,8 @@ class LearningMetaDomain(ditagen.dita.Domain):
     """Learning metadata domain."""
     id = u"learningmeta-d"
     _file = u"learning/dtd/learningMetadataDomain"
+    pi_entity = u"-//OASIS//ENTITIES DITA 1.2 Learning Metadata Domain//EN"
+    pi_module = u"-//OASIS//ELEMENTS DITA 1.2 Learning Metadata Domain//EN"
     title = u"Learning Metadata"
     elements = [u"metadata"]
     parent = [TopicType]
@@ -488,6 +536,8 @@ class LearningMapDomain(ditagen.dita.Domain):
     """Learning map domain."""
     id = u"learningmap-d"
     _file = u"learning/dtd/learningMapDomain"
+    pi_entity = u"-//OASIS//ENTITIES DITA 1.2 Learning Map Domain//EN"
+    pi_module = u"-//OASIS//ELEMENTS DITA 1.2 Learning Map Domain//EN"
     title = u"Learning Map"
     elements = [u"topicref"]
     parent = [MapType]
@@ -495,6 +545,8 @@ class TaskRequirementsDomain(ditagen.dita.Domain):
     """Task requirements domain."""
     id = u"taskreq-d"
     _file = u"technicalContent/dtd/taskreqDomain"
+    pi_entity = u"-//OASIS//ENTITIES DITA 1.2 Task Requirements Domain//EN"
+    pi_module = u"-//OASIS//ELEMENTS DITA 1.2 Task Requirements Domain//EN"
     title = u"Machine Industry Task"
     elements = [u"prereq", u"postreq"]
     parent = [TaskType]
@@ -502,6 +554,8 @@ class HazardStatementDomain(ditagen.dita.Domain):
     """Hazard statement domain."""
     id = u"hazard-d"
     _file = u"base/dtd/hazardstatementDomain"
+    pi_entity = u"-//OASIS//ENTITIES DITA 1.2 Hazard Statement Domain//EN"
+    pi_module = u"-//OASIS//ELEMENTS DITA 1.2 Hazard Domain//EN"
     title = u"Hazard Statement"
     elements = [u"note"]
     parent = [TopicType]
@@ -509,6 +563,8 @@ class MapGroupDomain(ditagen.dita.Domain):
     """Map group domain."""
     id = u"mapgroup-d"
     _file = u"base/dtd/mapGroup" # This is an exception to DITA's naming scheme
+    pi_entity = u"-//OASIS//ENTITIES DITA 1.2 Map Group Domain//EN"
+    pi_module = u"-//OASIS//ELEMENTS DITA 1.2 Map Group Domain//EN"
     title = u"Map Group"
     elements = [u"topicref"]
     parent = [MapType]
@@ -516,6 +572,8 @@ class AbbreviatedFormDomain(ditagen.dita.Domain):
     """Abbreviated form domain."""
     id = u"abbrev-d"
     _file = u"technicalContent/dtd/abbreviateDomain"
+    pi_entity = u"-//OASIS//ENTITIES DITA 1.2 Abbreviated Form Domain//EN"
+    pi_module = u"-//OASIS//ELEMENTS DITA 1.2 Abbreviated Form Domain//EN"
     title = u"Abbreviated Form"
     elements = [u"term"]
     parent = [TopicType]
@@ -530,6 +588,8 @@ class UserDelayedResolutionDomain(ditagen.dita.Domain):
     """User delayed resolution domain."""
     id = u"delay-d"
     _file = u"base/dtd/delayResolutionDomain"
+    pi_entity = u"-//OASIS//ENTITIES DITA 1.2 Delayed Resolution Domain//EN"
+    pi_module = u"-//OASIS//ELEMENTS DITA 1.2 Delayed Resolution Domain//EN"
     title = u"Delayed Resolution"
     elements = [u"keywords"]
     parent = [TopicType, MapType]
@@ -537,6 +597,8 @@ class ClassifyDomain(ditagen.dita.Domain):
     """Classify domain."""
     id = u"classify-d"
     _file = u"subjectScheme/dtd/classifyDomain"
+    pi_entity = u"-//OASIS//ENTITIES DITA 1.2 Classification Domain//EN"
+    pi_module = u"-//OASIS//ELEMENTS DITA 1.2 Classification Domain//EN"
     title = u"Map Subject Classification"
     elements = [u"topicref", u"reltable"]
     parent = [TopicType, MapType]
@@ -544,6 +606,8 @@ class GlossaryReferenceDomain(ditagen.dita.Domain):
     """Glossary reference domain."""
     id = u"glossref-d"
     _file = u"technicalContent/dtd/glossrefDomain"
+    pi_entity = u"-//OASIS//ENTITIES DITA 1.2 Glossary Reference Domain//EN"
+    pi_module = u"-//OASIS//ELEMENTS DITA 1.2 Glossary Reference Domain//EN"
     title = u"Glossary Reference"
     elements = [u"topicref"]
     parent = [MapType]
@@ -554,6 +618,7 @@ class StrictTaskbodyConstraints(Constraints):
     """Strict taskbody constraints."""
     id = u"strictTaskbody-c"
     _file = u"technicalContent/dtd/strictTaskbodyConstraint"
+    pi_module = u"-//OASIS//ELEMENTS DITA 1.2 Strict Taskbody Constraint//EN"
     title = u"Strict Taskbody"
     parent = [TaskType]
     _att_id = u"taskbody"
@@ -561,6 +626,7 @@ class MachineryTaskbodyConstraints(Constraints):
     """Machinery taskbody constraints."""
     id = u"machineryTaskbody-c"
     _file = u"machineryIndustry/dtd/machineryTaskbodyConstraint"
+    pi_module = u"-//OASIS//ELEMENTS DITA 1.2 Machinery Taskbody Constraint//EN"
     title = u"Machinery Taskbody"
     parent = [TaskType]
     _att_id = u"taskbody"

@@ -20,43 +20,8 @@ def main():
            "production": ("dita-generator.appspot.com", 80),
            "localhost": ("localhost", 8082)
            }
-    i = 1
-    server = None
-    handler = list
-    try:
-        if i == len(sys.argv):
-            raise None
-        while i < len(sys.argv):
-            if sys.argv[i] == "-o":
-                i = i + 1
-                dir = os.path.abspath(sys.argv[i])
-                handler = lambda zip: store(zip, dir)
-            elif sys.argv[i] == "-h" or sys.argv[i] == "--help":
-                raise None
-            else:
-                if not sys.argv[i] in servers:
-                    raise None
-                server = servers[sys.argv[i]]
-                break
-            i = i + 1
-    except:
-        help()
-        exit()
-    get(server, handler)
-
-def help():
-    sys.stderr.write("""Usage: get.py [options] environment
-
-Options:
-  -o DIR      output files to plug-ins directory
-  -h, --help  print help
-Environments:
-  localhost   localhost
-  production  dita-generator.appspot.com
-""")
-
-def get(server, handler):
-    params = {
+    targets = {
+        "pdf": {
             "output": "pdf-plugin",
             "ot.version": "1.6",
             "pdf.page-size": "210mm 297mm",
@@ -114,9 +79,78 @@ def get(server, handler):
             "id": "com.example.print-pdf",
             "transtype": "print-pdf",
             "plugin-version": "1.0.0"
-            }
+            },
+        "shell": [
+            ('version', '1.2'),
+            ('file', 'plugin'),
+            ('title', 'test'),
+            ('owner', 'test'),
+            ('output', 'shell'),
+            ('type', 'article'),
+            #("nested", "true"),
+            ('id', 'test'),
+            ('att.1.type', 'props'),
+            ('att.1.name', 'custom'),
+            ('att.1.datatype', 'CDATA'),
+            ("domain", "pr-d"),
+            ("domain", "hi-d"),
+            ("domain", "xml-d"),
+            ("domain", "d4p_formatting-d"),
+            ("domain", "d4p_renditionTargetAtt-d")
+            ]
+        }
+    i = 1
+    server = None
+    params = None
+    url = None
+    handler = list
+    try:
+        if i == len(sys.argv):
+            raise None
+        while i < len(sys.argv):
+            if sys.argv[i] == "-o":
+                i = i + 1
+                dir = os.path.abspath(sys.argv[i])
+                handler = lambda zip: store(zip, dir)
+            elif sys.argv[i] == "-h" or sys.argv[i] == "--help":
+                raise None
+            elif server is None:
+                if not sys.argv[i] in servers:
+                    raise None
+                server = servers[sys.argv[i]]
+            elif params is None:
+                if not sys.argv[i] in targets:
+                    raise None
+                params = targets[sys.argv[i]]
+                if sys.argv[i] == "pdf":
+                    url = "/generate-plugin"
+                else:
+                    url = "/generate"
+                break
+            i = i + 1
+    except Exception, e:
+        print e
+        help()
+        exit()
+    get(server, handler, params, url)
+
+def help():
+    sys.stderr.write("""Usage: get.py [options] environment target
+
+Options:
+  -o DIR      output files to plug-ins directory
+  -h, --help  print help
+Environments:
+  localhost   localhost
+  production  dita-generator.appspot.com
+Targets:
+  pdf
+  shell
+""")
+
+def get(server, handler, params, url):
     conn = httplib.HTTPConnection(server[0], server[1])
-    conn.request("POST", "/generate-plugin", urllib.urlencode(params))
+    conn.request("POST", url, urllib.urlencode(params))
     response = conn.getresponse()
     with zipfile.ZipFile(StringIO(response.read()), "r") as zip:
         handler(zip)

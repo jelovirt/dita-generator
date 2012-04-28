@@ -20,6 +20,7 @@ import sys
 import ditagen.dita
 import ditagen.dita.v1_1
 import ditagen.dita.v1_2
+import ditagen.dita.d4p
 from ditagen.dtdgen import Attribute as Attribute
 from ditagen.dtdgen import ParameterEntity as ParameterEntity
 import StringIO
@@ -72,12 +73,12 @@ class DtdGenerator(object):
         self.out.write(u"""<!ENTITY %% %s%s"%s">""" % (name, __div, __value))
         self.out.write("\n")
     
-    def __get_start_indent(self, len):
+    def __get_start_indent(self, length):
         """Get whitespace before entity value."""
-        if len > (24 + 1):
+        if length > (24 + 1):
             return "\n" + " " * 24
         else:
-            return " " * (24 + 2 - len)
+            return " " * (24 + 2 - length)
     
     def __get_entity_value(self, value, sep):
         """Get entity value."""
@@ -97,7 +98,7 @@ class DtdGenerator(object):
         if type(attrs) == list:
             __value = sep.join([str(a) for a in attrs])
             if len(attrs) > 1:
-              __value = sep + __value
+                __value = sep + __value
         else:
             __value = str(attrs)
         self.out.write("""<!ATTLIST %s %s>""" % (name, __value))
@@ -294,7 +295,7 @@ class DitaGenerator(DtdGenerator):
         # internal attributes
         self.__domains = []
         self.__types = None
-        self.__pfi_prefix = None
+        self.__pi_prefix = None
         self.__constraints = None
         self.__elements = None
         self._file_name = None
@@ -314,15 +315,22 @@ class DitaGenerator(DtdGenerator):
         
     def __domain_ent(self, domain):
         """Print domain entity declaration."""
+        __pi = domain.pi_entity
+        assert __pi is not None
+        #if __pi == None:
+        #    __pi = self.generate_public_identifier("ent", domain.id, self._pi_version, domain.title, None, u"Domain")
         self.__entity(domain.id + u"-dec", self._dtd_base_dir + domain.file + u".ent",
-                      self.generate_public_identifier("ent", domain.id, self._pfi_version, domain.title, None, u"Domain"))
+                      __pi)
     
     def __domain_mod(self, domain):
         """Print domain module declaration."""
-        if isinstance(domain, ditagen.dita.v1_2.Constraints):
-            __description = self.generate_public_identifier("mod", domain.id, self._pfi_version, domain.title, None, u"Constraint")
-        else:
-            __description = self.generate_public_identifier("mod", domain.id, self._pfi_version, domain.title, None, u"Domain")
+        __description = domain.pi_module
+        assert __description is not None
+        #if __description == None:
+        #    if isinstance(domain, ditagen.dita.v1_2.Constraints):
+        #        __description = self.generate_public_identifier("mod", domain.id, self._pi_version, domain.title, None, u"Constraint")
+        #    else:
+        #        __description = self.generate_public_identifier("mod", domain.id, self._pi_version, domain.title, None, u"Domain")
         self.__entity(domain.id + u"-def", self._dtd_base_dir + domain.file + u".mod",
                       __description)
     
@@ -331,9 +339,11 @@ class DitaGenerator(DtdGenerator):
         __f = topic_type.file + u".ent"
         if topic_type is not self.topic_type:
             __f = self._dtd_base_dir + __f
+        __pi = topic_type.pi_entity
+        assert __pi is not None
         self.__entity(topic_type.id + u"-dec",# u"-d-dec"
                       __f,
-                      self.generate_public_identifier("ent", topic_type.id, self._pfi_version, topic_type.title, topic_type.owner),
+                      __pi, #self.generate_public_identifier("ent", topic_type.id, self._pi_version, topic_type.title, topic_type.owner),
                       topic_type.owner)
         
     def __element_mod(self, topic_type):
@@ -345,9 +355,13 @@ class DitaGenerator(DtdGenerator):
             __suffix = u"-type"
         else:
             __suffix = u"-typemod"
+        __pi = topic_type.pi_module
+        assert __pi is not None
+        #if __pi is None:
+        #    __pi = self.generate_public_identifier("mod", topic_type.id, self._pi_version, topic_type.title, topic_type.owner)
         self.__entity(topic_type.id + __suffix,
                       __f,
-                      self.generate_public_identifier("mod", topic_type.id, self._pfi_version, topic_type.title, topic_type.owner),
+                      __pi,
                       topic_type.owner)
     
     def __domain_override(self, element, domains):
@@ -372,16 +386,20 @@ class DitaGenerator(DtdGenerator):
     
     def __domain_included(self, domains, topic_type):
         """Print included domains."""
-        __included_domains = []
+        __types = []
         if self.version == "1.2":
             for __t in self.__types:
-                if __t.parent is not None and not isinstance(__t, ditagen.dita.ShellType):
-                    __included_domains.append(u"&%s-att;" % (__t.id))
+                if __t.parent is not None and not isinstance(__t, ditagen.dita.ShellType) and __t.pi_entity is not None and __t not in __types:
+                    __types.append(__t)
             for __t in self.__types:
                 for __rt in __t.required_types:
-                    __included_domains.append(u"&%s-att;" % (__rt.id))
+                    if __t.pi_entity is not None and __rt not in __types:
+                        __types.append(__rt)
+        __included_domains = []
+        for __t in __types:
+            __included_domains.append(u"&%s-att;" % (__t.id))
         for __d in domains:
-            if isinstance(__d, ditagen.dita.Domain):
+            if isinstance(__d, ditagen.dita.Domain) or isinstance(__d, ditagen.dita.v1_2.AttributeDomain):
                 __s = u"&%s-att;"
             elif isinstance(__d, ditagen.dita.v1_2.Constraints):
                 __s = u"&%s-constraints;"
@@ -439,32 +457,32 @@ class DitaGenerator(DtdGenerator):
         #rmlst.extend(["%data.elements.incl;", "%foreign.unknown.incl;"])
         return [i for i in lst if i not in rmlst]
 
-    def _get_pfi(self, ext):
+    def _get_pi(self, ext):
         """Generate Formal Public Identifier based on file extension."""
         if self.owner is not None:
             __title = self.title #self.topic_type.title
             if ext == u"dtd" and self.__all_domains:
                 __title = u"%s (%s)" % (__title,
                                                u" ".join([__d.id for __d in self.__all_domains]))
-            return self.generate_public_identifier(ext, self.topic_type.file, self._pfi_version, __title, self.owner)
+            return self.generate_public_identifier(ext, self.topic_type.file, self._pi_version, __title, self.owner)
         else:
             return None
     
-    def __print_header(self, ext, pfi=None, sfi=None):
+    def __print_header(self, ext, pi=None, sfi=None):
         """Print boiler plate."""
-        if pfi:
-            __pfi = pfi
+        if pi:
+            __pi = pi
         else:
-            __pfi = self._get_pfi(ext)
+            __pi = self._get_pi(ext)
         if sfi:
             __sfi = sfi
         else:
             __sfi = self.topic_type.file
-        if __pfi:
+        if __pi:
             self.comment_block(u""" Refer to this file by the following public identifier or an 
       appropriate system identifier 
 PUBLIC "%s"
-      Delivered as file "%s.%s" """ % (__pfi, __sfi, ext), before=0)
+      Delivered as file "%s.%s" """ % (__pi, __sfi, ext), before=0)
         else:
             self.comment_block(u""" Refer to this file by an appropriate system identifier 
       Delivered as file "%s.%s" """ % (__sfi, ext), before=0)
@@ -476,19 +494,21 @@ PUBLIC "%s"
             #    self._owner = self.owner
             if self.topic_type:
                 if isinstance(self.topic_type, ditagen.dita.v1_2.MapType) or isinstance(self.topic_type, ditagen.dita.v1_1.MapType):
-                    self.__pfi_prefix = u"MAP"
+                    self.__pi_prefix = u"MAP"
                 else:
-                    self.__pfi_prefix = u"TOPIC"
+                    self.__pi_prefix = u"TOPIC"
                 if len(self.domains) == 0:
                     self.__domains = []
                     self.__constraints = []
+                    self.__attribute_domains = []
                 else:
                     self.__all_domains = filter_domains(self.topic_type, self.domains)
                     sort_domains(self.__all_domains)
-                    self.__domains = [__d for __d in self.__all_domains if not isinstance(__d, ditagen.dita.v1_2.Constraints)]
+                    self.__domains = [__d for __d in self.__all_domains if not (isinstance(__d, ditagen.dita.v1_2.Constraints) or isinstance(__d, ditagen.dita.v1_2.AttributeDomain))]
                     self.__constraints = [__d for __d in self.__all_domains if isinstance(__d, ditagen.dita.v1_2.Constraints)]
+                    self.__attribute_domains = [__d for __d in self.__all_domains if isinstance(__d, ditagen.dita.v1_2.AttributeDomain)]
                 self.__elements = []
-                for __d in self.__all_domains:
+                for __d in self.__domains + self.__constraints:
                     self.__elements.extend(__d.elements)
                 self.__elements = set(self.__elements)
                 self.__types = get_parent_list(self.topic_type)
@@ -503,7 +523,7 @@ PUBLIC "%s"
             
                 if self.title is None:
                     self.title = self.topic_type.id.capitalize()
-            self._pfi_version = " " + self.version
+            self._pi_version = " " + self.version
             # done
             self._initialized = True
 
@@ -567,34 +587,47 @@ PUBLIC "%s"
         
         self.__print_header("dtd")
         if self.version == "1.2":
-            __types_ents = [__t for __t in self.__types if __t.parent is not None]
+            __types_ents = [__t for __t in self.__types if __t.parent is not None and
+                                                           not isinstance(__t, ditagen.dita.ShellType) and
+                                                           __t.pi_entity is not None]
             for __t in self.__types:
-                __types_ents.extend(__t.required_types)
+                if __t.pi_entity is not None:
+                    for __rt in __t.required_types:
+                        sys.stderr.write("entity declarations for required type " + str(__rt))
+                        __types_ents.append(__rt)
+                    #__types_ents.extend([t for t in __t.required_types])
             if __types_ents:
-                self.comment_block(u"%s ENTITY DECLARATIONS" % (self.__pfi_prefix))
+                self.comment_block(u"%s ENTITY DECLARATIONS" % (self.__pi_prefix))
                 for __t in __types_ents:
-                    if not isinstance(__t, ditagen.dita.ShellType):
-                        self.__element_ent(__t)
-                        self.out.write("\n")
+                    self.__element_ent(__t)
+                    self.out.write("\n")
         if self.__all_domains or self.domain_attributes:
             self.comment_block(u"DOMAIN ENTITY DECLARATIONS", before=0)
             for d in self.domain_attributes:
                 self.__entity(d[0] + u"Att-d-dec", d[0] + u"AttDomain.ent",
-                              self.generate_public_identifier("ent", d[0], self._pfi_version,
+                              self.generate_public_identifier("ent", d[0], self._pi_version,
                                                               d[0].capitalize() + " Attribute",
                                                               self.owner, u"Domain"))
                 self.out.write("\n")
-            for __d in self.__domains:
+            __ds = []
+            __ds.extend(self.__all_domains)
+            for __d in __ds:
+                for __rd in __d.required_domains:
+                    if __rd not in __ds:
+                        __ds.append(__rd())
+            for __d in __ds:
                 #if not isinstance(__d, ditagen.dita.v1_2.Constraints):
                 self.__domain_ent(__d)
                 self.out.write("\n")
             self.comment_block(u"DOMAIN EXTENSIONS", before=0)
             for __e in self.__elements:
-                self.__domain_override(__e, self.__all_domains)
+                #self.__domain_override(__e, [d for d in self.__all_domains if d not in self.__attribute_domains])
+                self.__domain_override(__e, self.__domains)
             #self.out.write("\n")
         self.comment_block(u"DOMAIN ATTRIBUTE EXTENSIONS")
         for ae in (u"props", u"base"):
             __aes = [u"%%%sAtt-d-attribute;" % (a[0]) for a in self.domain_attributes if a[1] == ae]
+            __aes.extend([u"%%%s-attribute;" % a.id for a in self.__attribute_domains if ae in a.attributes])
             self.internal_parameter_entity(ae + u"-attribute-extensions", __aes)
         #if isinstance(self.topic_type, ditagen.dita.v1_1.TopicType) or isinstance(self.topic_type, ditagen.dita.v1_2.TopicType):
         if isinstancetype(self.topic_type, ditagen.dita.v1_1.TopicType) or isinstancetype(self.topic_type, ditagen.dita.v1_2.TopicType):
@@ -617,10 +650,12 @@ PUBLIC "%s"
             for __d in self.__constraints:
                 self.__domain_mod(__d)
                 self.out.write("\n")
-        self.comment_block(self.__pfi_prefix + u" ELEMENT INTEGRATION", before=0)
+        self.comment_block(self.__pi_prefix + u" ELEMENT INTEGRATION", before=0)
         __types_mods = self.__types
         for __t in self.__types:
-            __types_mods.extend(__t.required_types)
+            for __rt in __t.required_types:
+                if __rt not in __types_mods:
+                    __types_mods.append(__rt)
         for __t in __types_mods:
             if not isinstance(__t, ditagen.dita.ShellType):
                 self.__element_mod(__t)
@@ -632,12 +667,13 @@ PUBLIC "%s"
 #        if __specialization is not None:
 #            self.__element_mod(__specialization)
 #            self.out.write("\n")
-        if self.__domains:
+        if self.__all_domains or self.domain_attributes:
             self.comment_block(u"DOMAIN ELEMENT INTEGRATION", before=0)
-            for __d in self.__domains:
+            for __d in __ds :
                 #if not isinstance(__d, ditagen.dita.v1_2.Constraints):
-                self.__domain_mod(__d)
-                self.out.write("\n")
+                if __d.pi_module is not None:
+                    self.__domain_mod(__d)
+                    self.out.write("\n")
         self.centered_comment_line(u"End of file", before=0, after=1)
     
     def generate_mod(self):
@@ -711,7 +747,7 @@ PUBLIC "%s"
         self._preprocess()
         
         self.__print_header("ent",
-                            self.generate_public_identifier("ent", d[0], self._pfi_version,
+                            self.generate_public_identifier("ent", d[0], self._pi_version,
                                                             d[0].capitalize() + " Attribute",
                                                             self.owner, u"Domain"),
                             d[0] + u"AttDomain")
@@ -859,13 +895,13 @@ class PluginGenerator(DitaGenerator):
         #_file_name = str(self.topic_type.file)
         __c = []
         if self.topic_type:
-            __c.append((self._get_pfi("dtd"), "%s.dtd" % self._file_name))
+            __c.append((self._get_pi("dtd"), "%s.dtd" % self._file_name))
             if isinstance(self.topic_type, ditagen.dita.SpecializationType):
-                __c.append((self._get_pfi("mod"), "%s.mod" % self._file_name))
+                __c.append((self._get_pi("mod"), "%s.mod" % self._file_name))
                 if self.version == "1.2":
-                    __c.append((self._get_pfi("ent"), "%s.ent" % self._file_name))
+                    __c.append((self._get_pi("ent"), "%s.ent" % self._file_name))
         for d in self.domain_attributes:
-            __c.append((self.generate_public_identifier("ent", d[0], self._pfi_version,
+            __c.append((self.generate_public_identifier("ent", d[0], self._pi_version,
                                                               d[0].capitalize() + " Attribute",
                                                               self.owner, u"Domain"),
                         "%sAttDomain.ent" % d[0]))
@@ -874,9 +910,9 @@ class PluginGenerator(DitaGenerator):
         #__group = ET.SubElement(__root, "group", {
         #    "xml:base": "plugins/%s/dtd/" % self.plugin_name
         #    })
-        for (pfi, sfi) in __c:
+        for (pi, sfi) in __c:
             ET.SubElement(__root, "public", {
-                "publicId": pfi,
+                "publicId": pi,
                 "uri": "dtd/%s" % sfi
                 })
         indent(__root)
@@ -974,7 +1010,7 @@ class Version(object):
         else:
             n = min([len(self.tokens), len(other.tokens)])
             for i in range(n):
-                c = self.tokens[i].__cmp__(other.tokens[i])
+                #c = self.tokens[i].__cmp__(other.tokens[i])
                 if self.tokens[i] > other.tokens[i]:
                     return 1
                 elif self.tokens[i] < other.tokens[i]:
@@ -1048,13 +1084,10 @@ def unique(seq, idfun=None):
     return result
 
 def get_parent_list(topic_type):
-    """
-    Get list of topic type's super types, including topic type itself.
-    
-    If the topic type is an alias type, add alias into the list instead.
-    """
+    """Get list of topic type's super types, including topic type itself."""
     __result_types = []
     #if topic_type.get_alias() is None:
+    #if not isinstancetype(topic_type, ditagen.dita.ShellType):
     __result_types.append(topic_type)
     __t = topic_type
     #else:
@@ -1083,11 +1116,11 @@ def isinstancetype(__type, type_class):
 #        }
 #    return owner + ":" + description + ":" + version
 
-#u"ELEMENTS DITA" + self._pfi_version + " " + title + u" Constraints"
-#u"ELEMENTS DITA" + self._pfi_version + " " + title + u" Domain"
-#u"ENTITIES DITA" + self._pfi_version + " " + title + u" Domain"
-#u"ENTITIES DITA" + self._pfi_version + " " + title,
-#u"ELEMENTS DITA" + self._pfi_version + " " + title,
+#u"ELEMENTS DITA" + self._pi_version + " " + title + u" Constraints"
+#u"ELEMENTS DITA" + self._pi_version + " " + title + u" Domain"
+#u"ENTITIES DITA" + self._pi_version + " " + title + u" Domain"
+#u"ENTITIES DITA" + self._pi_version + " " + title,
+#u"ELEMENTS DITA" + self._pi_version + " " + title,
 #dec
 #mod -> "ELEMENTS"
 #ent -> "ENTITIES"

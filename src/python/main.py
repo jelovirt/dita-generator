@@ -31,6 +31,7 @@ import ditagen.dita
 import ditagen.dtdgen
 import ditagen.dita.v1_1
 import ditagen.dita.v1_2
+import ditagen.dita.d4p
 import ditagen.generator
 import ditagen.pdf_generator
 from ditagen.generator import Version
@@ -184,6 +185,7 @@ class GenerateHandler(webapp.RequestHandler):
                     __values = re.split("[\\s,\\|]+", __v)
                 else:
                     __values = []
+                # TODO: add DomainAttribute instance instead of tuple
                 __attrs.append((self.request.get(u"att." + i +".name"),
                                 self.request.get(u"att." + i +".type"),
                                 __values))
@@ -266,7 +268,7 @@ class PluginGenerateHandler(webapp.RequestHandler):
         __owner = None
         __nested = None
         __format = None
-        __domains = []
+        #__domains = []
         __ot_version = None
         __plugin_name = None
         __plugin_version = None
