@@ -134,7 +134,7 @@ class GenerateHandler(webapp.RequestHandler):
             # domains
             for __d in  self.request.get_all(u"domain"):
                 if __d in ditagen.DOMAIN_MAP[__version]:
-                    __domains.append(ditagen.DOMAIN_MAP[__version][__d]())
+                    __domains.append(ditagen.DOMAIN_MAP[__version][__d])
                 else:
                     raise ValueError("unsupported domain " + __d)
             # id
@@ -193,7 +193,7 @@ class GenerateHandler(webapp.RequestHandler):
                 # topic type
                 __t = self.request.get(u"type")
                 if __t in ditagen.TOPIC_MAP[__version]:
-                    __topic_type = ditagen.TOPIC_MAP[__version][__t]()
+                    __topic_type = ditagen.TOPIC_MAP[__version][__t]() # XXX: Should this be a class, not an instance
                 # output
                 __o = self.request.get(u"output")
                 if __o in ditagen.OUTPUT_MAP:

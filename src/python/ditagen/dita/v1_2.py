@@ -441,16 +441,17 @@ class SubjectSchemeType(MapType):
 
 class Constraints(ditagen.dita.DomainBase):
     """Base class for constraints."""
-    file_suffix = u""
-    fpi_suffix = u" Constraint"
+#    file_suffix = u""
+    pi_suffix = u" Constraint"
     elements = []
+    att_id = None
     def get_file_name(self, extension):
         return self.file + self.file_suffix + "." + extension
 
 class AttributeDomain(ditagen.dita.DomainBase):
     """Base class for attribute domains."""
-    file_suffix = u"Att"
-    fpi_suffix = u" Attribute Domain"
+#    file_suffix = u"Att"
+    pi_suffix = u" Attribute Domain"
     #elements = []
     attributes = []
     def get_file_name(self, extension):
@@ -461,7 +462,8 @@ class AttributeDomain(ditagen.dita.DomainBase):
 class UiDomain(ditagen.dita.Domain):
     """User interface domain."""
     id = u"ui-d"
-    _file = u"technicalContent/dtd/uiDomain"
+    si_module = u"technicalContent/dtd/uiDomain.mod"
+    si_entity = u"technicalContent/dtd/uiDomain.end"
     pi_entity = u"-//OASIS//ENTITIES DITA 1.2 User Interface Domain//EN"
     pi_module = u"-//OASIS//ELEMENTS DITA 1.2 User Interface Domain//EN"
     title = u"User Interface"
@@ -470,7 +472,8 @@ class UiDomain(ditagen.dita.Domain):
 class HiDomain(ditagen.dita.Domain):
     """Hilight domain."""
     id = u"hi-d"
-    _file = u"base/dtd/highlightDomain"
+    si_module = u"base/dtd/highlightDomain.mod"
+    si_entity = u"base/dtd/highlightDomain.ent"
     pi_entity = u"-//OASIS//ENTITIES DITA 1.2 Highlight Domain//EN"
     pi_module = u"-//OASIS//ELEMENTS DITA 1.2 Highlight Domain//EN"
     title = u"Highlight"
@@ -479,7 +482,8 @@ class HiDomain(ditagen.dita.Domain):
 class PrDomain(ditagen.dita.Domain):
     """Programmign domain."""
     id = u"pr-d"
-    _file = u"technicalContent/dtd/programmingDomain"
+    si_module = u"technicalContent/dtd/programmingDomain.mod"
+    si_entity = u"technicalContent/dtd/programmingDomain.ent"
     pi_entity = u"-//OASIS//ENTITIES DITA 1.2 Programming Domain//EN"
     pi_module = u"-//OASIS//ELEMENTS DITA 1.2 Programming Domain//EN"
     title = u"Programming"
@@ -488,7 +492,8 @@ class PrDomain(ditagen.dita.Domain):
 class SwDomain(ditagen.dita.Domain):
     """Software development domain."""
     id = u"sw-d"
-    _file = u"technicalContent/dtd/softwareDomain"
+    si_module = u"technicalContent/dtd/softwareDomain.mod"
+    si_entity = u"technicalContent/dtd/softwareDomain.ent"
     pi_entity = u"-//OASIS//ENTITIES DITA 1.2 Software Domain//EN"
     pi_module = u"-//OASIS//ELEMENTS DITA 1.2 Software Domain//EN"
     title = u"Software"
@@ -497,7 +502,8 @@ class SwDomain(ditagen.dita.Domain):
 class UtDomain(ditagen.dita.Domain):
     """Utilities domain."""
     id = u"ut-d"
-    _file = u"base/dtd/utilitiesDomain"
+    si_module = u"base/dtd/utilitiesDomain.mod"
+    si_entity = u"base/dtd/utilitiesDomain.ent"
     pi_entity = u"-//OASIS//ENTITIES DITA 1.2 Utilities Domain//EN"
     pi_module = u"-//OASIS//ELEMENTS DITA 1.2 Utilities Domain//EN"
     title = u"Utilities"
@@ -506,7 +512,8 @@ class UtDomain(ditagen.dita.Domain):
 class IndexingDomain(ditagen.dita.Domain):
     """Indexing domain."""
     id = u"indexing-d"
-    _file = u"base/dtd/indexingDomain"
+    si_module = u"base/dtd/indexingDomain.mod"
+    si_entity = u"base/dtd/indexingDomain.ent"
     pi_entity = u"-//OASIS//ENTITIES DITA 1.2 Indexing Domain//EN"
     pi_module = u"-//OASIS//ELEMENTS DITA 1.2 Indexing Domain//EN"
     title = u"Indexing"
@@ -515,7 +522,8 @@ class IndexingDomain(ditagen.dita.Domain):
 class LearningDomain(ditagen.dita.Domain):
     """Learning domain."""
     id = u"learning-d"
-    _file = u"learning/dtd/learningDomain"
+    si_module = u"learning/dtd/learningDomain.mod"
+    si_entity = u"learning/dtd/learningDomain.ent"
     pi_entity = u"-//OASIS//ENTITIES DITA 1.2 Learning Domain//EN"
     pi_module = u"-//OASIS//ELEMENTS DITA 1.2 Learning Domain//EN"
     title = u"Learning"
@@ -526,7 +534,8 @@ class LearningDomain(ditagen.dita.Domain):
 class LearningMetaDomain(ditagen.dita.Domain):
     """Learning metadata domain."""
     id = u"learningmeta-d"
-    _file = u"learning/dtd/learningMetadataDomain"
+    si_module = u"learning/dtd/learningMetadataDomain.mod"
+    si_entity = u"learning/dtd/learningMetadataDomain.ent"
     pi_entity = u"-//OASIS//ENTITIES DITA 1.2 Learning Metadata Domain//EN"
     pi_module = u"-//OASIS//ELEMENTS DITA 1.2 Learning Metadata Domain//EN"
     title = u"Learning Metadata"
@@ -535,7 +544,8 @@ class LearningMetaDomain(ditagen.dita.Domain):
 class LearningMapDomain(ditagen.dita.Domain):
     """Learning map domain."""
     id = u"learningmap-d"
-    _file = u"learning/dtd/learningMapDomain"
+    si_module = u"learning/dtd/learningMapDomain.mod"
+    si_entity = u"learning/dtd/learningMapDomain.ent"
     pi_entity = u"-//OASIS//ENTITIES DITA 1.2 Learning Map Domain//EN"
     pi_module = u"-//OASIS//ELEMENTS DITA 1.2 Learning Map Domain//EN"
     title = u"Learning Map"
@@ -544,7 +554,8 @@ class LearningMapDomain(ditagen.dita.Domain):
 class TaskRequirementsDomain(ditagen.dita.Domain):
     """Task requirements domain."""
     id = u"taskreq-d"
-    _file = u"technicalContent/dtd/taskreqDomain"
+    si_module = u"technicalContent/dtd/taskreqDomain.mod"
+    si_entity = u"technicalContent/dtd/taskreqDomain.ent"
     pi_entity = u"-//OASIS//ENTITIES DITA 1.2 Task Requirements Domain//EN"
     pi_module = u"-//OASIS//ELEMENTS DITA 1.2 Task Requirements Domain//EN"
     title = u"Machine Industry Task"
@@ -553,7 +564,8 @@ class TaskRequirementsDomain(ditagen.dita.Domain):
 class HazardStatementDomain(ditagen.dita.Domain):
     """Hazard statement domain."""
     id = u"hazard-d"
-    _file = u"base/dtd/hazardstatementDomain"
+    si_module = u"base/dtd/hazardstatementDomain.mod"
+    si_entity = u"base/dtd/hazardstatementDomain.ent"
     pi_entity = u"-//OASIS//ENTITIES DITA 1.2 Hazard Statement Domain//EN"
     pi_module = u"-//OASIS//ELEMENTS DITA 1.2 Hazard Domain//EN"
     title = u"Hazard Statement"
@@ -562,7 +574,8 @@ class HazardStatementDomain(ditagen.dita.Domain):
 class MapGroupDomain(ditagen.dita.Domain):
     """Map group domain."""
     id = u"mapgroup-d"
-    _file = u"base/dtd/mapGroup" # This is an exception to DITA's naming scheme
+    si_module = u"base/dtd/mapGroup.mod"
+    si_entity = u"base/dtd/mapGroup.ent" # This is an exception to DITA's naming scheme
     pi_entity = u"-//OASIS//ENTITIES DITA 1.2 Map Group Domain//EN"
     pi_module = u"-//OASIS//ELEMENTS DITA 1.2 Map Group Domain//EN"
     title = u"Map Group"
@@ -571,7 +584,8 @@ class MapGroupDomain(ditagen.dita.Domain):
 class AbbreviatedFormDomain(ditagen.dita.Domain):
     """Abbreviated form domain."""
     id = u"abbrev-d"
-    _file = u"technicalContent/dtd/abbreviateDomain"
+    si_module = u"technicalContent/dtd/abbreviateDomain.mod"
+    si_entity = u"technicalContent/dtd/abbreviateDomain.ent"
     pi_entity = u"-//OASIS//ENTITIES DITA 1.2 Abbreviated Form Domain//EN"
     pi_module = u"-//OASIS//ELEMENTS DITA 1.2 Abbreviated Form Domain//EN"
     title = u"Abbreviated Form"
@@ -580,14 +594,16 @@ class AbbreviatedFormDomain(ditagen.dita.Domain):
 class XNALDomain(ditagen.dita.Domain):
     """XNAL domain."""
     id = u"xnal-d"
-    _file = u"xnal/dtd/xnalDomain"
+    si_module = u"xnal/dtd/xnalDomain.mod"
+    si_entity = u"xnal/dtd/xnalDomain.ent"
     title = u"XNAL"
     elements = [u"author"]
     parent = [MapType]
 class UserDelayedResolutionDomain(ditagen.dita.Domain):
     """User delayed resolution domain."""
     id = u"delay-d"
-    _file = u"base/dtd/delayResolutionDomain"
+    si_module = u"base/dtd/delayResolutionDomain.mod"
+    si_entity = u"base/dtd/delayResolutionDomain.ent"
     pi_entity = u"-//OASIS//ENTITIES DITA 1.2 Delayed Resolution Domain//EN"
     pi_module = u"-//OASIS//ELEMENTS DITA 1.2 Delayed Resolution Domain//EN"
     title = u"Delayed Resolution"
@@ -596,7 +612,8 @@ class UserDelayedResolutionDomain(ditagen.dita.Domain):
 class ClassifyDomain(ditagen.dita.Domain):
     """Classify domain."""
     id = u"classify-d"
-    _file = u"subjectScheme/dtd/classifyDomain"
+    si_module = u"subjectScheme/dtd/classifyDomain.mod"
+    si_entity = u"subjectScheme/dtd/classifyDomain.ent"
     pi_entity = u"-//OASIS//ENTITIES DITA 1.2 Classification Domain//EN"
     pi_module = u"-//OASIS//ELEMENTS DITA 1.2 Classification Domain//EN"
     title = u"Map Subject Classification"
@@ -605,7 +622,8 @@ class ClassifyDomain(ditagen.dita.Domain):
 class GlossaryReferenceDomain(ditagen.dita.Domain):
     """Glossary reference domain."""
     id = u"glossref-d"
-    _file = u"technicalContent/dtd/glossrefDomain"
+    si_module = u"technicalContent/dtd/glossrefDomain.mod"
+    si_entity = u"technicalContent/dtd/glossrefDomain.ent"
     pi_entity = u"-//OASIS//ENTITIES DITA 1.2 Glossary Reference Domain//EN"
     pi_module = u"-//OASIS//ELEMENTS DITA 1.2 Glossary Reference Domain//EN"
     title = u"Glossary Reference"
@@ -617,19 +635,21 @@ class GlossaryReferenceDomain(ditagen.dita.Domain):
 class StrictTaskbodyConstraints(Constraints):
     """Strict taskbody constraints."""
     id = u"strictTaskbody-c"
-    _file = u"technicalContent/dtd/strictTaskbodyConstraint"
+    si_module = u"technicalContent/dtd/strictTaskbodyConstraint.mod"
+    si_entity = u"technicalContent/dtd/strictTaskbodyConstraint.ent"
     pi_module = u"-//OASIS//ELEMENTS DITA 1.2 Strict Taskbody Constraint//EN"
     title = u"Strict Taskbody"
     parent = [TaskType]
-    _att_id = u"taskbody"
+    att_id = u"taskbody"
 class MachineryTaskbodyConstraints(Constraints):
     """Machinery taskbody constraints."""
     id = u"machineryTaskbody-c"
-    _file = u"machineryIndustry/dtd/machineryTaskbodyConstraint"
+    si_module = u"machineryIndustry/dtd/machineryTaskbodyConstraint.mod"
+    si_entity = u"machineryIndustry/dtd/machineryTaskbodyConstraint.ent"
     pi_module = u"-//OASIS//ELEMENTS DITA 1.2 Machinery Taskbody Constraint//EN"
     title = u"Machinery Taskbody"
     parent = [TaskType]
-    _att_id = u"taskbody"
+    att_id = u"taskbody"
 
 # Defaults
 

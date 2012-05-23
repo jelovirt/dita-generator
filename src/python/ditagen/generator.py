@@ -16,6 +16,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import logging
 import sys
 import ditagen.dita
 import ditagen.dita.v1_1
@@ -314,25 +315,29 @@ class DitaGenerator(DtdGenerator):
         self.out.write("\n")
         
     def __domain_ent(self, domain):
-        """Print domain entity declaration."""
-        __pi = domain.pi_entity
-        assert __pi is not None
+        """Print domain entity declaration.
+        
+        Arguments:
+        domain -- domain class
+        """
+        #__pi = domain.pi_entity
+        #assert __pi is not None
         #if __pi == None:
         #    __pi = self.generate_public_identifier("ent", domain.id, self._pi_version, domain.title, None, u"Domain")
-        self.__entity(domain.id + u"-dec", self._dtd_base_dir + domain.file + u".ent",
-                      __pi)
+        self.__entity(domain.id + u"-dec", self._dtd_base_dir + domain.si_entity,
+                      domain.pi_entity)
     
     def __domain_mod(self, domain):
         """Print domain module declaration."""
-        __description = domain.pi_module
-        assert __description is not None
+        #__description = domain.pi_module
+        #assert __description is not None
         #if __description == None:
-        #    if isinstance(domain, ditagen.dita.v1_2.Constraints):
+        #    if issubclass(domain, ditagen.dita.v1_2.Constraints):
         #        __description = self.generate_public_identifier("mod", domain.id, self._pi_version, domain.title, None, u"Constraint")
         #    else:
         #        __description = self.generate_public_identifier("mod", domain.id, self._pi_version, domain.title, None, u"Domain")
-        self.__entity(domain.id + u"-def", self._dtd_base_dir + domain.file + u".mod",
-                      __description)
+        self.__entity(domain.id + u"-def", self._dtd_base_dir + domain.si_module,
+                      domain.pi_module)
     
     def __element_ent(self, topic_type):
         """Print element entity declaration."""
@@ -399,11 +404,13 @@ class DitaGenerator(DtdGenerator):
         for __t in __types:
             __included_domains.append(u"&%s-att;" % (__t.id))
         for __d in domains:
-            if isinstance(__d, ditagen.dita.Domain) or isinstance(__d, ditagen.dita.v1_2.AttributeDomain):
-                __s = u"&%s-att;"
-            elif isinstance(__d, ditagen.dita.v1_2.Constraints):
-                __s = u"&%s-constraints;"
-            __included_domains.append(__s % (__d.get_att_id()))
+            if issubclass(__d, ditagen.dita.Domain) or issubclass(__d, ditagen.dita.v1_2.AttributeDomain):
+                __included_domains.append(u"&%s-att;" % __d.id)
+            elif issubclass(__d, ditagen.dita.v1_2.Constraints):
+                if __d.att_id is not None:
+                    __included_domains.append(u"&%s-constraints;" % __d.att_id)
+                else:
+                    __included_domains.append(u"&%s-constraints;" % __d.id)
         for d in self.domain_attributes:
             __included_domains.append("&%sAtt-d-att;" % d[0])
         self.internal_general_entity(u"included-domains", __included_domains)
@@ -458,12 +465,12 @@ class DitaGenerator(DtdGenerator):
         return [i for i in lst if i not in rmlst]
 
     def _get_pi(self, ext):
-        """Generate Formal Public Identifier based on file extension."""
+        """Generate Public Identifier based on file extension."""
         if self.owner is not None:
             __title = self.title #self.topic_type.title
             if ext == u"dtd" and self.__all_domains:
                 __title = u"%s (%s)" % (__title,
-                                               u" ".join([__d.id for __d in self.__all_domains]))
+                                        u" ".join([__d.id for __d in self.__all_domains]))
             return self.generate_public_identifier(ext, self.topic_type.file, self._pi_version, __title, self.owner)
         else:
             return None
@@ -502,11 +509,14 @@ PUBLIC "%s"
                     self.__constraints = []
                     self.__attribute_domains = []
                 else:
+                    #logging.info("domains: %s"  % str(self.domains))
                     self.__all_domains = filter_domains(self.topic_type, self.domains)
+                    #logging.info("__all_domains: %s"  % str(self.__all_domains))
                     sort_domains(self.__all_domains)
-                    self.__domains = [__d for __d in self.__all_domains if not (isinstance(__d, ditagen.dita.v1_2.Constraints) or isinstance(__d, ditagen.dita.v1_2.AttributeDomain))]
-                    self.__constraints = [__d for __d in self.__all_domains if isinstance(__d, ditagen.dita.v1_2.Constraints)]
-                    self.__attribute_domains = [__d for __d in self.__all_domains if isinstance(__d, ditagen.dita.v1_2.AttributeDomain)]
+                    self.__domains = [__d for __d in self.__all_domains if not (issubclass(__d, ditagen.dita.v1_2.Constraints) or issubclass(__d, ditagen.dita.v1_2.AttributeDomain))]
+                    self.__constraints = [__d for __d in self.__all_domains if issubclass(__d, ditagen.dita.v1_2.Constraints)]
+                    self.__attribute_domains = [__d for __d in self.__all_domains if issubclass(__d, ditagen.dita.v1_2.AttributeDomain)]
+                sys.stderr.write(str(self.__all_domains))
                 self.__elements = []
                 for __d in self.__domains + self.__constraints:
                     self.__elements.extend(__d.elements)
@@ -593,30 +603,32 @@ PUBLIC "%s"
             for __t in self.__types:
                 if __t.pi_entity is not None:
                     for __rt in __t.required_types:
-                        sys.stderr.write("entity declarations for required type " + str(__rt))
                         __types_ents.append(__rt)
                     #__types_ents.extend([t for t in __t.required_types])
             if __types_ents:
                 self.comment_block(u"%s ENTITY DECLARATIONS" % (self.__pi_prefix))
                 for __t in __types_ents:
                     self.__element_ent(__t)
-                    self.out.write("\n")
+                    self.out.write("\n") 
         if self.__all_domains or self.domain_attributes:
             self.comment_block(u"DOMAIN ENTITY DECLARATIONS", before=0)
+            # attribute domains
             for d in self.domain_attributes:
                 self.__entity(d[0] + u"Att-d-dec", d[0] + u"AttDomain.ent",
                               self.generate_public_identifier("ent", d[0], self._pi_version,
                                                               d[0].capitalize() + " Attribute",
                                                               self.owner, u"Domain"))
                 self.out.write("\n")
+            # domains
             __ds = []
             __ds.extend(self.__all_domains)
             for __d in __ds:
                 for __rd in __d.required_domains:
                     if __rd not in __ds:
-                        __ds.append(__rd())
+                        __ds.append(__rd)
+            #logging.info("__ds: %s"  % str(__ds))
             for __d in __ds:
-                #if not isinstance(__d, ditagen.dita.v1_2.Constraints):
+                #if not issubclass(__d, ditagen.dita.v1_2.Constraints):
                 self.__domain_ent(__d)
                 self.out.write("\n")
             self.comment_block(u"DOMAIN EXTENSIONS", before=0)
@@ -669,8 +681,8 @@ PUBLIC "%s"
 #            self.out.write("\n")
         if self.__all_domains or self.domain_attributes:
             self.comment_block(u"DOMAIN ELEMENT INTEGRATION", before=0)
-            for __d in __ds :
-                #if not isinstance(__d, ditagen.dita.v1_2.Constraints):
+            for __d in __ds:
+                #if not issubclass(__d, ditagen.dita.v1_2.Constraints):
                 if __d.pi_module is not None:
                     self.__domain_mod(__d)
                     self.out.write("\n")
@@ -989,7 +1001,7 @@ class PluginGenerator(DitaGenerator):
                     __zip.close()
             __output.write(__temp.getvalue())
         except:
-            print "Failed to write ZIP file to output:", sys.exc_info()[0]
+            logging.error("Failed to write ZIP file to output:", sys.exc_info()[0])
             raise
         finally:
             __temp.close()
@@ -1037,9 +1049,9 @@ __domain_order.update({ u"hi-d": 0, u"ui-d": 1, u"indexing-d": 2 })
 
 def domain_comparator(x, y):
     """ Sort constraints after domains, then by required domains amount. """
-    if isinstance(x, ditagen.dita.v1_2.Constraints) and not isinstance(y, ditagen.dita.v1_2.Constraints):
+    if issubclass(x, ditagen.dita.v1_2.Constraints) and not issubclass(y, ditagen.dita.v1_2.Constraints):
         return 1
-    elif isinstance(y, ditagen.dita.v1_2.Constraints) and not isinstance(x, ditagen.dita.v1_2.Constraints):
+    elif issubclass(y, ditagen.dita.v1_2.Constraints) and not issubclass(x, ditagen.dita.v1_2.Constraints):
         return -1
     elif x.id in __domain_order or y.id in __domain_order:
         return __domain_order[x.id] - __domain_order[y.id]
@@ -1048,7 +1060,7 @@ def domain_comparator(x, y):
 
 def filter_domains(topic_type, domains):
     """Filter the domains list for aliases, non-applicable domains, and add reqired domains."""
-    #__domains = [d for d in domains if isinstance(topic_type, d.parent)]
+    #__domains = [d for d in domains if issubclass(topic_type, d.parent)]
     __result_domains = []
     #__alias = topic_type.get_alias()
     for __d in domains:
@@ -1060,10 +1072,10 @@ def filter_domains(topic_type, domains):
     __t = topic_type
     while __t is not None:
         for __d in __t.required_domains:
-            __result_domains.append(__d())
+            __result_domains.append(__d)
         __t = __t.parent
     __result_domains.sort()
-    return unique_classes(__result_domains)
+    return unique(__result_domains, lambda x: x) #unique_classes(__result_domains)
 
 def unique_classes(seq):
     """Remove duplicates by class."""

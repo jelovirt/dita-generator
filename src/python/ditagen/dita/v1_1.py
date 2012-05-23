@@ -184,56 +184,64 @@ class BookMapType(MapType):
 class UiDomain(ditagen.dita.Domain):
     """User interface domain."""
     id = u"ui-d"
-    _file = u"uiDomain"
+    si_module = u"uiDomain.mod"
+    si_entity = u"uiDomain.ent"
     title = u"User Interface"
     elements = [u"pre", u"keyword", u"ph"]
     parent = [TopicType]
 class HiDomain(ditagen.dita.Domain):
     """Hilight domain."""
     id = u"hi-d"
-    _file = u"highlightDomain"
+    si_module = u"highlightDomain.mod"
+    si_entity = u"highlightDomain.ent"
     title = u"Highlight"
     elements = [u"ph"]
     parent = [TopicType]
 class PrDomain(ditagen.dita.Domain):
     """Programmign domain."""
     id = u"pr-d"
-    _file = u"programmingDomain"
+    si_module = u"programmingDomain.mod"
+    si_entity = u"programmingDomain.ent"
     title = u"Programming"
     elements = [u"pre", u"keyword", u"ph", u"fig", u"dl"]
     parent = [TopicType]
 class SwDomain(ditagen.dita.Domain):
     """Software development domain."""
     id = u"sw-d"
-    _file = u"softwareDomain"
+    si_module = u"softwareDomain.mod"
+    si_entity = u"softwareDomain.ent"
     title = u"Software"
     elements = [u"pre", u"keyword", u"ph"]
     parent = [TopicType]
 class UtDomain(ditagen.dita.Domain):
     """Utilities domain."""
     id = u"ut-d"
-    _file = u"utilitiesDomain"
+    si_module = u"utilitiesDomain.mod"
+    si_entity = u"utilitiesDomain.ent"
     title = u"Utilities"
     elements = [u"fig"]
     parent = [TopicType]
 class IndexingDomain(ditagen.dita.Domain):
     """Indexing domain."""
     id = u"indexing-d"
-    _file = u"indexingDomain"
+    si_module = u"indexingDomain.mod"
+    si_entity = u"indexingDomain.ent"
     title = u"Indexing"
     elements = [u"index-base"]
     parent = [TopicType, MapType]
 class MapGroupDomain(ditagen.dita.Domain):
     """Map group domain."""
     id = u"mapgroup-d"
-    _file = u"mapGroup"
+    si_module = u"mapGroup.mod"
+    si_entity = u"mapGroup.ent"
     title = u"Map Group"
     elements = [u"topicref"]
     parent = [MapType]
 class XNALDomain(ditagen.dita.Domain):
     """XNAL domain."""
     id = u"xnal-d"
-    _file = u"xnalDomain"
+    si_module = u"xnalDomain.mod"
+    si_entity = u"xnalDomain.ent"
     title = u"XNAL"
     elements = [u"author"]
     parent = [MapType]

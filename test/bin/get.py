@@ -87,7 +87,7 @@ def main():
             ('owner', 'test'),
             ('output', 'shell'),
             ('type', 'article'),
-            #("nested", "true"),
+            ("nested", "true"),
             ('id', 'test'),
             ('att.1.type', 'props'),
             ('att.1.name', 'custom'),
