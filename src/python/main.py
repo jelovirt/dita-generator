@@ -36,7 +36,21 @@ import ditagen.generator
 import ditagen.pdf_generator
 from ditagen.generator import Version
 import re
+import logging
 
+class RedirectHandler(webapp.RequestHandler):
+    
+    def head(self):
+        self.redirect(self.get_redirect_url(), True)
+        
+    def post(self):
+        self.redirect(self.get_redirect_url(), True)
+
+    def get(self):
+        self.redirect(self.get_redirect_url(), True)
+
+    def get_redirect_url(self):
+        return "http://dita-generator-hrd.appspot.com%s?%s" % (self.request.path, self.request.query_string)
 
 class MainHandler(webapp.RequestHandler):
 
@@ -407,9 +421,11 @@ class PluginGenerateHandler(webapp.RequestHandler):
 
 
 def main():
-    application = webapp.WSGIApplication([('/generate', GenerateHandler),
-                                          ('/generate-plugin', PluginGenerateHandler),
-                                          ('/.*', MainHandler)],
+    #application = webapp.WSGIApplication([('/generate', GenerateHandler),
+    #                                      ('/generate-plugin', PluginGenerateHandler),
+    #                                      ('/.*', MainHandler)],
+    #                                     debug=True)
+    application = webapp.WSGIApplication([('/.*', RedirectHandler)],
                                          debug=True)
     util.run_wsgi_app(application)
 
