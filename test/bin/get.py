@@ -17,7 +17,7 @@ class bcolors:
 
 def main():
     servers = {
-           "production": ("dita-generator.appspot.com", 80),
+           "production": ("dita-generator-hrd.appspot.com", 80),
            "localhost": ("localhost", 8082)
            }
     targets = {
