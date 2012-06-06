@@ -331,6 +331,28 @@ class SimpleEnumerationDomain(ditagen.dita.Domain):
     elements = [u"data"]
     parent = [TopicType]
 
+class MathDomain(ditagen.dita.Domain):
+    """DITA For Publishers Math Domain."""
+    id = u"d4p_math-d"
+    si_module = u"d4p_mathDomain.mod"
+    si_entity = u"d4p_mathDomain.ent"
+    pi_module = u"urn:pubid:dita4publishers.sourceforge.net:doctypes:dita:modules:d4p_mathDomain"
+    pi_entity = u"urn:pubid:dita4publishers.sourceforge.net:doctypes:dita:modules:d4p_mathDomain:entities"
+    title = u"Math"
+    elements = [u"ph", u"p", u"fig", u"foreign"]
+    parent = [TopicType]
+    
+class MediaDomain(ditagen.dita.Domain):
+    """DITA For Publishers Media Domain."""
+    id = u"d4p_media-d"
+    si_module = u"d4p_mediaDomain.mod"
+    si_entity = u"d4p_mediaDomain.ent"
+    pi_module = u"urn:pubid:dita4publishers.sourceforge.net:doctypes:dita:modules:d4p_mediaDomain"
+    pi_entity = u"urn:pubid:dita4publishers.sourceforge.net:doctypes:dita:modules:d4p_mediaDomain:entities"
+    title = u"Media"
+    elements = [u"object"]
+    parent = [TopicType]
+
 class ClassificationDomain(ditagen.dita.Domain):
     """DITA For Publishers Classification Domain."""
     id = u"d4p_classification-d"
@@ -442,7 +464,7 @@ class RenditionTargetAttDomain(ditagen.dita.v1_2.AttributeDomain):
     parent = [TopicType]
 
 # Defaults
-__commonDomains = [FormattingDomain, EnumerationTopicDomain, SimpleEnumerationDomain, ClassificationDomain, PubcontentDomain, RubyDomain, VariablesDomain, VerseDomain, XmlDomain, RenditionTargetAttDomain]
+__commonDomains = [FormattingDomain, EnumerationTopicDomain, SimpleEnumerationDomain, MathDomain, MediaDomain, ClassificationDomain, PubcontentDomain, RubyDomain, VariablesDomain, VerseDomain, XmlDomain, RenditionTargetAttDomain]
 ArticleType.default_domains = __commonDomains
 ChapterType.default_domains = __commonDomains
 CoverType.default_domains = __commonDomains
