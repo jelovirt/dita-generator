@@ -175,13 +175,6 @@ class StylePluginGenerator(DitaGenerator):
         self.page_size = ()
         self.style = {}
         self.page_margins = None
-        #self.font_family = None
-        #self.font_size = None
-        #self.color = None
-        #self.link_font_weight = None
-        #self.link_font_style = None
-        #self.link_color = None
-        #self.link_text_decoration = None
         self.force_page_count = None
         self.chapter_layout = None
         self.body_column_count = None
@@ -190,14 +183,10 @@ class StylePluginGenerator(DitaGenerator):
         self.toc_maximum_level = None
         self.task_label = None
         self.include_related_links = None
-        #self.side_col_width = None
         self.column_gap = None
         self.mirror_page_margins = None
-        #self.text_align = None
         self.dl = None
         self.title_numbering = None
-        #self.spacing_before = None
-        #self.spacing_after = None
         self.generate_shell = None
         self.link_pagenumber = None
         self.table_continued = None
@@ -205,7 +194,6 @@ class StylePluginGenerator(DitaGenerator):
         self.header_even = None
         self.header_odd = None
         self.drop_folio = None
-        #self._stylesheet_stump = []
 
     def _preprocess(self):
         """Preprocess arguments."""

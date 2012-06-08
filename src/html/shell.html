@@ -5,7 +5,7 @@
     <input type="hidden" name="file" value="plugin">
   {% endif %}
   <input type="hidden" name="output" value="{{ output }}">
-  <div class="page">
+  <!--div class="page">
     <p class="help">A {{ output_title }}  defines the set of structural modules
       (topic or map types), domain modules, and constraints modules that the map
       or topic can use. In general, any production use of DITA involves
@@ -13,8 +13,9 @@
       always requires the creation of local shell document types, even if all
       they do is omit unneeded modules or apply constraints to the standard
       DITA-defined vocabulary.</p>
-  </div>
-  {% include "version-page.html" %}
+  </div-->
+  {# include "version-page.html" #}
+  <input type="hidden" name="version" value="1.2">
   {% include "common-pages.html" %}
   <div class="page">
     <fieldset>

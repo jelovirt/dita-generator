@@ -261,149 +261,97 @@ class PluginGenerateHandler(webapp.RequestHandler):
         self.get()
 
     def get(self):
-        __topic_type = None
-        __output_type = None
+        #__topic_type = None
+        #__output_type = None
         __id = None
-        __root = None
-        __owner = None
-        __nested = None
-        __format = None
-        #__domains = []
+        #__format = None
         __ot_version = None
         __plugin_name = None
         __plugin_version = None
-        __stylesheet = None
-        __title = None
-        __file = None
-        __attrs = []
+        #__file = None
         try:
-            # version
+            __dita_gen = ditagen.pdf_generator.StylePluginGenerator()
+            __dita_gen.out = self.response.out
+
             if u"ot.version" in self.request.arguments():
                 __ot_version = Version(self.request.get(u"ot.version"))
             else:
                 raise ValueError("version missing")
-            # id
             if u"id" in self.request.arguments():
                 __id = self.request.get(u"id")
             else:
                 raise ValueError("id missing")
-            # root
-            #if u"root" in self.request.arguments():
-            #    __root = self.request.get(u"root")
-            # page size
-            if u"owner" in self.request.arguments():
-                __owner = self.request.get(u"owner")
-            # title
-            #if u"title" in self.request.arguments():
-            #    __title = self.request.get(u"title")
-            #else:
-            #    raise ValueError("title missing")
             if u"plugin-name" in self.request.arguments():
                 __plugin_name = self.request.get(u"plugin-name")
             else:
                 __plugin_name = __id
             if u"plugin-version" in self.request.arguments():
                 __plugin_version = self.request.get(u"plugin-version")
-            #if not __title:
-            #    __title = __id.capitalize()
-            __nested = u"nested" in self.request.arguments()
-            #__remove = dict([(n, True) for n in form.getlist("remove")])
-            #__global_atts = None#self.request.get(u"attribute")
-            # output type
-            #if u"file" in self.request.arguments():
-            #    __format = self.request.get(u"file")
-            #else:
-            #    raise ValueError("file missing")
-            # stylesheet
-            #__stylesheet = self.request.get_all(u"stylesheet")
-            #for s in __stylesheet:
-            #   if s not in ("docbook", "eclipse.plugin", "fo", "rtf", "xhtml"):
-            #        raise ValueError("unsupported stylesheet " + s)
-            # file name
+            #__nested = u"nested" in self.request.arguments()
             __file = __id
+
+            __dita_gen.ot_version = __ot_version
+            if __plugin_name != None:
+                __dita_gen.plugin_name = __plugin_name
+            if __plugin_version != None:
+                __dita_gen.plugin_version = __plugin_version
+            __file_name = __dita_gen.get_file_name(__id, __file, "zip")
+    
+            
+            if self.request.get(u"pdf.page-size"):
+                __dita_gen.page_size = self.request.get(u"pdf.page-size").split(" ")
+            if self.request.get(u"pdf.orientation") == u"landscape":
+                __dita_gen.page_size.reverse()
+            if __ot_version >= Version("1.5.4"):
+                __dita_gen.page_margins = {
+                    "page-margin-top": self.request.get(u"pdf.page-margin-top"),
+                    "page-margin-outside": self.request.get(u"pdf.page-margin-outside"),
+                    "page-margin-bottom": self.request.get(u"pdf.page-margin-bottom"),
+                    "page-margin-inside": self.request.get(u"pdf.page-margin-inside")
+                }
+            else:
+                __dita_gen.page_margins = {
+                    "page-margin-top": self.request.get(u"pdf.page-margin-top"),
+                    "page-margin-right": self.request.get(u"pdf.page-margin-right"),
+                    "page-margin-bottom": self.request.get(u"pdf.page-margin-bottom"),
+                    "page-margin-left": self.request.get(u"pdf.page-margin-left")
+                }
+            for __type in set([f["type"] for f in ditagen.pdf_generator.styles]):
+                group = {}
+                for __property in set([f["property"] for f in ditagen.pdf_generator.styles]):
+                    v = self.request.get(u"pdf." + __property + "." + __type)
+                    if v:
+                        group[__property] = v 
+                __dita_gen.style[__type] = group
+            __dita_gen.transtype = self.request.get(u"transtype")
+            __dita_gen.force_page_count = self.request.get(u"pdf.force-page-count")
+            __dita_gen.chapter_layout = self.request.get(u"pdf.chapter-layout")
+            __dita_gen.bookmark_style = self.request.get(u"pdf.bookmark-style")
+            __dita_gen.toc_maximum_level = self.request.get(u"pdf.toc-maximum-level")
+            __dita_gen.task_label = self.request.get(u"pdf.task-label")
+            __dita_gen.include_related_links = self.request.get(u"pdf.include-related-links")
+            __dita_gen.body_column_count = self.request.get(u"pdf.body-column-count")
+            __dita_gen.index_column_count = self.request.get(u"pdf.index-column-count")
+            __dita_gen.column_gap = self.request.get(u"pdf.column-gap")
+            __dita_gen.mirror_page_margins = self.request.get(u"pdf.mirror-page-margins")
+            __dita_gen.dl = self.request.get(u"pdf.dl")
+            __dita_gen.title_numbering = self.request.get(u"pdf.title-numbering")
+            __dita_gen.spacing_before = self.request.get(u"pdf.spacing.before")
+            __dita_gen.spacing_after = self.request.get(u"pdf.spacing.before")
+            __dita_gen.generate_shell = self.request.get(u"pdf.generate-shell")
+            __dita_gen.link_pagenumber = self.request.get(u"pdf.link-page-number")
+            __dita_gen.table_continued = self.request.get(u"pdf.table-continued")
+            __dita_gen.formatter = self.request.get(u"pdf.formatter")
+            __dita_gen.header_even = self.request.get(u"pdf.header.even")
+            __dita_gen.header_odd = self.request.get(u"pdf.header.odd")
+            __dita_gen.drop_folio = self.request.get(u"pdf.drop-folio")
+            
+            self.response.headers["Content-Type"] = "application/zip"
+            self.response.headers["Content-Disposition"] = "attachment; filename=" + __file_name
+            __dita_gen.generate_plugin()
         except Exception:
             self.error(500)
             raise
-
-        # run generator
-        __dita_gen = ditagen.pdf_generator.StylePluginGenerator()
-        __dita_gen.out = self.response.out
-        __dita_gen.owner = __owner
-
-#        if __topic_type is not None:
-#            __dita_gen.topic_type = __topic_type
-#        if not len(__domains) == 0:
-#            __dita_gen.domains = __domains
-#        __dita_gen.nested = __nested
-        __dita_gen.ot_version = __ot_version
-        __dita_gen.title = __title
-        # page size
-        if self.request.get(u"pdf.page-size"):
-            __dita_gen.page_size = self.request.get(u"pdf.page-size").split(" ")
-        if self.request.get(u"pdf.orientation") == u"landscape":
-            __dita_gen.page_size.reverse()
-        # page margins
-        if __ot_version >= Version("1.5.4"):
-            __dita_gen.page_margins = {
-                "page-margin-top": self.request.get(u"pdf.page-margin-top"),
-                "page-margin-outside": self.request.get(u"pdf.page-margin-outside"),
-                "page-margin-bottom": self.request.get(u"pdf.page-margin-bottom"),
-                "page-margin-inside": self.request.get(u"pdf.page-margin-inside")
-            }
-        else:
-            __dita_gen.page_margins = {
-                "page-margin-top": self.request.get(u"pdf.page-margin-top"),
-                "page-margin-right": self.request.get(u"pdf.page-margin-right"),
-                "page-margin-bottom": self.request.get(u"pdf.page-margin-bottom"),
-                "page-margin-left": self.request.get(u"pdf.page-margin-left")
-            }
-        #__dita_gen.text_align = self.request.get(u"pdf.text-align")
-        for type in set([f["type"] for f in ditagen.pdf_generator.styles]):
-            group = {}
-            for property in set([f["property"] for f in ditagen.pdf_generator.styles]):
-                v = self.request.get(u"pdf." + property + "." + type)
-                if v:
-                    group[property] = v 
-            __dita_gen.style[type] = group
-        #__dita_gen.link_font_weight = self.request.get(u"pdf.link-font-weight") or "normal"
-        #__dita_gen.link_font_style = self.request.get(u"pdf.link-font-style") or "normal"
-        #__dita_gen.link_text_decoration = self.request.get(u"pdf.link-text-decoration") or "none"
-        #__dita_gen.link_color = self.request.get(u"pdf.link-color.other") or self.request.get(u"pdf.link-color")
-        __dita_gen.transtype = self.request.get(u"transtype")
-        __dita_gen.force_page_count = self.request.get(u"pdf.force-page-count")
-        __dita_gen.chapter_layout = self.request.get(u"pdf.chapter-layout")
-        __dita_gen.bookmark_style = self.request.get(u"pdf.bookmark-style")
-        __dita_gen.toc_maximum_level = self.request.get(u"pdf.toc-maximum-level")
-        __dita_gen.task_label = self.request.get(u"pdf.task-label")
-        __dita_gen.include_related_links = self.request.get(u"pdf.include-related-links")
-        #__dita_gen.side_col_width = self.request.get(u"pdf.side-col-width")
-        __dita_gen.body_column_count = self.request.get(u"pdf.body-column-count")
-        __dita_gen.index_column_count = self.request.get(u"pdf.index-column-count")
-        __dita_gen.column_gap = self.request.get(u"pdf.column-gap")
-        __dita_gen.mirror_page_margins = self.request.get(u"pdf.mirror-page-margins")
-        __dita_gen.dl = self.request.get(u"pdf.dl")
-        __dita_gen.title_numbering = self.request.get(u"pdf.title-numbering")
-        __dita_gen.spacing_before = self.request.get(u"pdf.spacing.before")
-        __dita_gen.spacing_after = self.request.get(u"pdf.spacing.before")
-        __dita_gen.generate_shell = self.request.get(u"pdf.generate-shell")
-        __dita_gen.link_pagenumber = self.request.get(u"pdf.link-page-number")
-        __dita_gen.table_continued = self.request.get(u"pdf.table-continued")
-        __dita_gen.formatter = self.request.get(u"pdf.formatter")
-        __dita_gen.header_even = self.request.get(u"pdf.header.even")
-        __dita_gen.header_odd = self.request.get(u"pdf.header.odd")
-        __dita_gen.drop_folio = self.request.get(u"pdf.drop-folio")
-        
-        
-        if __plugin_name != None:
-            __dita_gen.plugin_name = __plugin_name
-        if __plugin_version != None:
-            __dita_gen.plugin_version = __plugin_version
-        __file_name = __dita_gen.get_file_name(__id, __file, "zip")
-
-        self.response.headers["Content-Type"] = "application/zip"
-        self.response.headers["Content-Disposition"] = "attachment; filename=" + __file_name
-        __dita_gen.generate_plugin()
-        
 
 
 def main():

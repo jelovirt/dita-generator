@@ -5,16 +5,37 @@
     <h3>DTD Generation</h3>
     <dl>
       <dt><a href="specialization/">structural specialization</a>
-      <dd>Defines new types of structured information, such
-        as new topic types or new map types.</dd>
+      <!--dd>Defines new types of structured information, such
+        as new topic types or new map types.</dd-->
+      <dd>The specialization feature of DITA allows for the creatio
+        of new element types and attributes that are explicitly and formally
+        derived from existing types in a way that allows for the blind interchange
+        of all conforming DITA content and a minimum level of
+        common processing for all DITA content.</dd>
+      <dd>Specialization DTD can be used to create a base for a structural
+        type spcialization with the correct naming and modularization conventions.
+        This base can then manually edited to define the element level
+        specialization details.</dd>
       <dt><a href="shell/">shell DTD</a></dt>
-      <dd>Defines the set of structural modules,
-        domain modules, and constraints modules that a map or topic can use.</dd>
+      <!--dd>Defines the set of structural modules,
+        domain modules, and constraints modules that a map or topic can use.</dd-->
+      <dd>A shell DTD defines the set of structural modules
+      (topic or map types), domain modules, and constraints modules that the map
+      or topic can use. In general, any production use of DITA involves
+      definition of the set of modules best suited to local requirements. This
+      always requires the creation of local shell document types, even if all
+      they do is omit unneeded modules or apply constraints to the standard
+      DITA-defined vocabulary.</dd>
       <dd>See <a href="http://drmacros-xml-rants.blogspot.com/2007/04/dita-standard-practice-always-make.html">article</a>
         about the benefits of creating local shells.</dd>
       <dt><a href="attribute/">domain attribute specialization</a></dt>
-      <dd>Defines new conditional processing attributes. Both structural specialization and
-        shell DTD generation also include the option for domain attribute specialization.</dd>
+      <!--dd>Defines new conditional processing attributes. Both structural specialization and
+        shell DTD generation also include the option for domain attribute specialization.</dd-->
+      <dd>Domain attribute specialization allows DITA document type
+        developers to incorporate new conditional processing attributes that can
+        be used for filtering and flagging, or new attributes with no existing
+        equivalent that can be managed and generalized in the same way as
+        conditional processing attributes.</dd>
     </dl>
     <h3>Style plug-in generation</h3>
     <dl>
@@ -23,8 +44,96 @@
       <dd>Example plug-ins:
         <ul>
           <li>
-            <a rel="nofollow" href="/generate-plugin?output=pdf-plugin&ot.version=1.5.4&pdf.page-size=210mm+297mm&pdf.page-margin-top=10mm&pdf.page-margin-outside=10mm&pdf.page-margin-bottom=10mm&pdf.page-margin-inside=20mm&pdf.mirror-page-margins=true&pdf.body-column-count=1&pdf.force-page-count=auto&pdf.chapter-layout=BASIC&pdf.bookmark-style=COLLAPSED&pdf.toc-maximum-level=3&pdf.task-label=NO&pdf.include-related-links=none&pdf.font-family=Serif&pdf.default-font-size=10pt&pdf.color=black&pdf.side-col-width=0pt&pdf.link-color=inherit&id=com.example.print-pdf&transtype=print-pdf&plugin-version=1.0.0">print PDF plug-in</a>
+            <a rel="nofollow" href="/generate-plugin?output=pdf-plugin&amp;ot.version=1.5.4&amp;pdf.page-size=210mm+297mm&amp;pdf.page-margin-top=10mm&amp;pdf.page-margin-outside=10mm&amp;pdf.page-margin-bottom=10mm&amp;pdf.page-margin-inside=20mm&amp;pdf.mirror-page-margins=true&amp;pdf.body-column-count=1&amp;pdf.force-page-count=auto&amp;pdf.chapter-layout=BASIC&amp;pdf.bookmark-style=COLLAPSED&amp;pdf.toc-maximum-level=3&amp;pdf.task-label=NO&amp;pdf.include-related-links=none&amp;pdf.font-family=Serif&amp;pdf.default-font-size=10pt&amp;pdf.color=black&amp;pdf.side-col-width=0pt&amp;pdf.link-color=inherit&amp;id=com.example.print-pdf&amp;transtype=print-pdf&amp;plugin-version=1.0.0">print PDF plug-in</a>
           </li>
+          <!--li>
+            <form action="/generate-plugin" method="post">
+              <input type="hidden" name="output" value="pdf-plugin">
+              <input type="hidden" name="ot.version" value="1.6">
+              <input type="hidden" name="pdf.formatter" value="ah">
+              <input type="hidden" name="pdf.page-size" value="124.9mm 125.2mm">
+              <input type="hidden" name="pdf.orientation" value="portrait">
+              <input type="hidden" name="pdf.page-margin-top" value="5mm">
+              <input type="hidden" name="pdf.page-margin-outside" value="5mm">
+              <input type="hidden" name="pdf.page-margin-bottom" value="5mm">
+              <input type="hidden" name="pdf.page-margin-inside" value="5mm">
+              <input type="hidden" name="pdf.body-column-count" value="1">
+              <input type="hidden" name="pdf.index-column-count" value="2">
+              <input type="hidden" name="pdf.drop-folio" value="true">
+              <input type="hidden" name="pdf.force-page-count" value="auto">
+              <input type="hidden" name="pdf.chapter-layout" value="BASIC">
+              <input type="hidden" name="pdf.font-family.body" value="sans-serif">
+              <input type="hidden" name="pdf.font-size.body" value="10pt">
+              <input type="hidden" name="pdf.color.body" value="black">
+              <input type="hidden" name="pdf.font-weight.body" value="normal">
+              <input type="hidden" name="pdf.font-style.body" value="normal">
+              <input type="hidden" name="pdf.text-decoration.body" value="none">
+              <input type="hidden" name="pdf.space-before.body" value="6pt">
+              <input type="hidden" name="pdf.space-after.body" value="6pt">
+              <input type="hidden" name="pdf.text-align.body" value="start">
+              <input type="hidden" name="pdf.start-indent.body" value="0pt">
+              <input type="hidden" name="pdf.font-family.topic" value="sans-serif">
+              <input type="hidden" name="pdf.font-size.topic" value="18pt">
+              <input type="hidden" name="pdf.color.topic" value="black">
+              <input type="hidden" name="pdf.font-weight.topic" value="bold">
+              <input type="hidden" name="pdf.font-style.topic" value="normal">
+              <input type="hidden" name="pdf.text-decoration.topic" value="none">
+              <input type="hidden" name="pdf.space-before.topic" value="0pt">
+              <input type="hidden" name="pdf.space-after.topic" value="16.8pt">
+              <input type="hidden" name="pdf.text-align.topic" value="start">
+              <input type="hidden" name="pdf.start-indent.topic" value="0pt">
+              <input type="hidden" name="pdf.font-family.topic.topic" value="sans-serif">
+              <input type="hidden" name="pdf.font-size.topic.topic" value="14pt">
+              <input type="hidden" name="pdf.color.topic.topic" value="black">
+              <input type="hidden" name="pdf.font-weight.topic.topic" value="bold">
+              <input type="hidden" name="pdf.font-style.topic.topic" value="normal">
+              <input type="hidden" name="pdf.text-decoration.topic.topic" value="none">
+              <input type="hidden" name="pdf.space-before.topic.topic" value="12pt">
+              <input type="hidden" name="pdf.space-after.topic.topic" value="5pt">
+              <input type="hidden" name="pdf.text-align.topic.topic" value="start">
+              <input type="hidden" name="pdf.start-indent.topic.topic" value="0pt">
+              <input type="hidden" name="pdf.font-family.topic.topic.topic" value="sans-serif">
+              <input type="hidden" name="pdf.font-size.topic.topic.topic" value="12pt">
+              <input type="hidden" name="pdf.color.topic.topic.topic" value="black">
+              <input type="hidden" name="pdf.font-weight.topic.topic.topic" value="bold">
+              <input type="hidden" name="pdf.font-style.topic.topic.topic" value="normal">
+              <input type="hidden" name="pdf.text-decoration.topic.topic.topic" value="none">
+              <input type="hidden" name="pdf.space-before.topic.topic.topic" value="12pt">
+              <input type="hidden" name="pdf.space-after.topic.topic.topic" value="2pt">
+              <input type="hidden" name="pdf.text-align.topic.topic.topic" value="start">
+              <input type="hidden" name="pdf.start-indent.topic.topic.topic" value="0pt">
+              <input type="hidden" name="pdf.font-family.topic.topic.topic.topic" value="sans-serif">
+              <input type="hidden" name="pdf.font-size.topic.topic.topic.topic" value="10pt">
+              <input type="hidden" name="pdf.color.topic.topic.topic.topic" value="black">
+              <input type="hidden" name="pdf.font-weight.topic.topic.topic.topic" value="bold">
+              <input type="hidden" name="pdf.font-style.topic.topic.topic.topic" value="normal">
+              <input type="hidden" name="pdf.text-decoration.topic.topic.topic.topic" value="none">
+              <input type="hidden" name="pdf.space-before.topic.topic.topic.topic" value="12pt">
+              <input type="hidden" name="pdf.space-after.topic.topic.topic.topic" value="0pt">
+              <input type="hidden" name="pdf.text-align.topic.topic.topic.topic" value="start">
+              <input type="hidden" name="pdf.start-indent.topic.topic.topic.topic" value="0pt">
+              <input type="hidden" name="pdf.font-family.section" value="sans-serif">
+              <input type="hidden" name="pdf.space-before.section" value="15pt">
+              <input type="hidden" name="pdf.start-indent.section" value="0pt">
+              <input type="hidden" name="pdf.font-family.note" value="sans-serif">
+              <input type="hidden" name="pdf.start-indent.note" value="0pt">
+              <input type="hidden" name="pdf.font-family.pre" value="monospace">
+              <input type="hidden" name="pdf.space-before.pre" value="15pt">
+              <input type="hidden" name="pdf.start-indent.pre" value="0pt">
+              <input type="hidden" name="pdf.font-family.link" value="sans-serif">
+              <input type="hidden" name="pdf.color.link" value="blue">
+              <input type="hidden" name="pdf.title-numbering" value="chapters">
+              <input type="hidden" name="pdf.toc-maximum-level" value="3">
+              <input type="hidden" name="pdf.bookmark-style" value="COLLAPSED">
+              <input type="hidden" name="pdf.link-page-number" value="true">
+              <input type="hidden" name="pdf.include-related-links" value="none">
+              <input type="hidden" name="pdf.dl" value="table">
+              <input type="hidden" name="id" value="square">
+              <input type="hidden" name="transtype" value="pdf.square">
+              <input type="hidden" name="plugin-version" value="1.0.0">              
+              Square web PDF plug-in: <button type="submit">Download</button>
+            </form>
+          </li-->
         </ul></dd>
     </dl>
   </div>

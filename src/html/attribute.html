@@ -5,14 +5,15 @@
     <input type="hidden" name="file" value="plugin">
   {% endif %}
   <input type="hidden" name="output" value="{{ output }}">
-  <div class="page">
+  <!--div class="page">
     <p class="help">Domain attribute specialization allows DITA document type
       developers to incorporate new conditional processing attributes that can
       be used for filtering and flagging, or new attributes with no existing
       equivalent that can be managed and generalized in the same way as
       conditional processing attributes.</p>
-  </div>
-  {% include "version-page.html" %}
+  </div-->
+  {# include "version-page.html" #}
+  <input type="hidden" name="version" value="1.2">
   <div class="page">
     {% include "attribute-domain.html" %}
   </div>
