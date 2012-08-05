@@ -132,38 +132,38 @@ styles = [{ "property": f[0], "type": f[1], "value": f[2], "inherit": f[3] } for
     ("start-indent", "link", None, False)
     ]]
 
+fonts = {
+    "Sans": {
+        "default": ["Helvetica"],
+        "Simplified Chinese": ["AdobeSongStd-Light"],
+        "Japanese": ["KozMinProVI-Regular"],
+        "Korean": ["AdobeMyungjoStd-Medium"],
+        "Symbols": ["ZapfDingbats"],
+        "SubmenuSymbol": ["ZapfDingbats"],
+        "SymbolsSuperscript": ["Helvetica", "20%", "smaller"]
+        },
+    "Serif": {
+        "default": ["Times"],
+        "Simplified Chinese": ["AdobeSongStd-Light"],
+        "Japanese": ["KozMinProVI-Regular"],
+        "Korean": ["AdobeMyungjoStd-Medium"],
+        "Symbols": ["ZapfDingbats"],
+        "SubmenuSymbol": ["ZapfDingbats"],
+        "SymbolsSuperscript": ["Times", "20%", "smaller"]
+        },
+    "Monospaced": {
+        "default": ["Courier"],
+        "Simplified Chinese": ["AdobeSongStd-Light"],
+        "Japanese": ["KozMinProVI-Regular"],
+        "Korean": ["AdobeMyungjoStd-Medium"],
+        "Symbols": ["ZapfDingbats"],
+        "SymbolsSuperscript": ["Courier", "20%", "smaller"]
+        }
+    }
+
 class StylePluginGenerator(DitaGenerator):
     """Generator for a DITA-OT style plug-in."""
 
-    fonts = {
-        "Sans": {
-            "default": ["Helvetica"],
-            "Simplified Chinese": ["AdobeSongStd-Light"],
-            "Japanese": ["KozMinProVI-Regular"],
-            "Korean": ["AdobeMyungjoStd-Medium"],
-            "Symbols": ["ZapfDingbats"],
-            "SubmenuSymbol": ["ZapfDingbats"],
-            "SymbolsSuperscript": ["Helvetica", "20%", "smaller"]
-            },
-        "Serif": {
-            "default": ["Times"],
-            "Simplified Chinese": ["AdobeSongStd-Light"],
-            "Japanese": ["KozMinProVI-Regular"],
-            "Korean": ["AdobeMyungjoStd-Medium"],
-            "Symbols": ["ZapfDingbats"],
-            "SubmenuSymbol": ["ZapfDingbats"],
-            "SymbolsSuperscript": ["Times", "20%", "smaller"]
-            },
-        "Monospaced": {
-            "default": ["Courier"],
-            "Simplified Chinese": ["AdobeSongStd-Light"],
-            "Japanese": ["KozMinProVI-Regular"],
-            "Korean": ["AdobeMyungjoStd-Medium"],
-            "Symbols": ["ZapfDingbats"],
-            "SymbolsSuperscript": ["Courier", "20%", "smaller"]
-            }
-        }
-    
     variable_languages = ["de", "en", "es", "fi", "fr", "he", "it", "ja", "nl", "ro", "ru", "sv", "zh_CN"]
 
     def __init__(self):
@@ -191,9 +191,14 @@ class StylePluginGenerator(DitaGenerator):
         self.link_pagenumber = None
         self.table_continued = None
         self.formatter = None
-        self.header_even = None
-        self.header_odd = None
-        self.drop_folio = None
+        self.header = {
+            "odd": ["pagenum"],
+            "even": ["pagenum"]
+            }
+        self.footer = {
+            "odd": [],
+            "even": []
+            }
 
     def _preprocess(self):
         """Preprocess arguments."""
@@ -659,31 +664,23 @@ class StylePluginGenerator(DitaGenerator):
         # table continued
         if self.table_continued:
             ET.SubElement(__root, u"variable", id=u"#table-continued").text = u"Table continued\u2026"
-        # headers
-        for id in self.__headers:
-            vars = []
-            is_even = "even" in id
-            if is_even and self.header_even:
-                vars.append(ET.Element(u"param", { "ref-name": "heading" }))
-            elif not is_even and self.header_odd:
-                vars.append(ET.Element(u"param", { "ref-name": "heading" }))
-            if not self.drop_folio:
-                vars.append(ET.Element(u"param", { "ref-name": "pagenum" }))
-            if is_even:
-                vars.reverse()
-            f = ET.SubElement(__root, u"variable", id=id)
-            i = 1
-            for v in vars:
-                if i < len(vars):
-                    v.tail = " | "
-                f.append(v)
-                i = i + 1
         
-        # footers
-        for id in self.__footers:
-            f = ET.SubElement(__root, u"variable", id=id)
-            if self.drop_folio:
-                ET.SubElement(f, u"param", { "ref-name": "pagenum" })
+        # static content
+        for args, var_names in [(self.header, self.__headers), (self.footer, self.__footers)]:
+            for id in var_names: 
+                vars = []
+                if "even" in id:
+                    vars = args["even"]
+                else:
+                    vars = args["odd"]
+                f = ET.SubElement(__root, u"variable", id=id)
+                i = 1
+                for v in vars:
+                    e = ET.Element(u"param", { "ref-name": v })
+                    if i < len(vars):
+                        e.tail = " | "
+                    f.append(e)
+                    i = i + 1
         
         ditagen.generator.indent(__root, max=1)
         ditagen.generator.set_prefixes(__root, {"": "http://www.idiominc.com/opentopic/vars"})

@@ -302,12 +302,12 @@ class PluginGenerateHandler(webapp.RequestHandler):
                 __dita_gen.page_size = self.request.get(u"pdf.page-size").split(" ")
             if self.request.get(u"pdf.orientation") == u"landscape":
                 __dita_gen.page_size.reverse()
-                __dita_gen.page_margins = {
-                    "page-margin-top": self.request.get(u"pdf.page-margin-top"),
-                    "page-margin-outside": self.request.get(u"pdf.page-margin-outside"),
-                    "page-margin-bottom": self.request.get(u"pdf.page-margin-bottom"),
-                    "page-margin-inside": self.request.get(u"pdf.page-margin-inside")
-                }
+            __dita_gen.page_margins = {
+                "page-margin-top": self.request.get(u"pdf.page-margin-top"),
+                "page-margin-outside": self.request.get(u"pdf.page-margin-outside"),
+                "page-margin-bottom": self.request.get(u"pdf.page-margin-bottom"),
+                "page-margin-inside": self.request.get(u"pdf.page-margin-inside")
+            }
             for __type in set([f["type"] for f in ditagen.pdf_generator.styles]):
                 group = {}
                 for __property in set([f["property"] for f in ditagen.pdf_generator.styles]):
@@ -334,9 +334,19 @@ class PluginGenerateHandler(webapp.RequestHandler):
             __dita_gen.link_pagenumber = self.request.get(u"pdf.link-page-number")
             __dita_gen.table_continued = self.request.get(u"pdf.table-continued")
             __dita_gen.formatter = self.request.get(u"pdf.formatter")
-            __dita_gen.header_even = self.request.get(u"pdf.header.even")
-            __dita_gen.header_odd = self.request.get(u"pdf.header.odd")
-            __dita_gen.drop_folio = self.request.get(u"pdf.drop-folio")
+            
+            __header_folio = []
+            if not self.request.get(u"pdf.drop-folio"):
+                __header_folio = ["pagenum"]
+            __dita_gen.header = {
+                "odd": self.request.get(u"pdf.header.even").split() + __header_folio,
+                "even": __header_folio + self.request.get(u"pdf.header.odd").split()
+                }
+            if self.request.get(u"pdf.drop-folio"):
+                __dita_gen.footer = {
+                    "odd": ["pagenum"],
+                    "even": ["pagenum"]
+                    }
             
             self.response.headers["Content-Type"] = "application/zip"
             self.response.headers["Content-Disposition"] = "attachment; filename=" + __file_name

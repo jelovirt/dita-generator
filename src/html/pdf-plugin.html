@@ -14,8 +14,8 @@
       <p>
         <label for="ot.version" class="required">DITA-OT version</label>
         <select name="ot.version" id="ot.version" title="DITA-OT version">
-          <option value="1.6">1.6</option>
-          <option value="1.5.4" selected>1.5.4</option>
+          <option value="1.6" selected>1.6</option>
+          <option value="1.5.4">1.5.4</option>
         </select>
       </p>
       <p class="instruction">Version of DITA-OT for which the plug-in is
@@ -116,11 +116,7 @@
         <label for="pdf.page-margin-top">Top</label>
         <input name="pdf.page-margin-top" id="pdf.page-margin-top" placeholder="20mm" pattern="\d+(\.\d+)?(pt|mm|in|pc|cm|em)" class="length-value">
       </p>
-      <p class="v1_5_3 hidden-when-disabled">
-        <label for="pdf.page-margin-right">Right</label>
-        <input name="pdf.page-margin-right" id="pdf.page-margin-right" placeholder="20mm" pattern="\d+(\.\d+)?(pt|mm|in|pc|cm|em)" class="length-value">
-      </p>
-      <p class="v1_5_4 v1_6 hidden-when-disabled">
+      <p>
         <label for="pdf.page-margin-outside">Outside</label>
         <input name="pdf.page-margin-outside" id="pdf.page-margin-outside" placeholder="20mm" pattern="\d+(\.\d+)?(pt|mm|in|pc|cm|em)" class="length-value">
       </p>
@@ -128,27 +124,21 @@
         <label for="pdf.page-margin-bottom">Bottom</label>
         <input name="pdf.page-margin-bottom" id="pdf.page-margin-bottom" placeholder="20mm" pattern="\d+(\.\d+)?(pt|mm|in|pc|cm|em)" class="length-value">
       </p>
-      <p class="v1_5_3 hidden-when-disabled">
-        <label for="pdf.page-margin-left">Left</label>
-        <input name="pdf.page-margin-left" id="pdf.page-margin-left" placeholder="20mm" pattern="\d+(\.\d+)?(pt|mm|in|pc|cm|em)" class="length-value">
-      </p>
-      <p class="v1_5_4 v1_6 hidden-when-disabled">
+      <p>
         <label for="pdf.page-margin-inside">Inside</label>
         <input name="pdf.page-margin-inside" id="pdf.page-margin-inside" placeholder="20mm" pattern="\d+(\.\d+)?(pt|mm|in|pc|cm|em)" class="length-value">
       </p>
       <p class="instruction">Page margins.</p>
     </fieldset>
-    <fieldset class="v1_5_4 v1_6">
-      <p class="not-available">Not available for DITA-OT older than 1.5.4</p>
+    <fieldset>
       <p>
         <label for="pdf.mirror-page-margins">Mirror margins</label>
         <input type="checkbox" name="pdf.mirror-page-margins" id="pdf.mirror-page-margins"
                value="true">
       </p>
     </fieldset>
-    <h3 class="v1_5_4 v1_6">Columns</h3>
-    <fieldset class="v1_5_4 v1_6">
-      <p class="not-available">Not available for DITA-OT older than 1.5.4</p>
+    <h3>Columns</h3>
+    <fieldset>
       <p>
         <label for="pdf.body-column-count">Body column count</label>
         <select name="pdf.body-column-count" id="pdf.body-column-count">
@@ -182,8 +172,8 @@
         <table>
           <thead class="even">
             <tr>
-              <td><label for="pdf.header.even">even</label></td>
-              <td><label for="pdf.header.odd">odd</label></td>
+              <th><label for="pdf.header.even">even</label></th>
+              <th><label for="pdf.header.odd">odd</label></th>
             </tr>
           </thead>
           <tbody>
@@ -215,7 +205,7 @@
     <fieldset class="v1_6">
       <p>
         <label for="pdf.drop-folio">Drop folio</label>
-        <input type="checkbox" name="pdf.drop-folio" id="pdf.drop-folio" value="true">
+        <input type="checkbox" name="pdf.drop-folio" id="pdf.drop-folio" value="pagenum">
       </p>
       <p class="instruction">Place page number in footer.</p>
     </fieldset>

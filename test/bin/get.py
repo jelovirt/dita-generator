@@ -73,9 +73,9 @@ def main():
             "pdf.link-page-number": "true",
             "pdf.table-continued": "true",
             "pdf.formatter": "ah",
-            "pdf.header.even": "heading",
-            "pdf.header.odd": "heading",
-            "pdf.drop-folio": "true",
+            "pdf.header.even": "chapter",
+            "pdf.header.odd": "chapter",
+            "pdf.drop-folio": "pagenum",
             "id": "com.example.print-pdf",
             "transtype": "print-pdf",
             "plugin-version": "1.0.0"

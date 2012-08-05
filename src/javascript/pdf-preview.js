@@ -288,9 +288,7 @@ $(document).ready(function() {
 	$(":input[name='pdf.page-size']," +
       ":input[name='pdf.orientation']," +
       ":input[name='pdf.page-margin-top']," +
-      ":input[name='pdf.page-margin-right']," +
       ":input[name='pdf.page-margin-bottom']," +
-      ":input[name='pdf.page-margin-left']," +
       ":input[name='pdf.page-margin-inside']," +
       ":input[name='pdf.page-margin-outside']," +
       ":input[name='pdf.body-column-count']," + 
