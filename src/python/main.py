@@ -302,19 +302,11 @@ class PluginGenerateHandler(webapp.RequestHandler):
                 __dita_gen.page_size = self.request.get(u"pdf.page-size").split(" ")
             if self.request.get(u"pdf.orientation") == u"landscape":
                 __dita_gen.page_size.reverse()
-            if __ot_version >= Version("1.5.4"):
                 __dita_gen.page_margins = {
                     "page-margin-top": self.request.get(u"pdf.page-margin-top"),
                     "page-margin-outside": self.request.get(u"pdf.page-margin-outside"),
                     "page-margin-bottom": self.request.get(u"pdf.page-margin-bottom"),
                     "page-margin-inside": self.request.get(u"pdf.page-margin-inside")
-                }
-            else:
-                __dita_gen.page_margins = {
-                    "page-margin-top": self.request.get(u"pdf.page-margin-top"),
-                    "page-margin-right": self.request.get(u"pdf.page-margin-right"),
-                    "page-margin-bottom": self.request.get(u"pdf.page-margin-bottom"),
-                    "page-margin-left": self.request.get(u"pdf.page-margin-left")
                 }
             for __type in set([f["type"] for f in ditagen.pdf_generator.styles]):
                 group = {}

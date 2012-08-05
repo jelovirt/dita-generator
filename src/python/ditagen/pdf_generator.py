@@ -513,11 +513,7 @@ class StylePluginGenerator(DitaGenerator):
                 for (p, v) in e.items():
                     ET.SubElement(__title_attr, NS_XSL + "attribute", name=p).text = v
         # link
-        link_attr_sets = []
-        if self.ot_version >= Version("1.5.4"):
-            link_attr_sets.extend(["common.link"])
-        else:
-            link_attr_sets.extend(["link__content", "xref"])
+        link_attr_sets = ["common.link"]
         for n in link_attr_sets:
             __link_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name=n)
             for k, v in self.style["link"].items():
@@ -532,11 +528,7 @@ class StylePluginGenerator(DitaGenerator):
 #                ET.SubElement(__link_attr, NS_XSL + "attribute", name=u"text-decoration").text = self.link_text_decoration
 
         # normal block
-        spacing_attr_sets = []
-        if self.ot_version >= Version("1.5.4"):
-            spacing_attr_sets.extend(["common.block"])
-        else:
-            spacing_attr_sets.extend(["section", "example", "p"])#"note", "note__table"
+        spacing_attr_sets = ["common.block"]
         for n in spacing_attr_sets:
             __spacing_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name=n)
             for k, v in self.style["body"].items():
@@ -563,7 +555,7 @@ class StylePluginGenerator(DitaGenerator):
                 ET.SubElement(__dd_attr, NS_XSL + "attribute", name=u"start-indent").text = "from-parent(start-indent) + 5mm"
 
         # page column count
-        if self.body_column_count and self.ot_version >= Version("1.5.4"):
+        if self.body_column_count:
             for a in ["region-body.odd", "region-body.even"]:
                 __region_body_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name=a)
                 ET.SubElement(__region_body_attr, NS_XSL + "attribute", name=u"column-count").text = self.body_column_count
