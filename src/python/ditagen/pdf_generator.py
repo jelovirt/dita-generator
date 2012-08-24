@@ -161,6 +161,26 @@ fonts = {
         }
     }
 
+imports = {
+    "ah": [
+        "plugin:org.dita.pdf2:cfg/fo/attrs/tables-attr_axf.xsl", 
+        "plugin:org.dita.pdf2:cfg/fo/attrs/toc-attr_axf.xsl", 
+        "plugin:org.dita.pdf2:cfg/fo/attrs/index-attr_axf.xsl",
+        "plugin:org.dita.pdf2:xsl/fo/root-processing_axf.xsl", 
+        "plugin:org.dita.pdf2:xsl/fo/index_axf.xsl"],
+    "fop": [
+        "plugin:org.dita.pdf2:cfg/fo/attrs/commons-attr_fop.xsl", 
+        "plugin:org.dita.pdf2:cfg/fo/attrs/tables-attr_fop.xsl", 
+        "plugin:org.dita.pdf2:cfg/fo/attrs/toc-attr_fop.xsl",
+        "plugin:org.dita.pdf2:xsl/fo/root-processing_fop.xsl", 
+        "plugin:org.dita.pdf2:xsl/fo/index_fop.xsl"],
+    "xep": [
+        "plugin:org.dita.pdf2:cfg/fo/attrs/commons-attr_xep.xsl", 
+        "plugin:org.dita.pdf2:cfg/fo/attrs/layout-masters-attr_xep.xsl", 
+        "plugin:org.dita.pdf2:xsl/fo/root-processing_xep.xsl", 
+        "plugin:org.dita.pdf2:xsl/fo/index_xep.xsl"]
+    }
+
 class StylePluginGenerator(DitaGenerator):
     """Generator for a DITA-OT style plug-in."""
 
@@ -191,6 +211,7 @@ class StylePluginGenerator(DitaGenerator):
         self.link_pagenumber = None
         self.table_continued = None
         self.formatter = None
+        self.override_shell = False
         self.header = {
             "odd": ["pagenum"],
             "even": ["pagenum"]
@@ -218,6 +239,11 @@ class StylePluginGenerator(DitaGenerator):
             "name": "customization.dir",
             "location": ("${dita.plugin.%s.dir}/cfg" % self.plugin_name)
             })
+        if self.override_shell:
+            ET.SubElement(__init, "property", {
+                "name": "args.xsl.pdf",
+                "location": ("${dita.plugin.%s.dir}/xsl/fo/topic2fo_shell_%s.xsl" % (self.plugin_name, self.formatter))
+                })
         if self.chapter_layout:
             ET.SubElement(__init, "property", {
                 "name": "args.chapter.layout",
@@ -363,6 +389,7 @@ class StylePluginGenerator(DitaGenerator):
         elif self.dl == "html":
             __dl_raw = __dl_html_raw
         if __dl_raw:
+            __root.append(ET.Comment("dl"))
             __dl = ET.fromstring(__dl_raw)
             for __c in list(__dl):
                 __root.append(__c)
@@ -407,6 +434,7 @@ class StylePluginGenerator(DitaGenerator):
 </xsl:stylesheet>
 """
         if self.title_numbering:
+            __root.append(ET.Comment("title numbering"))
             for __c in list(ET.fromstring(__get_title_raw)):
                 __root.append(__c)
         
@@ -489,7 +517,7 @@ class StylePluginGenerator(DitaGenerator):
                 
 </xsl:stylesheet>
 """
-
+        __root.append(ET.Comment("table"))
         __table_raw = __table_footer_raw
         if self.table_continued:
             __table_raw = __table_continued_raw
@@ -597,7 +625,7 @@ class StylePluginGenerator(DitaGenerator):
         if "start-indent" in self.style["body"]:
             ET.SubElement(__root, NS_XSL + "variable", name=u"side-col-width").text = self.style["body"]["start-indent"]
         # toc
-        if self.toc_maximum_level:
+        if not self.override_shell and self.toc_maximum_level:
             ET.SubElement(__root, NS_XSL + "variable", name=u"tocMaximumLevel").text = self.toc_maximum_level
         # table continued
         if self.table_continued:
@@ -609,6 +637,108 @@ class StylePluginGenerator(DitaGenerator):
         
         ditagen.generator.indent(__root)
         ditagen.generator.set_prefixes(__root, {"xsl": "http://www.w3.org/1999/XSL/Transform", "fo": "http://www.w3.org/1999/XSL/Format", "e": self.plugin_name})
+        __d = ET.ElementTree(__root)
+        __d.write(self.out, "UTF-8")
+
+    def __generate_shell(self):
+        __root = ET.Element(NS_XSL + "stylesheet", {
+            "version":"2.0",
+            "exclude-result-prefixes": "ditaarch e",
+            })
+        
+        __root.append(ET.Comment("base imports"))
+        for i in [
+                  "plugin:org.dita.base:xsl/common/dita-utilities.xsl",
+                  "plugin:org.dita.base:xsl/common/dita-textonly.xsl",
+        
+                  "plugin:org.dita.pdf2:xsl/common/attr-set-reflection.xsl",
+                  "plugin:org.dita.pdf2:xsl/common/vars.xsl",
+        
+                  "plugin:org.dita.pdf2:cfg/fo/attrs/basic-settings.xsl",
+                  "plugin:org.dita.pdf2:cfg/fo/attrs/layout-masters-attr.xsl",
+                  "plugin:org.dita.pdf2:cfg/fo/layout-masters.xsl",
+                  "plugin:org.dita.pdf2:cfg/fo/attrs/links-attr.xsl",
+                  "plugin:org.dita.pdf2:xsl/fo/links.xsl",
+                  "plugin:org.dita.pdf2:cfg/fo/attrs/lists-attr.xsl",
+                  "plugin:org.dita.pdf2:xsl/fo/lists.xsl",
+                  "plugin:org.dita.pdf2:cfg/fo/attrs/tables-attr.xsl",
+                  "plugin:org.dita.pdf2:xsl/fo/tables.xsl",
+                  "plugin:org.dita.pdf2:xsl/fo/root-processing.xsl",
+                  "plugin:org.dita.pdf2:cfg/fo/attrs/commons-attr.xsl",
+                  "plugin:org.dita.pdf2:xsl/fo/commons.xsl",
+                  "plugin:org.dita.pdf2:cfg/fo/attrs/toc-attr.xsl",
+                  "plugin:org.dita.pdf2:xsl/fo/toc.xsl",
+                  "plugin:org.dita.pdf2:xsl/fo/bookmarks.xsl",
+                  "plugin:org.dita.pdf2:cfg/fo/attrs/index-attr.xsl",
+                  "plugin:org.dita.pdf2:xsl/fo/index.xsl",
+                  "plugin:org.dita.pdf2:cfg/fo/attrs/front-matter-attr.xsl",
+                  "plugin:org.dita.pdf2:xsl/fo/front-matter.xsl",
+                  "plugin:org.dita.pdf2:xsl/fo/preface.xsl",
+            
+                  "plugin:org.dita.pdf2:cfg/fo/attrs/map-elements-attr.xsl",
+                  "plugin:org.dita.pdf2:xsl/fo/map-elements.xsl",
+            
+                  "plugin:org.dita.pdf2:cfg/fo/attrs/task-elements-attr.xsl",
+                  "plugin:org.dita.pdf2:xsl/fo/task-elements.xsl",
+            
+                  "plugin:org.dita.pdf2:cfg/fo/attrs/reference-elements-attr.xsl",
+                  "plugin:org.dita.pdf2:xsl/fo/reference-elements.xsl",
+            
+                  "plugin:org.dita.pdf2:cfg/fo/attrs/sw-domain-attr.xsl",
+                  "plugin:org.dita.pdf2:xsl/fo/sw-domain.xsl",
+                  "plugin:org.dita.pdf2:cfg/fo/attrs/pr-domain-attr.xsl",
+                  "plugin:org.dita.pdf2:xsl/fo/pr-domain.xsl",
+                  "plugin:org.dita.pdf2:cfg/fo/attrs/hi-domain-attr.xsl",
+                  "plugin:org.dita.pdf2:xsl/fo/hi-domain.xsl",
+                  "plugin:org.dita.pdf2:cfg/fo/attrs/ui-domain-attr.xsl",
+                  "plugin:org.dita.pdf2:xsl/fo/ui-domain.xsl",
+            
+                  "plugin:org.dita.pdf2:cfg/fo/attrs/static-content-attr.xsl",
+                  "plugin:org.dita.pdf2:xsl/fo/static-content.xsl",
+                  "plugin:org.dita.pdf2:cfg/fo/attrs/glossary-attr.xsl",
+                  "plugin:org.dita.pdf2:xsl/fo/glossary.xsl",
+                  "plugin:org.dita.pdf2:cfg/fo/attrs/lot-lof-attr.xsl",
+                  "plugin:org.dita.pdf2:xsl/fo/lot-lof.xsl",
+            
+                  "plugin:org.dita.pdf2:cfg/fo/attrs/learning-elements-attr.xsl",
+                  "plugin:org.dita.pdf2:xsl/fo/learning-elements.xsl",
+            
+                  "plugin:org.dita.pdf2:xsl/fo/flagging.xsl"]:
+            ET.SubElement(__root, "xsl:import", href=i)
+        __root.append(ET.Comment("formatter specific imports"))
+        for i in imports[self.formatter]:
+            ET.SubElement(__root, "xsl:import", href=i)
+        __root.append(ET.Comment("configuration overrides"))
+        for i in ["cfg:fo/attrs/custom.xsl",
+                  "cfg:fo/xsl/custom.xsl"]:
+            ET.SubElement(__root, "xsl:import", href=i)
+        
+        __root.append(ET.Comment("parameters"))
+        ET.SubElement(__root, "xsl:param", name="locale")
+        ET.SubElement(__root, "xsl:param", name="customizationDir.url")
+        ET.SubElement(__root, "xsl:param", name="artworkPrefix")
+        ET.SubElement(__root, "xsl:param", name="publishRequiredCleanup")
+        ET.SubElement(__root, "xsl:param", name="DRAFT")
+        ET.SubElement(__root, "xsl:param", name="output.dir.url")
+        ET.SubElement(__root, "xsl:param", name="work.dir.url")
+        ET.SubElement(__root, "xsl:param", name="input.dir.url")
+        ET.SubElement(__root, "xsl:param", name="disableRelatedLinks", select="'yes'")
+        ET.SubElement(__root, "xsl:param", name="pdfFormatter", select="'%s'" % self.formatter)
+        ET.SubElement(__root, "xsl:param", name="antArgsBookmarkStyle")
+        ET.SubElement(__root, "xsl:param", name="antArgsChapterLayout")
+        ET.SubElement(__root, "xsl:param", name="antArgsIncludeRelatedLinks")
+        ET.SubElement(__root, "xsl:param", name="include.rellinks")
+        ET.SubElement(__root, "xsl:param", name="antArgsGenerateTaskLabels")
+        ET.SubElement(__root, "xsl:param", name="tocMaximumLevel", select=self.toc_maximum_level)
+        ET.SubElement(__root, "xsl:param", name="ditaVersion", select="number(/*[contains(@class,' map/map ')]/@ditaarch:DITAArchVersion)")
+        
+        ditagen.generator.indent(__root)
+        ditagen.generator.set_prefixes(__root, {
+            "xsl": "http://www.w3.org/1999/XSL/Transform",
+            "fo": "http://www.w3.org/1999/XSL/Format",
+            "e": self.plugin_name,
+            "ditaarch": "http://dita.oasis-open.org/architecture/2005/"
+            })
         __d = ET.ElementTree(__root)
         __d.write(self.out, "UTF-8")
 
@@ -653,7 +783,7 @@ class StylePluginGenerator(DitaGenerator):
                  "Index even footer",
                  "Glossary odd footer",
                  "Glossary even footer"]
-
+    
     def __generate_vars(self, lang):
         """Generate variable file."""
         __root = ET.Element(u"vars")
@@ -718,6 +848,10 @@ class StylePluginGenerator(DitaGenerator):
                 # custom XSLT attribute sets
                 self._run_generation(__zip, self.__generate_custom_attr,
                                     "%s/cfg/fo/attrs/custom.xsl" % (self.plugin_name))
+                # shell XSLT
+                if self.override_shell:
+                    self._run_generation(__zip, self.__generate_shell,
+                                        "%s/xsl/fo/topic2fo_shell_%s.xsl" % (self.plugin_name, self.formatter))
 #                if not self.link_pagenumber or self.table_continued:
                 for lang in self.variable_languages:
                     self._run_generation(__zip, lambda: self.__generate_vars(lang),

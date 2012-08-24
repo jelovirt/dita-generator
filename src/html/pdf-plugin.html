@@ -32,8 +32,17 @@
       </p>
       <p class="instruction">XSL formatter used to generate PDF output. DITA-OT comes with open source FOP formatter.</p>
     </fieldset>
-     <p class="help">Note that customisation features available are dependent
+    <p class="help">Note that customisation features available are dependent
         on the target DITA-OT and XSL formatter.</p>
+    <fieldset>
+      <p>
+        <label for="pdf.override_shell" class="required">Override shell</label>
+        <input type="checkbox" name="pdf.override_shell" id="pdf.override_shell" title="Override shell"
+               value="true">
+      </p>
+      <p class="instruction">Override XSLT shell stylesheet. Advanced generation option which will make further developing the generated plug-in
+        easier.</p>
+    </fieldset>
     <!--fieldset>
       <p>
         <label for="pdf.generate-shell" class="required">Generate shell</label>

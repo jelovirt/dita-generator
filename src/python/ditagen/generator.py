@@ -1178,13 +1178,14 @@ def fixup_element_prefixes(elem, uri_map, memo):
         try:
             return memo[name]
         except KeyError:
-            if name[0] != "{":
-                return
-            uri, tag = name[1:].split("}")
-            if uri in uri_map:
-                new_name = uri_map[uri] + ":" + tag
-                memo[name] = new_name
-                return new_name
+            if hasattr(name, "__getitem__"):
+                if name[0] != "{":
+                    return
+                uri, tag = name[1:].split("}")
+                if uri in uri_map:
+                    new_name = uri_map[uri] + ":" + tag
+                    memo[name] = new_name
+                    return new_name
     # fix element name
     name = fixup(elem.tag)
     if name:

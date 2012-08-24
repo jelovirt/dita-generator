@@ -73,6 +73,7 @@ def main():
             "pdf.link-page-number": "true",
             "pdf.table-continued": "true",
             "pdf.formatter": "ah",
+            "pdf.override_shell": "true",
             "pdf.header.even": "chapter",
             "pdf.header.odd": "chapter",
             "pdf.drop-folio": "pagenum",

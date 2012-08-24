@@ -334,6 +334,7 @@ class PluginGenerateHandler(webapp.RequestHandler):
             __dita_gen.link_pagenumber = self.request.get(u"pdf.link-page-number")
             __dita_gen.table_continued = self.request.get(u"pdf.table-continued")
             __dita_gen.formatter = self.request.get(u"pdf.formatter")
+            __dita_gen.override_shell = self.request.get(u"pdf.override_shell")
             
             __header_folio = []
             if not self.request.get(u"pdf.drop-folio"):
