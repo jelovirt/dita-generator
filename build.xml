@@ -14,6 +14,19 @@
     <property name="src.dir" location="${basedir}/src"/>
     <property name="python.dir" location="${src.dir}/python"/>
     <property name="resources.dir" location="${src.dir}/resources"/>
+    
+    <taskdef name="jscomp" classname="com.google.javascript.jscomp.ant.CompileTask"
+             classpath="${basedir}/lib/compiler.jar"/>
+    <macrodef name="compiler">
+      <attribute name="js"/>
+      <attribute name="output"/>
+      <sequential>
+        <jscomp compilationLevel="whitespace" prettyPrint="true" warning="quiet"
+                output="${work.dir}/javascript/@{output}">
+          <sources dir="${src.dir}/javascript" files="@{js}"/>
+        </jscomp>
+      </sequential>
+    </macrodef>
   </target>
 
   <target name="-hg.info" depends="-init">
@@ -41,12 +54,15 @@
   </target>
 
   <target name="generate-js" depends="-init" description="Generate JS files from Python source.">
+    <mkdir dir="${work.dir}/javascript"/>
     <exec executable="python" output="${src.dir}/javascript/domains.js">
       <arg file="${basedir}/build/generate-js.py"/>
       <env key="PYTHONPATH" path="${basedir}/build:${basedir}/build:${python.dir}"/>
     </exec>
+    <compiler js="domains.js,form.js" output="generator.js"/>
+    <compiler js="pdf.js,pdf-preview.js" output="pdf.js"/>
   </target>
-
+  
   <target name="dist" depends="-init, -manifest, -version" description="Build distribution package.">
     <property name="prefix" value="ditagen-${version}"/>
     <property name="dist.file" location="${dist.dir}/${prefix}.zip"/><!--build.current.-->
@@ -115,7 +131,7 @@
         <include name="css/*.css"/>
         <include name="images/*.png"/>
       </zipfileset>
-      <zipfileset dir="${src.dir}/javascript" prefix="${prefix}/js">
+      <zipfileset dir="${work.dir}/javascript" prefix="${prefix}/js">
         <include name="*.js"/>
       </zipfileset>
     </jar>

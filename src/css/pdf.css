@@ -38,6 +38,10 @@ fieldset {
   clear: none;
 }
 
+h3 {
+  clear: both;
+}
+
 .example {
   width: 225px;
   float: right;

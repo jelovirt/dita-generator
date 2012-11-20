@@ -179,12 +179,24 @@ function updateFixedPageExample(page) {
 }
 
 /**
+ * Page dimensions in points.
+ */
+function Dimensions() {
+    var pageWidth;
+    var pageHeight;
+    var marginTop;
+    var marginOutside;
+    var marginBottom;
+    var marginInside
+}
+
+/**
  * Return page dimensions in points.
  * 
  * @returns {___anonymous8727_8728}
  */
 function readPageDimensions() {
-	var res = {};
+	var res = new Dimensions();
 	
 	var pageSize = $(":input[name='pdf.page-size']").val().split(' ');
 	if ($(":input[name='pdf.orientation']").val() == "landscape") {
@@ -273,9 +285,21 @@ function titleNumberingHandler(event) {
 	$("*[id='pdf.title-numbering.example." + target.val() + "']").show();
 }
 
+function tableAndFigureNumberingHandler(event) {
+    var target = $(event.target);
+    var preview = $("*[id='" + target.attr("name") + ".example']");
+    if (target.val() == "none") {
+        preview.hide();
+    } else {
+        preview.show();
+    }
+}
+
 $(document).ready(function() {
     $(":input[name='pdf.link-page-number']").change(linkPageNumberHandler).change();
     $(":input[name='pdf.title-numbering']").change(titleNumberingHandler).change();
+    $(":input[name='pdf.table-numbering']," +
+      ":input[name='pdf.figure-numbering']").change(tableAndFigureNumberingHandler).change();
     $(":input[name='pdf.dl']").change(definitionListHandler).change();
     $(":input[name='pdf.mirror-page-margins']").change(mirrorPageHandler).change();
 	$(":input[name='pdf.task-label']").change(taskLabelHandler).change();
@@ -309,6 +333,12 @@ function stripUnit(val) {
 	return new Number(val.substring(0, val.length - 2));
 }
 
+/**
+ * Convert length value to millimetres.
+ * 
+ * @param val length with CSS unit
+ * @return Number
+ */
 function toMm(val) {
 	if (val == undefined) {
 		return undefined;
@@ -330,6 +360,12 @@ function toMm(val) {
     }
 }
 
+/**
+ * Convert length value to points.
+ * 
+ * @param val length with CSS unit
+ * @return Number
+ */
 function toPt(val) {
 	if (val == undefined) {
 		return undefined;

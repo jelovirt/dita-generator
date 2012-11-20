@@ -181,6 +181,74 @@ imports = {
         "plugin:org.dita.pdf2:xsl/fo/index_xep.xsl"]
     }
 
+langs = {
+  u"de": {
+    u"#table-continued": u"<variable id='#table-continued'>Table continued&#x2026;</variable>",
+    u"Figure": u"<variable id='Figure'>Abbildung: <param ref-name='title'/></variable>",
+    u"Table": u"<variable id='Table'>Tabelle: <param ref-name='title'/></variable>"
+  },
+  u"en": {
+    u"#table-continued": u"<variable id='#table-continued'>Table continued&#x2026;</variable>",
+    u"Figure": u"<variable id='Figure'>Figure: <param ref-name='title'/></variable>",
+    u"Table": u"<variable id='Table'>Table: <param ref-name='title'/></variable>"
+  },
+  u"es": {
+    u"#table-continued": u"<variable id='#table-continued'>Table continued&#x2026;</variable>",
+    u"Figure": u"<variable id='Figure'>Figura: <param ref-name='title'/></variable>",
+    u"Table": u"<variable id='Table'>Tabla: <param ref-name='title'/></variable>"
+  },
+  u"fi": {
+    u"#table-continued": u"<variable id='#table-continued'>Table continued&#x2026;</variable>",
+    u"Figure": u"<variable id='Figure'>Kuva. <param ref-name='title'/></variable>",
+    u"Table": u"<variable id='Table'>Taulu. <param ref-name='title'/></variable>"
+  },
+  u"fr": {
+    u"#table-continued": u"<variable id='#table-continued'>Table continued&#x2026;</variable>",
+    u"Figure": u"<variable id='Figure'>Illustration: <param ref-name='title'/></variable>",
+    u"Table": u"<variable id='Table'>Table: <param ref-name='title'/></variable>"
+  },
+  u"he": {
+    u"#table-continued": u"<variable id='#table-continued'>Table continued&#x2026;</variable>",
+    u"Figure": u"<variable id='Figure'>&#x5d0;&#x5d9;&#x5d5;&#x5e8;. <param ref-name='title'/></variable>",
+    u"Table": u"<variable id='Table'>&#x5d8;&#x5d1;&#x5dc;&#x5d4;. <param ref-name='title'/></variable>"
+  },
+  u"it": {
+    u"#table-continued": u"<variable id='#table-continued'>Table continued&#x2026;</variable>",
+    u"Figure": u"<variable id='Figure'> Figura: <param ref-name='title'/></variable>",
+    u"Table": u"<variable id='Table'>Tabella: <param ref-name='title'/></variable>"
+  },
+  u"ja": {
+    u"#table-continued": u"<variable id='#table-continued'>Table continued&#x2026;</variable>",
+    u"Figure": u"<variable id='Figure'>&#x56f3; : <param ref-name='title'/></variable>",
+    u"Table": u"<variable id='Table'>&#x8868; : <param ref-name='title'/></variable>"
+  },
+  u"nl": {
+    u"#table-continued": u"<variable id='#table-continued'>Table continued&#x2026;</variable>",
+    u"Figure": u"<variable id='Figure'>Figuur: <param ref-name='title'/></variable>",
+    u"Table": u"<variable id='Table'>Tabel: <param ref-name='title'/></variable>"
+  },
+  u"ro": {
+    u"#table-continued": u"<variable id='#table-continued'>Table continued&#x2026;</variable>",
+    u"Figure": u"<variable id='Figure'>Fig.. <param ref-name='title'/></variable>",
+    u"Table": u"<variable id='Table'>Tabel. <param ref-name='title'/></variable>"
+  },
+  u"ru": {
+    u"#table-continued": u"<variable id='#table-continued'>Table continued&#x2026;</variable>",
+    u"Figure": u"<variable id='Figure'>&#x420;&#x438;&#x441;&#x443;&#x43d;&#x43e;&#x43a;. <param ref-name='title'/></variable>",
+    u"Table": u"<variable id='Table'>&#x422;&#x430;&#x431;&#x43b;&#x438;&#x446;&#x430;. <param ref-name='title'/></variable>"
+  },
+  u"sv": {
+    u"#table-continued": u"<variable id='#table-continued'>Table continued&#x2026;</variable>",
+    u"Figure": u"<variable id='Figure'>Figur. <param ref-name='title'/></variable>",
+    u"Table": u"<variable id='Table'>Tabell. <param ref-name='title'/></variable>"
+  },
+  u"zh_CN": {
+    u"#table-continued": u"<variable id='#table-continued'>Table continued&#x2026;</variable>",
+    u"Figure": u"<variable id='Figure'>&#x56fe;: <param ref-name='title'/></variable>",
+    u"Table": u"<variable id='Table'>&#x8868;: <param ref-name='title'/></variable>"
+  }
+} 
+
 class StylePluginGenerator(DitaGenerator):
     """Generator for a DITA-OT style plug-in."""
 
@@ -207,6 +275,8 @@ class StylePluginGenerator(DitaGenerator):
         self.mirror_page_margins = None
         self.dl = None
         self.title_numbering = None
+        self.table_numbering = None
+        self.figure_numbering = None
         self.generate_shell = None
         self.link_pagenumber = None
         self.table_continued = None
@@ -793,7 +863,14 @@ class StylePluginGenerator(DitaGenerator):
             ET.SubElement(__root, u"variable", id=u"On the page")
         # table continued
         if self.table_continued:
-            ET.SubElement(__root, u"variable", id=u"#table-continued").text = u"Table continued\u2026"
+            #ET.SubElement(__root, u"variable", id=u"#table-continued").text = u"Table continued\u2026"
+            __root.append(ET.fromstring(langs[lang][u"#table-continued"]))
+        # table caption numbering
+        if self.table_numbering == u"none":
+            __root.append(ET.fromstring(langs[lang][u"Table"]))
+        # figure caption numbering
+        if self.figure_numbering == u"none":
+            __root.append(ET.fromstring(langs[lang][u"Figure"]))
         
         # static content
         for args, var_names in [(self.header, self.__headers), (self.footer, self.__footers)]:

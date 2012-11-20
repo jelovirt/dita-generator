@@ -11,10 +11,12 @@ class DomainGenerator:
         self.write("// Generated from code, do not edit")
         self.write("var domains = {")
         self.i += 1
-        for v in ditagen.TOPIC_MAP.keys():
+        __vs = ditagen.TOPIC_MAP.keys()
+        for v in __vs:
             self.write(v + ": {")
             self.i += 1
-            for t in ditagen.TOPIC_MAP[v].keys():
+            __ds = ditagen.TOPIC_MAP[v].keys()
+            for t in __ds:
                 self.write(t + ": {")
                 self.i += 1
                 type = ditagen.TOPIC_MAP[v][t]
@@ -32,9 +34,15 @@ class DomainGenerator:
                 self.write("domainClass: [" +  ", ".join(['"' + p().id + '"' for p in ps]) +  "],")
                 self.write("defaultDomains: [" + ", ".join(['"' + d.id + '"' for d in default_domains])  + "]")
                 self.i -= 1
-                self.write("},")
+                if t != __ds[-1]:
+                    self.write("},")
+                else:
+                    self.write("}")
             self.i -= 1
-            self.write("},")
+            if v != __vs[-1]:
+                self.write("},")
+            else:
+                self.write("}")
         self.i -= 1
         self.write("}")
         

@@ -65,6 +65,9 @@ def main():
             "pdf.color.note": "gray",
             "pdf.start-indent.note": "50pt",
             
+            "pdf.table-numbering": "document",
+            "pdf.figure-numbering": "none",
+            
             "pdf.text-align": "justify",
             "pdf.dl": "list",
             "pdf.title-numbering": "all",

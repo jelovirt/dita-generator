@@ -328,6 +328,8 @@ class PluginGenerateHandler(webapp.RequestHandler):
             __dita_gen.mirror_page_margins = self.request.get(u"pdf.mirror-page-margins")
             __dita_gen.dl = self.request.get(u"pdf.dl")
             __dita_gen.title_numbering = self.request.get(u"pdf.title-numbering")
+            __dita_gen.table_numbering = self.request.get(u"pdf.table-numbering")
+            __dita_gen.figure_numbering = self.request.get(u"pdf.figure-numbering")
             __dita_gen.spacing_before = self.request.get(u"pdf.spacing.before")
             __dita_gen.spacing_after = self.request.get(u"pdf.spacing.before")
             __dita_gen.generate_shell = self.request.get(u"pdf.generate-shell")

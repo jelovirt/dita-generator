@@ -1,8 +1,6 @@
 {% extends "form.html" %}
 
 {% block form %}
-  <script type="text/javascript" src="/js/pdf.js"></script>
-  <script type="text/javascript" src="/js/pdf-preview.js"></script>
   {% if not advanced %}
     <!--input type="hidden" name="file" value="plugin"-->
   {% endif %}
@@ -14,6 +12,7 @@
       <p>
         <label for="ot.version" class="required">DITA-OT version</label>
         <select name="ot.version" id="ot.version" title="DITA-OT version">
+          <option value="1.7">1.7 milestone</option>
           <option value="1.6" selected>1.6</option>
           <option value="1.5.4">1.5.4</option>
         </select>
@@ -665,6 +664,46 @@
         </select>
       </p>
     </fieldset>
+    <h3>Captions</h3>
+    <div class="example">
+      <div class="example-text">
+        <p class="example-page-content-title"><strong>Table<span id="pdf.table-numbering.example"> 4</span>: Table caption</strong></p>
+        <table class="example-page-content-para" style="width: 100%">
+          <tr>
+            <td>Dog</td>
+            <td>lazy</td>
+          </tr>
+          <tr>
+            <td>For</td>
+            <td>quick</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <fieldset>
+      <p>
+        <label for="pdf.table-numbering">Table caption numbering</label>
+        <select name="pdf.table-numbering" id="pdf.table-numbering" title="Table caption numbering">
+          <option value="document" selected>Document wide</option>
+          <option value="none">No numbering</option>
+        </select>
+      </p>
+    </fieldset>
+    <div class="example">
+      <div class="example-text">
+        <p class="example-page-content-para"><img src="http://upload.wikimedia.org/wikipedia/en/5/5a/Dogcow.png" style="height: 30px"/></p>
+        <p class="example-page-content-title"><strong>Figure<span id="pdf.figure-numbering.example"> 6</span>: Figure caption</strong></p>
+      </div>
+    </div>
+    <fieldset>
+      <p>
+        <label for="pdf.figure-numbering">Figure caption numbering</label>
+        <select name="pdf.figure-numbering" id="pdf.figure-numbering" title="Figure caption numbering">
+          <option value="document" selected>Document wide</option>
+          <option value="none">No numbering</option>
+        </select>
+      </p>
+    </fieldset>
     <h3>Table of Contents</h3>
     <fieldset>
       <p>
@@ -834,4 +873,5 @@
       </p>
     </fieldset>
   </div>
+  <script type="text/javascript" src="/js/pdf.js"></script>
 {% endblock %}
