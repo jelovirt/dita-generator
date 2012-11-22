@@ -122,19 +122,19 @@
     <fieldset>
       <p>
         <label for="pdf.page-margin-top">Top</label>
-        <input name="pdf.page-margin-top" id="pdf.page-margin-top" placeholder="20mm" pattern="\d+(\.\d+)?(pt|mm|in|pc|cm|em)" class="length-value">
+        <input name="pdf.page-margin-top" id="pdf.page-margin-top" placeholder="20mm" pattern="(\d+(\.\d+)?|\.\d+)(pt|mm|in|pc|cm|em)" class="length-value">
       </p>
       <p>
         <label for="pdf.page-margin-outside">Outside</label>
-        <input name="pdf.page-margin-outside" id="pdf.page-margin-outside" placeholder="20mm" pattern="\d+(\.\d+)?(pt|mm|in|pc|cm|em)" class="length-value">
+        <input name="pdf.page-margin-outside" id="pdf.page-margin-outside" placeholder="20mm" pattern="(\d+(\.\d+)?|\.\d+)(pt|mm|in|pc|cm|em)" class="length-value">
       </p>
       <p>
         <label for="pdf.page-margin-bottom">Bottom</label>
-        <input name="pdf.page-margin-bottom" id="pdf.page-margin-bottom" placeholder="20mm" pattern="\d+(\.\d+)?(pt|mm|in|pc|cm|em)" class="length-value">
+        <input name="pdf.page-margin-bottom" id="pdf.page-margin-bottom" placeholder="20mm" pattern="(\d+(\.\d+)?|\.\d+)(pt|mm|in|pc|cm|em)" class="length-value">
       </p>
       <p>
         <label for="pdf.page-margin-inside">Inside</label>
-        <input name="pdf.page-margin-inside" id="pdf.page-margin-inside" placeholder="20mm" pattern="\d+(\.\d+)?(pt|mm|in|pc|cm|em)" class="length-value">
+        <input name="pdf.page-margin-inside" id="pdf.page-margin-inside" placeholder="20mm" pattern="(\d+(\.\d+)?|\.\d+)(pt|mm|in|pc|cm|em)" class="length-value">
       </p>
       <p class="instruction">Page margins.</p>
     </fieldset>
@@ -167,7 +167,7 @@
       </p>
       <p>
         <label for="pdf.column-gap">Column gap</label>
-        <input name="pdf.column-gap" id="pdf.column-gap" placeholder="12pt" pattern="\d+(\.\d+)?(pt|mm|in|pc|cm|em)" class="length-value">
+        <input name="pdf.column-gap" id="pdf.column-gap" placeholder="12pt" pattern="(\d+(\.\d+)?|\.\d+)(pt|mm|in|pc|cm|em)" class="length-value">
       </p>
     </fieldset>
   </div>
@@ -368,20 +368,20 @@
     <fieldset>
       <p>
         <label for="pdf.side-col-width">Indentation</label>
-        <input name="pdf.side-col-width" id="pdf.side-col-width" placeholder="25pt" pattern="\d+(\.\d+)?(pt|mm|in|pc|cm|em)" size="5" class="length-value">
+        <input name="pdf.side-col-width" id="pdf.side-col-width" placeholder="25pt" pattern="(\d+(\.\d+)?|\.\d+)(pt|mm|in|pc|cm|em)" size="5" class="length-value">
       </p>
       <p class="instruction">Amount the body text is indented relative to the left margin.</p>
     </fieldset>
     <fieldset>
       <p>
         <label for="pdf.spacing">Spacing before</label>
-        <input name="pdf.spacing.before" id="pdf.spacing.before" placeholder="0.6em" pattern="\d+(\.\d+)?(pt|mm|in|pc|cm|em)" size="5" class="length-value">
+        <input name="pdf.spacing.before" id="pdf.spacing.before" placeholder="0.6em" pattern="(\d+(\.\d+)?|\.\d+)(pt|mm|in|pc|cm|em)" size="5" class="length-value">
       </p>
     </fieldset>
     <fieldset>
       <p>
         <label for="pdf.spacing">Spacing after</label>
-        <input name="pdf.spacing.after" id="pdf.spacing.after" placeholder="0.6em" pattern="\d+(\.\d+)?(pt|mm|in|pc|cm|em)" size="5" class="length-value">
+        <input name="pdf.spacing.after" id="pdf.spacing.after" placeholder="0.6em" pattern="(\d+(\.\d+)?|\.\d+)(pt|mm|in|pc|cm|em)" size="5" class="length-value">
       </p>
     </fieldset>
     <fieldset>
@@ -520,7 +520,7 @@
                     <label for="pdf.space-before" class="inline">Before</label>:
                   </th>
                   <td>
-                    <input id="pdf.space-before" pattern="\d+(\.\d+)?(pt|mm|in|pc|cm|em)" size="5" class="length-value">
+                    <input id="pdf.space-before" pattern="(\d+(\.\d+)?|\.\d+)(pt|mm|in|pc|cm|em)" size="5" class="length-value">
                   </td>
                 </tr>
                 <tr class="pdf-style-selector-block">
@@ -528,7 +528,7 @@
                     <label for="pdf.space-after" class="inline">After</label>:
                   </th>
                   <td>
-                    <input id="pdf.space-after" pattern="\d+(\.\d+)?(pt|mm|in|pc|cm|em)" size="5" class="length-value">
+                    <input id="pdf.space-after" pattern="(\d+(\.\d+)?|\.\d+)(pt|mm|in|pc|cm|em)" size="5" class="length-value">
                   </td>
                 </tr>
               </table>
@@ -541,7 +541,7 @@
                     <label for="pdf.start-indent" class="inline">Left</label>:
                   </th>
                   <td>
-                    <input id="pdf.start-indent" pattern="\d+(\.\d+)?(pt|mm|in|pc|cm|em)" size="5" class="length-value">
+                    <input id="pdf.start-indent" pattern="(\d+(\.\d+)?|\.\d+)(pt|mm|in|pc|cm|em)" size="5" class="length-value">
                   </td>
                 </tr>
               </table>
