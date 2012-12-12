@@ -84,6 +84,39 @@ class ReferenceElement(ditagen.dita.DitaElement):
         ParameterEntity("arch-atts"),
         Attribute("outputclass", "CDATA", "#IMPLIED"),
     ]
+
+class GlossentryElement(ditagen.dita.DitaElement):
+    """Glossary entry element."""
+    name = u"glossentry"
+    cls = u"- topic/topic concept/concept glossentry/glossentry "
+    model = """(%glossterm;), 
+               (%glossdef;)?, 
+               (%prolog;)?, 
+               (%glossBody;)?, 
+               (%related-links;)?%(nested)s"""
+    attrs = [
+        Attribute("id", "ID", "#REQUIRED"),
+        Attribute("conref", "CDATA", "#IMPLIED"),
+        ParameterEntity("select-atts"),
+        ParameterEntity("localization-atts"),
+        ParameterEntity("arch-atts"),
+        Attribute("outputclass", "CDATA", "#IMPLIED"),
+    ]
+class GlossgroupElement(ditagen.dita.DitaElement):
+    """Glossary group element."""
+    name = u"glossgroup"
+    cls = u"- topic/topic concept/concept glossgroup/glossgroup "
+    model = """(%title;), 
+               (%prolog;)?*%(nested)s""" # (%glossgroup-info-types;)
+    attrs = [
+        Attribute("id", "ID", "#REQUIRED"),
+        Attribute("conref", "CDATA", "#IMPLIED"),
+        ParameterEntity("select-atts"),
+        ParameterEntity("localization-atts"),
+        ParameterEntity("arch-atts"),
+        Attribute("outputclass", "CDATA", "#IMPLIED"),
+    ]
+
 class LearningBaseElement(ditagen.dita.DitaElement):
     """Learning Base element."""
     name = u"learningBase"
@@ -347,6 +380,25 @@ class BookMapType(MapType):
     title = u"BookMap"
     parent = MapType()
     root = BookMapElement()
+
+class GlossentryType(ConceptType):
+    """Glossary entry topic type."""
+    id = u"glossentry"
+    file = u"technicalContent/dtd/glossentry"
+    pi_entity = u"-//OASIS//ENTITIES DITA Glossary Entry//EN"
+    pi_module = u"-//OASIS//ELEMENTS DITA Glossary Entry//EN"
+    title = u"Glossary Entry"
+    parent = ConceptType()
+    root = GlossentryElement()
+class GlossgroupType(ConceptType):
+    """Glossary group topic type."""
+    id = u"glossgroup"
+    file = u"technicalContent/dtd/glossgroup"
+    pi_entity = u"-//OASIS//ENTITIES DITA Glossary Group//EN"
+    pi_module = u"-//OASIS//ELEMENTS DITA Glossary Group//EN"
+    title = u"Glossary Group"
+    parent = ConceptType()
+    root = GlossgroupElement()
 
 class MachineryTaskType(ditagen.dita.ShellType):
     """Machinery Task topic type."""
@@ -670,3 +722,5 @@ LearningMapType.default_domains = [LearningMapDomain, LearningMetaDomain, MapGro
 LearningOverviewType.default_domains = [LearningDomain, LearningMetaDomain, HiDomain, UtDomain, IndexingDomain]
 LearningPlanType.default_domains = [LearningDomain, LearningMetaDomain, HiDomain, UtDomain, IndexingDomain]
 LearningSummaryType.default_domains = [LearningDomain, LearningMetaDomain, HiDomain, UtDomain, IndexingDomain]
+GlossentryType.default_domains = [HiDomain, UtDomain, IndexingDomain, HazardStatementDomain, AbbreviatedFormDomain, PrDomain, SwDomain, UiDomain]
+GlossgroupType.default_domains = [HiDomain, UtDomain, IndexingDomain, HazardStatementDomain, AbbreviatedFormDomain, PrDomain, SwDomain, UiDomain]
