@@ -619,7 +619,7 @@ class HazardStatementDomain(ditagen.dita.Domain):
     si_module = u"base/dtd/hazardstatementDomain.mod"
     si_entity = u"base/dtd/hazardstatementDomain.ent"
     pi_entity = u"-//OASIS//ENTITIES DITA 1.2 Hazard Statement Domain//EN"
-    pi_module = u"-//OASIS//ELEMENTS DITA 1.2 Hazard Domain//EN"
+    pi_module = u"-//OASIS//ELEMENTS DITA 1.2 Hazard Statement Domain//EN"
     title = u"Hazard Statement"
     elements = [u"note"]
     parent = [TopicType]
