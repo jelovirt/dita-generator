@@ -66,6 +66,7 @@ $(document).ready(function() {
     $(":input[name='pdf.body-column-count']").change(columnChangeHandler).change();
 	$(":input[id='pdf.font-family']," +
       ":input[id='pdf.font-size']," +
+      ":input[id='pdf.line-height']," +
       ":input[id='pdf.font-weight']," +
       ":input[id='pdf.font-style']," +
       ":input[id='pdf.text-decoration']," +
@@ -213,7 +214,7 @@ function styleHandler(event) {
 	pdfStyleSelectorCurrent = target.val();
 	readFromModel(target.val());
 }
-var storeFields = ["font-family", "font-size", "font-weight", "font-style", "color", "space-before", "space-after", "start-indent", "text-align", "text-decoration"];
+var storeFields = ["font-family", "font-size", "font-weight", "font-style", "color", "space-before", "space-after", "start-indent", "text-align", "text-decoration", "line-height"];
 /**
  * Read fields from model to UI.
  * @param type

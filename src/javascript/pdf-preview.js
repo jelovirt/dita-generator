@@ -71,6 +71,10 @@ function previewSpaceHandler(event) {
 		cls = "font-size";
 		isLength = true;
 		break;
+	case "line-height":
+        cls = "line-height";
+        isLength = true;
+        break;
 	case "text-align":
 		cls = "text-align";
 		switch (v) {

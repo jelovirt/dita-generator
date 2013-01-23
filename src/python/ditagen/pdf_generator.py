@@ -41,6 +41,7 @@ styles = [{ "property": f[0], "type": f[1], "value": f[2], "inherit": f[3] } for
     ("space-after", "body", "6pt", False),
     ("text-align", "body", "start", False),
     ("start-indent", "body", "25pt", False),
+    ("line-height", "body", "1.2em", False),
     
     ("font-family", "topic", "sans-serif", False),
     ("font-size", "topic", "18pt", False),
@@ -52,6 +53,7 @@ styles = [{ "property": f[0], "type": f[1], "value": f[2], "inherit": f[3] } for
     ("space-after", "topic", "16.8pt", False),
     ("text-align", "topic", "start", False),
     ("start-indent", "topic", "0pt", False),
+    ("line-height", "topic", None, True),
     
     ("font-family", "topic.topic", "sans-serif", False),
     ("font-size", "topic.topic", "14pt", False),
@@ -63,6 +65,7 @@ styles = [{ "property": f[0], "type": f[1], "value": f[2], "inherit": f[3] } for
     ("space-after", "topic.topic", "5pt", False),
     ("text-align", "topic.topic", "start", False),
     ("start-indent", "topic.topic", "0pt", False),
+    ("line-height", "topic.topic", None, True),
     
     ("font-family", "topic.topic.topic", "sans-serif", False),
     ("font-size", "topic.topic.topic", "12pt", False),
@@ -74,6 +77,7 @@ styles = [{ "property": f[0], "type": f[1], "value": f[2], "inherit": f[3] } for
     ("space-after", "topic.topic.topic", "2pt", False),
     ("text-align", "topic.topic.topic", "start", False),
     ("start-indent", "topic.topic.topic", "0pt", False),
+    ("line-height", "topic.topic.topic", None, True),
     
     ("font-family", "topic.topic.topic.topic", "serif", True),
     ("font-size", "topic.topic.topic.topic", "10pt", True),
@@ -85,6 +89,7 @@ styles = [{ "property": f[0], "type": f[1], "value": f[2], "inherit": f[3] } for
     ("space-after", "topic.topic.topic.topic", "0pt", False),
     ("text-align", "topic.topic.topic.topic", "start", False),
     ("start-indent", "topic.topic.topic.topic", None, True),
+    ("line-height", "topic.topic.topic.topic", None, True),
 
     ("font-family", "section", "sans-serif", False),
     ("font-size", "section", None, True),
@@ -96,6 +101,7 @@ styles = [{ "property": f[0], "type": f[1], "value": f[2], "inherit": f[3] } for
     ("space-after", "section", None, True),
     ("text-align", "section", None, True),
     ("start-indent", "section", None, True),
+    ("line-height", "section", None, True),
     
     ("font-family", "note", None, True),
     ("font-size", "note", None, True),
@@ -107,6 +113,7 @@ styles = [{ "property": f[0], "type": f[1], "value": f[2], "inherit": f[3] } for
     ("space-after", "note", None, True),
     ("text-align", "note", None, True),
     ("start-indent", "note", None, True),
+    ("line-height", "note", None, True),
     
     ("font-family", "pre", "monospace", False),
     ("font-size", "pre", None, True),
@@ -118,7 +125,7 @@ styles = [{ "property": f[0], "type": f[1], "value": f[2], "inherit": f[3] } for
     ("space-after", "pre", None, True),
     ("text-align", "pre", None, True),
     ("start-indent", "pre", None, True),
-    
+    ("line-height", "pre", None, True),
     
     ("font-family", "link", None, True),
     ("font-size", "link", None, True),
@@ -129,7 +136,8 @@ styles = [{ "property": f[0], "type": f[1], "value": f[2], "inherit": f[3] } for
     ("space-before", "link", None, False),
     ("space-after", "link", None, False),
     ("text-align", "link", None, False),
-    ("start-indent", "link", None, False)
+    ("start-indent", "link", None, False),
+    ("line-height", "link", None, False)
     ]]
 
 fonts = {
@@ -646,7 +654,7 @@ class StylePluginGenerator(DitaGenerator):
         # pre
         __pre_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name=u"pre")
         for k, v in self.style["pre"].items():
-            ET.SubElement(__note_attr, NS_XSL + "attribute", name=k).text = v
+            ET.SubElement(__pre_attr, NS_XSL + "attribute", name=k).text = v
 
         # dl
         if self.dl:
@@ -691,6 +699,9 @@ class StylePluginGenerator(DitaGenerator):
         # font size
         if "font-size" in self.style["body"]:
             ET.SubElement(__root, NS_XSL + "variable", name=u"default-font-size").text = self.style["body"]["font-size"]
+        # line height
+        if "line-height" in self.style["body"]:
+            ET.SubElement(__root, NS_XSL + "variable", name=u"default-line-height").text = self.style["body"]["line-height"]
         # body indent
         if "start-indent" in self.style["body"]:
             ET.SubElement(__root, NS_XSL + "variable", name=u"side-col-width").text = self.style["body"]["start-indent"]

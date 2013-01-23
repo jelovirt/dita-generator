@@ -46,6 +46,7 @@ def main():
             "pdf.color.body": "black",
             "pdf.start-indent.body": "25pt",
             "pdf.text-align.body": "justify",
+            "pdf.line-height.body": "1.8em",
             
             "pdf.font-family.topic": "Serif",
             "pdf.font-size.topic": "18pt",
@@ -64,6 +65,8 @@ def main():
             "pdf.font-size.note": "10pt",
             "pdf.color.note": "gray",
             "pdf.start-indent.note": "50pt",
+            
+            "pdf.line-height.pre": "1em",
             
             "pdf.table-numbering": "document",
             "pdf.figure-numbering": "none",

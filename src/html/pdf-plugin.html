@@ -547,6 +547,29 @@
                 </tr>
               </table>
             </td>
+            <td>
+              <table>
+                <tr>
+                  <th colspan="2">
+                    <label for="pdf.line-height" class="inline">Line spacing</label>:
+                  </th>
+                </tr>
+                <tr>
+                  <td>
+                    <input type="hidden" id="pdf.line-height" class="editable-list">
+                    <select id="pdf.line-height.list">
+                      <option value="1.2em" selected>Single</option>
+                      <option value="1.8em">1.5 lines</option>
+                      <option value="2.4em">Double</option>
+                      <option value="#other">Exactly</option>
+                    </select>
+                  </td>
+                  <td>
+                    <input id="pdf.line-height.other" pattern="(\d+(\.\d+)?|\.\d+)(pt|mm|in|pc|cm|em)" size="5" style="display:none" class="length-value">
+                  </td>
+                </tr>
+              </table>
+            </td>
           </tr>
         </table>
       </div>
