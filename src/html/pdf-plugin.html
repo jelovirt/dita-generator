@@ -12,9 +12,8 @@
       <p>
         <label for="ot.version" class="required">DITA-OT version</label>
         <select name="ot.version" id="ot.version" title="DITA-OT version">
-          <option value="1.7">1.7 milestone</option>
-          <option value="1.6" selected>1.6</option>
-          <option value="1.5.4">1.5.4</option>
+          <option value="1.7" selected>1.7</option>
+          <option value="1.6">1.6</option>
         </select>
       </p>
       <p class="instruction">Version of DITA-OT for which the plug-in is
@@ -513,6 +512,21 @@
           </tr>
           <tr class="pdf-style-selector-block">
             <td>
+              <label class="inline">Indentation</label>
+              <table>
+                <tr class="pdf-style-selector-block">
+                  <th>
+                    <label for="pdf.start-indent" class="inline">Left</label>:
+                  </th>
+                  <td>
+                    <input id="pdf.start-indent" pattern="(\d+(\.\d+)?|\.\d+)(pt|mm|in|pc|cm|em)" size="5" class="length-value">
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr class="pdf-style-selector-block">
+            <td>
               <label class="inline">Spacing</label>
               <table>
                 <tr class="pdf-style-selector-block">
@@ -533,22 +547,7 @@
                 </tr>
               </table>
             </td>
-            <td>
-              <label class="inline">Indentation</label>
-              <table>
-                <tr class="pdf-style-selector-block">
-                  <th>
-                    <label for="pdf.start-indent" class="inline">Left</label>:
-                  </th>
-                  <td>
-                    <input id="pdf.start-indent" pattern="(\d+(\.\d+)?|\.\d+)(pt|mm|in|pc|cm|em)" size="5" class="length-value">
-                  </td>
-                </tr>
-              </table>
-            </td>
           </tr>
-        
-      
         </table>
       </div>
       <!--p class="help">Style definition.</p-->
