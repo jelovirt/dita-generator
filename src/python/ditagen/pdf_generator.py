@@ -26,6 +26,7 @@ import ditagen.generator
 import StringIO
 from zipfile import ZipFile, ZipInfo
 from xml.etree import ElementTree as ET
+from datetime import datetime
 
 NS_XSL = "{http://www.w3.org/1999/XSL/Transform}"
 NS_FO = "{http://www.w3.org/1999/XSL/Format}"
@@ -290,6 +291,8 @@ class StylePluginGenerator(DitaGenerator):
         self.table_continued = None
         self.formatter = None
         self.override_shell = False
+        self.cover_image = None
+        self.cover_image_name = None
         self.header = {
             "odd": ["pagenum"],
             "even": ["pagenum"]
@@ -377,6 +380,52 @@ class StylePluginGenerator(DitaGenerator):
     def __generate_custom(self):
         """Generate plugin custom XSLT file."""
         __root = ET.Element(NS_XSL + "stylesheet", {"version":"2.0", "exclude-result-prefixes": "e opentopic"})
+        
+        __cover_raw = """
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:fo="http://www.w3.org/1999/XSL/Format"
+                xmlns:e="e"
+                exclude-result-prefixes="e"
+                version="2.0">
+
+  <xsl:template name="createFrontMatter_1.0">
+    <fo:page-sequence master-reference="front-matter" xsl:use-attribute-sets="__force__page__count">
+      <xsl:call-template name="insertFrontMatterStaticContents"/>
+      <fo:flow flow-name="xsl-region-body">
+        <fo:block xsl:use-attribute-sets="__frontmatter">
+          <fo:block xsl:use-attribute-sets="__frontmatter__title">
+            <xsl:choose>
+              <xsl:when test="$map/*[contains(@class,' topic/title ')][1]">
+                <xsl:apply-templates select="$map/*[contains(@class,' topic/title ')][1]"/>
+              </xsl:when>
+              <xsl:when test="$map//*[contains(@class,' bookmap/mainbooktitle ')][1]">
+                <xsl:apply-templates select="$map//*[contains(@class,' bookmap/mainbooktitle ')][1]"/>
+              </xsl:when>
+              <xsl:when test="//*[contains(@class, ' map/map ')]/@title">
+                <xsl:value-of select="//*[contains(@class, ' map/map ')]/@title"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of select="/descendant::*[contains(@class, ' topic/topic ')][1]/*[contains(@class, ' topic/title ')]"/>
+              </xsl:otherwise>
+            </xsl:choose>
+          </fo:block>
+          <xsl:apply-templates select="$map//*[contains(@class,' bookmap/booktitlealt ')]"/>
+          <fo:block xsl:use-attribute-sets="__frontmatter__owner">
+            <xsl:apply-templates select="$map//*[contains(@class,' bookmap/bookmeta ')]"/>
+          </fo:block>
+          <fo:external-graphic src="url({concat($artworkPrefix, $e:cover-image-path)})" xsl:use-attribute-sets="image"/>
+        </fo:block>
+      </fo:flow>
+    </fo:page-sequence>
+    <xsl:if test="not($retain-bookmap-order)">
+      <xsl:call-template name="createNotices"/>
+    </xsl:if>
+  </xsl:template>
+  
+</xsl:stylesheet>"""
+        __root.append(ET.Comment("cover"))
+        for __c in list(ET.fromstring(__cover_raw)):
+                __root.append(__c)
         
         __dl_list_raw = """
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -611,6 +660,9 @@ class StylePluginGenerator(DitaGenerator):
     def __generate_custom_attr(self):
         """Generate plugin custom XSLT file."""
         __root = ET.Element(NS_XSL + "stylesheet", {"version":"2.0", "exclude-result-prefixes": "e"})
+        
+        if self.cover_image:
+            ET.SubElement(__root, NS_XSL + "variable", name="e:cover-image-path").text = "Customization/OpenTopic/common/artwork/" + self.cover_image_name 
         
         __root_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name="__fo__root")
         # font family
@@ -948,6 +1000,9 @@ class StylePluginGenerator(DitaGenerator):
 #                    # shell XSLT
 #                    self._run_generation(__zip, self.__generate_shell,
 #                                        "%s/xsl/fo/.xsl" % (self.plugin_name))
+                if self.cover_image:
+                    self._store_file(__zip, self.cover_image,
+                                      "%s/cfg/common/artwork/%s" % (self.plugin_name, self.cover_image_name))
             except:
                 __failed = True
                 raise Exception("Failed to write plugin", sys.exc_info()[1]), None, sys.exc_info()[2]
@@ -961,3 +1016,13 @@ class StylePluginGenerator(DitaGenerator):
             raise Exception("Failed to write ZIP file to output", sys.exc_info()[1]), None, sys.exc_info()[2]
         finally:
             __temp.close()
+    
+    def _store_file(self, __zip, __file, filename):
+        """Run a file generation."""
+        __dt = datetime.now()
+        __zipinfo = ZipInfo(filename.encode("UTF-8"), (__dt.year, __dt.month, __dt.day, __dt.hour, __dt.minute, __dt.second))
+        __zipinfo.external_attr = 0755 << 16L # give full access to included file
+        try:
+            __zip.writestr(__zipinfo, __file)
+        except:
+            raise Exception("Failed to write " + filename, sys.exc_info()[1]), None, sys.exc_info()[2]            

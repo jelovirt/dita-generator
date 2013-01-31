@@ -337,6 +337,9 @@ class PluginGenerateHandler(webapp.RequestHandler):
             __dita_gen.table_continued = self.request.get(u"pdf.table-continued")
             __dita_gen.formatter = self.request.get(u"pdf.formatter")
             __dita_gen.override_shell = self.request.get(u"pdf.override_shell")
+            if "pdf.cover_image" in self.request.arguments():
+                __dita_gen.cover_image = self.request.get("pdf.cover_image")
+                __dita_gen.cover_image_name = self.request.POST["pdf.cover_image"].filename
             
             __header_folio = []
             if not self.request.get(u"pdf.drop-folio"):

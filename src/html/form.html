@@ -4,7 +4,7 @@
   <noscript>
     <p><strong>Please enable JavaScript</strong></p>
   </noscript>
-  <form action="{{ generate_url }}" method="post" target="_blank">
+  <form action="{{ generate_url }}" method="post" target="_blank" enctype="multipart/form-data">
     {% block form %}{% endblock %}
     <div id="controls">
       <button id="generate" type="submit">Generate</button>
