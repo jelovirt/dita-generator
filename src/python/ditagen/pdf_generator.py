@@ -377,7 +377,7 @@ class StylePluginGenerator(DitaGenerator):
         __d = ET.ElementTree(__root)
         __d.write(self.out, "UTF-8")
 
-    def __generate_custom(self):
+    def __generate_custom(self, stylesheet=None):
         """Generate plugin custom XSLT file."""
         __root = ET.Element(NS_XSL + "stylesheet", {"version":"2.0", "exclude-result-prefixes": "e opentopic"})
         
@@ -423,10 +423,86 @@ class StylePluginGenerator(DitaGenerator):
   </xsl:template>
   
 </xsl:stylesheet>"""
-        __root.append(ET.Comment("cover"))
-        for __c in list(ET.fromstring(__cover_raw)):
-                __root.append(__c)
-        
+
+        __table_footer_raw = """
+<xsl:stylesheet xmlns:fo="http://www.w3.org/1999/XSL/Format"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:e="e"
+                exclude-result-prefixes="e"
+                version="2.0">
+                
+  <xsl:template match="*[contains(@class, ' topic/tbody ')]" name="topic.tbody">
+    <fo:table-footer xsl:use-attribute-sets="tgroup.tfoot">
+      <fo:table-row>
+        <fo:table-cell number-columns-spanned="{../@cols}"/>
+      </fo:table-row>
+    </fo:table-footer>
+    <fo:table-body xsl:use-attribute-sets="tgroup.tbody">
+      <xsl:call-template name="commonattributes"/>
+      <xsl:apply-templates/>
+    </fo:table-body>
+  </xsl:template>
+                
+</xsl:stylesheet>
+"""
+        __table_continued_raw = """
+<xsl:stylesheet xmlns:fo="http://www.w3.org/1999/XSL/Format"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:e="e"
+                exclude-result-prefixes="e"
+                version="2.0">
+                
+  <xsl:variable name="table.frame-default" select="'all'"/>
+                
+  <xsl:template match="*[contains(@class, ' topic/tbody ')]" name="topic.tbody">
+    <fo:table-footer xsl:use-attribute-sets="tgroup.tfoot table__tableframe__top">
+      <fo:retrieve-table-marker retrieve-class-name="e:continued" retrieve-position-within-table="last-ending" retrieve-boundary-within-table="table-fragment"/>
+    </fo:table-footer>
+    <fo:table-body xsl:use-attribute-sets="tgroup.tbody">
+      <xsl:call-template name="commonattributes"/>
+      <fo:marker marker-class-name="e:continued">
+        <fo:table-row>
+          <fo:table-cell xsl:use-attribute-sets="e:tfoot.row.entry.continued" number-columns-spanned="{../@cols}">
+            <xsl:variable name="frame">
+              <xsl:choose>
+                <xsl:when test="../../@frame">
+                  <xsl:value-of select="../../@frame"/>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:value-of select="$table.frame-default"/>
+                </xsl:otherwise>
+              </xsl:choose>
+            </xsl:variable>
+            <xsl:if test="$frame = 'all' or $frame = 'topbot' or $frame = 'bottom'">
+              <xsl:call-template name="processAttrSetReflection">
+                <xsl:with-param name="attrSet" select="'__tableframe__top'"/>
+                <xsl:with-param name="path" select="$tableAttrs"/>
+              </xsl:call-template>
+            </xsl:if>
+            <fo:block>
+              <xsl:call-template name="insertVariable">
+                <xsl:with-param name="theVariableID" select="'#table-continued'"/>
+              </xsl:call-template>
+            </fo:block>
+          </fo:table-cell>
+        </fo:table-row>
+      </fo:marker>
+      <xsl:apply-templates/>
+    </fo:table-body>
+  </xsl:template>
+  
+  <xsl:template match="*[contains(@class, ' topic/tbody ')]/*[contains(@class, ' topic/row ')]" name="topic.tbody_row">
+    <fo:table-row xsl:use-attribute-sets="tbody.row">
+      <xsl:call-template name="commonattributes"/>
+      <xsl:if test="not(following-sibling::*)">
+        <fo:marker marker-class-name="e:continued"/>
+      </xsl:if>
+      <xsl:apply-templates/>
+    </fo:table-row>
+  </xsl:template>
+                
+</xsl:stylesheet>
+"""        
         __dl_list_raw = """
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:fo="http://www.w3.org/1999/XSL/Format"
@@ -509,18 +585,7 @@ class StylePluginGenerator(DitaGenerator):
   </xsl:template>
 
 </xsl:stylesheet>
-"""
-        __dl_raw = None
-        if self.dl == "list":
-            __dl_raw = __dl_list_raw
-        elif self.dl == "html":
-            __dl_raw = __dl_html_raw
-        if __dl_raw:
-            __root.append(ET.Comment("dl"))
-            __dl = ET.fromstring(__dl_raw)
-            for __c in list(__dl):
-                __root.append(__c)
-   
+"""   
         __get_title_raw = """
 <xsl:stylesheet xmlns:fo="http://www.w3.org/1999/XSL/Format"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -560,96 +625,41 @@ class StylePluginGenerator(DitaGenerator):
   
 </xsl:stylesheet>
 """
-        if self.title_numbering:
-            __root.append(ET.Comment("title numbering"))
-            for __c in list(ET.fromstring(__get_title_raw)):
+        if stylesheet == "front-matter" or not stylesheet:
+            if self.cover_image_name:
+                __root.append(ET.Comment("cover"))
+                for __c in list(ET.fromstring(__cover_raw)):
+                        __root.append(__c)
+        
+        if stylesheet == "tables" or not stylesheet:
+            __root.append(ET.Comment("table"))
+            __table_raw = __table_footer_raw
+            if self.table_continued:
+                __table_raw = __table_continued_raw
+            for __c in list(ET.fromstring(__table_raw)):
                 __root.append(__c)
         
-        __table_footer_raw = """
-<xsl:stylesheet xmlns:fo="http://www.w3.org/1999/XSL/Format"
-                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:e="e"
-                exclude-result-prefixes="e"
-                version="2.0">
-                
-  <xsl:template match="*[contains(@class, ' topic/tbody ')]" name="topic.tbody">
-    <fo:table-footer xsl:use-attribute-sets="tgroup.tfoot">
-      <fo:table-row>
-        <fo:table-cell number-columns-spanned="{../@cols}"/>
-      </fo:table-row>
-    </fo:table-footer>
-    <fo:table-body xsl:use-attribute-sets="tgroup.tbody">
-      <xsl:call-template name="commonattributes"/>
-      <xsl:apply-templates/>
-    </fo:table-body>
-  </xsl:template>
-                
-</xsl:stylesheet>
-"""
-        __table_continued_raw = """
-<xsl:stylesheet xmlns:fo="http://www.w3.org/1999/XSL/Format"
-                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:e="e"
-                exclude-result-prefixes="e"
-                version="2.0">
-                
-  <xsl:variable name="table.frame-default" select="'all'"/>
-                
-  <xsl:template match="*[contains(@class, ' topic/tbody ')]" name="topic.tbody">
-    <fo:table-footer xsl:use-attribute-sets="tgroup.tfoot table__tableframe__top">
-      <fo:retrieve-table-marker retrieve-class-name="e:continued" retrieve-position-within-table="last-ending" retrieve-boundary-within-table="table-fragment"/>
-    </fo:table-footer>
-    <fo:table-body xsl:use-attribute-sets="tgroup.tbody">
-      <xsl:call-template name="commonattributes"/>
-      <fo:marker marker-class-name="e:continued">
-        <fo:table-row>
-          <fo:table-cell xsl:use-attribute-sets="e:tfoot.row.entry.continued" number-columns-spanned="{../@cols}">
-            <xsl:variable name="frame">
-              <xsl:choose>
-                <xsl:when test="../../@frame">
-                  <xsl:value-of select="../../@frame"/>
-                </xsl:when>
-                <xsl:otherwise>
-                  <xsl:value-of select="$table.frame-default"/>
-                </xsl:otherwise>
-              </xsl:choose>
-            </xsl:variable>
-            <xsl:if test="$frame = 'all' or $frame = 'topbot' or $frame = 'bottom'">
-              <xsl:call-template name="processAttrSetReflection">
-                <xsl:with-param name="attrSet" select="'__tableframe__top'"/>
-                <xsl:with-param name="path" select="$tableAttrs"/>
-              </xsl:call-template>
-            </xsl:if>
-            <fo:block>
-              <xsl:call-template name="insertVariable">
-                <xsl:with-param name="theVariableID" select="'#table-continued'"/>
-              </xsl:call-template>
-            </fo:block>
-          </fo:table-cell>
-        </fo:table-row>
-      </fo:marker>
-      <xsl:apply-templates/>
-    </fo:table-body>
-  </xsl:template>
-  
-  <xsl:template match="*[contains(@class, ' topic/tbody ')]/*[contains(@class, ' topic/row ')]" name="topic.tbody_row">
-    <fo:table-row xsl:use-attribute-sets="tbody.row">
-      <xsl:call-template name="commonattributes"/>
-      <xsl:if test="not(following-sibling::*)">
-        <fo:marker marker-class-name="e:continued"/>
-      </xsl:if>
-      <xsl:apply-templates/>
-    </fo:table-row>
-  </xsl:template>
-                
-</xsl:stylesheet>
-"""
-        __root.append(ET.Comment("table"))
-        __table_raw = __table_footer_raw
-        if self.table_continued:
-            __table_raw = __table_continued_raw
-        for __c in list(ET.fromstring(__table_raw)):
-            __root.append(__c)
+            __dl_raw = None
+            if self.dl == "list":
+                __dl_raw = __dl_list_raw
+            elif self.dl == "html":
+                __dl_raw = __dl_html_raw
+            if __dl_raw:
+                __root.append(ET.Comment("dl"))
+                __dl = ET.fromstring(__dl_raw)
+                for __c in list(__dl):
+                    __root.append(__c)
+    
+        if stylesheet == "commons" or not stylesheet:
+            if self.title_numbering:
+                __root.append(ET.Comment("title numbering"))
+                for __c in list(ET.fromstring(__get_title_raw)):
+                    __root.append(__c)
+                    
+        if not stylesheet:
+            if not self.override_shell and self.toc_maximum_level:
+                __root.append(ET.Comment("TOC"))
+                ET.SubElement(__root, NS_XSL + "variable", name=u"tocMaximumLevel").text = self.toc_maximum_level
         
         ditagen.generator.indent(__root)
         ditagen.generator.set_prefixes(__root, {"xsl": "http://www.w3.org/1999/XSL/Transform", "fo": "http://www.w3.org/1999/XSL/Format", "e": self.plugin_name, "opentopic": "http://www.idiominc.com/opentopic"})
@@ -657,116 +667,110 @@ class StylePluginGenerator(DitaGenerator):
         __d = ET.ElementTree(__root)
         __d.write(self.out, "UTF-8")
 
-    def __generate_custom_attr(self):
+    def __generate_custom_attr(self, stylesheet=None):
         """Generate plugin custom XSLT file."""
         __root = ET.Element(NS_XSL + "stylesheet", {"version":"2.0", "exclude-result-prefixes": "e"})
         
-        if self.cover_image:
-            ET.SubElement(__root, NS_XSL + "variable", name="e:cover-image-path").text = "Customization/OpenTopic/common/artwork/" + self.cover_image_name 
+        if stylesheet == "front-matter-attr" or not stylesheet:
+            if self.cover_image_name:
+                ET.SubElement(__root, NS_XSL + "variable", name="e:cover-image-path").text = "Customization/OpenTopic/common/artwork/" + self.cover_image_name
         
-        __root_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name="__fo__root")
-        # font family
-        for p in ["font-family", "color", "text-align"]:
-            if p in self.style["body"]:
-                ET.SubElement(__root_attr, NS_XSL + "attribute", name=p).text = self.style["body"][p]
-        # titles
-        for (k, e) in self.style.items():
-            if k.startswith("topic") or k.startswith("section"):
-                __title_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name=k + ".title")
-                for (p, v) in e.items():
-                    ET.SubElement(__title_attr, NS_XSL + "attribute", name=p).text = v
-        # link
-        link_attr_sets = ["common.link"]
-        for n in link_attr_sets:
-            __link_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name=n)
-            for k, v in self.style["link"].items():
-                ET.SubElement(__link_attr, NS_XSL + "attribute", name=k).text = v
-#            if self.link_color:
-#                ET.SubElement(__link_attr, NS_XSL + "attribute", name=u"color").text = self.link_color
-#            if self.link_font_weight:
-#                ET.SubElement(__link_attr, NS_XSL + "attribute", name=u"font-weight").text = self.link_font_weight
-#            if self.link_font_style:
-#                ET.SubElement(__link_attr, NS_XSL + "attribute", name=u"font-style").text = self.link_font_style
-#            if self.link_text_decoration:
-#                ET.SubElement(__link_attr, NS_XSL + "attribute", name=u"text-decoration").text = self.link_text_decoration
-
-        # normal block
-        spacing_attr_sets = ["common.block"]
-        for n in spacing_attr_sets:
-            __spacing_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name=n)
-            for k, v in self.style["body"].items():
-                if k != "start-indent":
-                    ET.SubElement(__spacing_attr, NS_XSL + "attribute", name=k).text = v
-
-        # note
-        __note_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name=u"note__table")
-        for k, v in self.style["note"].items():
-            ET.SubElement(__note_attr, NS_XSL + "attribute", name=k).text = v
-            
-        # pre
-        __pre_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name=u"pre")
-        for k, v in self.style["pre"].items():
-            ET.SubElement(__pre_attr, NS_XSL + "attribute", name=k).text = v
-
-        # dl
-        if self.dl:
-            __dt_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name="e:dlentry.dt__content")
-            ET.SubElement(__dt_attr, NS_XSL + "attribute", name=u"font-weight").text = "bold"
-            ET.SubElement(__dt_attr, NS_XSL + "attribute", name=u"keep-with-next").text = "always"
-            __dd_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name="e:dlentry.dd__content")
-            if self.dl == "html":
-                ET.SubElement(__dd_attr, NS_XSL + "attribute", name=u"start-indent").text = "from-parent(start-indent) + 5mm"
-
-        # page column count
-        if self.body_column_count:
-            for a in ["region-body.odd", "region-body.even"]:
-                __region_body_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name=a)
-                ET.SubElement(__region_body_attr, NS_XSL + "attribute", name=u"column-count").text = self.body_column_count
-                if self.column_gap:
-                    ET.SubElement(__region_body_attr, NS_XSL + "attribute", name=u"column-gap").text = self.column_gap
-            for a in ["region-body__frontmatter.odd", "region-body__frontmatter.even"]:
-                __region_body_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name=a)
-                ET.SubElement(__region_body_attr, NS_XSL + "attribute", name=u"column-count").text = "1"
-            if self.index_column_count:
-                for a in ["region-body__index.odd", "region-body__index.even"]:
-                    __region_body_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name=a)
-                    ET.SubElement(__region_body_attr, NS_XSL + "attribute", name=u"column-count").text = self.index_column_count
+        if stylesheet == "commons-attr" or not stylesheet:
+            # force page count
+            if self.force_page_count:
+                __page_count_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name="__force__page__count")
+                ET.SubElement(__page_count_attr, NS_XSL + "attribute", name=u"force-page-count").text = self.force_page_count
+        
+            __root_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name="__fo__root")
+            # font family
+            for p in ["font-family", "color", "text-align"]:
+                if p in self.style["body"]:
+                    ET.SubElement(__root_attr, NS_XSL + "attribute", name=p).text = self.style["body"][p]
+            # titles
+            for (k, e) in self.style.items():
+                if k.startswith("topic") or k.startswith("section"):
+                    __title_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name=k + ".title")
+                    for (p, v) in e.items():
+                        ET.SubElement(__title_attr, NS_XSL + "attribute", name=p).text = v
+            # link
+            link_attr_sets = ["common.link"]
+            for n in link_attr_sets:
+                __link_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name=n)
+                for k, v in self.style["link"].items():
+                    ET.SubElement(__link_attr, NS_XSL + "attribute", name=k).text = v
+    
+            # normal block
+            spacing_attr_sets = ["common.block"]
+            for n in spacing_attr_sets:
+                __spacing_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name=n)
+                for k, v in self.style["body"].items():
+                    if k != "start-indent":
+                        ET.SubElement(__spacing_attr, NS_XSL + "attribute", name=k).text = v
+    
+            # note
+            __note_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name=u"note__table")
+            for k, v in self.style["note"].items():
+                ET.SubElement(__note_attr, NS_XSL + "attribute", name=k).text = v
                 
-
-        # force page count
-        if self.force_page_count:
-            __page_count_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name="__force__page__count")
-            ET.SubElement(__page_count_attr, NS_XSL + "attribute", name=u"force-page-count").text = self.force_page_count
-        # page size
-        if self.page_size:
-            ET.SubElement(__root, NS_XSL + "variable", name=u"page-width").text = self.page_size[0]
-            ET.SubElement(__root, NS_XSL + "variable", name=u"page-height").text = self.page_size[1]
-        # mirror pages
-        if self.mirror_page_margins:
-            ET.SubElement(__root, NS_XSL + "variable", name=u"mirror-page-margins", select=u"true()")
-        # page margins
-        for k, v in self.page_margins.iteritems():
-            if v:
-                ET.SubElement(__root, NS_XSL + "variable", name=k).text = v
-        # font size
-        if "font-size" in self.style["body"]:
-            ET.SubElement(__root, NS_XSL + "variable", name=u"default-font-size").text = self.style["body"]["font-size"]
-        # line height
-        if "line-height" in self.style["body"]:
-            ET.SubElement(__root, NS_XSL + "variable", name=u"default-line-height").text = self.style["body"]["line-height"]
-        # body indent
-        if "start-indent" in self.style["body"]:
-            ET.SubElement(__root, NS_XSL + "variable", name=u"side-col-width").text = self.style["body"]["start-indent"]
-        # toc
-        if not self.override_shell and self.toc_maximum_level:
-            ET.SubElement(__root, NS_XSL + "variable", name=u"tocMaximumLevel").text = self.toc_maximum_level
-        # table continued
-        if self.table_continued:
-            __table_continued_attr = ET.SubElement(__root, NS_XSL + "attribute-set", { "name": "e:tfoot.row.entry.continued" })
-            ET.SubElement(__table_continued_attr, NS_XSL + "attribute", name=u"border-right-style").text = "hidden"
-            ET.SubElement(__table_continued_attr, NS_XSL + "attribute", name=u"border-left-style").text = "hidden"
-            ET.SubElement(__table_continued_attr, NS_XSL + "attribute", name=u"text-align").text = "end"
-            ET.SubElement(__table_continued_attr, NS_XSL + "attribute", name=u"font-style").text = "italic"
+            # pre
+            __pre_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name=u"pre")
+            for k, v in self.style["pre"].items():
+                ET.SubElement(__pre_attr, NS_XSL + "attribute", name=k).text = v
+        
+        if stylesheet == "tables-attr" or not stylesheet:
+            # dl
+            if self.dl:
+                __dt_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name="e:dlentry.dt__content")
+                ET.SubElement(__dt_attr, NS_XSL + "attribute", name=u"font-weight").text = "bold"
+                ET.SubElement(__dt_attr, NS_XSL + "attribute", name=u"keep-with-next").text = "always"
+                __dd_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name="e:dlentry.dd__content")
+                if self.dl == "html":
+                    ET.SubElement(__dd_attr, NS_XSL + "attribute", name=u"start-indent").text = "from-parent(start-indent) + 5mm"
+            # table continued
+            if self.table_continued:
+                __table_continued_attr = ET.SubElement(__root, NS_XSL + "attribute-set", { "name": "e:tfoot.row.entry.continued" })
+                ET.SubElement(__table_continued_attr, NS_XSL + "attribute", name=u"border-right-style").text = "hidden"
+                ET.SubElement(__table_continued_attr, NS_XSL + "attribute", name=u"border-left-style").text = "hidden"
+                ET.SubElement(__table_continued_attr, NS_XSL + "attribute", name=u"text-align").text = "end"
+                ET.SubElement(__table_continued_attr, NS_XSL + "attribute", name=u"font-style").text = "italic"
+        
+        if stylesheet == "layout-masters-attr" or not stylesheet:
+            # page column count
+            if self.body_column_count:
+                for a in ["region-body.odd", "region-body.even"]:
+                    __region_body_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name=a)
+                    ET.SubElement(__region_body_attr, NS_XSL + "attribute", name=u"column-count").text = self.body_column_count
+                    if self.column_gap:
+                        ET.SubElement(__region_body_attr, NS_XSL + "attribute", name=u"column-gap").text = self.column_gap
+                for a in ["region-body__frontmatter.odd", "region-body__frontmatter.even"]:
+                    __region_body_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name=a)
+                    ET.SubElement(__region_body_attr, NS_XSL + "attribute", name=u"column-count").text = "1"
+                if self.index_column_count:
+                    for a in ["region-body__index.odd", "region-body__index.even"]:
+                        __region_body_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name=a)
+                        ET.SubElement(__region_body_attr, NS_XSL + "attribute", name=u"column-count").text = self.index_column_count
+        
+        if stylesheet == "basic-settings" or not stylesheet:       
+            # page size
+            if self.page_size:
+                ET.SubElement(__root, NS_XSL + "variable", name=u"page-width").text = self.page_size[0]
+                ET.SubElement(__root, NS_XSL + "variable", name=u"page-height").text = self.page_size[1]
+            # mirror pages
+            if self.mirror_page_margins:
+                ET.SubElement(__root, NS_XSL + "variable", name=u"mirror-page-margins", select=u"true()")
+            # page margins
+            for k, v in self.page_margins.iteritems():
+                if v:
+                    ET.SubElement(__root, NS_XSL + "variable", name=k).text = v
+            # font size
+            if "font-size" in self.style["body"]:
+                ET.SubElement(__root, NS_XSL + "variable", name=u"default-font-size").text = self.style["body"]["font-size"]
+            # line height
+            if "line-height" in self.style["body"]:
+                ET.SubElement(__root, NS_XSL + "variable", name=u"default-line-height").text = self.style["body"]["line-height"]
+            # body indent
+            if "start-indent" in self.style["body"]:
+                ET.SubElement(__root, NS_XSL + "variable", name=u"side-col-width").text = self.style["body"]["start-indent"]
         
         ditagen.generator.indent(__root)
         ditagen.generator.set_prefixes(__root, {"xsl": "http://www.w3.org/1999/XSL/Transform", "fo": "http://www.w3.org/1999/XSL/Format", "e": self.plugin_name})
@@ -780,71 +784,89 @@ class StylePluginGenerator(DitaGenerator):
             })
         
         __root.append(ET.Comment("base imports"))
-        for i in [
-                  "plugin:org.dita.base:xsl/common/dita-utilities.xsl",
-                  "plugin:org.dita.base:xsl/common/dita-textonly.xsl",
+        fs = []
+        fs.append("plugin:org.dita.base:xsl/common/dita-utilities.xsl")
+        fs.append("plugin:org.dita.base:xsl/common/dita-textonly.xsl")
         
-                  "plugin:org.dita.pdf2:xsl/common/attr-set-reflection.xsl",
-                  "plugin:org.dita.pdf2:xsl/common/vars.xsl",
+        fs.append("plugin:org.dita.pdf2:xsl/common/attr-set-reflection.xsl")
+        fs.append("plugin:org.dita.pdf2:xsl/common/vars.xsl")
         
-                  "plugin:org.dita.pdf2:cfg/fo/attrs/basic-settings.xsl",
-                  "plugin:org.dita.pdf2:cfg/fo/attrs/layout-masters-attr.xsl",
-                  "plugin:org.dita.pdf2:cfg/fo/layout-masters.xsl",
-                  "plugin:org.dita.pdf2:cfg/fo/attrs/links-attr.xsl",
-                  "plugin:org.dita.pdf2:xsl/fo/links.xsl",
-                  "plugin:org.dita.pdf2:cfg/fo/attrs/lists-attr.xsl",
-                  "plugin:org.dita.pdf2:xsl/fo/lists.xsl",
-                  "plugin:org.dita.pdf2:cfg/fo/attrs/tables-attr.xsl",
-                  "plugin:org.dita.pdf2:xsl/fo/tables.xsl",
-                  "plugin:org.dita.pdf2:xsl/fo/root-processing.xsl",
-                  "plugin:org.dita.pdf2:cfg/fo/attrs/commons-attr.xsl",
-                  "plugin:org.dita.pdf2:xsl/fo/commons.xsl",
-                  "plugin:org.dita.pdf2:cfg/fo/attrs/toc-attr.xsl",
-                  "plugin:org.dita.pdf2:xsl/fo/toc.xsl",
-                  "plugin:org.dita.pdf2:xsl/fo/bookmarks.xsl",
-                  "plugin:org.dita.pdf2:cfg/fo/attrs/index-attr.xsl",
-                  "plugin:org.dita.pdf2:xsl/fo/index.xsl",
-                  "plugin:org.dita.pdf2:cfg/fo/attrs/front-matter-attr.xsl",
-                  "plugin:org.dita.pdf2:xsl/fo/front-matter.xsl",
-                  "plugin:org.dita.pdf2:xsl/fo/preface.xsl",
-            
-                  "plugin:org.dita.pdf2:cfg/fo/attrs/map-elements-attr.xsl",
-                  "plugin:org.dita.pdf2:xsl/fo/map-elements.xsl",
-            
-                  "plugin:org.dita.pdf2:cfg/fo/attrs/task-elements-attr.xsl",
-                  "plugin:org.dita.pdf2:xsl/fo/task-elements.xsl",
-            
-                  "plugin:org.dita.pdf2:cfg/fo/attrs/reference-elements-attr.xsl",
-                  "plugin:org.dita.pdf2:xsl/fo/reference-elements.xsl",
-            
-                  "plugin:org.dita.pdf2:cfg/fo/attrs/sw-domain-attr.xsl",
-                  "plugin:org.dita.pdf2:xsl/fo/sw-domain.xsl",
-                  "plugin:org.dita.pdf2:cfg/fo/attrs/pr-domain-attr.xsl",
-                  "plugin:org.dita.pdf2:xsl/fo/pr-domain.xsl",
-                  "plugin:org.dita.pdf2:cfg/fo/attrs/hi-domain-attr.xsl",
-                  "plugin:org.dita.pdf2:xsl/fo/hi-domain.xsl",
-                  "plugin:org.dita.pdf2:cfg/fo/attrs/ui-domain-attr.xsl",
-                  "plugin:org.dita.pdf2:xsl/fo/ui-domain.xsl",
-            
-                  "plugin:org.dita.pdf2:cfg/fo/attrs/static-content-attr.xsl",
-                  "plugin:org.dita.pdf2:xsl/fo/static-content.xsl",
-                  "plugin:org.dita.pdf2:cfg/fo/attrs/glossary-attr.xsl",
-                  "plugin:org.dita.pdf2:xsl/fo/glossary.xsl",
-                  "plugin:org.dita.pdf2:cfg/fo/attrs/lot-lof-attr.xsl",
-                  "plugin:org.dita.pdf2:xsl/fo/lot-lof.xsl",
-            
-                  "plugin:org.dita.pdf2:cfg/fo/attrs/learning-elements-attr.xsl",
-                  "plugin:org.dita.pdf2:xsl/fo/learning-elements.xsl",
-            
-                  "plugin:org.dita.pdf2:xsl/fo/flagging.xsl"]:
+        fs.append("plugin:org.dita.pdf2:cfg/fo/attrs/basic-settings.xsl")
+        if self.override_shell:
+            fs.append("plugin:%s:cfg/fo/attrs/basic-settings.xsl" % (self.plugin_name))
+        fs.append("plugin:org.dita.pdf2:cfg/fo/attrs/layout-masters-attr.xsl")
+        if self.override_shell:
+            fs.append("plugin:%s:cfg/fo/attrs/layout-masters-attr.xsl" % (self.plugin_name))
+        fs.append("plugin:org.dita.pdf2:cfg/fo/layout-masters.xsl")
+        fs.append("plugin:org.dita.pdf2:cfg/fo/attrs/links-attr.xsl")
+        fs.append("plugin:org.dita.pdf2:xsl/fo/links.xsl")
+        fs.append("plugin:org.dita.pdf2:cfg/fo/attrs/lists-attr.xsl")
+        fs.append("plugin:org.dita.pdf2:xsl/fo/lists.xsl")
+        fs.append("plugin:org.dita.pdf2:cfg/fo/attrs/tables-attr.xsl")
+        if self.override_shell:
+            fs.append("plugin:%s:cfg/fo/attrs/tables-attr.xsl" % (self.plugin_name))
+        fs.append("plugin:org.dita.pdf2:xsl/fo/tables.xsl")
+        if self.override_shell:
+            fs.append("plugin:%s:xsl/fo/tables.xsl" % (self.plugin_name))
+        fs.append("plugin:org.dita.pdf2:xsl/fo/root-processing.xsl")
+        fs.append("plugin:org.dita.pdf2:cfg/fo/attrs/commons-attr.xsl")
+        if self.override_shell:
+            fs.append("plugin:%s:cfg/fo/attrs/commons-attr.xsl" % (self.plugin_name))
+        fs.append("plugin:org.dita.pdf2:xsl/fo/commons.xsl")
+        if self.override_shell:
+            fs.append("plugin:%s:xsl/fo/commons.xsl" % (self.plugin_name))
+        fs.append("plugin:org.dita.pdf2:cfg/fo/attrs/toc-attr.xsl")
+        fs.append("plugin:org.dita.pdf2:xsl/fo/toc.xsl")
+        fs.append("plugin:org.dita.pdf2:xsl/fo/bookmarks.xsl")
+        fs.append("plugin:org.dita.pdf2:cfg/fo/attrs/index-attr.xsl")
+        fs.append("plugin:org.dita.pdf2:xsl/fo/index.xsl")
+        fs.append("plugin:org.dita.pdf2:cfg/fo/attrs/front-matter-attr.xsl")
+        if self.override_shell:
+            fs.append("plugin:%s:cfg/fo/attrs/front-matter-attr.xsl" % (self.plugin_name))
+        fs.append("plugin:org.dita.pdf2:xsl/fo/front-matter.xsl")
+        if self.override_shell:
+            fs.append("plugin:%s:xsl/fo/front-matter.xsl" % (self.plugin_name))
+        fs.append("plugin:org.dita.pdf2:xsl/fo/preface.xsl")
+        
+        fs.append("plugin:org.dita.pdf2:cfg/fo/attrs/map-elements-attr.xsl")
+        fs.append("plugin:org.dita.pdf2:xsl/fo/map-elements.xsl")
+        
+        fs.append("plugin:org.dita.pdf2:cfg/fo/attrs/task-elements-attr.xsl")
+        fs.append("plugin:org.dita.pdf2:xsl/fo/task-elements.xsl")
+        
+        fs.append("plugin:org.dita.pdf2:cfg/fo/attrs/reference-elements-attr.xsl")
+        fs.append("plugin:org.dita.pdf2:xsl/fo/reference-elements.xsl")
+        
+        fs.append("plugin:org.dita.pdf2:cfg/fo/attrs/sw-domain-attr.xsl")
+        fs.append("plugin:org.dita.pdf2:xsl/fo/sw-domain.xsl")
+        fs.append("plugin:org.dita.pdf2:cfg/fo/attrs/pr-domain-attr.xsl")
+        fs.append("plugin:org.dita.pdf2:xsl/fo/pr-domain.xsl")
+        fs.append("plugin:org.dita.pdf2:cfg/fo/attrs/hi-domain-attr.xsl")
+        fs.append("plugin:org.dita.pdf2:xsl/fo/hi-domain.xsl")
+        fs.append("plugin:org.dita.pdf2:cfg/fo/attrs/ui-domain-attr.xsl")
+        fs.append("plugin:org.dita.pdf2:xsl/fo/ui-domain.xsl")
+        
+        fs.append("plugin:org.dita.pdf2:cfg/fo/attrs/static-content-attr.xsl")
+        fs.append("plugin:org.dita.pdf2:xsl/fo/static-content.xsl")
+        fs.append("plugin:org.dita.pdf2:cfg/fo/attrs/glossary-attr.xsl")
+        fs.append("plugin:org.dita.pdf2:xsl/fo/glossary.xsl")
+        fs.append("plugin:org.dita.pdf2:cfg/fo/attrs/lot-lof-attr.xsl")
+        fs.append("plugin:org.dita.pdf2:xsl/fo/lot-lof.xsl")
+        
+        fs.append("plugin:org.dita.pdf2:cfg/fo/attrs/learning-elements-attr.xsl")
+        fs.append("plugin:org.dita.pdf2:xsl/fo/learning-elements.xsl")
+        
+        fs.append("plugin:org.dita.pdf2:xsl/fo/flagging.xsl")
+
+        for i in fs:
             ET.SubElement(__root, "xsl:import", href=i)
         __root.append(ET.Comment("formatter specific imports"))
         for i in imports[self.formatter]:
             ET.SubElement(__root, "xsl:import", href=i)
-        __root.append(ET.Comment("configuration overrides"))
-        for i in ["cfg:fo/attrs/custom.xsl",
-                  "cfg:fo/xsl/custom.xsl"]:
-            ET.SubElement(__root, "xsl:import", href=i)
+        if not self.override_shell:
+            __root.append(ET.Comment("configuration overrides"))
+            for i in ["cfg:fo/attrs/custom.xsl", "cfg:fo/xsl/custom.xsl"]:
+                ET.SubElement(__root, "xsl:import", href=i)
         
         __root.append(ET.Comment("parameters"))
         ET.SubElement(__root, "xsl:param", name="locale")
@@ -982,12 +1004,24 @@ class StylePluginGenerator(DitaGenerator):
                 # font-mappings
 #                self._run_generation(__zip, self.__generate_font_mappings,
 #                                    "%s/cfg/fo/font-mappins.xml" % (self.plugin_name))
+                
                 # custom XSLT
-                self._run_generation(__zip, self.__generate_custom,
-                                    "%s/cfg/fo/xsl/custom.xsl" % (self.plugin_name))
+                if self.override_shell:
+                    for s in ["front-matter", "commons", "tables"]:
+                        self._run_generation(__zip, lambda: self.__generate_custom(s),
+                                            "%s/xsl/fo/%s.xsl" % (self.plugin_name, s))
+                else:
+                    self._run_generation(__zip, self.__generate_custom,
+                                        "%s/cfg/fo/xsl/custom.xsl" % (self.plugin_name))
                 # custom XSLT attribute sets
-                self._run_generation(__zip, self.__generate_custom_attr,
-                                    "%s/cfg/fo/attrs/custom.xsl" % (self.plugin_name))
+                if self.override_shell:
+                    for s in ["front-matter-attr", "commons-attr", "layout-masters-attr", "tables-attr", "basic-settings"]:
+                        self._run_generation(__zip, lambda: self.__generate_custom_attr(s),
+                                            "%s/cfg/fo/attrs/%s.xsl" % (self.plugin_name, s))
+                else:
+                    self._run_generation(__zip, self.__generate_custom_attr,
+                                        "%s/cfg/fo/attrs/custom.xsl" % (self.plugin_name))
+                
                 # shell XSLT
                 if self.override_shell:
                     self._run_generation(__zip, self.__generate_shell,
