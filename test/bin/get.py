@@ -104,6 +104,25 @@ def main():
             ("domain", "xml-d"),
             ("domain", "d4p_formatting-d"),
             ("domain", "d4p_renditionTargetAtt-d")
+            ],
+        "specialization": [
+            ('version', '1.2'),
+            ('file', 'plugin'),
+            ('title', 'test'),
+            ('owner', 'test'),
+            ('output', 'specialization'),
+            ('root', 'test'),
+            ('type', 'concept'),
+            ("nested", "true"),
+            ('id', 'test'),
+            ('att.1.type', 'props'),
+            ('att.1.name', 'custom'),
+            ('att.1.datatype', 'CDATA'),
+            ("domain", "pr-d"),
+            ("domain", "hi-d"),
+            ("domain", "xml-d"),
+            ("domain", "d4p_formatting-d"),
+            ("domain", "d4p_renditionTargetAtt-d")
             ]
         }
     i = 1
@@ -153,6 +172,7 @@ Environments:
 Targets:
   pdf
   shell
+  specialization
 """)
 
 def get(server, handler, params, url):

@@ -361,9 +361,9 @@ class DitaGenerator(DtdGenerator):
         else:
             __suffix = u"-typemod"
         __pi = topic_type.pi_module
-        assert __pi is not None
-        #if __pi is None:
-        #    __pi = self.generate_public_identifier("mod", topic_type.id, self._pi_version, topic_type.title, topic_type.owner)
+        #assert __pi is not None
+        if __pi is None:
+            __pi = self.generate_public_identifier("mod", topic_type.id, self._pi_version, topic_type.title, topic_type.owner)
         self.__entity(topic_type.id + __suffix,
                       __f,
                       __pi,
