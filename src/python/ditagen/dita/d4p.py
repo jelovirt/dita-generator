@@ -33,12 +33,12 @@ class ArticleElement(ditagen.dita.DitaElement):
     """Article element."""
     name = u"article"
     cls = u"- topic/topic article/article "
-    model = """"(%title;),
-                (%titlealts;)?,
-                (%abstract; | %deck;)?,
-                (%prolog;)?,
-                (%body;)?,
-                (%related-links;)?,
+    model = """"(%%title;),
+                (%%titlealts;)?,
+                (%%abstract; | %%deck;)?,
+                (%%prolog;)?,
+                (%%body;)?,
+                (%%related-links;)?,
                 %(nested)s"""
     attrs = [
         Attribute("id", "ID", "#REQUIRED"),
@@ -53,12 +53,12 @@ class SubsectionElement(ditagen.dita.DitaElement):
     """Subsection element."""
     name = u"subsection"
     cls = u"- topic/topic subsection/subsection "
-    model = """"(%title;),
-                (%titlealts;)?,
-                (%abstract; | %shortdesc;)?,
-                (%prolog;)?, 
-                (%body;)?,
-                (%related-links;)?,
+    model = """"(%%title;),
+                (%%titlealts;)?,
+                (%%abstract; | %%shortdesc;)?,
+                (%%prolog;)?, 
+                (%%body;)?,
+                (%%related-links;)?,
                 %(nested)s"""
     attrs = [
         Attribute("id", "ID", "#REQUIRED"),
@@ -73,12 +73,12 @@ class SidebarElement(ditagen.dita.DitaElement):
     """Sidebar element."""
     name = u"sidebar"
     cls = u"- topic/topic sidebar/sidebar "
-    model = """"(%title;),
-                (%titlealts;)?,
-                (%abstract; | %shortdesc;)?,
-                (%prolog;)?, 
-                (%body;)?,
-                (%related-links;)?,
+    model = """"(%%title;),
+                (%%titlealts;)?,
+                (%%abstract; | %%shortdesc;)?,
+                (%%prolog;)?, 
+                (%%body;)?,
+                (%%related-links;)?,
                 %(nested)s"""
     attrs = [
         Attribute("id", "ID", "#REQUIRED"),
@@ -93,12 +93,12 @@ class ChapterElement(ditagen.dita.DitaElement):
     """Chapter element."""
     name = u"chapter"
     cls = u"- topic/topic chapter/chapter "
-    model = """"(%title;),
-                (%titlealts;)?,
-                (%abstract; | %shortdesc;)?,
-                (%prolog;)?, 
-                (%body;)?,
-                (%related-links;)?,
+    model = """"(%%title;),
+                (%%titlealts;)?,
+                (%%abstract; | %%shortdesc;)?,
+                (%%prolog;)?, 
+                (%%body;)?,
+                (%%related-links;)?,
                 %(nested)s"""
     attrs = [
         Attribute("id", "ID", "#REQUIRED"),
@@ -113,12 +113,12 @@ class PartElement(ditagen.dita.DitaElement):
     """Part element."""
     name = u"part"
     cls = u"- topic/topic part/part "
-    model = """"(%title;),
-                (%titlealts;)?,
-                (%abstract; | %shortdesc;)?,
-                (%prolog;)?, 
-                (%body;)?,
-                (%related-links;)?,
+    model = """"(%%title;),
+                (%%titlealts;)?,
+                (%%abstract; | %%shortdesc;)?,
+                (%%prolog;)?, 
+                (%%body;)?,
+                (%%related-links;)?,
                 %(nested)s"""
     attrs = [
         Attribute("id", "ID", "#REQUIRED"),
@@ -133,12 +133,12 @@ class CoverElement(ditagen.dita.DitaElement):
     """Cover element."""
     name = u"cover"
     cls = u"- topic/topic cover/cover "
-    model = """"(%title;),
-                (%titlealts;)?,
-                (%abstract; | %shortdesc;)?,
-                (%prolog;)?, 
-                (%body;)?,
-                (%related-links;)?,
+    model = """"(%%title;),
+                (%%titlealts;)?,
+                (%%abstract; | %%shortdesc;)?,
+                (%%prolog;)?, 
+                (%%body;)?,
+                (%%related-links;)?,
                 %(nested)s"""
     attrs = [
         Attribute("id", "ID", "#REQUIRED"),
@@ -152,31 +152,31 @@ class PubmapElement(ditagen.dita.DitaElement):
     """Pubmap element."""
     name = u"pubmap"
     cls = u"- map/map pubmap/pubmap "
-    model = """(%pubtitle;)?, 
-               (%pubmeta;)?,
-               (%keydefs;)?,
-               (%topicref;)*,
-               ((%mapref;) |
-                ((%publication;) |
-                 (%publication-mapref;))|
-                ((%covers;)?,
-                 (%colophon;)?, 
-                 ((%frontmatter;) |
-                  (%department;) |
-                  (%page;))*,
-                 ((%pubbody;) |
-                  (%part;) |
-                  (%chapter;) |
-                  (%sidebar;) |
-                  (%subsection;))?, 
-                 ((%appendixes;) |
-                  (%appendix;) |
-                  (%backmatter;) |
-                  (%page;) |
-                  (%department;) |
-                  (%colophon;))*)),
-               (%data.elements.incl; |
-                %reltable;)*"""
+    model = """(%%pubtitle;)?, 
+               (%%pubmeta;)?,
+               (%%keydefs;)?,
+               (%%topicref;)*,
+               ((%%mapref;) |
+                ((%%publication;) |
+                 (%%publication-mapref;))|
+                ((%%covers;)?,
+                 (%%colophon;)?, 
+                 ((%%frontmatter;) |
+                  (%%department;) |
+                  (%%page;))*,
+                 ((%%pubbody;) |
+                  (%%part;) |
+                  (%%chapter;) |
+                  (%%sidebar;) |
+                  (%%subsection;))?, 
+                 ((%%appendixes;) |
+                  (%%appendix;) |
+                  (%%backmatter;) |
+                  (%%page;) |
+                  (%%department;) |
+                  (%%colophon;))*)),
+               (%%data.elements.incl; |
+                %%reltable;)*"""
     attrs = [
         Attribute("title", "CDATA", "#IMPLIED"),
         Attribute("id", "ID", "#REQUIRED"),
