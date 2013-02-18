@@ -258,7 +258,7 @@ function checkFragment() {
 
 function attributeAddHandler(event) {
     $("#noAttributesRow").hide();
-    $("#attributes thead").show();
+    $("#attributes thead,#generate-subject-scheme").show();
     
     var tr = $("<tr></tr>");
     tr.append("<td><input name='name' size='15'></td>");
@@ -303,7 +303,7 @@ function attributeRemoveHandler(event) {
     $(event.target).parents("tr:first").remove();
     if ($("#attributes tbody tr:visible").length === 0) {
         $("#noAttributesRow").show();
-        $("#attributes thead").hide();
+        $("#attributes thead,#generate-subject-scheme").hide();
     }
 }
 

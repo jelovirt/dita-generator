@@ -81,20 +81,21 @@ class MainHandler(webapp.RequestHandler):
                     template_values["output_title"] = self.titles[path_args[__idx]].lower()
                     template_values["generate_url"] = "/generate-plugin"
                     template_values["styles"] = ditagen.pdf_generator.styles
+                    template_values["css"] = "pdf.css"
                     template_file = a + ".html"
                 else:
                     self.response.set_status(404)
                     self.response.headers["Content-Type"] = "text/plain; charset=UTF-8"
                     self.response.out.write("Unrecognized output type " + a)
                     return
-            elif __idx == 1:
-                if a in ("1.1", "1.2"):
-                    template_values["version"] = a
-                else:
-                    self.response.set_status(404)
-                    self.response.headers["Content-Type"] = "text/plain; charset=UTF-8"
-                    self.response.out.write("Unrecognized DITA version " + a)
-                    return
+            #elif __idx == 1:
+                #if a in ("1.1", "1.2"):
+                #    template_values["version"] = a
+                #else:
+                #    self.response.set_status(404)
+                #    self.response.headers["Content-Type"] = "text/plain; charset=UTF-8"
+                #    self.response.out.write("Unrecognized DITA version " + a)
+                #    return
             __idx += 1
         
         path = os.path.join(os.path.dirname(__file__), template_file)
@@ -114,9 +115,9 @@ class GenerateHandler(webapp.RequestHandler):
         __root = None
         __owner = None
         __nested = None
-        __format = None
+        #__format = None
         __domains = []
-        __version = None
+        __version = "1.2"
         __plugin_name = None
         __plugin_version = None
         __stylesheet = None
@@ -125,12 +126,12 @@ class GenerateHandler(webapp.RequestHandler):
         __attrs = []
         try:
             # version
-            if u"version" in self.request.arguments():
-                __version = self.request.get(u"version")
-                if __version not in ("1.1", "1.2"):
-                    raise ValueError("unsupported version " + __version)
-            else:
-                raise ValueError("version missing")
+            #if u"version" in self.request.arguments():
+            #    __version = self.request.get(u"version")
+            #    if __version not in ("1.1", "1.2"):
+            #        raise ValueError("unsupported version " + __version)
+            #else:
+            #    raise ValueError("version missing")
             # domains
             for __d in  self.request.get_all(u"domain"):
                 if __d in ditagen.DOMAIN_MAP[__version]:
@@ -167,10 +168,10 @@ class GenerateHandler(webapp.RequestHandler):
             #__remove = dict([(n, True) for n in form.getlist("remove")])
             #__global_atts = None#self.request.get(u"attribute")
             # output type
-            if u"file" in self.request.arguments():
-                __format = self.request.get(u"file")
-            else:
-                raise ValueError("file missing")
+            #if u"file" in self.request.arguments():
+            #    __format = self.request.get(u"file")
+            #else:
+            #    raise ValueError("file missing")
             # stylesheet
             __stylesheet = self.request.get_all(u"stylesheet")
             for s in __stylesheet:
@@ -178,6 +179,10 @@ class GenerateHandler(webapp.RequestHandler):
                     raise ValueError("unsupported stylesheet " + s)
             # file name
             __file = __id
+            if u"subject-scheme" in self.request.arguments():
+                __subject_scheme = self.request.get(u"subject-scheme") == "true"
+            else:
+                __subject_scheme = False
             # attributes
             for i in [t[1] for t in [a.split(".") for a in self.request.arguments()] if t[0] == "att" and t[2] == "name"]:
                 __v = self.request.get(u"att." + i +".values").strip()
@@ -185,9 +190,12 @@ class GenerateHandler(webapp.RequestHandler):
                     __values = re.split("[\\s,\\|]+", __v)
                 else:
                     __values = []
+                __t = self.request.get(u"att." + i +".type")
+                if __subject_scheme:
+                    __t = "CDATA"
                 # TODO: add DomainAttribute instance instead of tuple
                 __attrs.append((self.request.get(u"att." + i +".name"),
-                                self.request.get(u"att." + i +".type"),
+                                __t,
                                 __values))
             if u"type" in self.request.arguments():
                 # topic type
@@ -209,50 +217,52 @@ class GenerateHandler(webapp.RequestHandler):
             raise
             
         # run generator
-        if __format== u"plugin" or not __format:
-            __dita_gen = ditagen.generator.PluginGenerator()
-            __dita_gen.out = self.response.out
-            __dita_gen.owner = __owner
+        #if __format== u"plugin" or not __format:
+        __dita_gen = ditagen.generator.PluginGenerator()
+        __dita_gen.out = self.response.out
+        __dita_gen.owner = __owner
 
-            if __topic_type is not None:
-                __dita_gen.topic_type = __topic_type
-            if not len(__domains) == 0:
-                __dita_gen.domains = __domains
-            __dita_gen.nested = __nested
-            __dita_gen.version = __version
-            __dita_gen.title = __title
-            if __stylesheet:
-                __dita_gen.set_stylesheet(__stylesheet)
-            if __plugin_name != None:
-                __dita_gen.plugin_name = __plugin_name
-            if __plugin_version != None:
-                __dita_gen.plugin_version = __plugin_version
-            if __attrs:
-                __dita_gen.domain_attributes = __attrs
-            __file_name = __dita_gen.get_file_name(__id, __file, "zip")
-            
-            self.response.headers["Content-Type"] = "application/zip"
-            self.response.headers["Content-Disposition"] = "attachment; filename=" + __file_name
-            __dita_gen.generate_plugin()
-        else:
-            __dita_gen = ditagen.generator.DitaGenerator()
-            __dita_gen.out = self.response.out
+        if __topic_type is not None:
             __dita_gen.topic_type = __topic_type
-            if not len(__domains) == 0:
-                __dita_gen.domains = __domains
-            __dita_gen.nested = __nested
-            __dita_gen.version = __version
-            if __attrs:
-                __dita_gen.domain_attributes = __attrs
-            __file_name = __dita_gen.get_file_name(__topic_type, __file, __format)
-            
-            self.response.headers["Content-Type"] = "text/plain; charset=UTF-8"
-            if __format == u"dtd":
-                __dita_gen.generate_dtd()
-            elif __format == u"mod":
-                __dita_gen.generate_mod()
-            elif __format == u"ent":
-                __dita_gen.generate_ent()
+        if not len(__domains) == 0:
+            __dita_gen.domains = __domains
+        __dita_gen.nested = __nested
+        #__dita_gen.version = __version
+        __dita_gen.title = __title
+        if __stylesheet:
+            __dita_gen.set_stylesheet(__stylesheet)
+        if __plugin_name != None:
+            __dita_gen.plugin_name = __plugin_name
+        if __plugin_version != None:
+            __dita_gen.plugin_version = __plugin_version
+        if __attrs:
+            __dita_gen.domain_attributes = __attrs
+        __dita_gen.generate_subject_scheme = __subject_scheme
+        
+        __file_name = __dita_gen.get_file_name(__id, __file, "zip")
+        
+        self.response.headers["Content-Type"] = "application/zip"
+        self.response.headers["Content-Disposition"] = "attachment; filename=" + __file_name
+        __dita_gen.generate_plugin()
+        #else:
+        #    __dita_gen = ditagen.generator.DitaGenerator()
+        #    __dita_gen.out = self.response.out
+        #    __dita_gen.topic_type = __topic_type
+        #    if not len(__domains) == 0:
+        #        __dita_gen.domains = __domains
+        #    __dita_gen.nested = __nested
+        #    __dita_gen.version = __version
+        #    if __attrs:
+        #        __dita_gen.domain_attributes = __attrs
+        #    __file_name = __dita_gen.get_file_name(__topic_type, __file, __format)
+        #    
+        #    self.response.headers["Content-Type"] = "text/plain; charset=UTF-8"
+        #    if __format == u"dtd":
+        #        __dita_gen.generate_dtd()
+        #    elif __format == u"mod":
+        #        __dita_gen.generate_mod()
+        #    elif __format == u"ent":
+        #        __dita_gen.generate_ent()
 
 
 class PluginGenerateHandler(webapp.RequestHandler):

@@ -4,7 +4,9 @@
     <meta charset="utf-8">
     <title>DITA Generator - {{ title }}</title>
     <link rel="stylesheet" type="text/css" href="/css/form.css">
-    <link rel="stylesheet" type="text/css" href="/css/pdf.css">
+    {% if css %}
+    <link rel="stylesheet" type="text/css" href="/css/{{ css }}">
+    {% endif %}
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
     <script type="text/javascript" src="/js/generator.js"></script>
   </head>

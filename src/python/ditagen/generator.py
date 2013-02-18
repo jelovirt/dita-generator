@@ -301,7 +301,9 @@ class DitaGenerator(DtdGenerator):
         self.__elements = None
         self._file_name = None
         self.__all_domains = []
+        # [(id, type, [value])]
         self.domain_attributes = []
+        self.generate_subject_scheme = False
 
     def __entity(self, __id, __system, __public,
                  __owner=u"OASIS", __system_identifier=None):
@@ -764,7 +766,9 @@ PUBLIC "%s"
                                                             self.owner, u"Domain"),
                             d[0] + u"AttDomain")
         self.comment_block(u"ATTRIBUTE EXTENSION ENTITY DECLARATIONS")
-        if d[2]:
+        if self.generate_subject_scheme:
+            __value = u"%s CDATA #IMPLIED" % d[0]
+        elif d[2]:
             __value = u"%s (%s) #IMPLIED" % (d[0], "|".join(d[2]))
         else:
             __value = u"%s NMTOKENS #IMPLIED" % d[0] #CDATA
@@ -932,6 +936,24 @@ class PluginGenerator(DitaGenerator):
         __d = ET.ElementTree(__root)
         __d.write(self.out, "UTF-8")
     
+    def __generate_subject_scheme(self):
+        """Generate subject scheme."""
+        __root = ET.Element("subjectScheme")
+        for a in self.domain_attributes:
+            __def = ET.SubElement(__root, "subjectdef", {"keys": a[0] + ".values"})
+            for v in a[2]:
+                ET.SubElement(__def, "subjectdef", {"keys": v})
+            __enum = ET.SubElement(__root, "enumerationdef")
+            ET.SubElement(__enum, "attributedef", {"name": a[0]})
+            ET.SubElement(__enum, "subjectdef", {"keyref": a[0] + ".values"})
+            #ET.SubElement(__enum, "defaultSubject", {"keyref": a[0] + ".values"})
+        indent(__root)
+        __d = ET.ElementTree(__root)
+        self.out.write("""<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE subjectScheme PUBLIC "-//OASIS//DTD DITA Subject Scheme Map//EN" "subjectScheme.dtd">
+""")
+        __d.write(self.out, "UTF-8", False)
+    
     def __generate_stylesheet(self):
         """Generate stylesheet file."""
         __root = ET.Element(NS_XSL + "stylesheet", {
@@ -989,6 +1011,12 @@ class PluginGenerator(DitaGenerator):
                     self._run_generation(__zip,
                                         self.__generate_catalog,
                                         "%s/catalog-dita.xml" % (self.plugin_name))
+                # subject scheme
+                if self.generate_subject_scheme and self.version >= 1.2:
+                    if self.domain_attributes:
+                        self._run_generation(__zip,
+                                            self.__generate_subject_scheme,
+                                            "%s/subject_scheme.ditamap" % (self.plugin_name))
                 # stylesheet
                 for ss in self._stylesheet_stump:
                     self._run_generation(__zip,

@@ -88,8 +88,8 @@ def main():
             "plugin-version": "1.0.0"
             },
         "shell": [
-            ('version', '1.2'),
-            ('file', 'plugin'),
+            #('version', '1.2'),
+            #('file', 'plugin'),
             ('title', 'test'),
             ('owner', 'test'),
             ('output', 'shell'),
@@ -98,7 +98,13 @@ def main():
             ('id', 'test'),
             ('att.1.type', 'props'),
             ('att.1.name', 'custom'),
-            ('att.1.datatype', 'CDATA'),
+            ('att.1.datatype', 'NMTOKENS'),
+            ('att.1.values', 'foo bar baz'),
+            ('att.2.type', 'props'),
+            ('att.2.name', 'series'),
+            ('att.2.datatype', 'NMTOKENS'),
+            ('att.2.values', 'consumer'),
+            ('subject-scheme', 'true'),
             ("domain", "pr-d"),
             ("domain", "hi-d"),
             ("domain", "xml-d"),
@@ -106,8 +112,8 @@ def main():
             ("domain", "d4p_renditionTargetAtt-d")
             ],
         "specialization": [
-            ('version', '1.2'),
-            ('file', 'plugin'),
+            #('version', '1.2'),
+            #('file', 'plugin'),
             ('title', 'test'),
             ('owner', 'test'),
             ('output', 'specialization'),
