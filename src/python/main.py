@@ -190,12 +190,9 @@ class GenerateHandler(webapp.RequestHandler):
                     __values = re.split("[\\s,\\|]+", __v)
                 else:
                     __values = []
-                __t = self.request.get(u"att." + i +".type")
-                if __subject_scheme:
-                    __t = "CDATA"
                 # TODO: add DomainAttribute instance instead of tuple
                 __attrs.append((self.request.get(u"att." + i +".name"),
-                                __t,
+                                self.request.get(u"att." + i +".type"),
                                 __values))
             if u"type" in self.request.arguments():
                 # topic type
