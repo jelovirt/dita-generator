@@ -184,15 +184,15 @@ class GenerateHandler(webapp.RequestHandler):
             else:
                 __subject_scheme = False
             # attributes
-            for i in [t[1] for t in [a.split(".") for a in self.request.arguments()] if t[0] == "att" and t[2] == "name"]:
-                __v = self.request.get(u"att." + i +".values").strip()
+            for __a in self.parse("att"):
+                __v = __a["values"].strip()
                 if __v:
                     __values = re.split("[\\s,\\|]+", __v)
                 else:
                     __values = []
                 # TODO: add DomainAttribute instance instead of tuple
-                __attrs.append((self.request.get(u"att." + i +".name"),
-                                self.request.get(u"att." + i +".type"),
+                __attrs.append((__a["name"],
+                                __a["type"],
                                 __values))
             if u"type" in self.request.arguments():
                 # topic type
@@ -261,6 +261,16 @@ class GenerateHandler(webapp.RequestHandler):
         #    elif __format == u"ent":
         #        __dita_gen.generate_ent()
 
+    def parse(self, base):
+        """Parse key-value arguments into list of dicts.""" 
+        ret = []
+        for key in self.request.arguments():
+            a = key.split(".")
+            if a[0] == base and len(a) > 2:
+                i = int(a[1]) - 1
+                ret.extend([{} for j in range(i - len(ret) + 1)]) # guarantee index exists
+                ret[i][a[2]] = self.request.get(key)
+        return ret
 
 class PluginGenerateHandler(webapp.RequestHandler):
 
