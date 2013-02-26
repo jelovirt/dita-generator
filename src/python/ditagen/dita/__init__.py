@@ -113,6 +113,9 @@ class Domain(DomainBase):
 #    def get_file_name(self, extension):
 #        return self._file + self._file_suffix + "." + extension
 
+class CustomDomain(Domain):
+    """Class for custom domains."""
+
 def create_element(__type, __root, __id):
     """Create new DITA element from an existing type's root element."""
     __r = type(__type.root)()

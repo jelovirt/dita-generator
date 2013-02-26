@@ -29,6 +29,7 @@ import ditagen
 import sys
 import ditagen.dita
 import ditagen.dtdgen
+from ditagen.dita import CustomDomain
 import ditagen.dita.v1_1
 import ditagen.dita.v1_2
 import ditagen.dita.d4p
@@ -36,6 +37,8 @@ import ditagen.generator
 import ditagen.pdf_generator
 from ditagen.generator import Version
 import re
+import logging
+import json
 
 
 class MainHandler(webapp.RequestHandler):
@@ -109,159 +112,142 @@ class GenerateHandler(webapp.RequestHandler):
         self.get()
 
     def get(self):
-        __topic_type = None
-        __output_type = None
-        __id = None
-        __root = None
-        __owner = None
-        __nested = None
-        #__format = None
-        __domains = []
-        __version = "1.2"
-        __plugin_name = None
-        __plugin_version = None
-        __stylesheet = None
-        __title = None
-        __file = None
-        __attrs = []
         try:
-            # version
-            #if u"version" in self.request.arguments():
-            #    __version = self.request.get(u"version")
-            #    if __version not in ("1.1", "1.2"):
-            #        raise ValueError("unsupported version " + __version)
-            #else:
-            #    raise ValueError("version missing")
-            # domains
-            for __d in  self.request.get_all(u"domain"):
-                if __d in ditagen.DOMAIN_MAP[__version]:
-                    __domains.append(ditagen.DOMAIN_MAP[__version][__d])
-                else:
-                    raise ValueError("unsupported domain " + __d)
-            # id
-            if u"id" in self.request.arguments():
-                __id = self.request.get(u"id")
-            else:
-                raise ValueError("id missing")
-            # root
-            if u"root" in self.request.arguments():
-                __root = self.request.get(u"root")
-            # owner
-            if u"owner" in self.request.arguments():
-                __owner = self.request.get(u"owner")
-            else:
-                raise ValueError("owner missing")
-            # title
-            if u"title" in self.request.arguments():
-                __title = self.request.get(u"title")
-            else:
-                raise ValueError("title missing")
-            if u"plugin-name" in self.request.arguments():
-                __plugin_name = self.request.get(u"plugin-name")
-            else:
-                __plugin_name = __id
-            if u"plugin-version" in self.request.arguments():
-                __plugin_version = self.request.get(u"plugin-version")
-            #if not __title:
-            #    __title = __id.capitalize()
-            __nested = u"nested" in self.request.arguments()
-            #__remove = dict([(n, True) for n in form.getlist("remove")])
-            #__global_atts = None#self.request.get(u"attribute")
-            # output type
-            #if u"file" in self.request.arguments():
-            #    __format = self.request.get(u"file")
-            #else:
-            #    raise ValueError("file missing")
-            # stylesheet
-            __stylesheet = self.request.get_all(u"stylesheet")
-            for s in __stylesheet:
-                if s not in ("docbook", "eclipse.plugin", "fo", "rtf", "xhtml"):
-                    raise ValueError("unsupported stylesheet " + s)
-            # file name
-            __file = __id
-            if u"subject-scheme" in self.request.arguments():
-                __subject_scheme = self.request.get(u"subject-scheme") == "true"
-            else:
-                __subject_scheme = False
-            # attributes
-            for __a in self.parse("att"):
-                __v = __a["values"].strip()
-                if __v:
-                    __values = re.split("[\\s,\\|]+", __v)
-                else:
-                    __values = []
-                # TODO: add DomainAttribute instance instead of tuple
-                __attrs.append((__a["name"],
-                                __a["type"],
-                                __values))
-            if u"type" in self.request.arguments():
-                # topic type
-                __t = self.request.get(u"type")
-                if __t in ditagen.TOPIC_MAP[__version]:
-                    __topic_type = ditagen.TOPIC_MAP[__version][__t]() # XXX: Should this be a class, not an instance
-                # output
-                __o = self.request.get(u"output")
-                if __o in ditagen.OUTPUT_MAP:
-                    __output_type = ditagen.OUTPUT_MAP[__o]
-                else:
-                    raise ValueError("unsupported output type " + __o)
-                __topic_type = __output_type(__id, __title, __topic_type,
-                                             __owner, __file)#__root
-                if type(__topic_type) == ditagen.dita.SpecializationType:
-                    __topic_type.root = ditagen.dita.create_element(__topic_type, __root, __id)
+            __args = self.read_arguments()
+            #logging.info(json.dumps(__args))
         except Exception:
             self.error(500)
             raise
             
         # run generator
-        #if __format== u"plugin" or not __format:
+        __version = "1.2"
         __dita_gen = ditagen.generator.PluginGenerator()
         __dita_gen.out = self.response.out
-        __dita_gen.owner = __owner
-
-        if __topic_type is not None:
-            __dita_gen.topic_type = __topic_type
-        if not len(__domains) == 0:
-            __dita_gen.domains = __domains
-        __dita_gen.nested = __nested
-        #__dita_gen.version = __version
-        __dita_gen.title = __title
-        if __stylesheet:
-            __dita_gen.set_stylesheet(__stylesheet)
-        if __plugin_name != None:
-            __dita_gen.plugin_name = __plugin_name
-        if __plugin_version != None:
-            __dita_gen.plugin_version = __plugin_version
-        if __attrs:
+        __dita_gen.owner = __args["owner"]
+        if "type" in __args:
+            __topic_type = None
+            __t = self.request.get(u"type")
+            if __t in ditagen.TOPIC_MAP[__version]:
+                __topic_type = ditagen.TOPIC_MAP[__version][__t]() # XXX: Should this be a class, not an instance
+            # output
+            __output_type = None
+            if __args["output"] in ditagen.OUTPUT_MAP:
+                __output_type = ditagen.OUTPUT_MAP[__args["output"]]
+            else:
+                raise ValueError("unsupported output type " + __args["output"])
+            __topic_type = __output_type(__args["id"], __args["title"], __topic_type,
+                                         __args["owner"], __args["file"])#__root
+            if type(__topic_type) == ditagen.dita.SpecializationType:
+                __topic_type.root = ditagen.dita.create_element(__topic_type, __args["root"], __args["id"])
+            __dita_gen.topic_type = __topic_type            
+            
+        __domains = []
+        for __d in __args["domain"]:
+            if __d in ditagen.DOMAIN_MAP[__version]:
+                __domains.append(ditagen.DOMAIN_MAP[__version][__d])
+            else:
+                raise ValueError("unsupported domain " + __d)
+        # custom domains
+        for __cd in __args["custom_domain"]:
+            __d = CustomDomain
+            __d.id = __cd["id"] + u"-d"
+            __d.si_module = __cd["id"] + u"Domain.mod"
+            __d.si_entity = __cd["id"] + u"Domain.end"
+            __d.pi_entity = u"-//OASIS//ENTITIES DITA %s Domain//EN" % __cd["title"]
+            __d.pi_module = u"-//OASIS//ELEMENTS DITA %s Domain//EN" % __cd["title"]
+            __d.title = __cd["title"]
+            __d.elements = [u"ph"]
+            __d.parent = [ditagen.TOPIC_MAP[__version]["topic"]]
+            __domains.append(__d)
+        __dita_gen.domains = __domains
+            
+        __dita_gen.nested = __args["nested"]
+        __dita_gen.title = __args["title"]
+        if "stylesheet" in __args:
+            __dita_gen.set_stylesheet(__args["stylesheet"])
+        if "plugin_name" in __args:
+            __dita_gen.plugin_name = __args["plugin_name"]
+        if "plugin_version" in __args:
+            __dita_gen.plugin_version = __args["plugin_version"]
+        if "attrs" in __args and len(__args["attrs"]) != 0:
+            __attrs = []
+            for __a in __args["attrs"]:
+                # TODO: add DomainAttribute instance instead of tuple
+                __attrs.append((__a["name"], __a["type"], __a["values"]))
             __dita_gen.domain_attributes = __attrs
-        __dita_gen.generate_subject_scheme = __subject_scheme
+        __dita_gen.generate_subject_scheme = __args["subject_scheme"]
         
-        __file_name = __dita_gen.get_file_name(__id, __file, "zip")
+        __file_name = __dita_gen.get_file_name(__args["id"], __args["file"], "zip")
         
         self.response.headers["Content-Type"] = "application/zip"
         self.response.headers["Content-Disposition"] = "attachment; filename=" + __file_name
         __dita_gen.generate_plugin()
-        #else:
-        #    __dita_gen = ditagen.generator.DitaGenerator()
-        #    __dita_gen.out = self.response.out
-        #    __dita_gen.topic_type = __topic_type
-        #    if not len(__domains) == 0:
-        #        __dita_gen.domains = __domains
-        #    __dita_gen.nested = __nested
-        #    __dita_gen.version = __version
-        #    if __attrs:
-        #        __dita_gen.domain_attributes = __attrs
-        #    __file_name = __dita_gen.get_file_name(__topic_type, __file, __format)
-        #    
-        #    self.response.headers["Content-Type"] = "text/plain; charset=UTF-8"
-        #    if __format == u"dtd":
-        #        __dita_gen.generate_dtd()
-        #    elif __format == u"mod":
-        #        __dita_gen.generate_mod()
-        #    elif __format == u"ent":
-        #        __dita_gen.generate_ent()
 
-    def parse(self, base):
+    def read_arguments(self):
+        __version = "1.2"
+        ret = {}
+        # domains
+        __domains = []
+        for __d in  self.request.get_all(u"domain"):
+            #if __d in ditagen.DOMAIN_MAP[__version]:
+            #    __domains.append(ditagen.DOMAIN_MAP[__version][__d])
+            #else:
+            #    raise ValueError("unsupported domain " + __d)
+            __domains.append(__d)
+        ret["domain"] = __domains
+        # custom domains
+        ret["custom_domain"] = self.parse_dict_list("dom")
+        # id
+        if u"id" in self.request.arguments():
+            ret["id"] = self.request.get(u"id")
+        else:
+            raise ValueError("id missing")
+        # root
+        if u"root" in self.request.arguments():
+            ret["root"] = self.request.get(u"root")
+        # owner
+        if u"owner" in self.request.arguments():
+            ret["owner"] = self.request.get(u"owner")
+        else:
+            raise ValueError("owner missing")
+        # title
+        if u"title" in self.request.arguments():
+            ret["title"] = self.request.get(u"title")
+        else:
+            raise ValueError("title missing")
+        if u"plugin-name" in self.request.arguments():
+            ret["plugin_name"] = self.request.get(u"plugin-name")
+        else:
+            ret["plugin_name"] = ret["id"]
+        if u"plugin-version" in self.request.arguments():
+            ret["plugin_version"] = self.request.get(u"plugin-version")
+        ret["nested"] = u"nested" in self.request.arguments()
+        ret["stylesheet"] = self.request.get_all(u"stylesheet")
+        for s in ret["stylesheet"]:
+            if s not in ("docbook", "eclipse.plugin", "fo", "rtf", "xhtml"):
+                raise ValueError("unsupported stylesheet " + s)
+        # file name
+        ret["file"] = ret["id"]
+        if u"subject-scheme" in self.request.arguments():
+            ret["subject_scheme"] = self.request.get(u"subject-scheme") == "true"
+        else:
+            ret["subject_scheme"] = False
+        # attributes
+        __attrs = []
+        for __a in self.parse_dict_list("att"):
+            __values = []
+            if "values" in __a:
+                __v = __a["values"]
+                if __v.strip():
+                    __values = re.split("[\\s,\\|]+", __v.strip())
+            __attrs.append({"name": __a["name"], "type": __a["type"], "values": __values})
+        ret["attrs"] = __attrs
+        if u"type" in self.request.arguments():
+            ret["type"] = self.request.get(u"type")
+            ret["output"] = self.request.get(u"output")
+        return ret
+
+    def parse_dict_list(self, base):
         """Parse key-value arguments into list of dicts.""" 
         ret = []
         for key in self.request.arguments():
@@ -278,105 +264,147 @@ class PluginGenerateHandler(webapp.RequestHandler):
         self.get()
 
     def get(self):
-        #__topic_type = None
-        #__output_type = None
-        __id = None
-        #__format = None
-        __ot_version = None
-        __plugin_name = None
-        __plugin_version = None
-        #__file = None
+        __args = self.read_arguments()
+        #logging.info(json.dumps(__args))
         try:
             __dita_gen = ditagen.pdf_generator.StylePluginGenerator()
-            __dita_gen.out = self.response.out
-
-            if u"ot.version" in self.request.arguments():
-                __ot_version = Version(self.request.get(u"ot.version"))
-            else:
-                raise ValueError("version missing")
-            if u"id" in self.request.arguments():
-                __id = self.request.get(u"id")
-            else:
-                raise ValueError("id missing")
-            if u"plugin-name" in self.request.arguments():
-                __plugin_name = self.request.get(u"plugin-name")
-            else:
-                __plugin_name = __id
-            if u"plugin-version" in self.request.arguments():
-                __plugin_version = self.request.get(u"plugin-version")
-            #__nested = u"nested" in self.request.arguments()
-            __file = __id
-
-            __dita_gen.ot_version = __ot_version
-            if __plugin_name != None:
-                __dita_gen.plugin_name = __plugin_name
-            if __plugin_version != None:
-                __dita_gen.plugin_version = __plugin_version
-            __file_name = __dita_gen.get_file_name(__id, __file, "zip")
-    
             
-            if self.request.get(u"pdf.page-size"):
-                __dita_gen.page_size = self.request.get(u"pdf.page-size").split(" ")
-            if self.request.get(u"pdf.orientation") == u"landscape":
-                __dita_gen.page_size.reverse()
-            __dita_gen.page_margins = {
-                "page-margin-top": self.request.get(u"pdf.page-margin-top"),
-                "page-margin-outside": self.request.get(u"pdf.page-margin-outside"),
-                "page-margin-bottom": self.request.get(u"pdf.page-margin-bottom"),
-                "page-margin-inside": self.request.get(u"pdf.page-margin-inside")
-            }
-            for __type in set([f["type"] for f in ditagen.pdf_generator.styles]):
-                group = {}
-                for __property in set([f["property"] for f in ditagen.pdf_generator.styles]):
-                    v = self.request.get(u"pdf." + __property + "." + __type)
-                    if v:
-                        group[__property] = v 
-                __dita_gen.style[__type] = group
-            __dita_gen.transtype = self.request.get(u"transtype")
-            __dita_gen.force_page_count = self.request.get(u"pdf.force-page-count")
-            __dita_gen.chapter_layout = self.request.get(u"pdf.chapter-layout")
-            __dita_gen.bookmark_style = self.request.get(u"pdf.bookmark-style")
-            __dita_gen.toc_maximum_level = self.request.get(u"pdf.toc-maximum-level")
-            __dita_gen.task_label = self.request.get(u"pdf.task-label")
-            __dita_gen.include_related_links = self.request.get(u"pdf.include-related-links")
-            __dita_gen.body_column_count = self.request.get(u"pdf.body-column-count")
-            __dita_gen.index_column_count = self.request.get(u"pdf.index-column-count")
-            __dita_gen.column_gap = self.request.get(u"pdf.column-gap")
-            __dita_gen.mirror_page_margins = self.request.get(u"pdf.mirror-page-margins")
-            __dita_gen.dl = self.request.get(u"pdf.dl")
-            __dita_gen.title_numbering = self.request.get(u"pdf.title-numbering")
-            __dita_gen.table_numbering = self.request.get(u"pdf.table-numbering")
-            __dita_gen.figure_numbering = self.request.get(u"pdf.figure-numbering")
-            __dita_gen.spacing_before = self.request.get(u"pdf.spacing.before")
-            __dita_gen.spacing_after = self.request.get(u"pdf.spacing.before")
-            __dita_gen.generate_shell = self.request.get(u"pdf.generate-shell")
-            __dita_gen.link_pagenumber = self.request.get(u"pdf.link-page-number")
-            __dita_gen.table_continued = self.request.get(u"pdf.table-continued")
-            __dita_gen.formatter = self.request.get(u"pdf.formatter")
-            __dita_gen.override_shell = self.request.get(u"pdf.override_shell")
+            if not u"ot_version" in __args:
+                raise ValueError("version missing")
+            __dita_gen.ot_version = Version(__args["ot_version"])
+            if not u"id" in __args:
+                raise ValueError("id missing")
+            if "plugin_name" in __args:
+                __dita_gen.plugin_name = __args["plugin_name"]
+            else:
+                __dita_gen.plugin_name = __args["id"]
+            if u"plugin_version" in self.request.arguments():
+                __dita_gen.plugin_version = __args["plugin_version"]
+            
+            if "pdf.page-size" in __args:
+                if "orientation" in __args and __args["orientation"] == u"landscape":
+                    __dita_gen.page_size = __args["page_size"].reverse()
+                else:
+                    __dita_gen.page_size = __args["page_size"]
+            __dita_gen.page_margins = __args["page_margins"]
+            __dita_gen.style = __args["style"]
+            __dita_gen.transtype = __args["transtype"]
+            __dita_gen.force_page_count = __args["force_page_count"]
+            __dita_gen.chapter_layout = __args["chapter_layout"]
+            __dita_gen.bookmark_style = __args["bookmark_style"]
+            __dita_gen.toc_maximum_level = __args["toc_maximum_level"]
+            __dita_gen.task_label = __args["task_label"]
+            __dita_gen.include_related_links = __args["include_related_links"]
+            if "body_column_count" in __args:
+                __dita_gen.body_column_count = __args["body_column_count"]
+            if "index_column_count" in __args:
+                __dita_gen.index_column_count = __args["index_column_count"]
+            if "column_gap" in __args:
+                __dita_gen.column_gap = __args["column_gap"]
+            __dita_gen.mirror_page_margins = __args["mirror_page_margins"]
+            __dita_gen.dl = __args["dl"]
+            __dita_gen.title_numbering = __args["title_numbering"]
+            __dita_gen.table_numbering = __args["table_numbering"]
+            __dita_gen.figure_numbering = __args["figure_numbering"]
+            __dita_gen.link_pagenumber = __args["link_pagenumber"]
+            __dita_gen.table_continued = __args["table_continued"]
+            __dita_gen.formatter = __args["formatter"]
+            __dita_gen.override_shell = __args["override_shell"]
             if "pdf.cover_image" in self.request.arguments() and type(self.request.POST["pdf.cover_image"]) != unicode:
                 __dita_gen.cover_image = self.request.get("pdf.cover_image")
                 __dita_gen.cover_image_name = self.request.POST["pdf.cover_image"].filename
+            __dita_gen.header = __args["header"]
             
-            __header_folio = []
-            if not self.request.get(u"pdf.drop-folio"):
-                __header_folio = ["pagenum"]
-            __dita_gen.header = {
-                "odd": self.request.get(u"pdf.header.even").split() + __header_folio,
-                "even": __header_folio + self.request.get(u"pdf.header.odd").split()
-                }
-            if self.request.get(u"pdf.drop-folio"):
-                __dita_gen.footer = {
-                    "odd": ["pagenum"],
-                    "even": ["pagenum"]
-                    }
-            
+            __dita_gen.out = self.response.out
             self.response.headers["Content-Type"] = "application/zip"
+            __file_name = __dita_gen.get_file_name(__args["id"], __args["id"], "zip")
             self.response.headers["Content-Disposition"] = "attachment; filename=" + __file_name
             __dita_gen.generate_plugin()
         except Exception:
             self.error(500)
             raise
+
+    def read_arguments(self):
+        ret = {}
+        if u"ot.version" in self.request.arguments():
+            ret["ot_version"] = self.request.get(u"ot.version")
+        if u"id" in self.request.arguments():
+            ret["id"] = self.request.get(u"id")
+        if u"plugin-name" in self.request.arguments():
+            ret["plugin_name"] = self.request.get(u"plugin-name")    
+        if u"plugin-version" in self.request.arguments() and self.request.get(u"plugin-version").strip():
+            ret["plugin_version"] = self.request.get(u"plugin-version")
+        if self.request.get(u"pdf.page-size"):
+            ret["page_size"] = self.request.get(u"pdf.page-size").split(" ")
+        ret["orientation"] = self.request.get(u"pdf.orientation")
+        ret["page_margins"] = {}
+        if u"pdf.page-margin-top" in self.request.arguments() and self.request.get("pdf.page-margin-top").strip():
+            ret["page_margins"]["page-margin-top"] = self.request.get("pdf.page-margin-top")
+        if u"pdf.page-margin-outside" in self.request.arguments() and self.request.get("pdf.page-margin-outside").strip():
+            ret["page_margins"]["page-margin-outside"] = self.request.get("pdf.page-margin-outside")
+        if u"pdf.page-margin-bottom" in self.request.arguments() and self.request.get("pdf.page-margin-bottom").strip():
+            ret["page_margins"]["page-margin-bottom"] = self.request.get("pdf.page-margin-bottom")
+        if u"pdf.page-margin-inside" in self.request.arguments() and self.request.get("pdf.page-margin-inside").strip():
+            ret["page_margins"]["page-margin-inside"] = self.request.get("pdf.page-margin-inside")
+        ret["style"] = {}
+        for __type in set([f["type"] for f in ditagen.pdf_generator.styles]):
+            group = {}
+            for __property in set([f["property"] for f in ditagen.pdf_generator.styles]):
+                v = self.request.get(u"pdf." + __property + "." + __type)
+                if v:
+                    group[__property] = v 
+            ret["style"][__type] = group
+        ret["transtype"] = self.request.get(u"transtype")
+        ret["force_page_count"] = self.request.get(u"pdf.force-page-count")
+        ret["chapter_layout"] = self.request.get(u"pdf.chapter-layout")
+        ret["bookmark_style"] = self.request.get(u"pdf.bookmark-style")
+        if u"pdf.toc-maximum-level" in self.request.arguments():
+            ret["toc_maximum_level"] = int(self.request.get(u"pdf.toc-maximum-level"))
+        ret["task_label"] = u"pdf.task-label" in self.request.arguments()
+        ret["include_related_links"] = self.request.get(u"pdf.include-related-links")
+        if u"pdf.body-column-count" in self.request.arguments():
+            ret["body_column_count"] = int(self.request.get(u"pdf.body-column-count"))
+        if u"pdf.index-column-count" in self.request.arguments():
+            ret["index_column_count"] = int(self.request.get(u"pdf.index-column-count"))
+        if u"pdf.column-gap" in self.request.arguments() and self.request.get(u"pdf.column-gap").strip():
+            ret["column_gap"] = self.request.get(u"pdf.column-gap")
+        ret["mirror_page_margins"] = u"pdf.mirror-page-margins" in self.request.arguments()
+        ret["dl"] = self.request.get(u"pdf.dl")
+        ret["title_numbering"] = self.request.get(u"pdf.title-numbering")
+        ret["table_numbering"] = self.request.get(u"pdf.table-numbering")
+        ret["figure_numbering"] = self.request.get(u"pdf.figure-numbering")
+        ret["link_pagenumber"] = u"pdf.link-page-number" in self.request.arguments()
+        ret["table_continued"] = u"pdf.table-continued" in self.request.arguments()
+        ret["formatter"] = self.request.get(u"pdf.formatter")
+        ret["override_shell"] = u"pdf.override_shell" in self.request.arguments()
+        if "pdf.cover_image" in self.request.arguments() and type(self.request.POST["pdf.cover_image"]) != unicode:
+            #ret["cover_image"] = self.request.get("pdf.cover_image")
+            ret["cover_image_name"] = self.request.POST["pdf.cover_image"].filename
+        #ret["drop_folio"] = u"pdf.drop-folio" in self.request.arguments()
+        __header_folio = []
+        if not self.request.get(u"pdf.drop-folio"):
+            __header_folio = ["pagenum"]
+        ret["header"] = {
+            "odd": self.request.get(u"pdf.header.even").split() + __header_folio,
+            "even": __header_folio + self.request.get(u"pdf.header.odd").split()
+            }
+        if self.request.get(u"pdf.drop-folio"):
+            ret["footer"] = {
+                "odd": ["pagenum"],
+                "even": ["pagenum"]
+                }
+        return ret
+
+    def parse_dict_list(self, base):
+        """Parse key-value arguments into list of dicts.""" 
+        ret = []
+        for key in self.request.arguments():
+            a = key.split(".")
+            if a[0] == base and len(a) > 2:
+                i = int(a[1]) - 1
+                ret.extend([{} for j in range(i - len(ret) + 1)]) # guarantee index exists
+                ret[i][a[2]] = self.request.get(key)
+        return ret
 
 
 def main():

@@ -286,7 +286,6 @@ class StylePluginGenerator(DitaGenerator):
         self.title_numbering = None
         self.table_numbering = None
         self.figure_numbering = None
-        self.generate_shell = None
         self.link_pagenumber = None
         self.table_continued = None
         self.formatter = None
@@ -339,7 +338,7 @@ class StylePluginGenerator(DitaGenerator):
             __t = ""
             ET.SubElement(__init, "property", {
                 "name": "args.gen.task.lbl",
-                "value": self.task_label
+                "value": str(self.task_label)
                 })
         if self.include_related_links:
             ET.SubElement(__init, "property", {
@@ -659,7 +658,7 @@ class StylePluginGenerator(DitaGenerator):
         if not stylesheet:
             if not self.override_shell and self.toc_maximum_level:
                 __root.append(ET.Comment("TOC"))
-                ET.SubElement(__root, NS_XSL + "variable", name=u"tocMaximumLevel").text = self.toc_maximum_level
+                ET.SubElement(__root, NS_XSL + "variable", name=u"tocMaximumLevel").text = str(self.toc_maximum_level)
         
         ditagen.generator.indent(__root)
         ditagen.generator.set_prefixes(__root, {"xsl": "http://www.w3.org/1999/XSL/Transform", "fo": "http://www.w3.org/1999/XSL/Format", "e": self.plugin_name, "opentopic": "http://www.idiominc.com/opentopic"})
@@ -739,7 +738,7 @@ class StylePluginGenerator(DitaGenerator):
             if self.body_column_count:
                 for a in ["region-body.odd", "region-body.even"]:
                     __region_body_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name=a)
-                    ET.SubElement(__region_body_attr, NS_XSL + "attribute", name=u"column-count").text = self.body_column_count
+                    ET.SubElement(__region_body_attr, NS_XSL + "attribute", name=u"column-count").text = str(self.body_column_count)
                     if self.column_gap:
                         ET.SubElement(__region_body_attr, NS_XSL + "attribute", name=u"column-gap").text = self.column_gap
                 for a in ["region-body__frontmatter.odd", "region-body__frontmatter.even"]:
@@ -748,7 +747,7 @@ class StylePluginGenerator(DitaGenerator):
                 if self.index_column_count:
                     for a in ["region-body__index.odd", "region-body__index.even"]:
                         __region_body_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name=a)
-                        ET.SubElement(__region_body_attr, NS_XSL + "attribute", name=u"column-count").text = self.index_column_count
+                        ET.SubElement(__region_body_attr, NS_XSL + "attribute", name=u"column-count").text = str(self.index_column_count)
         
         if stylesheet == "basic-settings" or not stylesheet:       
             # page size
@@ -884,7 +883,7 @@ class StylePluginGenerator(DitaGenerator):
         ET.SubElement(__root, "xsl:param", name="antArgsIncludeRelatedLinks")
         ET.SubElement(__root, "xsl:param", name="include.rellinks")
         ET.SubElement(__root, "xsl:param", name="antArgsGenerateTaskLabels")
-        ET.SubElement(__root, "xsl:param", name="tocMaximumLevel", select=self.toc_maximum_level)
+        ET.SubElement(__root, "xsl:param", name="tocMaximumLevel", select=str(self.toc_maximum_level))
         ET.SubElement(__root, "xsl:param", name="ditaVersion", select="number(/*[contains(@class,' map/map ')]/@ditaarch:DITAArchVersion)")
         
         ditagen.generator.indent(__root)
