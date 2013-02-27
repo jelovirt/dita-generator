@@ -650,10 +650,12 @@ class StylePluginGenerator(DitaGenerator):
                     __root.append(__c)
     
         if stylesheet == "commons" or not stylesheet:
-            if self.title_numbering:
+            if self.title_numbering == "all":
                 __root.append(ET.Comment("title numbering"))
                 for __c in list(ET.fromstring(__get_title_raw)):
                     __root.append(__c)
+            elif self.title_numbering == "chapters":
+                pass #DITA-OT default
                     
         if not stylesheet:
             if not self.override_shell and self.toc_maximum_level:
