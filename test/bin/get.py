@@ -6,6 +6,7 @@ import zipfile
 from StringIO import StringIO
 import sys
 import os.path
+import json
 
 class bcolors:
     HEADER = '\033[95m'
@@ -20,7 +21,149 @@ def main():
            "production": ("dita-generator-hrd.appspot.com", 80),
            "localhost": ("localhost", 8082)
            }
-    targets = {
+    json_targets = {
+        "shell": {
+              "domain": [
+                "pr-d",
+                "hi-d"
+              ],
+              "custom_domain": [{
+                "id": "legal",
+                "title": "Legal"
+              }],
+              "title": "test",
+              "subject_scheme": True,
+              "plugin_name": "test",
+              "nested": True,
+              "stylesheet": [],
+              "attrs": [
+                {
+                  "values": [
+                    "foo",
+                    "bar",
+                    "baz"
+                  ],
+                  "type": "props",
+                  "name": "custom"
+                },
+                {
+                  "values": ["consumer"],
+                  "type": "props",
+                  "name": "series"
+                }
+              ],
+              "file": "test",
+              "owner": "test",
+              "output": "shell",
+              "type": "concept",
+              "id": "test"
+            },
+        "specialization": {
+              "domain": [
+                "pr-d",
+                "hi-d",
+                "xml-d",
+                "d4p_formatting-d",
+                "d4p_renditionTargetAtt-d"
+              ],
+              "custom_domain": [],
+              "title": "test",
+              "subject_scheme": False,
+              "type": "concept",
+              "plugin_name": "test",
+              "nested": True,
+              "stylesheet": [],
+              "attrs": [{
+                "values": [],
+                "type": "props",
+                "name": "custom"
+              }],
+              "file": "test",
+              "owner": "test",
+              "output": "specialization",
+              "root": "test",
+              "id": "test"
+            },
+        "pdf": {
+              "orientation": "",
+              "header": {
+                "even": ["chapter"],
+                "odd": ["chapter"]
+              },
+              "chapter_layout": "BASIC",
+              "id": "com.example.print-pdf",
+              "style": {
+                "body": {
+                  "font-size": "12pt",
+                  "start-indent": "25pt",
+                  "color": "black",
+                  "font-family": "Sans",
+                  "line-height": "1.8em",
+                  "text-align": "justify"
+                },
+                "pre": {"line-height": "1em"},
+                "dl": {},
+                "topic.topic.topic": {
+                  "font-style": "italic",
+                  "start-indent": "5pt"
+                },
+                "section": {
+                  "font-style": "italic",
+                  "start-indent": "5pt"
+                },
+                "topic.topic.topic.topic": {},
+                "note": {
+                  "color": "gray",
+                  "font-size": "10pt",
+                  "start-indent": "50pt"
+                },
+                "topic.topic": {},
+                "topic": {
+                  "color": "blue",
+                  "font-size": "18pt",
+                  "font-weight": "bold",
+                  "font-family": "Serif"
+                },
+                "link": {
+                  "color": "black",
+                  "font-style": "italic"
+                }
+              },
+              "bookmark_style": "EXPANDED",
+              "page_size": [
+                "210mm",
+                "297mm"
+              ],
+              "include_related_links": "nofamily",
+              "formatter": "ah",
+              "override_shell": True,
+              "column_gap": "10mm",
+              "dl": "list",
+              "table_continued": True,
+              "title_numbering": "all",
+              "page_margins": {
+                "top": "20mm",
+                "inside": "30mm",
+                "bottom": "20mm",
+                "outside": "20mm"
+              },
+              "force_page_count": "auto",
+              "link_pagenumber": True,
+              "plugin_version": "1.0.0",
+              "footer": {
+                "even": ["pagenum"],
+                "odd": ["pagenum"]
+              },
+              "ot_version": "1.6",
+              "mirror_page_margins": True,
+              "figure_numbering": "none",
+              "transtype": "print-pdf",
+              "task_label": True,
+              "table_numbering": "document",
+              "toc_maximum_level": 3
+            }
+        }
+    form_targets = {
         "pdf": {
             "output": "pdf-plugin",
             "ot.version": "1.6",
@@ -87,13 +230,20 @@ def main():
             "transtype": "print-pdf",
             "plugin-version": "1.0.0"
             },
+        "empty": [
+            ('output', 'shell'),
+            ('id', 'test'),
+            ('owner', 'test'),
+            ('title', 'test')
+            ],
         "shell": [
             #('version', '1.2'),
             #('file', 'plugin'),
             ('title', 'test'),
             ('owner', 'test'),
             ('output', 'shell'),
-            ('type', 'article'),
+            #('type', 'article'),
+            ('type', 'concept'),
             ("nested", "true"),
             ('id', 'test'),
             ('att.1.type', 'props'),
@@ -104,12 +254,18 @@ def main():
             ('att.2.name', 'series'),
             ('att.2.datatype', 'NMTOKENS'),
             ('att.2.values', 'consumer'),
+            
+            ('dom.1.id', 'legal'),
+            ('dom.1.title', 'Legal'),
+            #('dom.2.id', 'safety'),
+            #('dom.2.title', 'Safety'),
+            
             ('subject-scheme', 'true'),
             ("domain", "pr-d"),
-            ("domain", "hi-d"),
-            ("domain", "xml-d"),
-            ("domain", "d4p_formatting-d"),
-            ("domain", "d4p_renditionTargetAtt-d")
+            ("domain", "hi-d")
+            #("domain", "xml-d"),
+            #("domain", "d4p_formatting-d"),
+            #("domain", "d4p_renditionTargetAtt-d")
             ],
         "specialization": [
             #('version', '1.2'),
@@ -135,7 +291,10 @@ def main():
     server = None
     params = None
     url = None
+    targets = form_targets
+    function = get
     handler = list
+    
     try:
         if i == len(sys.argv):
             raise None
@@ -146,6 +305,12 @@ def main():
                 handler = lambda zip: store(zip, dir)
             elif sys.argv[i] == "-h" or sys.argv[i] == "--help":
                 raise None
+            elif sys.argv[i] == "-f" or sys.argv[i] == "--form":
+                targets = form_targets
+                function = get
+            elif sys.argv[i] == "-j" or sys.argv[i] == "--json":
+                targets = json_targets
+                function = post
             elif server is None:
                 if not sys.argv[i] in servers:
                     raise None
@@ -164,7 +329,7 @@ def main():
         print e
         help()
         exit()
-    get(server, handler, params, url)
+    function(server, handler, params, url)
 
 def help():
     sys.stderr.write("""Usage: get.py [options] environment target
@@ -172,6 +337,8 @@ def help():
 Options:
   -o DIR      output files to plug-ins directory
   -h, --help  print help
+  -f, --form  use form API
+  -j, --json  use JSON API
 Environments:
   localhost   localhost
   production  dita-generator.appspot.com
@@ -184,6 +351,14 @@ Targets:
 def get(server, handler, params, url):
     conn = httplib.HTTPConnection(server[0], server[1])
     conn.request("POST", url, urllib.urlencode(params))
+    response = conn.getresponse()
+    with zipfile.ZipFile(StringIO(response.read()), "r") as zip:
+        handler(zip)
+    conn.close()
+
+def post(server, handler, params, url):
+    conn = httplib.HTTPConnection(server[0], server[1])
+    conn.request("POST", url, json.dumps(params), {"Content-Type": "application/json"})
     response = conn.getresponse()
     with zipfile.ZipFile(StringIO(response.read()), "r") as zip:
         handler(zip)

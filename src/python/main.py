@@ -109,7 +109,16 @@ class MainHandler(webapp.RequestHandler):
 class GenerateHandler(webapp.RequestHandler):
 
     def post(self):
-        self.get()
+        if self.request.headers["Content-Type"] == "application/json":
+            try:
+                __args = json.loads(self.request.body)
+                #logging.info(json.dumps(__args))
+            except Exception:
+                self.error(500)
+                raise
+            self.process(__args)
+        else:
+            self.get()
 
     def get(self):
         try:
@@ -118,17 +127,17 @@ class GenerateHandler(webapp.RequestHandler):
         except Exception:
             self.error(500)
             raise
-            
-        # run generator
+        self.process(__args)
+
+    def process(self, __args):
         __version = "1.2"
         __dita_gen = ditagen.generator.PluginGenerator()
         __dita_gen.out = self.response.out
         __dita_gen.owner = __args["owner"]
         if "type" in __args:
             __topic_type = None
-            __t = self.request.get(u"type")
-            if __t in ditagen.TOPIC_MAP[__version]:
-                __topic_type = ditagen.TOPIC_MAP[__version][__t]() # XXX: Should this be a class, not an instance
+            if __args["type"] in ditagen.TOPIC_MAP[__version]:
+                __topic_type = ditagen.TOPIC_MAP[__version][__args["type"]]() # XXX: Should this be a class, not an instance
             # output
             __output_type = None
             if __args["output"] in ditagen.OUTPUT_MAP:
@@ -261,10 +270,27 @@ class GenerateHandler(webapp.RequestHandler):
 class PluginGenerateHandler(webapp.RequestHandler):
 
     def post(self):
-        self.get()
+        if self.request.headers["Content-Type"] == "application/json":
+            try:
+                __args = json.loads(self.request.body)
+                #logging.info(json.dumps(__args))
+            except Exception:
+                self.error(500)
+                raise
+            self.process(__args)
+        else:
+            self.get()
 
     def get(self):
-        __args = self.read_arguments()
+        try:
+            __args = self.read_arguments()
+            #logging.info(json.dumps(__args))
+        except Exception:
+            self.error(500)
+            raise
+        self.process(__args)
+
+    def process(self, __args):
         #logging.info(json.dumps(__args))
         try:
             __dita_gen = ditagen.pdf_generator.StylePluginGenerator()
@@ -339,13 +365,13 @@ class PluginGenerateHandler(webapp.RequestHandler):
         ret["orientation"] = self.request.get(u"pdf.orientation")
         ret["page_margins"] = {}
         if u"pdf.page-margin-top" in self.request.arguments() and self.request.get("pdf.page-margin-top").strip():
-            ret["page_margins"]["page-margin-top"] = self.request.get("pdf.page-margin-top")
+            ret["page_margins"]["top"] = self.request.get("pdf.page-margin-top")
         if u"pdf.page-margin-outside" in self.request.arguments() and self.request.get("pdf.page-margin-outside").strip():
-            ret["page_margins"]["page-margin-outside"] = self.request.get("pdf.page-margin-outside")
+            ret["page_margins"]["outside"] = self.request.get("pdf.page-margin-outside")
         if u"pdf.page-margin-bottom" in self.request.arguments() and self.request.get("pdf.page-margin-bottom").strip():
-            ret["page_margins"]["page-margin-bottom"] = self.request.get("pdf.page-margin-bottom")
+            ret["page_margins"]["bottom"] = self.request.get("pdf.page-margin-bottom")
         if u"pdf.page-margin-inside" in self.request.arguments() and self.request.get("pdf.page-margin-inside").strip():
-            ret["page_margins"]["page-margin-inside"] = self.request.get("pdf.page-margin-inside")
+            ret["page_margins"]["inside"] = self.request.get("pdf.page-margin-inside")
         ret["style"] = {}
         for __type in set([f["type"] for f in ditagen.pdf_generator.styles]):
             group = {}

@@ -762,7 +762,7 @@ class StylePluginGenerator(DitaGenerator):
             # page margins
             for k, v in self.page_margins.iteritems():
                 if v:
-                    ET.SubElement(__root, NS_XSL + "variable", name=k).text = v
+                    ET.SubElement(__root, NS_XSL + "variable", name="page-margin-" + k).text = v
             # font size
             if "font-size" in self.style["body"]:
                 ET.SubElement(__root, NS_XSL + "variable", name=u"default-font-size").text = self.style["body"]["font-size"]
