@@ -45,7 +45,7 @@ class TopicElement(ditagen.dita.DitaElement):
         ])
     attrs = [
         Attribute("id", "ID", "#REQUIRED"),
-        Attribute("conref", "CDATA", "#IMPLIED"),
+        ParameterEntity("conref-atts"),
         ParameterEntity("select-atts"),
         ParameterEntity("localization-atts"),
         ParameterEntity("arch-atts"),
@@ -66,7 +66,7 @@ class ConceptElement(ditagen.dita.DitaElement):
         ])
     attrs = [
         Attribute("id", "ID", "#REQUIRED"),
-        Attribute("conref", "CDATA", "#IMPLIED"),
+        ParameterEntity("conref-atts"),
         ParameterEntity("select-atts"),
         ParameterEntity("localization-atts"),
         ParameterEntity("arch-atts"),
@@ -87,7 +87,7 @@ class TaskElement(ditagen.dita.DitaElement):
         ])
     attrs = [
         Attribute("id", "ID", "#REQUIRED"),
-        Attribute("conref", "CDATA", "#IMPLIED"),
+        ParameterEntity("conref-atts"),
         ParameterEntity("select-atts"),
         ParameterEntity("localization-atts"),
         ParameterEntity("arch-atts"),
@@ -108,7 +108,7 @@ class ReferenceElement(ditagen.dita.DitaElement):
         ])
     attrs = [
         Attribute("id", "ID", "#REQUIRED"),
-        Attribute("conref", "CDATA", "#IMPLIED"),
+        ParameterEntity("conref-atts"),
         ParameterEntity("select-atts"),
         ParameterEntity("localization-atts"),
         ParameterEntity("arch-atts"),
@@ -129,7 +129,7 @@ class GlossentryElement(ditagen.dita.DitaElement):
         ])
     attrs = [
         Attribute("id", "ID", "#REQUIRED"),
-        Attribute("conref", "CDATA", "#IMPLIED"),
+        ParameterEntity("conref-atts"),
         ParameterEntity("select-atts"),
         ParameterEntity("localization-atts"),
         ParameterEntity("arch-atts"),
@@ -146,7 +146,7 @@ class GlossgroupElement(ditagen.dita.DitaElement):
         ])
     attrs = [
         Attribute("id", "ID", "#REQUIRED"),
-        Attribute("conref", "CDATA", "#IMPLIED"),
+        ParameterEntity("conref-atts"),
         ParameterEntity("select-atts"),
         ParameterEntity("localization-atts"),
         ParameterEntity("arch-atts"),
@@ -168,7 +168,7 @@ class LearningBaseElement(ditagen.dita.DitaElement):
         ])
     attrs = [
         Attribute("id", "ID", "#REQUIRED"),
-        Attribute("conref", "CDATA", "#IMPLIED"),
+        ParameterEntity("conref-atts"),
         ParameterEntity("select-atts"),
         ParameterEntity("localization-atts"),
         ParameterEntity("arch-atts"),
