@@ -762,22 +762,12 @@ PUBLIC "%s"
         #self.out.write("\n")
         self.comment_block(u"ELEMENT DECLARATIONS", after=1)
         self.centered_comment_line(u"LONG NAME: " +  __root, " ")
-        
-        if type(self.topic_type.root.model) is str: # Legacy support
-            __model_params = { "nested": u"", "shortdesc" : u"?" }
-            if self.nested:
-                __model_params["nested"] = u", (%%%s-info-types;)*" % (__root)
-            if "shortdesc" in self.models:
-                __model_params["shortdesc"] = u""
-            __model = self.topic_type.root.model % (__model_params)
-        else:
-            __model_params = { "nested": None, "shortdesc" : Particle.Occurrences.OPTIONAL }
-            if self.nested:
-                __model_params["nested"] = Choice(ParameterEntity(__root + "-info-types"), Particle.Occurrences.ZERO_OR_MORE)
-            if "shortdesc" in self.models:
-                __model_params["shortdesc"] = Particle.Occurrences.ONCE
-            __model = self.__content_model(self.__resolve_params(self.topic_type.root.model, __model_params), "                          ")
-            
+        __model_params = { "nested": None, "shortdesc" : Particle.Occurrences.OPTIONAL }
+        if self.nested:
+            __model_params["nested"] = Choice(ParameterEntity(__root + "-info-types"), Particle.Occurrences.ZERO_OR_MORE)
+        if "shortdesc" in self.models:
+            __model_params["shortdesc"] = Particle.Occurrences.ONCE
+        __model = self.__content_model(self.__resolve_params(self.topic_type.root.model, __model_params)," " * 26)
         #self.element_declaration(__root, __model)
         self.internal_parameter_entity(__root + ".content", "%s" % __model)
         __attrs_ent = [str(a) for a in self.topic_type.root.attrs]

@@ -34,10 +34,6 @@ class TopicElement(ditagen.dita.DitaElement):
     """Topic element."""
     name = u"topic"
     cls = u"- topic/topic "
-    #model = """(%%title;), (%%titlealts;)?,
-    #    (%%shortdesc; | %%abstract;)%(shortdesc)s,
-    #    (%%prolog;)?, (%%body;)?, (%%related-links;)?%(nested)s"""
-    #(%%s-info-types;)*
     model = Seq([
         Choice(ParameterEntity("title")),
         Choice(ParameterEntity("titlealts"), OPTIONAL),
@@ -59,9 +55,6 @@ class ConceptElement(ditagen.dita.DitaElement):
     """Concept element."""
     name = u"concept"
     cls = u"- topic/topic concept/concept "
-    #model = """(%%title;), (%%titlealts;)?,
-    #    (%%shortdesc; | %%abstract;)%(shortdesc)s,
-    #    (%%prolog;)?, (%%conbody;)?, (%%related-links;)?%(nested)s"""
     model = Seq([
         Choice(ParameterEntity("title")),
         Choice(ParameterEntity("titlealts"), OPTIONAL),
@@ -83,10 +76,6 @@ class TaskElement(ditagen.dita.DitaElement):
     """Task element."""
     name = u"task"
     cls = u"- topic/topic task/task "
-    #model = """(%%title;), (%%titlealts;)?,
-    #    (%%shortdesc; | %%abstract;)%(shortdesc)s,
-    #    (%%prolog;)?, (%%taskbody;)?,
-    #    (%%related-links;)?%(nested)s"""
     model = Seq([
         Choice(ParameterEntity("title")),
         Choice(ParameterEntity("titlealts"), OPTIONAL),
@@ -108,9 +97,6 @@ class ReferenceElement(ditagen.dita.DitaElement):
     """Reference element."""
     name = u"reference"
     cls = u"- topic/topic reference/reference "
-    #model = """(%%title;), (%%titlealts;)?,
-    #    (%%shortdesc; | %%abstract;)%(shortdesc)s,
-    #    (%%prolog;)?, (%%refbody;)?, (%%related-links;)?%(nested)s"""
     model = Seq([
         Choice(ParameterEntity("title")),
         Choice(ParameterEntity("titlealts"), OPTIONAL),
@@ -133,11 +119,6 @@ class GlossentryElement(ditagen.dita.DitaElement):
     """Glossary entry element."""
     name = u"glossentry"
     cls = u"- topic/topic concept/concept glossentry/glossentry "
-    #model = """(%glossterm;), 
-    #           (%glossdef;)?, 
-    #           (%prolog;)?, 
-    #           (%glossBody;)?, 
-    #           (%related-links;)?%(nested)s"""
     model = Seq([
         Choice(ParameterEntity("glossterm")),
         Choice(ParameterEntity("glossdef"), OPTIONAL),
@@ -158,8 +139,6 @@ class GlossgroupElement(ditagen.dita.DitaElement):
     """Glossary group element."""
     name = u"glossgroup"
     cls = u"- topic/topic concept/concept glossgroup/glossgroup "
-    #model = """(%title;), 
-    #           (%prolog;)?*%(nested)s""" # (%glossgroup-info-types;)
     model = Seq([
         Choice(ParameterEntity("title")),
         Choice(ParameterEntity("prolog"), OPTIONAL),
@@ -178,13 +157,6 @@ class LearningBaseElement(ditagen.dita.DitaElement):
     """Learning Base element."""
     name = u"learningBase"
     cls = u"- topic/topic learningBase/learningBase "
-    #model = """(%%title;),
-    #            (%%titlealts;)?,
-    #            (%%shortdesc; | %%abstract;)?,
-    #            (%%prolog;)?,
-    #            (%%learningBasebody;),
-    #            (%%related-links;)?
-    #            %(nested)s"""
     model = Seq([
         Choice(ParameterEntity("title")),
         Choice(ParameterEntity("titlealts"), OPTIONAL),
@@ -206,13 +178,6 @@ class LearningAssessmentElement(ditagen.dita.DitaElement):
     """Learning Assessment element."""
     name = u"learningAssessment"
     cls = u"- topic/topic learningBase/learningBase learningAssessment/learningAssessment "
-    #model = """(%%title;),
-    #            (%%titlealts;)?,
-    #            (%%shortdesc; | %%abstract;)?,
-    #            (%%prolog;)?,
-    #            (%%learningAssessmentbody;),
-    #            (%%related-links;)?
-    #            %(nested)s"""
     model = Seq([
         Choice(ParameterEntity("title")),
         Choice(ParameterEntity("titlealts"), OPTIONAL),
@@ -235,13 +200,6 @@ class LearningOverviewElement(ditagen.dita.DitaElement):
     """Learning Overview element."""
     name = u"learningOverview"
     cls = u"- topic/topic learningBase/learningBase learningOverview/learningOverview "
-    #model = """(%%title;),
-    #            (%%titlealts;)?,
-    #            (%%shortdesc; | %%abstract;)?,
-    #            (%%prolog;)?,
-    #            (%%learningOverviewbody;),
-    #            (%%related-links;)?
-    #            %(nested)s"""
     model = Seq([
         Choice(ParameterEntity("title")),
         Choice(ParameterEntity("titlealts"), OPTIONAL),
@@ -264,13 +222,6 @@ class LearningPlanElement(ditagen.dita.DitaElement):
     """Learning Plan element."""
     name = u"learningPlan"
     cls = u"- topic/topic learningBase/learningBase learningPlan/learningPlan "
-    #model = """(%%title;),
-    #            (%%titlealts;)?,
-    #            (%%shortdesc; |  %%abstract;)?,
-    #            (%%prolog;)?,
-    #            (%%learningPlanbody;),
-    #            (%%related-links;)?
-    #            %(nested)s"""
     model = Seq([
         Choice(ParameterEntity("title")),
         Choice(ParameterEntity("titlealts"), OPTIONAL),
@@ -293,13 +244,6 @@ class LearningSummaryElement(ditagen.dita.DitaElement):
     """Learning Summary element."""
     name = u"learningSummary"
     cls = u"- topic/topic learningBase/learningBase learningSummary/learningSummary "
-    #model = """(%%title;),
-    #            (%%titlealts;)?,
-    #            (%%shortdesc; | %%abstract;)?,
-    #            (%%prolog;)?,
-    #            (%%learningSummarybody;),
-    #            (%%related-links;)?
-    #            %(nested)s"""
     model = Seq([
         Choice(ParameterEntity("title")),
         Choice(ParameterEntity("titlealts"), OPTIONAL),
@@ -322,13 +266,6 @@ class LearningContentElement(ditagen.dita.DitaElement):
     """Learning Content element."""
     name = u"learningContent"
     cls = u"- topic/topic learningBase/learningBase learningContent/learningContent "
-    #model = """(%%title;),
-    #            (%%titlealts;)?,
-    #            (%%shortdesc; |  %%abstract;)?,
-    #            (%%prolog;)?,
-    #            (%%learningContentbody;),
-    #            (%%related-links;)?
-    #            %(nested)s"""
     model = Seq([
         Choice(ParameterEntity("title")),
         Choice(ParameterEntity("titlealts"), OPTIONAL),
@@ -351,24 +288,6 @@ class SubjectSchemeElement(ditagen.dita.DitaElement):
     """Subject scheme element."""
     name = u"subjectScheme"
     cls = u"- map/map subjectScheme/subjectScheme "
-    #model = """(%%title;)?,
-    #            (%%topicmeta;)?,
-    #            ((%%anchor; |
-    #              %%data.elements.incl; |
-    #              %%enumerationdef; |
-    #              %%hasInstance; |
-    #              %%hasKind; |
-    #              %%hasNarrower; |
-    #              %%hasPart; |
-    #              %%hasRelated; |
-    #              %%navref; |
-    #              %%relatedSubjects; |
-    #              %%reltable; |
-    #              %%schemeref; |
-    #              %%subjectdef; |
-    #              %%subjectHead; |
-    #              %%subjectRelTable; |
-    #              %%topicref;)*)"""
     model = Seq([
         Choice(ParameterEntity("title"), OPTIONAL),
         Choice(ParameterEntity("topicmeta"), OPTIONAL),
@@ -406,13 +325,6 @@ class MapElement(ditagen.dita.DitaElement):
     """Map element."""
     name = u"map"
     cls = u"- map/map "
-    #model = """((%%title;)?,
-    #   (%%topicmeta;)?,
-    #   (%%anchor; |
-    #    %%data.elements.incl; |
-    #    %%navref; |
-    #    %%reltable; |
-    #    %%topicref;)*)"""
     model = Seq([
         Choice(ParameterEntity("title"), OPTIONAL),
         Choice(ParameterEntity("topicmeta"), OPTIONAL),
@@ -439,15 +351,6 @@ class BookMapElement(ditagen.dita.DitaElement):
     """BookMap element."""
     name = u"bookmap"
     cls = u"- map/map bookmap/bookmap "
-    #model = """(((%%title;) |
-    #    (%%booktitle;))?,
-    #    (%%bookmeta;)?,
-    #    (%%frontmatter;)?,
-    #    (%%chapter;)*,
-    #    (%%part;)*,
-    #    (%%appendix;)*,
-    #    (%%backmatter;)?,
-    #    (%%reltable;)*)"""
     model = Seq([
         Choice([ParameterEntity("title"), ParameterEntity("booktitle")], OPTIONAL),
         Choice(ParameterEntity("bookmeta"), OPTIONAL),
