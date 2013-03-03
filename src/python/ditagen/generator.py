@@ -22,6 +22,14 @@ import ditagen.dita
 import ditagen.dita.v1_1
 import ditagen.dita.v1_2
 import ditagen.dita.d4p
+from ditagen.dtdgen import Empty as Empty
+from ditagen.dtdgen import Any as Any
+from ditagen.dtdgen import Mixed as Mixed
+from ditagen.dtdgen import Particle as Particle
+from ditagen.dtdgen import Seq as Seq
+from ditagen.dtdgen import Choice as Choice
+from ditagen.dtdgen import Name as Name 
+from ditagen.dtdgen import Param as Param
 from ditagen.dtdgen import Attribute as Attribute
 from ditagen.dtdgen import ParameterEntity as ParameterEntity
 import StringIO
@@ -496,6 +504,47 @@ PUBLIC "%s"
             self.comment_block(u""" Refer to this file by an appropriate system identifier 
       Delivered as file "%s.%s" """ % (__sfi, ext), before=0)
     
+    def __content_model(self, particle, indent=""):
+        """Print content model into XML content specification."""
+        t = type(particle)
+        if t is Name:
+            return str(particle.name) + str(particle.occurrence)
+        elif t is Choice:
+            if len(particle.particles) == 1 and type(particle.particles[0]) is ParameterEntity:
+                return "(" + str(particle.particles[0]) + ")" + str(particle.occurrence)
+            else:
+                return "(" + (" |\n" + indent).join([self.__content_model(n, indent + " ") for n in particle.particles]) + ")" + str(particle.occurrence)
+        elif t is Seq:
+            if len(particle.particles) == 1 and type(particle.particles[0]) is ParameterEntity:
+                return "(" + str(particle.particles[0]) + ")" + str(self.occurrence)
+            else:
+                return "(" + (",\n" + indent).join([self.__content_model(n, indent + " ") for n in particle.particles]) + ")" + str(particle.occurrence)
+        elif t is ParameterEntity:
+            return str(particle)
+        else:
+            raise Exception("Unsupported particle type " + str(t) + ": " + str(particle))
+    
+    def __resolve_params(self, particle, params):
+        if type(particle) is Param:
+            return params[particle.name]
+        else: 
+            if type(particle) is Empty:
+                return Empty()
+            elif type(particle) is Any:
+                return Any()
+            elif type(particle) is Mixed:
+                return Mixed(filter(lambda x: x != None, [self.__resolve_params(n, params) for n in particle.names]))
+            if isinstance(particle, Particle):
+                o = particle.occurrence
+                if type(o) is Param:
+                    o = params[o.name]
+                if type(particle) is Name:
+                    return Name(self.__resolve_params(particle.name, params), o)
+                else:
+                    return type(particle)(filter(lambda x: x != None, [self.__resolve_params(n, params) for n in particle.particles]), o)
+            else:
+                return particle
+    
     def _preprocess(self):
         """Preprocess arguments."""
         if self._initialized == False:
@@ -713,14 +762,24 @@ PUBLIC "%s"
         #self.out.write("\n")
         self.comment_block(u"ELEMENT DECLARATIONS", after=1)
         self.centered_comment_line(u"LONG NAME: " +  __root, " ")
-        __model_params = { "nested": u"", "shortdesc" : u"?" }
-        if self.nested:
-            __model_params["nested"] = u", (%%%s-info-types;)*" % (__root)
-        if "shortdesc" in self.models:
-            __model_params["shortdesc"] = u""
-        __model = self.topic_type.root.model % (__model_params)
+        
+        if type(self.topic_type.root.model) is str: # Legacy support
+            __model_params = { "nested": u"", "shortdesc" : u"?" }
+            if self.nested:
+                __model_params["nested"] = u", (%%%s-info-types;)*" % (__root)
+            if "shortdesc" in self.models:
+                __model_params["shortdesc"] = u""
+            __model = self.topic_type.root.model % (__model_params)
+        else:
+            __model_params = { "nested": None, "shortdesc" : Particle.Occurrences.OPTIONAL }
+            if self.nested:
+                __model_params["nested"] = Choice(ParameterEntity(__root + "-info-types"), Particle.Occurrences.ZERO_OR_MORE)
+            if "shortdesc" in self.models:
+                __model_params["shortdesc"] = Particle.Occurrences.ONCE
+            __model = self.__content_model(self.__resolve_params(self.topic_type.root.model, __model_params), "                          ")
+            
         #self.element_declaration(__root, __model)
-        self.internal_parameter_entity(__root + ".content", "(%s)" % __model)
+        self.internal_parameter_entity(__root + ".content", "%s" % __model)
         __attrs_ent = [str(a) for a in self.topic_type.root.attrs]
         __attrs_list = [str(ParameterEntity(__root + ".attributes")),
                         str(ParameterEntity("arch-atts")),

@@ -74,3 +74,58 @@ class Element(object):
     def get_attributes(self):
         """Get element attributes."""
         return self.attrs
+
+def enum(**enums):
+    return type('Enum', (), enums)
+
+class Empty(object):
+    def __str__(self):
+        return "EMPTY"
+class Any(object):
+    def __str__(self):
+        return "ANY"
+class Mixed(object):
+    names = None
+    def __init__(self, names=[]):
+        Particle.__init__(self)
+        self.names = names
+    def __str__(self):
+        return "(" + " | ".join([str(n) for n in self.names]) + ")*"
+class Particle(object):
+    Occurrences = enum(ONCE = "", OPTIONAL = "?", ZERO_OR_MORE = "*", ONCE_OR_MORE = "+")
+    occurrence = None
+    def __init__(self, occurrence=Occurrences.ONCE):
+        self.occurrence = occurrence
+class Name(Particle):
+    name = None
+    def __init__(self, name, occurrence=Particle.Occurrences.ONCE):
+        Particle.__init__(self, occurrence)
+        self.name = name
+    def __str__(self):
+        return str(self.name) + str(self.occurrence)
+class Choice(Particle):
+    particles = []
+    def __init__(self, particles, occurrence=Particle.Occurrences.ONCE):
+        Particle.__init__(self, occurrence)
+        if type(particles) is list:
+            self.particles = particles
+        else:
+            self.particles = [particles]
+    def __str__(self):
+        return "(" + " | ".join([str(n) for n in self.particles]) + ")" + str(self.occurrence)
+class Seq(Particle):
+    particles = []
+    def __init__(self, particles, occurrence=Particle.Occurrences.ONCE):
+        Particle.__init__(self, occurrence)
+        if type(particles) is list:
+            self.particles = particles
+        else:
+            self.particles = [particles]
+    def __str__(self):
+        return "(" + ", ".join([str(n) for n in self.particles]) + ")" + str(self.occurrence)
+
+class Param(object):
+    name = None
+    def __init__(self, name):
+        self.name = name
+

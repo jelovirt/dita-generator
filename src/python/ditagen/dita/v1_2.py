@@ -16,20 +16,37 @@
 # limitations under the License.
 
 import ditagen.dita
+from ditagen.dtdgen import Particle as Particle
+from ditagen.dtdgen import Choice as Choice
+from ditagen.dtdgen import Name as Name 
+from ditagen.dtdgen import Seq as Seq
 from ditagen.dtdgen import Attribute as Attribute
+from ditagen.dtdgen import Param as Param
 from ditagen.dtdgen import ParameterEntity as ParameterEntity
 
 # Elements
 #####################################################################
 
+OPTIONAL = Particle.Occurrences.OPTIONAL
+ZERO_OR_MORE = Particle.Occurrences.ZERO_OR_MORE
+
 class TopicElement(ditagen.dita.DitaElement):
     """Topic element."""
     name = u"topic"
     cls = u"- topic/topic "
-    model = """(%%title;), (%%titlealts;)?,
-        (%%shortdesc; | %%abstract;)%(shortdesc)s,
-        (%%prolog;)?, (%%body;)?, (%%related-links;)?%(nested)s"""
+    #model = """(%%title;), (%%titlealts;)?,
+    #    (%%shortdesc; | %%abstract;)%(shortdesc)s,
+    #    (%%prolog;)?, (%%body;)?, (%%related-links;)?%(nested)s"""
     #(%%s-info-types;)*
+    model = Seq([
+        Choice(ParameterEntity("title")),
+        Choice(ParameterEntity("titlealts"), OPTIONAL),
+        Choice([Name(ParameterEntity("shortdesc")), Name(ParameterEntity("abstract"))], Param("shortdesc")),
+        Choice(ParameterEntity("prolog"), OPTIONAL),
+        Choice(ParameterEntity("body"), OPTIONAL),
+        Choice(ParameterEntity("related-links"), OPTIONAL),
+        Param("nested")
+        ])
     attrs = [
         Attribute("id", "ID", "#REQUIRED"),
         Attribute("conref", "CDATA", "#IMPLIED"),
@@ -42,9 +59,18 @@ class ConceptElement(ditagen.dita.DitaElement):
     """Concept element."""
     name = u"concept"
     cls = u"- topic/topic concept/concept "
-    model = """(%%title;), (%%titlealts;)?,
-        (%%shortdesc; | %%abstract;)%(shortdesc)s,
-        (%%prolog;)?, (%%conbody;)?, (%%related-links;)?%(nested)s"""
+    #model = """(%%title;), (%%titlealts;)?,
+    #    (%%shortdesc; | %%abstract;)%(shortdesc)s,
+    #    (%%prolog;)?, (%%conbody;)?, (%%related-links;)?%(nested)s"""
+    model = Seq([
+        Choice(ParameterEntity("title")),
+        Choice(ParameterEntity("titlealts"), OPTIONAL),
+        Choice([Name(ParameterEntity("shortdesc")), Name(ParameterEntity("abstract"))], Param("shortdesc")),
+        Choice(ParameterEntity("prolog"), OPTIONAL),
+        Choice(ParameterEntity("conbody"), OPTIONAL),
+        Choice(ParameterEntity("related-links"), OPTIONAL),
+        Param("nested")
+        ])
     attrs = [
         Attribute("id", "ID", "#REQUIRED"),
         Attribute("conref", "CDATA", "#IMPLIED"),
@@ -57,10 +83,19 @@ class TaskElement(ditagen.dita.DitaElement):
     """Task element."""
     name = u"task"
     cls = u"- topic/topic task/task "
-    model = """(%%title;), (%%titlealts;)?,
-        (%%shortdesc; | %%abstract;)%(shortdesc)s,
-        (%%prolog;)?, (%%taskbody;)?,
-        (%%related-links;)?%(nested)s"""
+    #model = """(%%title;), (%%titlealts;)?,
+    #    (%%shortdesc; | %%abstract;)%(shortdesc)s,
+    #    (%%prolog;)?, (%%taskbody;)?,
+    #    (%%related-links;)?%(nested)s"""
+    model = Seq([
+        Choice(ParameterEntity("title")),
+        Choice(ParameterEntity("titlealts"), OPTIONAL),
+        Choice([Name(ParameterEntity("shortdesc")), Name(ParameterEntity("abstract"))], Param("shortdesc")),
+        Choice(ParameterEntity("prolog"), OPTIONAL),
+        Choice(ParameterEntity("taskbody"), OPTIONAL),
+        Choice(ParameterEntity("related-links"), OPTIONAL),
+        Param("nested")
+        ])
     attrs = [
         Attribute("id", "ID", "#REQUIRED"),
         Attribute("conref", "CDATA", "#IMPLIED"),
@@ -73,9 +108,18 @@ class ReferenceElement(ditagen.dita.DitaElement):
     """Reference element."""
     name = u"reference"
     cls = u"- topic/topic reference/reference "
-    model = """(%%title;), (%%titlealts;)?,
-        (%%shortdesc; | %%abstract;)%(shortdesc)s,
-        (%%prolog;)?, (%%refbody;)?, (%%related-links;)?%(nested)s"""
+    #model = """(%%title;), (%%titlealts;)?,
+    #    (%%shortdesc; | %%abstract;)%(shortdesc)s,
+    #    (%%prolog;)?, (%%refbody;)?, (%%related-links;)?%(nested)s"""
+    model = Seq([
+        Choice(ParameterEntity("title")),
+        Choice(ParameterEntity("titlealts"), OPTIONAL),
+        Choice([Name(ParameterEntity("shortdesc")), Name(ParameterEntity("abstract"))], Param("shortdesc")),
+        Choice(ParameterEntity("prolog"), OPTIONAL),
+        Choice(ParameterEntity("refbody"), OPTIONAL),
+        Choice(ParameterEntity("related-links"), OPTIONAL),
+        Param("nested")
+        ])
     attrs = [
         Attribute("id", "ID", "#REQUIRED"),
         Attribute("conref", "CDATA", "#IMPLIED"),
@@ -89,11 +133,19 @@ class GlossentryElement(ditagen.dita.DitaElement):
     """Glossary entry element."""
     name = u"glossentry"
     cls = u"- topic/topic concept/concept glossentry/glossentry "
-    model = """(%glossterm;), 
-               (%glossdef;)?, 
-               (%prolog;)?, 
-               (%glossBody;)?, 
-               (%related-links;)?%(nested)s"""
+    #model = """(%glossterm;), 
+    #           (%glossdef;)?, 
+    #           (%prolog;)?, 
+    #           (%glossBody;)?, 
+    #           (%related-links;)?%(nested)s"""
+    model = Seq([
+        Choice(ParameterEntity("glossterm")),
+        Choice(ParameterEntity("glossdef"), OPTIONAL),
+        Choice(ParameterEntity("prolog"), OPTIONAL),
+        Choice(ParameterEntity("glossBody"), OPTIONAL),
+        Choice(ParameterEntity("related-links"), OPTIONAL),
+        Param("nested")
+        ])
     attrs = [
         Attribute("id", "ID", "#REQUIRED"),
         Attribute("conref", "CDATA", "#IMPLIED"),
@@ -106,8 +158,13 @@ class GlossgroupElement(ditagen.dita.DitaElement):
     """Glossary group element."""
     name = u"glossgroup"
     cls = u"- topic/topic concept/concept glossgroup/glossgroup "
-    model = """(%title;), 
-               (%prolog;)?*%(nested)s""" # (%glossgroup-info-types;)
+    #model = """(%title;), 
+    #           (%prolog;)?*%(nested)s""" # (%glossgroup-info-types;)
+    model = Seq([
+        Choice(ParameterEntity("title")),
+        Choice(ParameterEntity("prolog"), OPTIONAL),
+        Param("nested")
+        ])
     attrs = [
         Attribute("id", "ID", "#REQUIRED"),
         Attribute("conref", "CDATA", "#IMPLIED"),
@@ -121,13 +178,22 @@ class LearningBaseElement(ditagen.dita.DitaElement):
     """Learning Base element."""
     name = u"learningBase"
     cls = u"- topic/topic learningBase/learningBase "
-    model = """(%%title;),
-                (%%titlealts;)?,
-                (%%shortdesc; | %%abstract;)?,
-                (%%prolog;)?,
-                (%%learningBasebody;),
-                (%%related-links;)?
-                %(nested)s"""
+    #model = """(%%title;),
+    #            (%%titlealts;)?,
+    #            (%%shortdesc; | %%abstract;)?,
+    #            (%%prolog;)?,
+    #            (%%learningBasebody;),
+    #            (%%related-links;)?
+    #            %(nested)s"""
+    model = Seq([
+        Choice(ParameterEntity("title")),
+        Choice(ParameterEntity("titlealts"), OPTIONAL),
+        Choice([Name(ParameterEntity("shortdesc")), Name(ParameterEntity("abstract"))], Param("shortdesc")),
+        Choice(ParameterEntity("prolog"), OPTIONAL),
+        Choice(ParameterEntity("learningBasebody"), OPTIONAL),
+        Choice(ParameterEntity("related-links"), OPTIONAL),
+        Param("nested")
+        ])
     attrs = [
         Attribute("id", "ID", "#REQUIRED"),
         Attribute("conref", "CDATA", "#IMPLIED"),
@@ -140,13 +206,22 @@ class LearningAssessmentElement(ditagen.dita.DitaElement):
     """Learning Assessment element."""
     name = u"learningAssessment"
     cls = u"- topic/topic learningBase/learningBase learningAssessment/learningAssessment "
-    model = """(%%title;),
-                (%%titlealts;)?,
-                (%%shortdesc; | %%abstract;)?,
-                (%%prolog;)?,
-                (%%learningAssessmentbody;),
-                (%%related-links;)?
-                %(nested)s"""
+    #model = """(%%title;),
+    #            (%%titlealts;)?,
+    #            (%%shortdesc; | %%abstract;)?,
+    #            (%%prolog;)?,
+    #            (%%learningAssessmentbody;),
+    #            (%%related-links;)?
+    #            %(nested)s"""
+    model = Seq([
+        Choice(ParameterEntity("title")),
+        Choice(ParameterEntity("titlealts"), OPTIONAL),
+        Choice([Name(ParameterEntity("shortdesc")), Name(ParameterEntity("abstract"))], Param("shortdesc")),
+        Choice(ParameterEntity("prolog"), OPTIONAL),
+        Choice(ParameterEntity("learningAssessmentbody"), OPTIONAL),
+        Choice(ParameterEntity("related-links"), OPTIONAL),
+        Param("nested")
+        ])
     attrs = [
         Attribute("id", "ID", "#REQUIRED"),
         ParameterEntity("conref-atts"),
@@ -160,13 +235,22 @@ class LearningOverviewElement(ditagen.dita.DitaElement):
     """Learning Overview element."""
     name = u"learningOverview"
     cls = u"- topic/topic learningBase/learningBase learningOverview/learningOverview "
-    model = """(%%title;),
-                (%%titlealts;)?,
-                (%%shortdesc; | %%abstract;)?,
-                (%%prolog;)?,
-                (%%learningOverviewbody;),
-                (%%related-links;)?
-                %(nested)s"""
+    #model = """(%%title;),
+    #            (%%titlealts;)?,
+    #            (%%shortdesc; | %%abstract;)?,
+    #            (%%prolog;)?,
+    #            (%%learningOverviewbody;),
+    #            (%%related-links;)?
+    #            %(nested)s"""
+    model = Seq([
+        Choice(ParameterEntity("title")),
+        Choice(ParameterEntity("titlealts"), OPTIONAL),
+        Choice([Name(ParameterEntity("shortdesc")), Name(ParameterEntity("abstract"))], Param("shortdesc")),
+        Choice(ParameterEntity("prolog"), OPTIONAL),
+        Choice(ParameterEntity("learningOverviewbody"), OPTIONAL),
+        Choice(ParameterEntity("related-links"), OPTIONAL),
+        Param("nested")
+        ])
     attrs = [
         Attribute("id", "ID" ,"#REQUIRED"),
         ParameterEntity("conref-atts"),
@@ -180,13 +264,22 @@ class LearningPlanElement(ditagen.dita.DitaElement):
     """Learning Plan element."""
     name = u"learningPlan"
     cls = u"- topic/topic learningBase/learningBase learningPlan/learningPlan "
-    model = """(%%title;),
-                (%%titlealts;)?,
-                (%%shortdesc; |  %%abstract;)?,
-                (%%prolog;)?,
-                (%%learningPlanbody;),
-                (%%related-links;)?
-                %(nested)s"""
+    #model = """(%%title;),
+    #            (%%titlealts;)?,
+    #            (%%shortdesc; |  %%abstract;)?,
+    #            (%%prolog;)?,
+    #            (%%learningPlanbody;),
+    #            (%%related-links;)?
+    #            %(nested)s"""
+    model = Seq([
+        Choice(ParameterEntity("title")),
+        Choice(ParameterEntity("titlealts"), OPTIONAL),
+        Choice([Name(ParameterEntity("shortdesc")), Name(ParameterEntity("abstract"))], Param("shortdesc")),
+        Choice(ParameterEntity("prolog"), OPTIONAL),
+        Choice(ParameterEntity("learningPlanbody"), OPTIONAL),
+        Choice(ParameterEntity("related-links"), OPTIONAL),
+        Param("nested")
+        ])
     attrs = [
         Attribute("id", "ID" ,"#REQUIRED"),
         ParameterEntity("conref-atts"),
@@ -200,13 +293,22 @@ class LearningSummaryElement(ditagen.dita.DitaElement):
     """Learning Summary element."""
     name = u"learningSummary"
     cls = u"- topic/topic learningBase/learningBase learningSummary/learningSummary "
-    model = """(%%title;),
-                (%%titlealts;)?,
-                (%%shortdesc; | %%abstract;)?,
-                (%%prolog;)?,
-                (%%learningSummarybody;),
-                (%%related-links;)?
-                %(nested)s"""
+    #model = """(%%title;),
+    #            (%%titlealts;)?,
+    #            (%%shortdesc; | %%abstract;)?,
+    #            (%%prolog;)?,
+    #            (%%learningSummarybody;),
+    #            (%%related-links;)?
+    #            %(nested)s"""
+    model = Seq([
+        Choice(ParameterEntity("title")),
+        Choice(ParameterEntity("titlealts"), OPTIONAL),
+        Choice([Name(ParameterEntity("shortdesc")), Name(ParameterEntity("abstract"))], Param("shortdesc")),
+        Choice(ParameterEntity("prolog"), OPTIONAL),
+        Choice(ParameterEntity("learningSummarybody"), OPTIONAL),
+        Choice(ParameterEntity("related-links"), OPTIONAL),
+        Param("nested")
+        ])
     attrs = [
         Attribute("id", "ID" ,"#REQUIRED"),
         ParameterEntity("conref-atts"),
@@ -220,13 +322,22 @@ class LearningContentElement(ditagen.dita.DitaElement):
     """Learning Content element."""
     name = u"learningContent"
     cls = u"- topic/topic learningBase/learningBase learningContent/learningContent "
-    model = """(%%title;),
-                (%%titlealts;)?,
-                (%%shortdesc; |  %%abstract;)?,
-                (%%prolog;)?,
-                (%%learningContentbody;),
-                (%%related-links;)?
-                %(nested)s"""
+    #model = """(%%title;),
+    #            (%%titlealts;)?,
+    #            (%%shortdesc; |  %%abstract;)?,
+    #            (%%prolog;)?,
+    #            (%%learningContentbody;),
+    #            (%%related-links;)?
+    #            %(nested)s"""
+    model = Seq([
+        Choice(ParameterEntity("title")),
+        Choice(ParameterEntity("titlealts"), OPTIONAL),
+        Choice([Name(ParameterEntity("shortdesc")), Name(ParameterEntity("abstract"))], Param("shortdesc")),
+        Choice(ParameterEntity("prolog"), OPTIONAL),
+        Choice(ParameterEntity("learningContentbody"), OPTIONAL),
+        Choice(ParameterEntity("related-links"), OPTIONAL),
+        Param("nested")
+        ])
     attrs = [
         Attribute("id", "ID" ,"#REQUIRED"),
         ParameterEntity("conref-atts"),
@@ -240,24 +351,46 @@ class SubjectSchemeElement(ditagen.dita.DitaElement):
     """Subject scheme element."""
     name = u"subjectScheme"
     cls = u"- map/map subjectScheme/subjectScheme "
-    model = """(%%title;)?,
-                (%%topicmeta;)?,
-                ((%%anchor; |
-                  %%data.elements.incl; |
-                  %%enumerationdef; |
-                  %%hasInstance; |
-                  %%hasKind; |
-                  %%hasNarrower; |
-                  %%hasPart; |
-                  %%hasRelated; |
-                  %%navref; |
-                  %%relatedSubjects; |
-                  %%reltable; |
-                  %%schemeref; |
-                  %%subjectdef; |
-                  %%subjectHead; |
-                  %%subjectRelTable; |
-                  %%topicref;)*)"""
+    #model = """(%%title;)?,
+    #            (%%topicmeta;)?,
+    #            ((%%anchor; |
+    #              %%data.elements.incl; |
+    #              %%enumerationdef; |
+    #              %%hasInstance; |
+    #              %%hasKind; |
+    #              %%hasNarrower; |
+    #              %%hasPart; |
+    #              %%hasRelated; |
+    #              %%navref; |
+    #              %%relatedSubjects; |
+    #              %%reltable; |
+    #              %%schemeref; |
+    #              %%subjectdef; |
+    #              %%subjectHead; |
+    #              %%subjectRelTable; |
+    #              %%topicref;)*)"""
+    model = Seq([
+        Choice(ParameterEntity("title"), OPTIONAL),
+        Choice(ParameterEntity("topicmeta"), OPTIONAL),
+        Choice([
+            ParameterEntity("anchor"),
+            ParameterEntity("data.elements.incl"),
+            ParameterEntity("enumerationdef"),
+            ParameterEntity("hasInstance"),
+            ParameterEntity("hasKind"),
+            ParameterEntity("hasNarrower"),
+            ParameterEntity("hasPart"),
+            ParameterEntity("hasRelated"),
+            ParameterEntity("navref"),
+            ParameterEntity("relatedSubjects"),
+            ParameterEntity("reltable"),
+            ParameterEntity("schemeref"),
+            ParameterEntity("subjectdef"),
+            ParameterEntity("subjectHead"),
+            ParameterEntity("subjectRelTable"),
+            ParameterEntity("topicref")
+            ], ZERO_OR_MORE)
+        ])
     attrs = [
         Attribute("id", "ID", "#REQUIRED"),
         ParameterEntity("conref-atts"),
@@ -273,13 +406,24 @@ class MapElement(ditagen.dita.DitaElement):
     """Map element."""
     name = u"map"
     cls = u"- map/map "
-    model = """((%%title;)?,
-       (%%topicmeta;)?,
-       (%%anchor; |
-        %%data.elements.incl; |
-        %%navref; |
-        %%reltable; |
-        %%topicref;)*)"""
+    #model = """((%%title;)?,
+    #   (%%topicmeta;)?,
+    #   (%%anchor; |
+    #    %%data.elements.incl; |
+    #    %%navref; |
+    #    %%reltable; |
+    #    %%topicref;)*)"""
+    model = Seq([
+        Choice(ParameterEntity("title"), OPTIONAL),
+        Choice(ParameterEntity("topicmeta"), OPTIONAL),
+        Choice([
+            ParameterEntity("anchor"),
+            ParameterEntity("data.elements.incl"),
+            ParameterEntity("navref"),
+            ParameterEntity("reltable"),
+            ParameterEntity("topicref")
+            ], ZERO_OR_MORE)
+        ])
     attrs = [
         Attribute("title", "CDATA", "#IMPLIED"),
         Attribute("id", "ID", "#REQUIRED"),
@@ -295,15 +439,25 @@ class BookMapElement(ditagen.dita.DitaElement):
     """BookMap element."""
     name = u"bookmap"
     cls = u"- map/map bookmap/bookmap "
-    model = """(((%%title;) |
-        (%%booktitle;))?,
-        (%%bookmeta;)?,
-        (%%frontmatter;)?,
-        (%%chapter;)*,
-        (%%part;)*,
-        (%%appendix;)*,
-        (%%backmatter;)?,
-        (%%reltable;)*)"""
+    #model = """(((%%title;) |
+    #    (%%booktitle;))?,
+    #    (%%bookmeta;)?,
+    #    (%%frontmatter;)?,
+    #    (%%chapter;)*,
+    #    (%%part;)*,
+    #    (%%appendix;)*,
+    #    (%%backmatter;)?,
+    #    (%%reltable;)*)"""
+    model = Seq([
+        Choice([ParameterEntity("title"), ParameterEntity("booktitle")], OPTIONAL),
+        Choice(ParameterEntity("bookmeta"), OPTIONAL),
+        Choice(ParameterEntity("frontmatter"), OPTIONAL),
+        Choice(ParameterEntity("chapter"), ZERO_OR_MORE),
+        Choice(ParameterEntity("part"), ZERO_OR_MORE),
+        Choice([ParameterEntity("appendices"), ParameterEntity("appendix")], ZERO_OR_MORE),
+        Choice(ParameterEntity("backmatter"), OPTIONAL),
+        Choice(ParameterEntity("reltable"), OPTIONAL)
+        ])
     attrs = [
         Attribute("id", "ID", "#REQUIRED"),
         ParameterEntity("conref-atts"),
