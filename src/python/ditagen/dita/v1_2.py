@@ -37,7 +37,7 @@ class TopicElement(ditagen.dita.DitaElement):
     model = Seq([
         Choice(ParameterEntity("title")),
         Choice(ParameterEntity("titlealts"), OPTIONAL),
-        Choice([Name(ParameterEntity("shortdesc")), Name(ParameterEntity("abstract"))], Param("shortdesc")),
+        Choice([ParameterEntity("shortdesc"), ParameterEntity("abstract")], Param("shortdesc")),
         Choice(ParameterEntity("prolog"), OPTIONAL),
         Choice(ParameterEntity("body"), OPTIONAL),
         Choice(ParameterEntity("related-links"), OPTIONAL),
@@ -48,7 +48,6 @@ class TopicElement(ditagen.dita.DitaElement):
         ParameterEntity("conref-atts"),
         ParameterEntity("select-atts"),
         ParameterEntity("localization-atts"),
-        ParameterEntity("arch-atts"),
         Attribute("outputclass", "CDATA", "#IMPLIED"),
     ]
 class ConceptElement(ditagen.dita.DitaElement):
@@ -58,7 +57,7 @@ class ConceptElement(ditagen.dita.DitaElement):
     model = Seq([
         Choice(ParameterEntity("title")),
         Choice(ParameterEntity("titlealts"), OPTIONAL),
-        Choice([Name(ParameterEntity("shortdesc")), Name(ParameterEntity("abstract"))], Param("shortdesc")),
+        Choice([ParameterEntity("shortdesc"), ParameterEntity("abstract")], Param("shortdesc")),
         Choice(ParameterEntity("prolog"), OPTIONAL),
         Choice(ParameterEntity("conbody"), OPTIONAL),
         Choice(ParameterEntity("related-links"), OPTIONAL),
@@ -69,7 +68,6 @@ class ConceptElement(ditagen.dita.DitaElement):
         ParameterEntity("conref-atts"),
         ParameterEntity("select-atts"),
         ParameterEntity("localization-atts"),
-        ParameterEntity("arch-atts"),
         Attribute("outputclass", "CDATA", "#IMPLIED"),
     ]        
 class TaskElement(ditagen.dita.DitaElement):
@@ -79,7 +77,7 @@ class TaskElement(ditagen.dita.DitaElement):
     model = Seq([
         Choice(ParameterEntity("title")),
         Choice(ParameterEntity("titlealts"), OPTIONAL),
-        Choice([Name(ParameterEntity("shortdesc")), Name(ParameterEntity("abstract"))], Param("shortdesc")),
+        Choice([ParameterEntity("shortdesc"), ParameterEntity("abstract")], Param("shortdesc")),
         Choice(ParameterEntity("prolog"), OPTIONAL),
         Choice(ParameterEntity("taskbody"), OPTIONAL),
         Choice(ParameterEntity("related-links"), OPTIONAL),
@@ -90,7 +88,6 @@ class TaskElement(ditagen.dita.DitaElement):
         ParameterEntity("conref-atts"),
         ParameterEntity("select-atts"),
         ParameterEntity("localization-atts"),
-        ParameterEntity("arch-atts"),
         Attribute("outputclass", "CDATA", "#IMPLIED"),
     ]
 class ReferenceElement(ditagen.dita.DitaElement):
@@ -100,7 +97,7 @@ class ReferenceElement(ditagen.dita.DitaElement):
     model = Seq([
         Choice(ParameterEntity("title")),
         Choice(ParameterEntity("titlealts"), OPTIONAL),
-        Choice([Name(ParameterEntity("shortdesc")), Name(ParameterEntity("abstract"))], Param("shortdesc")),
+        Choice([ParameterEntity("shortdesc"), ParameterEntity("abstract")], Param("shortdesc")),
         Choice(ParameterEntity("prolog"), OPTIONAL),
         Choice(ParameterEntity("refbody"), OPTIONAL),
         Choice(ParameterEntity("related-links"), OPTIONAL),
@@ -111,7 +108,6 @@ class ReferenceElement(ditagen.dita.DitaElement):
         ParameterEntity("conref-atts"),
         ParameterEntity("select-atts"),
         ParameterEntity("localization-atts"),
-        ParameterEntity("arch-atts"),
         Attribute("outputclass", "CDATA", "#IMPLIED"),
     ]
 
@@ -132,7 +128,6 @@ class GlossentryElement(ditagen.dita.DitaElement):
         ParameterEntity("conref-atts"),
         ParameterEntity("select-atts"),
         ParameterEntity("localization-atts"),
-        ParameterEntity("arch-atts"),
         Attribute("outputclass", "CDATA", "#IMPLIED"),
     ]
 class GlossgroupElement(ditagen.dita.DitaElement):
@@ -149,7 +144,6 @@ class GlossgroupElement(ditagen.dita.DitaElement):
         ParameterEntity("conref-atts"),
         ParameterEntity("select-atts"),
         ParameterEntity("localization-atts"),
-        ParameterEntity("arch-atts"),
         Attribute("outputclass", "CDATA", "#IMPLIED"),
     ]
 
@@ -160,7 +154,7 @@ class LearningBaseElement(ditagen.dita.DitaElement):
     model = Seq([
         Choice(ParameterEntity("title")),
         Choice(ParameterEntity("titlealts"), OPTIONAL),
-        Choice([Name(ParameterEntity("shortdesc")), Name(ParameterEntity("abstract"))], Param("shortdesc")),
+        Choice([ParameterEntity("shortdesc"), ParameterEntity("abstract")], Param("shortdesc")),
         Choice(ParameterEntity("prolog"), OPTIONAL),
         Choice(ParameterEntity("learningBasebody"), OPTIONAL),
         Choice(ParameterEntity("related-links"), OPTIONAL),
@@ -171,7 +165,6 @@ class LearningBaseElement(ditagen.dita.DitaElement):
         ParameterEntity("conref-atts"),
         ParameterEntity("select-atts"),
         ParameterEntity("localization-atts"),
-        ParameterEntity("arch-atts"),
         Attribute("outputclass", "CDATA", "#IMPLIED"),
     ]
 class LearningAssessmentElement(ditagen.dita.DitaElement):
@@ -181,7 +174,7 @@ class LearningAssessmentElement(ditagen.dita.DitaElement):
     model = Seq([
         Choice(ParameterEntity("title")),
         Choice(ParameterEntity("titlealts"), OPTIONAL),
-        Choice([Name(ParameterEntity("shortdesc")), Name(ParameterEntity("abstract"))], Param("shortdesc")),
+        Choice([ParameterEntity("shortdesc"), ParameterEntity("abstract")], Param("shortdesc")),
         Choice(ParameterEntity("prolog"), OPTIONAL),
         Choice(ParameterEntity("learningAssessmentbody"), OPTIONAL),
         Choice(ParameterEntity("related-links"), OPTIONAL),
@@ -192,7 +185,6 @@ class LearningAssessmentElement(ditagen.dita.DitaElement):
         ParameterEntity("conref-atts"),
         ParameterEntity("select-atts"),
         ParameterEntity("localization-atts"),
-        ParameterEntity("arch-atts"),
         Attribute("outputclass", "CDATA", "#IMPLIED")
     ]
 
@@ -203,7 +195,7 @@ class LearningOverviewElement(ditagen.dita.DitaElement):
     model = Seq([
         Choice(ParameterEntity("title")),
         Choice(ParameterEntity("titlealts"), OPTIONAL),
-        Choice([Name(ParameterEntity("shortdesc")), Name(ParameterEntity("abstract"))], Param("shortdesc")),
+        Choice([ParameterEntity("shortdesc"), ParameterEntity("abstract")], Param("shortdesc")),
         Choice(ParameterEntity("prolog"), OPTIONAL),
         Choice(ParameterEntity("learningOverviewbody"), OPTIONAL),
         Choice(ParameterEntity("related-links"), OPTIONAL),
@@ -214,7 +206,6 @@ class LearningOverviewElement(ditagen.dita.DitaElement):
         ParameterEntity("conref-atts"),
         ParameterEntity("select-atts"),
         ParameterEntity("localization-atts"),
-        ParameterEntity("arch-atts"),
         Attribute("outputclass", "CDATA", "#IMPLIED")
     ]
 
@@ -225,7 +216,7 @@ class LearningPlanElement(ditagen.dita.DitaElement):
     model = Seq([
         Choice(ParameterEntity("title")),
         Choice(ParameterEntity("titlealts"), OPTIONAL),
-        Choice([Name(ParameterEntity("shortdesc")), Name(ParameterEntity("abstract"))], Param("shortdesc")),
+        Choice([ParameterEntity("shortdesc"), ParameterEntity("abstract")], Param("shortdesc")),
         Choice(ParameterEntity("prolog"), OPTIONAL),
         Choice(ParameterEntity("learningPlanbody"), OPTIONAL),
         Choice(ParameterEntity("related-links"), OPTIONAL),
@@ -236,7 +227,6 @@ class LearningPlanElement(ditagen.dita.DitaElement):
         ParameterEntity("conref-atts"),
         ParameterEntity("select-atts"),
         ParameterEntity("localization-atts"),
-        ParameterEntity("arch-atts"),
         Attribute("outputclass", "CDATA", "#IMPLIED")
     ]
     
@@ -247,7 +237,7 @@ class LearningSummaryElement(ditagen.dita.DitaElement):
     model = Seq([
         Choice(ParameterEntity("title")),
         Choice(ParameterEntity("titlealts"), OPTIONAL),
-        Choice([Name(ParameterEntity("shortdesc")), Name(ParameterEntity("abstract"))], Param("shortdesc")),
+        Choice([ParameterEntity("shortdesc"), ParameterEntity("abstract")], Param("shortdesc")),
         Choice(ParameterEntity("prolog"), OPTIONAL),
         Choice(ParameterEntity("learningSummarybody"), OPTIONAL),
         Choice(ParameterEntity("related-links"), OPTIONAL),
@@ -258,7 +248,6 @@ class LearningSummaryElement(ditagen.dita.DitaElement):
         ParameterEntity("conref-atts"),
         ParameterEntity("select-atts"),
         ParameterEntity("localization-atts"),
-        ParameterEntity("arch-atts"),
         Attribute("outputclass", "CDATA", "#IMPLIED")
     ]
 
@@ -269,7 +258,7 @@ class LearningContentElement(ditagen.dita.DitaElement):
     model = Seq([
         Choice(ParameterEntity("title")),
         Choice(ParameterEntity("titlealts"), OPTIONAL),
-        Choice([Name(ParameterEntity("shortdesc")), Name(ParameterEntity("abstract"))], Param("shortdesc")),
+        Choice([ParameterEntity("shortdesc"), ParameterEntity("abstract")], Param("shortdesc")),
         Choice(ParameterEntity("prolog"), OPTIONAL),
         Choice(ParameterEntity("learningContentbody"), OPTIONAL),
         Choice(ParameterEntity("related-links"), OPTIONAL),
@@ -280,7 +269,6 @@ class LearningContentElement(ditagen.dita.DitaElement):
         ParameterEntity("conref-atts"),
         ParameterEntity("select-atts"),
         ParameterEntity("localization-atts"),
-        ParameterEntity("arch-atts"),
         Attribute("outputclass", "CDATA", "#IMPLIED")
     ]
 
@@ -317,8 +305,7 @@ class SubjectSchemeElement(ditagen.dita.DitaElement):
         Attribute("outputclass", "CDATA", "#IMPLIED"),
         ParameterEntity("localization-atts"),
         ParameterEntity("topicref-atts"),
-        ParameterEntity("select-atts"),
-        ParameterEntity("arch-atts"),
+        ParameterEntity("select-atts")
     ]
 
 class MapElement(ditagen.dita.DitaElement):
@@ -344,22 +331,21 @@ class MapElement(ditagen.dita.DitaElement):
         Attribute("outputclass", "CDATA", "#IMPLIED"),
         ParameterEntity("localization-atts"),
         ParameterEntity("topicref-atts"),
-        ParameterEntity("select-atts"),
-        ParameterEntity("arch-atts"),
+        ParameterEntity("select-atts")
     ]
 class BookMapElement(ditagen.dita.DitaElement):
     """BookMap element."""
     name = u"bookmap"
     cls = u"- map/map bookmap/bookmap "
     model = Seq([
-        Choice([ParameterEntity("title"), ParameterEntity("booktitle")], OPTIONAL),
+        Choice([Choice(ParameterEntity("title")), Choice(ParameterEntity("booktitle"))], OPTIONAL),
         Choice(ParameterEntity("bookmeta"), OPTIONAL),
         Choice(ParameterEntity("frontmatter"), OPTIONAL),
         Choice(ParameterEntity("chapter"), ZERO_OR_MORE),
         Choice(ParameterEntity("part"), ZERO_OR_MORE),
-        Choice([ParameterEntity("appendices"), ParameterEntity("appendix")], ZERO_OR_MORE),
+        Choice([Choice(ParameterEntity("appendices"), OPTIONAL), Choice(ParameterEntity("appendix"), ZERO_OR_MORE)]),
         Choice(ParameterEntity("backmatter"), OPTIONAL),
-        Choice(ParameterEntity("reltable"), OPTIONAL)
+        Choice(ParameterEntity("reltable"), ZERO_OR_MORE)
         ])
     attrs = [
         Attribute("id", "ID", "#REQUIRED"),
@@ -368,8 +354,7 @@ class BookMapElement(ditagen.dita.DitaElement):
         Attribute("outputclass", "CDATA", "#IMPLIED"),
         ParameterEntity("localization-atts"),
         ParameterEntity("topicref-atts"),
-        ParameterEntity("select-atts"),
-        ParameterEntity("arch-atts"),
+        ParameterEntity("select-atts")
     ]
 
 # Topic types
