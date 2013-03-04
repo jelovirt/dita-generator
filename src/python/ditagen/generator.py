@@ -743,7 +743,7 @@ PUBLIC "%s"
         """Generate mod file."""
         self._preprocess()
 
-        self.out.write("<!--%s %s-->"  % (self._root_name, self.topic_type.root.name))
+        #self.out.write("<!--%s %s-->"  % (self._root_name, self.topic_type.root.name))
         if self._root_name is None:
             __root = self.topic_type.root.name
         else:
