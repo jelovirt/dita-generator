@@ -949,7 +949,6 @@ class StylePluginGenerator(DitaGenerator):
             ET.SubElement(__root, u"variable", id=u"On the page")
         # table continued
         if self.table_continued:
-            #ET.SubElement(__root, u"variable", id=u"#table-continued").text = u"Table continued\u2026"
             __root.append(ET.fromstring(langs[lang][u"#table-continued"]))
         # table caption numbering
         if self.table_numbering == u"none":
@@ -1027,14 +1026,9 @@ class StylePluginGenerator(DitaGenerator):
                 if self.override_shell:
                     self._run_generation(__zip, self.__generate_shell,
                                         "%s/xsl/fo/topic2fo_shell_%s.xsl" % (self.plugin_name, self.formatter))
-#                if not self.link_pagenumber or self.table_continued:
                 for lang in self.variable_languages:
                     self._run_generation(__zip, lambda: self.__generate_vars(lang),
                                          "%s/cfg/common/vars/%s.xml" % (self.plugin_name, lang))
-#                if self.generate_shell:
-#                    # shell XSLT
-#                    self._run_generation(__zip, self.__generate_shell,
-#                                        "%s/xsl/fo/.xsl" % (self.plugin_name))
                 if self.cover_image:
                     self._store_file(__zip, self.cover_image,
                                       "%s/cfg/common/artwork/%s" % (self.plugin_name, self.cover_image_name))
