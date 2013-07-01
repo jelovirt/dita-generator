@@ -1,29 +1,5 @@
 var factor = 0.12;
 
-function linkStyleHandler(event) {
-  var target = $(event.target);
-  var link = $("*[id='pdf.link-style.example']");
-  switch (target.attr("name")) {
-  case "pdf.link-font-weight":
-    link.css("font-weight", target.attr("checked") ? "bold" : "normal");
-    break;
-  case "pdf.link-font-style":
-    link.css("font-style", target.attr("checked") ? "italic" : "normal");
-    break;
-  case "pdf.link-text-decoration":
-    link.css("text-decoration", target.attr("checked") ? "underline" : "none");
-    break;
-  case "pdf.link-color":
-  case "pdf.link-color.other":
-    if ($(":input[name='pdf.link-color']").val() == "#other") {
-      link.css("color", $(":input[name='pdf.link-color.other']").val());
-    } else {
-      link.css("color", $(":input[name='pdf.link-color']").val());
-    }
-    break;
-  }
-}
-
 function previewSpaceHandler(event) {
   var model = $(event.target);
   var id = model.attr("name");
@@ -52,24 +28,6 @@ function previewSpaceHandler(event) {
     cls = "margin-left";
     isLength = true;
     break;
-//  case "font-weight":
-//    cls = "font-weight";
-//    break;
-//  case "font-family":
-//    cls = "font-family";
-//    break;
-//  case "font-style":
-//    cls = "font-style";
-//    break;
-//  case "text-decoration":
-//    cls = "text-decoration";
-//    break;
-//  case "color":
-//    cls = "color";
-//    break;
-//  case "background-color":
-//    cls = "background-color";
-//    break;
   case "font-size":
     cls = field;
     isLength = true;
@@ -98,20 +56,15 @@ function previewSpaceHandler(event) {
     cls = field;
     break;
   }
-  //$("#pdf-style-selector option").each(function() {
-  //  var type = $(this).attr("value");
-//    var model = $(":input[name='" + id + "." + type + "']");
-    if (isLength) {
-      if (v == undefined) { // support undefined values
-        return true;
-      }
-      v= toPt(v);
-      var f = 0.9;
-      v = String(v * f) + "px";
+  if (isLength) {
+    if (v == undefined) { // support undefined values
+      return true;
     }
-    //console.info("css " + type + " = " + cls + ":" + v);
-    $("*[class~='example-page-content-" + type + "']").css(cls, v);
-  //});
+    v= toPt(v);
+    var f = 0.9;
+    v = String(v * f) + "px";
+  }
+  $("*[class~='example-page-content-" + type + "']").css(cls, v);
 }
 
 function pageMarginHandler(event) {
@@ -125,26 +78,6 @@ function pageMarginHandler(event) {
 function updatePageExample(page) {
   var isOdd = page.is(".odd");
   var dim = readPageDimensions();
-  
-//  var pageSize = $(":input[name='pdf.page-size']").val().split(' ');
-//  var pageWidth, pageHeight;
-//  if ($(":input[name='pdf.orientation']").val() == "landscape") {
-//    pageWidth = toPt(pageSize[1]);
-//    pageHeight = toPt(pageSize[0]);
-//  } else {
-//    pageWidth = toPt(pageSize[0]);
-//    pageHeight = toPt(pageSize[1]);  
-//  }
-//  
-//  var marginTopTarget = $(":input[name='pdf.page-margin-top']");
-//  var marginOutsideTarget = $(":input[name='pdf.page-margin-outside']");
-//  var marginBottomTarget = $(":input[name='pdf.page-margin-bottom']");
-//  var marginInsideTarget = $(":input[name='pdf.page-margin-inside']");
-//  
-//  var marginTop = toPt(getVal(marginTopTarget));
-//  var marginOutside = toPt(getVal(marginOutsideTarget));
-//  var marginBottom = toPt(getVal(marginBottomTarget));
-//  var marginInside = toPt(getVal(marginInsideTarget));
   
   page.height(dim.pageHeight * factor);
   page.width(dim.pageWidth * factor);
@@ -175,19 +108,12 @@ function updatePageExample(page) {
 function updateFixedPageExample(page) {
   var dim = readPageDimensions();
   
-  var blockWidth = 700; //page.parents(".example-block:first").outerWidth();
+  var blockWidth = 700;
   var factor = blockWidth / dim.pageWidth;
 
-  //page.height(dim.pageHeight * factor);
-  //page.width(dim.pageWidth * factor);
-  
   var content = page.find(".example-page-content");
-  //content.css("margin-top", (dim.marginTop * factor) + "px");
   content.css("margin-right", (dim.marginOutside * factor) + "px");
-  //content.css("margin-bottom", (dim.marginBottom * factor) + "px");
   content.css("margin-left", (dim.marginInside * factor) + "px");
-  //content.height((dim.pageHeight - dim.marginTop - dim.marginBottom) * factor);
-  //content.width((dim.pageWidth - dim.marginInside - dim.marginOutside) * factor);
 }
 
 /**
@@ -204,8 +130,6 @@ function Dimensions() {
 
 /**
  * Return page dimensions in points.
- * 
- * @returns {___anonymous8727_8728}
  */
 function readPageDimensions() {
   var res = new Dimensions();
@@ -316,10 +240,6 @@ $(document).ready(function() {
     $(":input[name='pdf.mirror-page-margins']").change(mirrorPageHandler).change();
   $(":input[name='pdf.task-label']").change(taskLabelHandler).change();
     $(":input[name='pdf.force-page-count']").change(forcePageCountChangeHandler).change();
-    $(":input[name='pdf.link-font-weight']," +
-      ":input[name='pdf.link-font-style']," +
-      ":input[name='pdf.link-text-decoration']," +
-      ":input[name='pdf.link-color']").change(linkStyleHandler).change();
   $("#style-model :input").change(previewSpaceHandler).change();
   $(":input[name='pdf.page-size']," +
       ":input[name='pdf.orientation']," +
@@ -401,132 +321,3 @@ function toPt(val) {
       return undefined;
     }
 }
-
-// preview page drawing
-/*
-var margins = [5, 5, 5, 5];
-
-function drawSequencePreview() {
-  var canvas = document.getElementById("preview.sequence");
-    if (canvas != null && canvas.getContext) {
-      var ctx = canvas.getContext("2d");
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      var p1 = drawPage(ctx, 2, 1);
-      p1[3] = p1[3] / 2;
-      drawContents(ctx, p1, false);
-      if ($(":input[name='pdf.force-page-count']").val() == "auto") {
-          var p2 = drawPage(ctx, 1, 2);
-          if ($(":input[name='pdf.chapter-layout']").val() == "BASIC") {
-              drawContents(ctx, p2, false);  
-          } else {
-              drawMinitoc(ctx, p2, false);
-          }
-          var p3 = drawPage(ctx, 2, 2);
-          drawContents(ctx, p3, true);
-      } else {
-          var p2 = drawPage(ctx, 1, 2);
-          var p3 = drawPage(ctx, 2, 2);
-          if ($(":input[name='pdf.chapter-layout']").val() == "BASIC") {
-              drawContents(ctx, p3, true);  
-          } else {
-              drawMinitoc(ctx, p3, true);
-          }
-      }
-    }
-}
-
-function drawPage(ctx, col, row, content) {
-  ctx.lineWidth = "1px";
-  var height = 297 / 4;
-  var width = 210 / 4;
-  var x = ((col - 1) * 5) + (width * col) - width;
-  var y = ((row - 1) * 5) + (height * row) - height;
-  
-  ctx.strokeStyle = "black";
-  ctx.strokeRect(x, y, width, height);
-  
-  return {
-    x: x + margins[0],
-    y: y + margins[1],
-      width: width - margins[0] - margins[2],
-      height: height - margins[1] - margins[3]
-  };
-}
-
-function drawContents(ctx, c, cont) {
-  ctx.lineWidth = "2px";
-  var start = cont;
-  var offset = 0;
-  var lines = 0;
-  while (offset < c.height) {
-    if (start || Math.random() < 0.1) {
-      ctx.strokeStyle = "black";
-      offset = offset + 3;
-      lines = 0;
-      start = false;
-    } else {
-      ctx.strokeStyle = "silver";
-    }
-    ctx.beginPath();
-    ctx.moveTo(c.x,
-           c.y + offset);
-    ctx.lineTo(c.width + c.x - Math.random() * 20,
-           c.y + offset);
-    ctx.closePath();
-    ctx.stroke();
-    offset = offset + 3;
-    if (Math.random() > 0.75 && lines > 2) {
-      offset = offset + 3;
-      lines = 0;
-    } else {
-      lines++;
-    }
-  }
-}
-
-function drawMinitoc(ctx, c, cont) {
-  ctx.lineWidth = "2px";
-  ctx.strokeStyle = "black";
-  ctx.beginPath();
-  ctx.moveTo(c.x,
-         c.y);
-  ctx.lineTo(c.x + c.width / 1.5,
-         c.y);
-  ctx.closePath();
-  ctx.stroke();
-  var start = cont;
-  var offset = 3;
-  var lines = 0;
-  while (offset < c.height / 2) {
-//    if (start || Math.random() < 0.1) {
-//      ctx.strokeStyle = "black";
-//      offset = offset + 3;
-//      lines = 0;
-//      start = false;
-//    } else {
-      ctx.strokeStyle = "silver";
-//    }
-    ctx.beginPath();
-    ctx.moveTo(c.x,
-           c.y + offset);
-    ctx.lineTo(c.width + c.x / 1.5 - Math.random() * 5,
-           c.y + offset);
-    ctx.closePath();
-    ctx.stroke();
-    offset = offset + 3;
-    if (Math.random() > 0.75 && lines > 2) {
-      offset = offset + 3;
-      lines = 0;
-    } else {
-      lines++;
-    }
-  }
-  ctx.beginPath();
-  ctx.moveTo(c.width + c.x / 1.5 + 2,
-         c.y + 3);
-  ctx.lineTo(c.width + c.x / 1.5 + 2,
-         c.y + c.height / 2 + 3);
-  ctx.closePath();
-  ctx.stroke();
-}
-*/

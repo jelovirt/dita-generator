@@ -43,21 +43,7 @@ $(document).ready(function() {
 		s.change(editableHandler);
 		o.change(function(event){editableOtherHandler(s, l, o);});
 		l.change(function(event){editableListHandler(s, l, o);});
-//		editableListHandler(s, l, o);
 	});
-	
-	// model initialization
-//	$("#style-model :input").filter(function() { return $(this).attr("name").indexOf(".body") != -1; }).each(function() {
-//		var f = $(this);
-//		var field = f.attr("name").split(".")[1];
-//		console.info("model dependency field " + field);
-//		var dependencies = $("#style-model :input.inherit-from-body").filter(function() { return $(this).attr("name").indexOf("pdf." + field) != -1; });
-//		console.info("  dependency " + dependencies.length);
-//		if (dependencies.length) {
-//			f.change(function(event) { notifyDependencies(event, dependencies); });
-//		}
-//	});
-
 	
 	// form initialization
 	$(":input[name='ot.version']").change(toolkitVersionChangeHandler).change();
@@ -73,16 +59,6 @@ $(document).ready(function() {
   $("#pdf-style-selector").change();
 	$(":input.length-value").keydown(valueChangeHandler).change(validateLength);
 });
-
-// Model -----------------------------------------------------------------------
-
-//function notifyDependencies(event, dependencies) {
-//	var target = $(event.target);
-//	dependencies.each(function() {
-//		var t = $(this);
-//		if ()
-//	});
-//}
 
 // UI --------------------------------------------------------------------------
 
@@ -121,41 +97,20 @@ function editableHandler(event) {
 		other.hide().prop("disabled", true);
 		list.val(other.val());
 		other.val(undefined);
-		//store.val(list.val()).change();
 	} else {
 		list.val("#other");
 		other.show().prop("disabled", false).focus();
-		//store.val(other.val()).change();
 	}
 }
 function editableListHandler(store, list, other) {
-//console.info("change list");
-//	if (list.val() == "#other") {
-//		other.show().prop("disabled", false).focus();
-//		store.val(other.val()).change();
-//	} else {
-//		other.hide().prop("disabled", true);
-//		store.val(list.val()).change();
-//	}
 	if (list.val() == "#other") {
-		//other.show().prop("disabled", false).focus();
 		store.val(other.val()).change();
 	} else {
-		//other.hide().prop("disabled", true);
 		store.val(list.val()).change();
 	}
 
 }
 function editableOtherHandler(store, list, other) {
-//console.info("change other");
-//	if (list.find("option[value='" + other.val() + "']").length != 0) { // same value in list
-//		other.hide().prop("disabled", true);
-//		list.val(other.val());
-//		store.val(list.val()).change();
-//	} else {
-//		other.show().prop("disabled", false).focus();
-//		store.val(other.val()).change();
-//	}
 	store.val(other.val()).change();
 }
 
@@ -208,7 +163,6 @@ function styleHandler(event) {
 	} else {
 		$(".pdf-style-selector-block").removeClass("disabled").find(":input").removeAttr("disabled");
 	}
-	//writeToModel(pdfStyleSelectorCurrent);
 	pdfStyleSelectorCurrent = target.val();
 	readFromModel(target.val());
 }
@@ -272,8 +226,6 @@ function writeFieldToModel(field, type) {
 		var b = $(":input[name='pdf." + field + "." + "body" + "']");
 		if (oldValue == b.val()) {
 			newValue = undefined;
-			//model.val(undefined);
-			//return;
 		}
     // update inheriting model fields
 	} else if (type == "body") {
