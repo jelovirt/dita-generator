@@ -35,6 +35,7 @@ styles = [{ "property": f[0], "type": f[1], "value": f[2], "inherit": f[3] } for
     ("font-family", "body", "serif", False),
     ("font-size", "body", "10pt", False),
     ("color", "body", "black", False),
+    ("background-color", "body", "transparent", False),
     ("font-weight", "body", "normal", False),
     ("font-style", "body", "normal", False),
     ("text-decoration", "body", "none", False),
@@ -47,6 +48,7 @@ styles = [{ "property": f[0], "type": f[1], "value": f[2], "inherit": f[3] } for
     ("font-family", "topic", "sans-serif", False),
     ("font-size", "topic", "18pt", False),
     ("color", "topic", "black", True),
+    ("background-color", "topic", "transparent", False),
     ("font-weight", "topic", "bold", False),
     ("font-style", "topic", "normal", False),
     ("text-decoration", "topic", "none", True),
@@ -59,6 +61,7 @@ styles = [{ "property": f[0], "type": f[1], "value": f[2], "inherit": f[3] } for
     ("font-family", "topic.topic", "sans-serif", False),
     ("font-size", "topic.topic", "14pt", False),
     ("color", "topic.topic", "black", True),
+    ("background-color", "topic.topic", "transparent", False),
     ("font-weight", "topic.topic", "bold", False),
     ("font-style", "topic.topic", "normal", False),
     ("text-decoration", "topic.topic", "none", True),
@@ -71,6 +74,7 @@ styles = [{ "property": f[0], "type": f[1], "value": f[2], "inherit": f[3] } for
     ("font-family", "topic.topic.topic", "sans-serif", False),
     ("font-size", "topic.topic.topic", "12pt", False),
     ("color", "topic.topic.topic", "black", True),
+    ("background-color", "topic.topic.topic", "transparent", False),
     ("font-weight", "topic.topic.topic", "bold", False),
     ("font-style", "topic.topic.topic", "normal", False),
     ("text-decoration", "topic.topic.topic", "none", True),
@@ -83,6 +87,7 @@ styles = [{ "property": f[0], "type": f[1], "value": f[2], "inherit": f[3] } for
     ("font-family", "topic.topic.topic.topic", "serif", True),
     ("font-size", "topic.topic.topic.topic", "10pt", True),
     ("color", "topic.topic.topic.topic", "black", True),
+    ("background-color", "topic.topic.topic.topic", "transparent", False),
     ("font-weight", "topic.topic.topic.topic", "bold", False),
     ("font-style", "topic.topic.topic.topic", "normal", False),
     ("text-decoration", "topic.topic.topic.topic", "none", True),
@@ -95,6 +100,7 @@ styles = [{ "property": f[0], "type": f[1], "value": f[2], "inherit": f[3] } for
     ("font-family", "section", "sans-serif", False),
     ("font-size", "section", None, True),
     ("color", "section", None, True),
+    ("background-color", "section", "transparent", False),
     ("font-weight", "section", None, True),
     ("font-style", "section", None, True),
     ("text-decoration", "section", None, True),
@@ -107,6 +113,7 @@ styles = [{ "property": f[0], "type": f[1], "value": f[2], "inherit": f[3] } for
     ("font-family", "note", None, True),
     ("font-size", "note", None, True),
     ("color", "note", None, True),
+    ("background-color", "note", "transparent", False),
     ("font-weight", "note", None, True),
     ("font-style", "note", None, True),
     ("text-decoration", "note", None, True),
@@ -119,6 +126,7 @@ styles = [{ "property": f[0], "type": f[1], "value": f[2], "inherit": f[3] } for
     ("font-family", "pre", "monospace", False),
     ("font-size", "pre", None, True),
     ("color", "pre", None, True),
+    ("background-color", "pre", "transparent", False),
     ("font-weight", "pre", None, True),
     ("font-style", "pre", None, True),
     ("text-decoration", "pre", None, True),
@@ -128,9 +136,23 @@ styles = [{ "property": f[0], "type": f[1], "value": f[2], "inherit": f[3] } for
     ("start-indent", "pre", None, True),
     ("line-height", "pre", None, True),
     
+    ("font-family", "codeblock", "monospace", False),
+    ("font-size", "codeblock", None, True),
+    ("color", "codeblock", None, True),
+    ("background-color", "codeblock", "transparent", False),
+    ("font-weight", "codeblock", None, True),
+    ("font-style", "codeblock", None, True),
+    ("text-decoration", "codeblock", None, True),
+    ("space-before", "codeblock", "15pt", False),
+    ("space-after", "codeblock", None, True),
+    ("text-align", "codeblock", None, True),
+    ("start-indent", "codeblock", "31pt", True),#+6pt
+    ("line-height", "codeblock", None, True),
+    
     ("font-family", "link", None, True),
     ("font-size", "link", None, True),
     ("color", "link", "blue", False),
+    ("background-color", "link", "transparent", False),
     ("font-weight", "link", None, True),
     ("font-style", "link", None, True),
     ("text-decoration", "link", None, True),
@@ -300,6 +322,15 @@ class StylePluginGenerator(DitaGenerator):
             "odd": [],
             "even": []
             }
+            
+    def __get_ns(self):
+        return {
+            "xsl": "http://www.w3.org/1999/XSL/Transform",
+            "fo": "http://www.w3.org/1999/XSL/Format",
+            "e": self.plugin_name,
+            "ditaarch": "http://dita.oasis-open.org/architecture/2005/",
+            "opentopic": "http://www.idiominc.com/opentopic"
+            }
 
     def _preprocess(self):
         """Preprocess arguments."""
@@ -378,7 +409,7 @@ class StylePluginGenerator(DitaGenerator):
 
     def __generate_custom(self, stylesheet=None):
         """Generate plugin custom XSLT file."""
-        __root = ET.Element(NS_XSL + "stylesheet", {"version":"2.0", "exclude-result-prefixes": "e opentopic"})
+        __root = ET.Element(NS_XSL + "stylesheet", {"version":"2.0", "exclude-result-prefixes": "ditaarch opentopic e"})
         
         __cover_raw = """
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -663,14 +694,14 @@ class StylePluginGenerator(DitaGenerator):
                 ET.SubElement(__root, NS_XSL + "variable", name=u"tocMaximumLevel").text = str(self.toc_maximum_level)
         
         ditagen.generator.indent(__root)
-        ditagen.generator.set_prefixes(__root, {"xsl": "http://www.w3.org/1999/XSL/Transform", "fo": "http://www.w3.org/1999/XSL/Format", "e": self.plugin_name, "opentopic": "http://www.idiominc.com/opentopic"})
+        ditagen.generator.set_prefixes(__root, self.__get_ns())
         
         __d = ET.ElementTree(__root)
         __d.write(self.out, "UTF-8")
 
     def __generate_custom_attr(self, stylesheet=None):
         """Generate plugin custom XSLT file."""
-        __root = ET.Element(NS_XSL + "stylesheet", {"version":"2.0", "exclude-result-prefixes": "e"})
+        __root = ET.Element(NS_XSL + "stylesheet", {"version":"2.0", "exclude-result-prefixes": "ditaarch opentopic e"})
         
         if stylesheet == "front-matter-attr" or not stylesheet:
             if self.cover_image_name:
@@ -773,16 +804,19 @@ class StylePluginGenerator(DitaGenerator):
             if "start-indent" in self.style["body"]:
                 ET.SubElement(__root, NS_XSL + "variable", name=u"side-col-width").text = self.style["body"]["start-indent"]
         
+        if stylesheet == "pr-domain-attr" or not stylesheet:
+            # codeblock
+            __pre_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name=u"codeblock")
+            for k, v in self.style["codeblock"].items():
+                ET.SubElement(__pre_attr, NS_XSL + "attribute", name=k).text = v
+        
         ditagen.generator.indent(__root)
-        ditagen.generator.set_prefixes(__root, {"xsl": "http://www.w3.org/1999/XSL/Transform", "fo": "http://www.w3.org/1999/XSL/Format", "e": self.plugin_name})
+        ditagen.generator.set_prefixes(__root, self.__get_ns())
         __d = ET.ElementTree(__root)
         __d.write(self.out, "UTF-8")
 
     def __generate_shell(self):
-        __root = ET.Element(NS_XSL + "stylesheet", {
-            "version":"2.0",
-            "exclude-result-prefixes": "ditaarch e",
-            })
+        __root = ET.Element(NS_XSL + "stylesheet", {"version":"2.0", "exclude-result-prefixes": "ditaarch opentopic e"})
         
         __root.append(ET.Comment("base imports"))
         fs = []
@@ -841,6 +875,8 @@ class StylePluginGenerator(DitaGenerator):
         fs.append("plugin:org.dita.pdf2:cfg/fo/attrs/sw-domain-attr.xsl")
         fs.append("plugin:org.dita.pdf2:xsl/fo/sw-domain.xsl")
         fs.append("plugin:org.dita.pdf2:cfg/fo/attrs/pr-domain-attr.xsl")
+        if self.override_shell:
+            fs.append("plugin:%s:cfg/fo/attrs/pr-domain-attr.xsl" % (self.plugin_name))
         fs.append("plugin:org.dita.pdf2:xsl/fo/pr-domain.xsl")
         fs.append("plugin:org.dita.pdf2:cfg/fo/attrs/hi-domain-attr.xsl")
         fs.append("plugin:org.dita.pdf2:xsl/fo/hi-domain.xsl")
@@ -861,9 +897,11 @@ class StylePluginGenerator(DitaGenerator):
 
         for i in fs:
             ET.SubElement(__root, "xsl:import", href=i)
+            
         __root.append(ET.Comment("formatter specific imports"))
         for i in imports[self.formatter]:
             ET.SubElement(__root, "xsl:import", href=i)
+        
         if not self.override_shell:
             __root.append(ET.Comment("configuration overrides"))
             for i in ["cfg:fo/attrs/custom.xsl", "cfg:fo/xsl/custom.xsl"]:
@@ -889,12 +927,7 @@ class StylePluginGenerator(DitaGenerator):
         ET.SubElement(__root, "xsl:param", name="ditaVersion", select="number(/*[contains(@class,' map/map ')]/@ditaarch:DITAArchVersion)")
         
         ditagen.generator.indent(__root)
-        ditagen.generator.set_prefixes(__root, {
-            "xsl": "http://www.w3.org/1999/XSL/Transform",
-            "fo": "http://www.w3.org/1999/XSL/Format",
-            "e": self.plugin_name,
-            "ditaarch": "http://dita.oasis-open.org/architecture/2005/"
-            })
+        ditagen.generator.set_prefixes(__root, self.__get_ns())
         __d = ET.ElementTree(__root)
         __d.write(self.out, "UTF-8")
 
@@ -1015,7 +1048,7 @@ class StylePluginGenerator(DitaGenerator):
                                         "%s/cfg/fo/xsl/custom.xsl" % (self.plugin_name))
                 # custom XSLT attribute sets
                 if self.override_shell:
-                    for s in ["front-matter-attr", "commons-attr", "layout-masters-attr", "tables-attr", "basic-settings"]:
+                    for s in ["front-matter-attr", "commons-attr", "layout-masters-attr", "tables-attr", "basic-settings", "pr-domain-attr"]:
                         self._run_generation(__zip, lambda: self.__generate_custom_attr(s),
                                             "%s/cfg/fo/attrs/%s.xsl" % (self.plugin_name, s))
                 else:

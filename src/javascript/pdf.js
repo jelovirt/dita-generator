@@ -64,19 +64,11 @@ $(document).ready(function() {
     $(":input[name='pdf.formatter']").change(formatterHandler).change();
     $(":input[name='transtype']").change(transtypeChangeHandler);
     $(":input[name='pdf.body-column-count']").change(columnChangeHandler).change();
-	$(":input[id='pdf.font-family']," +
-      ":input[id='pdf.font-size']," +
-      ":input[id='pdf.line-height']," +
-      ":input[id='pdf.font-weight']," +
-      ":input[id='pdf.font-style']," +
-      ":input[id='pdf.text-decoration']," +
-      ":input[id='pdf.space-before']," +
-      ":input[id='pdf.space-after']," +
-      ":input[id='pdf.start-indent']," +
-      ":input[id='pdf.color']," +
-      ":input[id='pdf.text-align']").change(styleEditorHandler);
-    $("#pdf-style-selector").change(styleHandler);
-    readFromModel("body");// initialize style dialog
+  $.each(storeFields, function(f) {
+    $(":input[id='pdf." + this + "']").change(styleEditorHandler);
+  });
+  $("#pdf-style-selector").change(styleHandler);
+  readFromModel("body");// initialize style dialog
 	pdfStyleSelectorCurrent = "body";
 	$(":input.length-value").keydown(valueChangeHandler).change(validateLength);
 });
@@ -214,7 +206,7 @@ function styleHandler(event) {
 	pdfStyleSelectorCurrent = target.val();
 	readFromModel(target.val());
 }
-var storeFields = ["font-family", "font-size", "font-weight", "font-style", "color", "space-before", "space-after", "start-indent", "text-align", "text-decoration", "line-height"];
+var storeFields = ["font-family", "font-size", "font-weight", "font-style", "color", "background-color", "space-before", "space-after", "start-indent", "text-align", "text-decoration", "line-height"];
 /**
  * Read fields from model to UI.
  * @param type

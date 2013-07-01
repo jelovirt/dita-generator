@@ -102,6 +102,9 @@ def main():
                   "text-align": "justify"
                 },
                 "pre": {"line-height": "1em"},
+                "codeblock": {
+                  "background-color": "silver"
+                },
                 "dl": {},
                 "topic.topic.topic": {
                   "font-style": "italic",
@@ -210,6 +213,8 @@ def main():
             "pdf.start-indent.note": "50pt",
             
             "pdf.line-height.pre": "1em",
+            
+            "pdf.background-color.codeblock": "silver",
             
             "pdf.table-numbering": "document",
             "pdf.figure-numbering": "none",

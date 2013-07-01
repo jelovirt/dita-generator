@@ -130,6 +130,7 @@
       <zipfileset dir="${src.dir}" prefix="${prefix}">
         <include name="css/*.css"/>
         <include name="images/*.png"/>
+        <include name="images/*.gif"/>
       </zipfileset>
       <zipfileset dir="${work.dir}/javascript" prefix="${prefix}/js">
         <include name="*.js"/>
