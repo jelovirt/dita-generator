@@ -419,7 +419,7 @@
       </script>
       <input type="hidden" id="pdf-style-selector-current">
       <!-- Style UI -->
-      <div>
+      <div id="style-form">
         <select id="pdf-style-selector" class="label">
           <optgroup label="Block" class="block">
             <option value="body" selected>Normal</option>
@@ -569,6 +569,10 @@
                   </td>
                 </tr>
               </table>
+            </td>
+            <td data-style="note">
+              <label for="pdf.icon" class="inline">Note icon</label>:
+              <input id="pdf.icon" type="checkbox" value="icon" checked>
             </td>
           </tr>
           <tr class="pdf-style-selector-block">

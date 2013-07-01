@@ -69,7 +69,8 @@ $(document).ready(function() {
   });
   $("#pdf-style-selector").change(styleHandler);
   readFromModel("body");// initialize style dialog
-	pdfStyleSelectorCurrent = "body";
+  pdfStyleSelectorCurrent = "body";
+  $("#pdf-style-selector").change();
 	$(":input.length-value").keydown(valueChangeHandler).change(validateLength);
 });
 
@@ -196,6 +197,11 @@ function addToValue(target, add) {
  */
 function styleHandler(event) {
 	var target = $(event.target);
+	var style = target.val();
+	$("#style-form [data-style]").each(function() {
+	  var f = $(this); 
+	  f.toggle($(this).attr("data-style") === style);
+	});
 	var type = target.find(":selected").parent("optgroup.block");
 	if (type.length == 0) {
 		$(".pdf-style-selector-block").addClass("disabled").find(":input").attr("disabled", true);
@@ -206,7 +212,9 @@ function styleHandler(event) {
 	pdfStyleSelectorCurrent = target.val();
 	readFromModel(target.val());
 }
-var storeFields = ["font-family", "font-size", "font-weight", "font-style", "color", "background-color", "space-before", "space-after", "start-indent", "text-align", "text-decoration", "line-height"];
+var storeFields = ["font-family", "font-size", "font-weight", "font-style", "color", "background-color", "space-before", "space-after", "start-indent", "text-align", "text-decoration", "line-height",
+                   // note
+                   "icon"];
 /**
  * Read fields from model to UI.
  * @param type

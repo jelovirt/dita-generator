@@ -89,6 +89,11 @@ function previewSpaceHandler(event) {
       break;
     }
     break;
+  case "icon":
+    type = "note-image";
+    cls = "display";
+    v = (v == "icon") ? "table-cell" : "none";
+    break;
   default:
     cls = field;
     break;

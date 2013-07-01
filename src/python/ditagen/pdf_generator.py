@@ -122,6 +122,8 @@ styles = [{ "property": f[0], "type": f[1], "value": f[2], "inherit": f[3] } for
     ("text-align", "note", None, True),
     ("start-indent", "note", None, True),
     ("line-height", "note", None, True),
+    # custom
+    ("icon", "note", "icon", False),
     
     ("font-family", "pre", "monospace", False),
     ("font-size", "pre", None, True),
@@ -679,7 +681,31 @@ class StylePluginGenerator(DitaGenerator):
                 __dl = ET.fromstring(__dl_raw)
                 for __c in list(__dl):
                     __root.append(__c)
-    
+        
+        __note_raw = """
+<xsl:stylesheet xmlns:fo="http://www.w3.org/1999/XSL/Format"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:e="e"
+                xmlns:opentopic="http://www.idiominc.com/opentopic"
+                exclude-result-prefixes="e opentopic"
+                version="2.0">
+  
+  <xsl:template match="*[contains(@class,' topic/note ')]">
+    <fo:table xsl:use-attribute-sets="note__table">
+      <fo:table-column xsl:use-attribute-sets="note__text__column"/>
+      <fo:table-body>
+        <fo:table-row>
+          <fo:table-cell xsl:use-attribute-sets="note__text__entry">
+            <xsl:apply-templates select="." mode="placeNoteContent"/>
+          </fo:table-cell>
+        </fo:table-row>
+      </fo:table-body>
+    </fo:table>
+  </xsl:template>
+  
+</xsl:stylesheet>
+"""
+        
         if stylesheet == "commons" or not stylesheet:
             if self.title_numbering == "all":
                 __root.append(ET.Comment("title numbering"))
@@ -687,6 +713,12 @@ class StylePluginGenerator(DitaGenerator):
                     __root.append(__c)
             elif self.title_numbering == "chapters":
                 pass #DITA-OT default
+            
+            if not ("icon" in self.style["note"] and self.style["note"]["icon"] == "icon"):
+                __root.append(ET.Comment("note"))
+                __note = ET.fromstring(__note_raw)
+                for __c in list(__note):
+                    __root.append(__c)
                     
         if not stylesheet:
             if not self.override_shell and self.toc_maximum_level:
@@ -738,12 +770,16 @@ class StylePluginGenerator(DitaGenerator):
                 for k, v in self.style["body"].items():
                     if k != "start-indent":
                         ET.SubElement(__spacing_attr, NS_XSL + "attribute", name=k).text = v
-    
+
             # note
             __note_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name=u"note__table")
             for k, v in self.style["note"].items():
-                ET.SubElement(__note_attr, NS_XSL + "attribute", name=k).text = v
-                
+                if k != "icon":
+                    ET.SubElement(__note_attr, NS_XSL + "attribute", name=k).text = v
+            if not ("icon" in self.style["note"] and self.style["note"]["icon"] == "icon"):
+                __note_text = ET.SubElement(__root, NS_XSL + "attribute-set", name=u"note__text__column")
+                ET.SubElement(__note_text, NS_XSL + "attribute", name="column-number").text = "1"
+
             # pre
             __pre_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name=u"pre")
             for k, v in self.style["pre"].items():

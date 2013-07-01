@@ -118,7 +118,8 @@ def main():
                 "note": {
                   "color": "gray",
                   "font-size": "10pt",
-                  "start-indent": "50pt"
+                  "start-indent": "50pt",
+                  "icon": "icon"
                 },
                 "topic.topic": {},
                 "topic": {
@@ -211,6 +212,7 @@ def main():
             "pdf.font-size.note": "10pt",
             "pdf.color.note": "gray",
             "pdf.start-indent.note": "50pt",
+            "pdf.icon.note": "icon",
             
             "pdf.line-height.pre": "1em",
             
