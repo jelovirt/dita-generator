@@ -52,6 +52,11 @@ function previewSpaceHandler(event) {
     cls = "display";
     v = (v == "icon") ? "table-cell" : "none";
     break;
+  case "link-page-number":
+    type = "link-page-number";
+    cls = "display";
+    v = (v == "true") ? "inline" : "none";
+    break;
   default:
     cls = field;
     break;
@@ -204,16 +209,6 @@ function definitionListHandler(event) {
   $("*[id='pdf.dl.example." + target.val() + "']").show();
 }
 
-function linkPageNumberHandler(event) {
-  var target = $(event.target);
-  var view = $(".link-page-number-example");
-  if (target.is(":checked")) {
-    view.show();
-  } else {
-    view.hide();
-  }
-}
-
 function titleNumberingHandler(event) {
   var target = $(event.target);
   var preview = $("*[id='pdf.title-numbering.example']");
@@ -232,7 +227,6 @@ function tableAndFigureNumberingHandler(event) {
 }
 
 $(document).ready(function() {
-    $(":input[name='pdf.link-page-number']").change(linkPageNumberHandler).change();
     $(":input[name='pdf.title-numbering']").change(titleNumberingHandler).change();
     $(":input[name='pdf.table-numbering']," +
       ":input[name='pdf.figure-numbering']").change(tableAndFigureNumberingHandler).change();

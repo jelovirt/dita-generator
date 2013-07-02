@@ -162,7 +162,9 @@ styles = [{ "property": f[0], "type": f[1], "value": f[2], "inherit": f[3] } for
     #("space-after", "link", None, None),
     #("text-align", "link", None, None),
     #("start-indent", "link", None, None),
-    ("line-height", "link", None, None)
+    ("line-height", "link", None, None),
+    # custom
+    ("link-page-number", "link", "true", None)
     ]]
 
 fonts = {
@@ -310,7 +312,7 @@ class StylePluginGenerator(DitaGenerator):
         self.title_numbering = None
         self.table_numbering = None
         self.figure_numbering = None
-        self.link_pagenumber = None
+        #self.link_pagenumber = None
         self.table_continued = None
         self.formatter = None
         self.override_shell = False
@@ -1014,7 +1016,7 @@ class StylePluginGenerator(DitaGenerator):
         __root = ET.Element(u"vars")
         
         # page number reference
-        if not self.link_pagenumber:
+        if not ("link-page-number" in self.style["link"] and self.style["link"]["link-page-number"] == "true"):
             ET.SubElement(__root, u"variable", id=u"On the page")
         # table continued
         if self.table_continued:

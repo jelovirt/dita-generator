@@ -168,7 +168,9 @@ function styleHandler(event) {
 }
 var storeFields = ["font-family", "font-size", "font-weight", "font-style", "color", "background-color", "space-before", "space-after", "start-indent", "text-align", "text-decoration", "line-height",
                    // note
-                   "icon"];
+                   "icon",
+                   // link
+                   "link-page-number"];
 /**
  * Read fields from model to UI.
  * @param type
@@ -202,7 +204,7 @@ function writeToModel(type) {
 		writeFieldToModel(storeFields[i], type);
 	}
 }
-function writeFieldToModel(field, type) { 	
+function writeFieldToModel(field, type) {
 	var view = $("#style-form :input[id='pdf." + field + "']");
 	var model = $("#style-model :input[name='pdf." + field + "." + type + "']");
 	var oldValue = model.val();

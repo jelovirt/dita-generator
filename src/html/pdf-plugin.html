@@ -567,6 +567,16 @@
               <input id="pdf.icon" type="checkbox" value="icon" checked>
             </td>
           </tr>
+          <tr data-style="link">
+            <td>
+              <label for="pdf.link-page-number" class="inline">Page number</label>:
+              <input id="pdf.link-page-number" type="checkbox" value="true" checked title="Add page number to links.">
+            </td>
+            <!--td>
+              <label for="pdf.link-url" class="inline">Show URL</label>:
+              <input name="pdf.link-url" type="checkbox" value="true" checked title="Show external link address.">
+            </td-->
+          </tr>
           <tr class="pdf-style-selector-block">
             <td>
               <label class="inline">Spacing</label>
@@ -645,7 +655,7 @@
             The quick brown fox jumps over the lazy dog.
           </p>
           <p class="example-page-content-body">
-            The quick brown <span class="example-page-content-link">fox jumps</span><span class="link-page-number-example"> on page 42</span> over the lazy dog.
+            The quick brown <span class="example-page-content-link">fox jumps</span><span class="link-page-number-example example-page-content-link-page-number"> on page 42</span> over the lazy dog.
           </p>
           <div class="example-page-content-topic.topic.topic">Heading 3</div>
           <p class="example-page-content-body">
@@ -809,20 +819,6 @@ jumps over the lazy dog.</pre>
       <p class="instruction">Generate "Table continued…" to table footer when table is broken to multiple pages.</p>
     </fieldset>
     <h3>Linking</h3>
-    <div class="example">
-      <div class="example-text">
-        <p>The quick brown <span class="example-page-content-link">fox jumps</span><span class="link-page-number-example"> on page 42</span> over the lazy dog.</p>
-      </div>
-      <!--div class="example-heading">Related links</div>
-      </div-->
-    </div>
-    <fieldset>
-      <p>
-        <label for="pdf.link-page-number">Page number on links</label>
-        <input name="pdf.link-page-number" type="checkbox" value="true" checked>
-      </p>
-      <p class="instruction">Add page number to links.</p>
-    </fieldset>
     <fieldset>
       <p>
         <label for="pdf.include-related-links">Related links</label>

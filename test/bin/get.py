@@ -130,7 +130,8 @@ def main():
                 },
                 "link": {
                   "color": "black",
-                  "font-style": "italic"
+                  "font-style": "italic",
+                  "link-page-number": "true"
                 }
               },
               "bookmark_style": "EXPANDED",
@@ -152,7 +153,7 @@ def main():
                 "outside": "20mm"
               },
               "force_page_count": "auto",
-              "link_pagenumber": True,
+              #"link_pagenumber": True,
               "plugin_version": "1.0.0",
               "footer": {
                 "even": ["pagenum"],
@@ -208,6 +209,7 @@ def main():
             
             "pdf.color.link": "black",
             "pdf.font-style.link": "italic",
+            "pdf.link-page-number.link": "true",
             
             "pdf.font-size.note": "10pt",
             "pdf.color.note": "gray",
@@ -226,7 +228,7 @@ def main():
             "pdf.title-numbering": "all",
             "pdf.spacing.before": "10pt",
             "pdf.spacing.after": "10pt",
-            "pdf.link-page-number": "true",
+            #"pdf.link-page-number": "true",
             "pdf.table-continued": "true",
             "pdf.formatter": "ah",
             "pdf.override_shell": "true",
