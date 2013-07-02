@@ -21,7 +21,7 @@
       <attribute name="js"/>
       <attribute name="output"/>
       <sequential>
-        <jscomp compilationLevel="whitespace" prettyPrint="true" warning="quiet"
+        <jscomp compilationLevel="simple" prettyPrint="false" warning="quiet"
                 output="${work.dir}/javascript/@{output}">
           <sources dir="${src.dir}/javascript" files="@{js}"/>
         </jscomp>

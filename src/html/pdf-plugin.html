@@ -406,17 +406,9 @@
       <!-- Style model -->
       <fieldset id="style-model" class="model">
         {% for s in styles %}
-          <input type="hidden" name="pdf.{{ s.property }}.{{ s.type }}" value="{{ s.value|default_if_none:"" }}" {% if s.inherit %} class="inherit-from-body" {% endif %}>
+          <input type="hidden" name="pdf.{{ s.property }}.{{ s.type }}" {% if s.value %} value="{{ s.value|default_if_none:"" }}" {% endif %} {% if s.inherit %} data-inherit="{{ s.inherit }}" {% endif %}>
         {% endfor %}
       </fieldset>
-      <script type="text/javascript">
-        // var storeFields = [
-        {% regroup styles by property as properties %}
-        {% for style in properties %}
-        // "{{ style.grouper }}",
-        {% endfor %}
-        // ]
-      </script>
       <input type="hidden" id="pdf-style-selector-current">
       <!-- Style UI -->
       <div id="style-form">

@@ -9,8 +9,8 @@ function previewSpaceHandler(event) {
   var type = id.substring(second + 1);
   
   var v = getVal(model);
-  if (v == undefined && model.hasClass("inherit-from-body")) {
-    v = getVal($(":input[name='pdf." + field + ".body']"));
+  if (v == undefined && model.data("inherit") != undefined) {
+    v = getVal($(":input[name='pdf." + field + "." + model.data("inherit") + "']"));
   }
   
   var isLength = false;

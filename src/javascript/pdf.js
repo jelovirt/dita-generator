@@ -159,9 +159,9 @@ function styleHandler(event) {
 	});
 	var type = target.find(":selected").parent("optgroup.block");
 	if (type.length == 0) {
-		$(".pdf-style-selector-block").addClass("disabled").find(":input").attr("disabled", true);
+		$(".pdf-style-selector-block").hide().find(":input").attr("disabled", true);
 	} else {
-		$(".pdf-style-selector-block").removeClass("disabled").find(":input").removeAttr("disabled");
+		$(".pdf-style-selector-block").show().find(":input").removeAttr("disabled");
 	}
 	pdfStyleSelectorCurrent = target.val();
 	readFromModel(target.val());
@@ -175,12 +175,12 @@ var storeFields = ["font-family", "font-size", "font-weight", "font-style", "col
  */
 function readFromModel(type) {
 	for (var i = 0; i < storeFields.length; i++) {
-		var model = $(":input[name='pdf." + storeFields[i] + "." + type + "']");
+		var model = $("#style-model :input[name='pdf." + storeFields[i] + "." + type + "']");
 		// if no value, inherit from body
-		if (model.is(".inherit-from-body") && (model.val() == undefined || model.val() == "")) {
-			model = $(":input[name='pdf." + storeFields[i] + "." + "body" + "']");
+		if (model.data("inherit") != undefined && (model.val() == undefined || model.val() == "")) {
+			model = $("#style-model :input[name='pdf." + storeFields[i] + "." + "body" + "']");
 		}
-		var view = $(":input[id='pdf." + storeFields[i] + "']");
+		var view = $("#style-form :input[id='pdf." + storeFields[i] + "']");
 		if (view.is(":checkbox")) {
 			if (model.val() == view.val()) {
 				view.attr("checked", true);
@@ -189,7 +189,7 @@ function readFromModel(type) {
 			}
 		} else if (view.is(".editable-list")) {
 			var id = view.attr("name") != undefined ? ui.attr("name") : view.attr("id");
-			var store = $(":input[id='" + id + "']");
+			var store = $("#style-model :input[id='" + id + "']");
 		    store.val(model.val());
 		    store.change();		    
 		} else {
@@ -203,8 +203,8 @@ function writeToModel(type) {
 	}
 }
 function writeFieldToModel(field, type) { 	
-	var view = $(":input[id='pdf." + field + "']");
-	var model = $(":input[name='pdf." + field + "." + type + "']");
+	var view = $("#style-form :input[id='pdf." + field + "']");
+	var model = $("#style-model :input[name='pdf." + field + "." + type + "']");
 	var oldValue = model.val();
 	var newValue;
 	if (view.is(":checkbox")) {
@@ -222,16 +222,16 @@ function writeFieldToModel(field, type) {
 	}
 	
 	// if equals body value, treat as inherit value
-	if (model.is(".inherit-from-body")) {
-		var b = $(":input[name='pdf." + field + "." + "body" + "']");
+	if (model.data("inherit") != undefined) {
+		var b = $("#style-model :input[name='pdf." + field + "." + "body" + "']");
 		if (oldValue == b.val()) {
 			newValue = undefined;
 		}
     // update inheriting model fields
 	} else if (type == "body") {
-		$(".inherit-from-body").each(function() {
+	  $("#style-model :input[data-inherit=body]").each(function() {
 			var m = $(this);
-			if (m.is("*[name^='pdf." + field + "']")) {
+			if (m.is("[name^='pdf." + field + "']")) {
 				if (m.val() == undefined || m.val() == "" || m.val() == oldValue) {
 					m.val(newValue);
 					m.change();
