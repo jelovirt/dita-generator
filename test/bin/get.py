@@ -131,7 +131,8 @@ def main():
                 "link": {
                   "color": "black",
                   "font-style": "italic",
-                  "link-page-number": "true"
+                  "link-page-number": "true",
+                  "link-url": "true"
                 }
               },
               "bookmark_style": "EXPANDED",
@@ -210,6 +211,7 @@ def main():
             "pdf.color.link": "black",
             "pdf.font-style.link": "italic",
             "pdf.link-page-number.link": "true",
+            "pdf.link-url.link": "true",
             
             "pdf.font-size.note": "10pt",
             "pdf.color.note": "gray",

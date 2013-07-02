@@ -57,6 +57,11 @@ function previewSpaceHandler(event) {
     cls = "display";
     v = (v == "true") ? "inline" : "none";
     break;
+  case "link-url":
+    type = "link-url";
+    cls = "display";
+    v = (v == "true") ? "inline" : "none";
+    break;
   default:
     cls = field;
     break;

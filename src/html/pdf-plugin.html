@@ -572,10 +572,10 @@
               <label for="pdf.link-page-number" class="inline">Page number</label>:
               <input id="pdf.link-page-number" type="checkbox" value="true" checked title="Add page number to links.">
             </td>
-            <!--td>
+            <td>
               <label for="pdf.link-url" class="inline">Show URL</label>:
-              <input name="pdf.link-url" type="checkbox" value="true" checked title="Show external link address.">
-            </td-->
+              <input id="pdf.link-url" type="checkbox" value="true" title="Show external link address.">
+            </td>
           </tr>
           <tr class="pdf-style-selector-block">
             <td>
@@ -656,6 +656,8 @@
           </p>
           <p class="example-page-content-body">
             The quick brown <span class="example-page-content-link">fox jumps</span><span class="link-page-number-example example-page-content-link-page-number"> on page 42</span> over the lazy dog.
+          
+            The quick <span class="example-page-content-link">brown fox</span><span class="example-page-content-link-url"> at www.example.com</span> jumps over the lazy dog.
           </p>
           <div class="example-page-content-topic.topic.topic">Heading 3</div>
           <p class="example-page-content-body">

@@ -164,7 +164,8 @@ styles = [{ "property": f[0], "type": f[1], "value": f[2], "inherit": f[3] } for
     #("start-indent", "link", None, None),
     ("line-height", "link", None, None),
     # custom
-    ("link-page-number", "link", "true", None)
+    ("link-page-number", "link", "true", None),
+    ("link-url", "link", None, None)
     ]]
 
 fonts = {
@@ -333,7 +334,8 @@ class StylePluginGenerator(DitaGenerator):
             "fo": "http://www.w3.org/1999/XSL/Format",
             "e": self.plugin_name,
             "ditaarch": "http://dita.oasis-open.org/architecture/2005/",
-            "opentopic": "http://www.idiominc.com/opentopic"
+            "opentopic": "http://www.idiominc.com/opentopic",
+            "opentopic-func": "http://www.idiominc.com/opentopic/exsl/function"
             }
 
     def _preprocess(self):
@@ -721,7 +723,90 @@ class StylePluginGenerator(DitaGenerator):
                 __note = ET.fromstring(__note_raw)
                 for __c in list(__note):
                     __root.append(__c)
-                    
+
+        __link_raw = """
+<xsl:stylesheet xmlns:fo="http://www.w3.org/1999/XSL/Format"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:e="e"
+                xmlns:opentopic="http://www.idiominc.com/opentopic"
+                xmlns:opentopic-func="http://www.idiominc.com/opentopic/exsl/function"
+                exclude-result-prefixes="e opentopic opentopic-func"
+                version="2.0">
+
+  <xsl:template match="*[contains(@class,' topic/xref ')]" name="topic.xref">
+    <fo:inline>
+      <xsl:call-template name="commonattributes"/>
+    </fo:inline>
+    <xsl:variable name="destination" select="opentopic-func:getDestinationId(@href)"/>
+    <xsl:variable name="element" select="key('key_anchor',$destination)[1]"/>
+    <xsl:variable name="referenceTitle">
+      <xsl:apply-templates select="." mode="insertReferenceTitle">
+        <xsl:with-param name="href" select="@href"/>
+        <xsl:with-param name="titlePrefix" select="''"/>
+        <xsl:with-param name="destination" select="$destination"/>
+        <xsl:with-param name="element" select="$element"/>
+      </xsl:apply-templates>
+    </xsl:variable>
+    <fo:basic-link xsl:use-attribute-sets="xref">
+      <xsl:call-template name="buildBasicLinkDestination">
+        <xsl:with-param name="scope" select="@scope"/>
+        <xsl:with-param name="format" select="@format"/>
+        <xsl:with-param name="href" select="@href"/>
+      </xsl:call-template>
+      <xsl:choose>
+        <xsl:when test="not(@scope = 'external' or @format = 'html') and not($referenceTitle = '')">
+          <xsl:copy-of select="$referenceTitle"/>
+        </xsl:when>
+        <xsl:when test="not(@scope = 'external' or @format = 'html')">
+          <xsl:call-template name="insertPageNumberCitation">
+            <xsl:with-param name="isTitleEmpty" select="'yes'"/>
+            <xsl:with-param name="destination" select="$destination"/>
+            <xsl:with-param name="element" select="$element"/>
+          </xsl:call-template>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:choose>
+            <xsl:when test="exists(*[not(contains(@class,' topic/desc '))] | text()) and
+                            exists(processing-instruction()[name()='ditaot'][.='usertext'])">
+              <xsl:apply-templates select="*[not(contains(@class,' topic/desc '))] | text()"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="e:format-link-url(@href)"/>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:otherwise>
+      </xsl:choose>
+    </fo:basic-link>
+    <xsl:if test="not(@scope = 'external' or @format = 'html') and not($referenceTitle = '') and not($element[contains(@class, ' topic/fn ')])">
+      <xsl:if test="not(processing-instruction()[name()='ditaot'][.='usertext'])">
+        <xsl:call-template name="insertPageNumberCitation">
+          <xsl:with-param name="destination" select="$destination"/>
+          <xsl:with-param name="element" select="$element"/>
+        </xsl:call-template>
+      </xsl:if>
+    </xsl:if>
+    <xsl:if test="@scope = 'external' and exists(processing-instruction()[name()='ditaot'][.='usertext'])">
+      <xsl:text> at </xsl:text>
+      <xsl:value-of select="e:format-link-url(@href)"/>
+    </xsl:if>
+  </xsl:template>
+  
+  <xsl:function name="e:format-link-url">
+    <xsl:param name="href"/>
+    <xsl:variable name="h" select="if (starts-with($href, 'http://')) then substring($href, 8) else $href"/>
+    <xsl:value-of select="if (contains($h, '/') and substring-after($h, '/') = '') then substring($h, 0, string-length($h)) else $h"/>
+  </xsl:function>
+
+</xsl:stylesheet>
+"""
+
+        if stylesheet == "links" or not stylesheet:
+            if "link-url" in self.style["link"] and self.style["link"]["link-url"] == "true":
+                __root.append(ET.Comment("link"))
+                __link = ET.fromstring(__link_raw)
+                for __c in list(__link):
+                    __root.append(__c)
+
         if not stylesheet:
             if not self.override_shell and self.toc_maximum_level:
                 __root.append(ET.Comment("TOC"))
@@ -763,7 +848,8 @@ class StylePluginGenerator(DitaGenerator):
             for n in link_attr_sets:
                 __link_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name=n)
                 for k, v in self.style["link"].items():
-                    ET.SubElement(__link_attr, NS_XSL + "attribute", name=k).text = v
+                    if k not in ["link-url", "link-page-number"]:
+                        ET.SubElement(__link_attr, NS_XSL + "attribute", name=k).text = v
     
             # normal block
             spacing_attr_sets = ["common.block"]
@@ -873,6 +959,8 @@ class StylePluginGenerator(DitaGenerator):
         fs.append("plugin:org.dita.pdf2:cfg/fo/layout-masters.xsl")
         fs.append("plugin:org.dita.pdf2:cfg/fo/attrs/links-attr.xsl")
         fs.append("plugin:org.dita.pdf2:xsl/fo/links.xsl")
+        if self.override_shell:
+            fs.append("plugin:%s:xsl/fo/links.xsl" % (self.plugin_name))
         fs.append("plugin:org.dita.pdf2:cfg/fo/attrs/lists-attr.xsl")
         fs.append("plugin:org.dita.pdf2:xsl/fo/lists.xsl")
         fs.append("plugin:org.dita.pdf2:cfg/fo/attrs/tables-attr.xsl")
@@ -1078,7 +1166,7 @@ class StylePluginGenerator(DitaGenerator):
                 
                 # custom XSLT
                 if self.override_shell:
-                    for s in ["front-matter", "commons", "tables"]:
+                    for s in ["front-matter", "commons", "tables", "links"]:
                         self._run_generation(__zip, lambda: self.__generate_custom(s),
                                             "%s/xsl/fo/%s.xsl" % (self.plugin_name, s))
                 else:

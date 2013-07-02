@@ -170,7 +170,7 @@ var storeFields = ["font-family", "font-size", "font-weight", "font-style", "col
                    // note
                    "icon",
                    // link
-                   "link-page-number"];
+                   "link-page-number", "link-url"];
 /**
  * Read fields from model to UI.
  * @param type
