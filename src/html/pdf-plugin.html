@@ -423,6 +423,7 @@
             <option value="note">Note</option>
             <option value="pre">Preformatted</option>
             <option value="codeblock">Code block</option>
+            <option value="dl">Definition list</option>
             <!--
             <option value="topic.topic.topic.topic.topic">Heading 5</option>
             <option value="topic.topic.topic.topic.topic.topic">Heading 6</option>
@@ -623,6 +624,19 @@
               </table>
             </td>
           </tr>
+          <tr data-style="dl">
+            <th colspan="2"><h4>List styles</h4></th>
+          </tr>
+          <tr data-style="dl">
+            <td colspan="2">
+              <label for="pdf.dl-type" class="inline">List type</label>:
+              <select id="pdf.dl-type" title="Definition list style">
+                <option value="table" selected>table</option>
+                <option value="html">HTML style</option>
+                <option value="list">bullet list</option>
+              </select>
+            </td>
+          </tr>
         </table>
       </div>
       <!--p class="help">Style definition.</p-->
@@ -654,6 +668,26 @@
             The quick brown fox jumps over the lazy dog.
             The quick brown fox jumps over the lazy dog.
           </p>
+          <dl class="example-page-content-dl" data-field="dl-type" data-value="html">
+            <dt><strong>Pangram</strong></dt>
+            <dd>The quick brown fox jumps over the lazy dog.</dd>
+            <dt><strong>XXX</strong></dt>
+            <dd>The quick brown fox jumps over the lazy dog.</dd>
+          </dl>
+          <table class="example-page-content-dl" data-field="dl-type" data-value="table">
+            <tr>
+              <th><strong>Pangram</strong></th>
+              <td>The quick brown fox jumps over the lazy dog.</td>
+            </tr>
+            <tr>
+              <th><strong>XXX</strong></th>
+              <td>The quick brown fox jumps over the lazy dog.</td>
+            </tr>
+          </table>
+          <ul  class="example-page-content-dl" data-field="dl-type" data-value="list">
+            <li><strong>Pangram</strong><br>The quick brown fox jumps over the lazy dog.</li>
+            <li><strong>XXX</strong><br>The quick brown fox jumps over the lazy dog.</li>
+          </ul>
           <p class="example-page-content-body">
             The quick brown <span class="example-page-content-link">fox jumps</span><span class="link-page-number-example example-page-content-link-page-number"> on page 42</span> over the lazy dog.
           
@@ -832,50 +866,6 @@ jumps over the lazy dog.</pre>
         </select>
       </p>
       <p class="instruction">Related links generated for topics.</p>
-    </fieldset>
-    <!--
-  </div>
-  <div class="page">
-    -->
-    <h3>Lists</h3>
-    <div class="example">
-      <div id="pdf.dl.example.html" class="example-text">
-      <dl>
-        <dt><strong>Pangram</strong></dt>
-        <dd>The quick brown fox jumps over the lazy dog.</dd>
-        <dt><strong>XXX</strong></dt>
-        <dd>The quick brown fox jumps over the lazy dog.</dd>
-      </dl>
-      </div>
-      <div id="pdf.dl.example.table" class="example-text">
-      <table>
-        <tr>
-          <th><strong>Pangram</strong></th>
-          <td>The quick brown fox jumps over the lazy dog.</td>
-        </tr>
-        <tr>
-          <th><strong>XXX</strong></th>
-          <td>The quick brown fox jumps over the lazy dog.</td>
-        </tr>
-      </table>
-      </div>
-      <div id="pdf.dl.example.list" class="example-text">
-      <ul>
-        <li><strong>Pangram</strong><br>The quick brown fox jumps over the lazy dog.</li>
-        <li><strong>XXX</strong><br>The quick brown fox jumps over the lazy dog.</li>
-      </ul>
-      </div>
-    </div>
-    <fieldset>
-      <p>
-        <label for="pdf.dl">Definition list</label>
-        <select name="pdf.dl" id="pdf.dl" title="Definition list">
-          <option value="table" selected>table</option>
-          <option value="html">HTML style</option>
-          <option value="list">bullet list</option>
-        </select>
-      </p>
-      <p class="instruction">Definition list style.</p>
     </fieldset>
   </div>
   <!-- metadata -->

@@ -151,6 +151,21 @@ styles = [{ "property": f[0], "type": f[1], "value": f[2], "inherit": f[3] } for
     ("start-indent", "codeblock", "31pt", "body"),#+6pt
     ("line-height", "codeblock", None, "body"),
     
+    ("font-family", "dl", None, "body"),
+    ("font-size", "dl", None, "body"),
+    ("color", "dl", None, "body"),
+    ("background-color", "dl", None, "body"),
+    ("font-weight", "dl", None, "body"),
+    ("font-style", "dl", None, "body"),
+    ("text-decoration", "dl", None, "body"),
+    ("space-before", "dl", None, "body"),
+    ("space-after", "dl", None, "body"),
+    ("text-align", "dl", None, "body"),
+    ("start-indent", "dl", None, "body"),
+    ("line-height", "dl", None, "body"),
+    # custom
+    ("dl-type", "dl", "table", None),
+    
     ("font-family", "link", None, "body"),
     ("font-size", "link", None, "body"),
     ("color", "link", "blue", None),
@@ -309,7 +324,7 @@ class StylePluginGenerator(DitaGenerator):
         self.include_related_links = None
         self.column_gap = None
         self.mirror_page_margins = None
-        self.dl = None
+        #self.dl = None
         self.title_numbering = None
         self.table_numbering = None
         self.figure_numbering = None
@@ -676,10 +691,11 @@ class StylePluginGenerator(DitaGenerator):
                 __root.append(__c)
         
             __dl_raw = None
-            if self.dl == "list":
-                __dl_raw = __dl_list_raw
-            elif self.dl == "html":
-                __dl_raw = __dl_html_raw
+            if "dl-type" in self.style["dl"]:
+                if self.style["dl"]["dl-type"] == "list":
+                    __dl_raw = __dl_list_raw
+                elif self.style["dl"]["dl-type"] == "html":
+                    __dl_raw = __dl_html_raw
             if __dl_raw:
                 __root.append(ET.Comment("dl"))
                 __dl = ET.fromstring(__dl_raw)
@@ -875,12 +891,12 @@ class StylePluginGenerator(DitaGenerator):
         
         if stylesheet == "tables-attr" or not stylesheet:
             # dl
-            if self.dl:
+            if "dl-type" in self.style["dl"]:
                 __dt_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name="e:dlentry.dt__content")
                 ET.SubElement(__dt_attr, NS_XSL + "attribute", name=u"font-weight").text = "bold"
                 ET.SubElement(__dt_attr, NS_XSL + "attribute", name=u"keep-with-next").text = "always"
                 __dd_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name="e:dlentry.dd__content")
-                if self.dl == "html":
+                if self.style["dl"]["dl-type"] == "html":
                     ET.SubElement(__dd_attr, NS_XSL + "attribute", name=u"start-indent").text = "from-parent(start-indent) + 5mm"
             # table continued
             if self.table_continued:

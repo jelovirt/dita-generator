@@ -62,19 +62,26 @@ function previewSpaceHandler(event) {
     cls = "display";
     v = (v == "true") ? "inline" : "none";
     break;
+  case "dl-type":
+    var all = $("[data-field='" + field + "']");
+    all.hide();
+    all.filter("[data-value='" + v + "']").show();
+    break;
   default:
     cls = field;
     break;
   }
-  if (isLength) {
-    if (v == undefined) { // support undefined values
-      return true;
+  if (cls != undefined) {
+    if (isLength) {
+      if (v == undefined) { // support undefined values
+        return true;
+      }
+      v= toPt(v);
+      var f = 0.9;
+      v = String(v * f) + "px";
     }
-    v= toPt(v);
-    var f = 0.9;
-    v = String(v * f) + "px";
+    $("*[class~='example-page-content-" + type + "']").css(cls, v);
   }
-  $("*[class~='example-page-content-" + type + "']").css(cls, v);
 }
 
 function pageMarginHandler(event) {

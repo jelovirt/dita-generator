@@ -328,7 +328,7 @@ class PluginGenerateHandler(webapp.RequestHandler):
             if "column_gap" in __args:
                 __dita_gen.column_gap = __args["column_gap"]
             __dita_gen.mirror_page_margins = __args["mirror_page_margins"]
-            __dita_gen.dl = __args["dl"]
+            #__dita_gen.dl = __args["dl"]
             __dita_gen.title_numbering = __args["title_numbering"]
             __dita_gen.table_numbering = __args["table_numbering"]
             __dita_gen.figure_numbering = __args["figure_numbering"]
@@ -395,7 +395,7 @@ class PluginGenerateHandler(webapp.RequestHandler):
         if u"pdf.column-gap" in self.request.arguments() and self.request.get(u"pdf.column-gap").strip():
             ret["column_gap"] = self.request.get(u"pdf.column-gap")
         ret["mirror_page_margins"] = u"pdf.mirror-page-margins" in self.request.arguments()
-        ret["dl"] = self.request.get(u"pdf.dl")
+        #ret["dl"] = self.request.get(u"pdf.dl")
         ret["title_numbering"] = self.request.get(u"pdf.title-numbering")
         ret["table_numbering"] = self.request.get(u"pdf.table-numbering")
         ret["figure_numbering"] = self.request.get(u"pdf.figure-numbering")

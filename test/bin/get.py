@@ -133,6 +133,9 @@ def main():
                   "font-style": "italic",
                   "link-page-number": "true",
                   "link-url": "true"
+                },
+                "dl": {
+                  "dl-type": "list"
                 }
               },
               "bookmark_style": "EXPANDED",
@@ -144,7 +147,7 @@ def main():
               "formatter": "ah",
               "override_shell": True,
               "column_gap": "10mm",
-              "dl": "list",
+              #"dl": "list",
               "table_continued": True,
               "title_numbering": "all",
               "page_margins": {
@@ -220,13 +223,15 @@ def main():
             
             "pdf.line-height.pre": "1em",
             
+            "pdf.dl-type.dl": "list",
+            
             "pdf.background-color.codeblock": "silver",
             
             "pdf.table-numbering": "document",
             "pdf.figure-numbering": "none",
             
             "pdf.text-align": "justify",
-            "pdf.dl": "list",
+            #"pdf.dl": "list",
             "pdf.title-numbering": "all",
             "pdf.spacing.before": "10pt",
             "pdf.spacing.after": "10pt",
