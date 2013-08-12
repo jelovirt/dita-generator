@@ -592,14 +592,13 @@ class StylePluginGenerator(DitaGenerator):
                 version="2.0">
 
   <xsl:template match="*[contains(@class, ' topic/dl ')]">
-    <fo:list-block xsl:use-attribute-sets="ul">
+    <fo:list-block xsl:use-attribute-sets="ul e:dl">
       <xsl:call-template name="commonattributes"/>
       <xsl:apply-templates select="*[contains(@class, ' topic/dlentry ')]"/>
     </fo:list-block>
   </xsl:template>
 
   <xsl:template match="*[contains(@class, ' topic/dlentry ')]">
-
     <fo:list-item xsl:use-attribute-sets="ul.li">
       <fo:list-item-label xsl:use-attribute-sets="ul.li__label">
         <fo:block xsl:use-attribute-sets="ul.li__label__content">
@@ -639,27 +638,27 @@ class StylePluginGenerator(DitaGenerator):
                  exclude-result-prefixes="e"
                  version="2.0">
   
-  <xsl:template match="*[contains(@class, &apos; topic/dl &apos;)]">
-    <fo:block>
+  <xsl:template match="*[contains(@class, ' topic/dl ')]">
+    <fo:block xsl:use-attribute-sets="e:dl">
       <xsl:call-template name="commonattributes" />
-      <xsl:apply-templates select="*[contains(@class, &apos; topic/dlentry &apos;)]" />
+      <xsl:apply-templates select="*[contains(@class, ' topic/dlentry ')]" />
     </fo:block>
   </xsl:template>
   
-  <xsl:template match="*[contains(@class, &apos; topic/dlentry &apos;)]">
+  <xsl:template match="*[contains(@class, ' topic/dlentry ')]">
       <fo:block>
-          <xsl:apply-templates select="*[contains(@class, &apos; topic/dt &apos;)]" />
-          <xsl:apply-templates select="*[contains(@class, &apos; topic/dd &apos;)]" />
+          <xsl:apply-templates select="*[contains(@class, ' topic/dt ')]" />
+          <xsl:apply-templates select="*[contains(@class, ' topic/dd ')]" />
       </fo:block>
   </xsl:template>
   
-  <xsl:template match="*[contains(@class, &apos; topic/dt &apos;)]">
+  <xsl:template match="*[contains(@class, ' topic/dt ')]">
     <fo:block xsl:use-attribute-sets="e:dlentry.dt__content">
       <xsl:apply-templates />
     </fo:block>
   </xsl:template>
   
-  <xsl:template match="*[contains(@class, &apos; topic/dd &apos;)]">
+  <xsl:template match="*[contains(@class, ' topic/dd ')]">
     <fo:block xsl:use-attribute-sets="e:dlentry.dd__content">
       <xsl:apply-templates />
     </fo:block>
@@ -922,6 +921,10 @@ class StylePluginGenerator(DitaGenerator):
         if stylesheet == "tables-attr" or not stylesheet:
             # dl
             if "dl-type" in self.style["dl"]:
+                __dl_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name="e:dl")
+                for k, v in self.style["dl"].items():
+                    if k != "dl-type":
+                        ET.SubElement(__dl_attr, NS_XSL + "attribute", name=k).text = v
                 __dt_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name="e:dlentry.dt__content")
                 ET.SubElement(__dt_attr, NS_XSL + "attribute", name=u"font-weight").text = "bold"
                 ET.SubElement(__dt_attr, NS_XSL + "attribute", name=u"keep-with-next").text = "always"
@@ -935,6 +938,13 @@ class StylePluginGenerator(DitaGenerator):
                 ET.SubElement(__table_continued_attr, NS_XSL + "attribute", name=u"border-left-style").text = "hidden"
                 ET.SubElement(__table_continued_attr, NS_XSL + "attribute", name=u"text-align").text = "end"
                 ET.SubElement(__table_continued_attr, NS_XSL + "attribute", name=u"font-style").text = "italic"
+            # table
+            __table_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name=u"table.tgroup")
+            for k, v in self.style["table"].items():
+                if k != "caption-number":
+                    ET.SubElement(__table_attr, NS_XSL + "attribute", name=k).text = v
+            __thead_row_entry_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name=u"thead.row.entry")
+            ET.SubElement(__thead_row_entry_attr, NS_XSL + "attribute", name="background-color").text = "inherit"
         
         if stylesheet == "layout-masters-attr" or not stylesheet:
             # page column count

@@ -227,10 +227,13 @@ def main():
             "pdf.line-height.pre": "1em",
             
             "pdf.dl-type.dl": "list",
+            "pdf.background-color.dl": "pink",
             
             "pdf.background-color.codeblock": "silver",
             
             "pdf.caption-number.table": "document",
+            "pdf.background-color.table": "cyan",
+            
             "pdf.figure-numbering": "none",
             
             "pdf.text-align": "justify",
