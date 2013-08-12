@@ -31,6 +31,8 @@ from datetime import datetime
 NS_XSL = "{http://www.w3.org/1999/XSL/Transform}"
 NS_FO = "{http://www.w3.org/1999/XSL/Format}"
 
+properties = set(["font-family", "font-size", "color", "background-color", "font-weight", "font-style", "text-decoration", "space-before", "space-after", "text-align", "start-indent", "line-height"])
+
 styles = [{ "property": f[0], "type": f[1], "value": f[2], "inherit": f[3] } for f in [
     ("font-family", "body", "serif", None),
     ("font-size", "body", "10pt", None),
@@ -863,6 +865,14 @@ class StylePluginGenerator(DitaGenerator):
         __d = ET.ElementTree(__root)
         __d.write(self.out, "UTF-8")
 
+    def __attribute_set(self, __root, __style, __attribute_set, __include=properties):
+        """Generate attribute set."""
+        __attrs = ET.SubElement(__root, NS_XSL + "attribute-set", name=__attribute_set)
+        for k, v in self.style[__style].items():
+            if k in __include:
+                ET.SubElement(__attrs, NS_XSL + "attribute", name=k).text = v
+
+
     def __generate_custom_attr(self, stylesheet=None):
         """Generate plugin custom XSLT file."""
         __root = ET.Element(NS_XSL + "stylesheet", {"version":"2.0", "exclude-result-prefixes": "ditaarch opentopic e"})
@@ -877,11 +887,8 @@ class StylePluginGenerator(DitaGenerator):
                 __page_count_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name="__force__page__count")
                 ET.SubElement(__page_count_attr, NS_XSL + "attribute", name=u"force-page-count").text = self.force_page_count
         
-            __root_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name="__fo__root")
             # font family
-            for p in ["font-family", "color", "text-align"]:
-                if p in self.style["body"]:
-                    ET.SubElement(__root_attr, NS_XSL + "attribute", name=p).text = self.style["body"][p]
+            self.__attribute_set(__root, "body", "__fo__root", ["font-family", "color", "text-align"])
             # titles
             for (k, e) in self.style.items():
                 if k.startswith("topic") or k.startswith("section"):
@@ -891,40 +898,26 @@ class StylePluginGenerator(DitaGenerator):
             # link
             link_attr_sets = ["common.link"]
             for n in link_attr_sets:
-                __link_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name=n)
-                for k, v in self.style["link"].items():
-                    if k not in ["link-url", "link-page-number"]:
-                        ET.SubElement(__link_attr, NS_XSL + "attribute", name=k).text = v
+                self.__attribute_set(__root, "link", n)
     
             # normal block
             spacing_attr_sets = ["common.block"]
             for n in spacing_attr_sets:
-                __spacing_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name=n)
-                for k, v in self.style["body"].items():
-                    if k != "start-indent":
-                        ET.SubElement(__spacing_attr, NS_XSL + "attribute", name=k).text = v
+                self.__attribute_set(__root, "body", n, properties.difference(["start-indent"]))
 
             # note
-            __note_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name=u"note__table")
-            for k, v in self.style["note"].items():
-                if k != "icon":
-                    ET.SubElement(__note_attr, NS_XSL + "attribute", name=k).text = v
+            self.__attribute_set(__root, "note", "note__table")
             if not ("icon" in self.style["note"] and self.style["note"]["icon"] == "icon"):
                 __note_text = ET.SubElement(__root, NS_XSL + "attribute-set", name=u"note__text__column")
                 ET.SubElement(__note_text, NS_XSL + "attribute", name="column-number").text = "1"
 
             # pre
-            __pre_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name=u"pre")
-            for k, v in self.style["pre"].items():
-                ET.SubElement(__pre_attr, NS_XSL + "attribute", name=k).text = v
+            self.__attribute_set(__root, "pre", "pre")
         
         if stylesheet == "tables-attr" or not stylesheet:
             # dl
             if "dl-type" in self.style["dl"]:
-                __dl_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name="e:dl")
-                for k, v in self.style["dl"].items():
-                    if k != "dl-type":
-                        ET.SubElement(__dl_attr, NS_XSL + "attribute", name=k).text = v
+                self.__attribute_set(__root, "dl", "e:dl")
                 __dt_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name="e:dlentry.dt__content")
                 ET.SubElement(__dt_attr, NS_XSL + "attribute", name=u"font-weight").text = "bold"
                 ET.SubElement(__dt_attr, NS_XSL + "attribute", name=u"keep-with-next").text = "always"
@@ -939,10 +932,7 @@ class StylePluginGenerator(DitaGenerator):
                 ET.SubElement(__table_continued_attr, NS_XSL + "attribute", name=u"text-align").text = "end"
                 ET.SubElement(__table_continued_attr, NS_XSL + "attribute", name=u"font-style").text = "italic"
             # table
-            __table_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name=u"table.tgroup")
-            for k, v in self.style["table"].items():
-                if k != "caption-number":
-                    ET.SubElement(__table_attr, NS_XSL + "attribute", name=k).text = v
+            self.__attribute_set(__root, "table", "table.tgroup")
             __thead_row_entry_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name=u"thead.row.entry")
             ET.SubElement(__thead_row_entry_attr, NS_XSL + "attribute", name="background-color").text = "inherit"
         
