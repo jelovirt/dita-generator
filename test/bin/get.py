@@ -234,8 +234,9 @@ def main():
             "pdf.caption-number.table": "document",
             "pdf.background-color.table": "cyan",
             
-            "pdf.figure-numbering": "none",
-            
+            "pdf.caption-number.fig": "none",
+            "pdf.background-color.fig": "yellow",
+
             "pdf.text-align": "justify",
             #"pdf.dl": "list",
             "pdf.title-numbering": "all",

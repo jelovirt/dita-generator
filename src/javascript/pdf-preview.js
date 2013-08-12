@@ -62,14 +62,14 @@ function previewSpaceHandler(event) {
     cls = "display";
     v = (v == "true") ? "inline" : "none";
     break;
-  case "dl-type":
-  case "caption-number":
-    var all = $("[data-field='" + field + "']");
-    all.hide();
-    all.filter("[data-value='" + v + "']").show();
-    break;
   default:
-    cls = field;
+    if ($("[data-field][data-style]").length) {
+      var all = $("[data-field='" + field + "'][data-style='" + type + "']");
+      all.hide();
+      all.filter("[data-value='" + v + "']").show();
+    } else {
+      cls = field;
+    }
     break;
   }
   if (cls != undefined) {

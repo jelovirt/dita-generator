@@ -424,7 +424,7 @@
             <option value="codeblock">Code block</option>
             <option value="dl">Definition list</option>
             <option value="table">Table</option>
-            <!--option value="fig">Figure</option-->
+            <option value="fig">Figure</option>
             <!--
             <option value="topic.topic.topic.topic.topic">Heading 5</option>
             <option value="topic.topic.topic.topic.topic.topic">Heading 6</option>
@@ -687,13 +687,13 @@
             The quick brown fox jumps over the lazy dog.
             The quick brown fox jumps over the lazy dog.
           </p>
-          <dl class="example-page-content-dl" data-field="dl-type" data-value="html">
+          <dl class="example-page-content-dl" data-style="dl" data-field="dl-type" data-value="html">
             <dt><strong>Pangram</strong></dt>
             <dd>The quick brown fox jumps over the lazy dog.</dd>
             <dt><strong>XXX</strong></dt>
             <dd>The quick brown fox jumps over the lazy dog.</dd>
           </dl>
-          <table class="example-page-content-dl" data-field="dl-type" data-value="table">
+          <table class="example-page-content-dl" data-style="dl" data-field="dl-type" data-value="table">
             <tr>
               <th><strong>Pangram</strong></th>
               <td>The quick brown fox jumps over the lazy dog.</td>
@@ -703,7 +703,7 @@
               <td>The quick brown fox jumps over the lazy dog.</td>
             </tr>
           </table>
-          <ul class="example-page-content-dl" data-field="dl-type" data-value="list">
+          <ul class="example-page-content-dl" data-style="dl" data-field="dl-type" data-value="list">
             <li><strong>Pangram</strong><br>The quick brown fox jumps over the lazy dog.</li>
             <li><strong>XXX</strong><br>The quick brown fox jumps over the lazy dog.</li>
           </ul>
@@ -732,7 +732,7 @@ jumps over the lazy dog.</pre>
   (if (<= n 1)
        1
        (* n (factorial (- n 1)))))</pre>
-          <p class="example-page-content-body"><strong>Table<span data-field="caption-number" data-value="document"> 4</span>: Table caption</strong></p>
+          <p class="example-page-content-table-title"><strong>Table<span data-style="table" data-field="caption-number" data-value="document"> 4</span>: Table caption</strong></p>
           <table class="example-page-content-table" border="1">
             <tr class="example-page-content-tr">
               <td class="example-page-content-td">Dog</td>
@@ -743,10 +743,8 @@ jumps over the lazy dog.</pre>
               <td class="example-page-content-td">quick, brown</td>
             </tr>
           </table>
-          <!--
-          <p class="example-page-content-body"><img src="http://upload.wikimedia.org/wikipedia/en/5/5a/Dogcow.png" style="height: 30px"/></p>
-          <p class="example-page-content-body"><strong>Figure<span data-field="caption-number" data-value="document"> 6</span>: Figure caption</strong></p>
-          -->
+          <p class="example-page-content-fig"><img src="http://upload.wikimedia.org/wikipedia/en/5/5a/Dogcow.png" style="height: 30px"/></p>
+          <p class="example-page-content-fig-title"><strong>Figure<span data-style="fig" data-field="caption-number" data-value="document"> 6</span>: Figure caption</strong></p>
         </div>
       </div>
     </div>
@@ -781,22 +779,6 @@ jumps over the lazy dog.</pre>
         <select name="pdf.title-numbering" id="pdf.title-numbering" title="Title numbering">
           <option value="chapters">Chapters only</option>
           <option value="all">All levels</option>
-        </select>
-      </p>
-    </fieldset>
-    <h3>Captions</h3>
-    <div class="example">
-      <div class="example-text">
-        <p class="example-page-content-para"><img src="http://upload.wikimedia.org/wikipedia/en/5/5a/Dogcow.png" style="height: 30px"/></p>
-        <p class="example-page-content-title"><strong>Figure<span id="pdf.figure-numbering.example"> 6</span>: Figure caption</strong></p>
-      </div>
-    </div>
-    <fieldset>
-      <p>
-        <label for="pdf.figure-numbering">Figure caption numbering</label>
-        <select name="pdf.figure-numbering" id="pdf.figure-numbering" title="Figure caption numbering">
-          <option value="document" selected>Document wide</option>
-          <option value="none">No numbering</option>
         </select>
       </p>
     </fieldset>

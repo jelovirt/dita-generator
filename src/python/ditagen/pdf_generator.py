@@ -31,7 +31,7 @@ from datetime import datetime
 NS_XSL = "{http://www.w3.org/1999/XSL/Transform}"
 NS_FO = "{http://www.w3.org/1999/XSL/Format}"
 
-properties = set(["font-family", "font-size", "color", "background-color", "font-weight", "font-style", "text-decoration", "space-before", "space-after", "text-align", "start-indent", "line-height"])
+properties = set(["absolute-position", "active-state", "alignment-adjust", "alignment-baseline", "allowed-height-scale", "allowed-width-scale", "auto-restore", "azimuth", "background-attachment", "background-color", "background-image", "background-position-horizontal", "background-position-vertical", "background-repeat", "baseline-shift", "blank-or-not-blank", "block-progression-dimension", "border-after-color", "border-after-precedence", "border-after-style", "border-after-width", "border-before-color", "border-before-precedence", "border-before-style", "border-before-width", "border-bottom-color", "border-bottom-style", "border-bottom-width", "border-collapse", "border-end-color", "border-end-precedence", "border-end-style", "border-end-width", "border-left-color", "border-left-style", "border-left-width", "border-right-color", "border-right-style", "border-right-width", "border-separation", "border-start-color", "border-start-precedence", "border-start-style", "border-start-width", "border-top-color", "border-top-style", "border-top-width", "bottom", "bottom", "break-after", "break-before", "caption-side", "case-name", "case-title", "change-bar-class", "change-bar-color", "change-bar-offset", "change-bar-placement", "change-bar-style", "change-bar-width", "character", "clear", "clip", "color", "color-profile-name", "column-count", "column-gap", "column-number", "column-width", "content-height", "content-type", "content-width", "country", "cue-after", "cue-before", "destination-placement-offset", "direction", "display-align", "dominant-baseline", "elevation", "empty-cells", "end-indent", "ends-row", "extent", "external-destination", "float", "flow-map-name", "flow-map-reference", "flow-name", "flow-name-reference", "font-family", "font-selection-strategy", "font-size", "font-size-adjust", "font-stretch", "font-style", "font-variant", "font-weight", "force-page-count", "format", "glyph-orientation-horizontal", "glyph-orientation-vertical", "grouping-separator", "grouping-size", "height", "hyphenate", "hyphenation-character", "hyphenation-keep", "hyphenation-ladder-count", "hyphenation-push-character-count", "hyphenation-remain-character-count", "id", "index-class", "index-key", "indicate-destination", "initial-page-number", "inline-progression-dimension", "internal-destination", "intrinsic-scale-value", "intrusion-displace", "keep-together", "keep-with-next", "keep-with-previous", "language", "last-line-end-indent", "leader-alignment", "leader-length", "leader-pattern", "leader-pattern-width", "left", "left", "letter-spacing", "letter-value", "linefeed-treatment", "line-height", "line-height-shift-adjustment", "line-stacking-strategy", "margin-bottom", "margin-bottom", "margin-left", "margin-left", "margin-right", "margin-right", "margin-top", "margin-top", "marker-class-name", "master-name", "master-reference", "maximum-repeats", "media-usage", "merge-pages-across-index-key-references", "merge-ranges-across-index-key-references", "merge-sequential-page-numbers", "number-columns-repeated", "number-columns-spanned", "number-rows-spanned", "odd-or-even", "orphans", "overflow", "padding-after", "padding-before", "padding-bottom", "padding-end", "padding-left", "padding-right", "padding-start", "padding-top", "page-citation-strategy", "page-height", "page-number-treatment", "page-position", "page-width", "pause-after", "pause-before", "pitch", "pitch-range", "play-during", "precedence", "provisional-distance-between-starts", "provisional-label-separation", "reference-orientation", "ref-id", "ref-index-key", "region-name", "region-name-reference", "relative-align", "relative-position", "rendering-intent", "retrieve-boundary", "retrieve-boundary-within-table", "retrieve-class-name", "retrieve-position", "retrieve-position-within-table", "richness", "right", "right", "role", "rule-style", "rule-thickness", "scale-option", "scaling", "scaling-method", "score-spaces", "script", "show-destination", "source-document", "space-after", "space-before", "space-end", "space-start", "span", "speak", "speak-header", "speak-numeral", "speak-punctuation", "speech-rate", "src", "start-indent", "starting-state", "starts-row", "stress", "suppress-at-line-break", "switch-to", "table-layout", "table-omit-footer-at-break", "table-omit-header-at-break", "target-presentation-context", "target-processing-context", "target-stylesheet", "text-align", "text-align-last", "text-altitude", "text-decoration", "text-depth", "text-indent", "text-shadow", "text-transform", "top", "top", "treat-as-word-space", "unicode-bidi", "visibility", "voice-family", "volume", "white-space-collapse", "white-space-treatment", "widows", "width", "word-spacing", "wrap-option", "writing-mode", "z-index"])
 
 styles = [{ "property": f[0], "type": f[1], "value": f[2], "inherit": f[3] } for f in [
     ("font-family", "body", "serif", None),
@@ -359,7 +359,7 @@ class StylePluginGenerator(DitaGenerator):
         #self.dl = None
         self.title_numbering = None
         #self.table_numbering = None
-        self.figure_numbering = None
+        #self.figure_numbering = None
         #self.link_pagenumber = None
         self.table_continued = None
         self.formatter = None
@@ -913,6 +913,9 @@ class StylePluginGenerator(DitaGenerator):
 
             # pre
             self.__attribute_set(__root, "pre", "pre")
+            
+            # fig
+            self.__attribute_set(__root, "fig", "fig")
         
         if stylesheet == "tables-attr" or not stylesheet:
             # dl
@@ -1159,7 +1162,7 @@ class StylePluginGenerator(DitaGenerator):
         if "caption-number" in self.style["table"] and self.style["table"]["caption-number"] == "none":
             __root.append(ET.fromstring(langs[lang][u"Table"]))
         # figure caption numbering
-        if self.figure_numbering == u"none":
+        if "caption-number" in self.style["fig"] and self.style["fig"]["caption-number"] == "none":
             __root.append(ET.fromstring(langs[lang][u"Figure"]))
         
         # static content

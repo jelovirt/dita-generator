@@ -333,7 +333,7 @@ class PluginGenerateHandler(webapp.RequestHandler):
             #__dita_gen.dl = __args["dl"]
             __dita_gen.title_numbering = __args["title_numbering"]
             #__dita_gen.table_numbering = __args["table_numbering"]
-            __dita_gen.figure_numbering = __args["figure_numbering"]
+            #__dita_gen.figure_numbering = __args["figure_numbering"]
             #__dita_gen.link_pagenumber = __args["link_pagenumber"]
             __dita_gen.table_continued = __args["table_continued"]
             __dita_gen.formatter = __args["formatter"]
@@ -400,7 +400,7 @@ class PluginGenerateHandler(webapp.RequestHandler):
         #ret["dl"] = self.request.get(u"pdf.dl")
         ret["title_numbering"] = self.request.get(u"pdf.title-numbering")
         #ret["table_numbering"] = self.request.get(u"pdf.table-numbering")
-        ret["figure_numbering"] = self.request.get(u"pdf.figure-numbering")
+        #ret["figure_numbering"] = self.request.get(u"pdf.figure-numbering")
         #ret["link_pagenumber"] = u"pdf.link-page-number" in self.request.arguments()
         ret["table_continued"] = u"pdf.table-continued" in self.request.arguments()
         ret["formatter"] = self.request.get(u"pdf.formatter")
