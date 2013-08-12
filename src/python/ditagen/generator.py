@@ -168,8 +168,8 @@ class DitaGenerator(DtdGenerator):
             "mod": u"ELEMENTS"
             }
         desc = [__ENTITY_MAP[ext], "DITA"]
-        if dita_version != None and dita_version != "":
-            desc.append(dita_version.strip())
+        #if dita_version != None and dita_version != "":
+        #    desc.append(dita_version.strip())
         desc.append(title)
         if suffix != None:
             desc.append(suffix)

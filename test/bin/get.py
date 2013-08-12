@@ -136,6 +136,9 @@ def main():
                 },
                 "dl": {
                   "dl-type": "list"
+                },
+                "table": {
+                  "caption-number": "document"
                 }
               },
               "bookmark_style": "EXPANDED",
@@ -168,7 +171,7 @@ def main():
               "figure_numbering": "none",
               "transtype": "print-pdf",
               "task_label": True,
-              "table_numbering": "document",
+              #"table_numbering": "document",
               "toc_maximum_level": 3
             }
         }
@@ -227,7 +230,7 @@ def main():
             
             "pdf.background-color.codeblock": "silver",
             
-            "pdf.table-numbering": "document",
+            "pdf.caption-number.table": "document",
             "pdf.figure-numbering": "none",
             
             "pdf.text-align": "justify",
@@ -253,7 +256,7 @@ def main():
             ('title', 'test')
             ],
         "shell": [
-            #('version', '1.2'),
+            ('version', '1.2'),
             #('file', 'plugin'),
             ('title', 'test'),
             ('owner', 'test'),

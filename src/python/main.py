@@ -55,6 +55,7 @@ class MainHandler(webapp.RequestHandler):
         template_values = {
             #"advanced": self.request.get("debug") == "true",
             "advanced": False,
+            "version": "1.2"
             #"title": "DITA Generator"
         }
         template_file = "index.html"
@@ -130,7 +131,7 @@ class GenerateHandler(webapp.RequestHandler):
         self.process(__args)
 
     def process(self, __args):
-        __version = "1.2"
+        __version = __args["version"] #"1.2"
         __dita_gen = ditagen.generator.PluginGenerator()
         __dita_gen.out = self.response.out
         __dita_gen.owner = __args["owner"]
@@ -193,8 +194,9 @@ class GenerateHandler(webapp.RequestHandler):
         __dita_gen.generate_plugin()
 
     def read_arguments(self):
-        __version = "1.2"
         ret = {}
+        # version
+        ret["version"] = self.request.get("version")# "1.2"
         # domains
         __domains = []
         for __d in  self.request.get_all(u"domain"):
@@ -330,7 +332,7 @@ class PluginGenerateHandler(webapp.RequestHandler):
             __dita_gen.mirror_page_margins = __args["mirror_page_margins"]
             #__dita_gen.dl = __args["dl"]
             __dita_gen.title_numbering = __args["title_numbering"]
-            __dita_gen.table_numbering = __args["table_numbering"]
+            #__dita_gen.table_numbering = __args["table_numbering"]
             __dita_gen.figure_numbering = __args["figure_numbering"]
             #__dita_gen.link_pagenumber = __args["link_pagenumber"]
             __dita_gen.table_continued = __args["table_continued"]
@@ -397,7 +399,7 @@ class PluginGenerateHandler(webapp.RequestHandler):
         ret["mirror_page_margins"] = u"pdf.mirror-page-margins" in self.request.arguments()
         #ret["dl"] = self.request.get(u"pdf.dl")
         ret["title_numbering"] = self.request.get(u"pdf.title-numbering")
-        ret["table_numbering"] = self.request.get(u"pdf.table-numbering")
+        #ret["table_numbering"] = self.request.get(u"pdf.table-numbering")
         ret["figure_numbering"] = self.request.get(u"pdf.figure-numbering")
         #ret["link_pagenumber"] = u"pdf.link-page-number" in self.request.arguments()
         ret["table_continued"] = u"pdf.table-continued" in self.request.arguments()

@@ -13,11 +13,11 @@ class DomainGenerator:
         self.i += 1
         __vs = ditagen.TOPIC_MAP.keys()
         for v in __vs:
-            self.write(v + ": {")
+            self.write("'" + v + "': {")
             self.i += 1
             __ds = ditagen.TOPIC_MAP[v].keys()
             for t in __ds:
-                self.write(t + ": {")
+                self.write("'" + t + "': {")
                 self.i += 1
                 type = ditagen.TOPIC_MAP[v][t]
                 o = type()

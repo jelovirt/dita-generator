@@ -14,7 +14,6 @@
         <select name="ot.version" id="ot.version" title="DITA-OT version">
           <option value="1.8" selected>1.8</option>
           <option value="1.7">1.7</option>
-          <option value="1.6">1.6</option>
         </select>
       </p>
       <p class="instruction">Version of DITA-OT for which the plug-in is
@@ -424,6 +423,8 @@
             <option value="pre">Preformatted</option>
             <option value="codeblock">Code block</option>
             <option value="dl">Definition list</option>
+            <option value="table">Table</option>
+            <!--option value="fig">Figure</option-->
             <!--
             <option value="topic.topic.topic.topic.topic">Heading 5</option>
             <option value="topic.topic.topic.topic.topic.topic">Heading 6</option>
@@ -434,6 +435,7 @@
           </optgroup>
         </select>
         <table>
+        <tbody>
           <tr>
             <th colspan="2"><h4>Formatting</h4></th>
           </tr>
@@ -624,10 +626,12 @@
               </table>
             </td>
           </tr>
-          <tr data-style="dl">
+        </tbody>
+        <tbody data-style="dl">
+          <tr>
             <th colspan="2"><h4>List styles</h4></th>
           </tr>
-          <tr data-style="dl">
+          <tr>
             <td colspan="2">
               <label for="pdf.dl-type" class="inline">List type</label>:
               <select id="pdf.dl-type" title="Definition list style">
@@ -637,6 +641,21 @@
               </select>
             </td>
           </tr>
+        </tbody>
+        <tbody data-style="table fig">
+          <tr>
+            <th colspan="2"><h4>Captions</h4></th>
+          </tr>
+          <tr>
+            <td colspan="2">
+            <label for="pdf.caption-number" class="inline">Caption numbering</label>:
+              <select id="pdf.caption-number" title="Caption numbering">
+                <option value="document" selected>Document wide</option>
+                <option value="none">No numbering</option>
+              </select>
+            </td>
+          </tr>
+        </tbody>
         </table>
       </div>
       <!--p class="help">Style definition.</p-->
@@ -657,7 +676,7 @@
           </p>
           <table class="example-page-content-note">
             <tr>
-              <td class="example-page-content-note-image"><img src="/images/hand.gif" style="height:16px"/></td>
+              <td class="example-page-content-icon"><img src="/images/hand.gif" style="height:16px"/></td>
               <td><strong class="example-page-content-note-label">Note:</strong> The quick brown fox jumps over the lazy dog.</td>
             </tr>
           </table>
@@ -684,7 +703,7 @@
               <td>The quick brown fox jumps over the lazy dog.</td>
             </tr>
           </table>
-          <ul  class="example-page-content-dl" data-field="dl-type" data-value="list">
+          <ul class="example-page-content-dl" data-field="dl-type" data-value="list">
             <li><strong>Pangram</strong><br>The quick brown fox jumps over the lazy dog.</li>
             <li><strong>XXX</strong><br>The quick brown fox jumps over the lazy dog.</li>
           </ul>
@@ -713,6 +732,21 @@ jumps over the lazy dog.</pre>
   (if (<= n 1)
        1
        (* n (factorial (- n 1)))))</pre>
+          <p class="example-page-content-body"><strong>Table<span data-field="caption-number" data-value="document"> 4</span>: Table caption</strong></p>
+          <table class="example-page-content-table" border="1">
+            <tr class="example-page-content-tr">
+              <td class="example-page-content-td">Dog</td>
+              <td class="example-page-content-td">lazy</td>
+            </tr>
+            <tr class="example-page-content-tr">
+              <td class="example-page-content-td">Fox</td>
+              <td class="example-page-content-td">quick, brown</td>
+            </tr>
+          </table>
+          <!--
+          <p class="example-page-content-body"><img src="http://upload.wikimedia.org/wikipedia/en/5/5a/Dogcow.png" style="height: 30px"/></p>
+          <p class="example-page-content-body"><strong>Figure<span data-field="caption-number" data-value="document"> 6</span>: Figure caption</strong></p>
+          -->
         </div>
       </div>
     </div>
@@ -751,30 +785,6 @@ jumps over the lazy dog.</pre>
       </p>
     </fieldset>
     <h3>Captions</h3>
-    <div class="example">
-      <div class="example-text">
-        <p class="example-page-content-title"><strong>Table<span id="pdf.table-numbering.example"> 4</span>: Table caption</strong></p>
-        <table class="example-page-content-para" style="width: 100%">
-          <tr>
-            <td>Dog</td>
-            <td>lazy</td>
-          </tr>
-          <tr>
-            <td>For</td>
-            <td>quick</td>
-          </tr>
-        </table>
-      </div>
-    </div>
-    <fieldset>
-      <p>
-        <label for="pdf.table-numbering">Table caption numbering</label>
-        <select name="pdf.table-numbering" id="pdf.table-numbering" title="Table caption numbering">
-          <option value="document" selected>Document wide</option>
-          <option value="none">No numbering</option>
-        </select>
-      </p>
-    </fieldset>
     <div class="example">
       <div class="example-text">
         <p class="example-page-content-para"><img src="http://upload.wikimedia.org/wikipedia/en/5/5a/Dogcow.png" style="height: 30px"/></p>

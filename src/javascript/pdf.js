@@ -155,7 +155,7 @@ function styleHandler(event) {
 	var style = target.val();
 	$("#style-form [data-style]").each(function() {
 	  var f = $(this); 
-	  f.toggle($(this).attr("data-style") === style);
+	  f.toggle($(this).attr("data-style").split(" ").indexOf(style) !== -1);
 	});
 	var type = target.find(":selected").parent("optgroup.block");
 	if (type.length == 0) {
@@ -172,7 +172,9 @@ var storeFields = ["font-family", "font-size", "font-weight", "font-style", "col
                    // link
                    "link-page-number", "link-url",
                    //
-                   "dl-type"];
+                   "dl-type",
+                   // table, fig
+                   "caption-number"];
 /**
  * Read fields from model to UI.
  * @param type

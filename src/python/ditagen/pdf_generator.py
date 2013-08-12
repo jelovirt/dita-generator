@@ -166,6 +166,36 @@ styles = [{ "property": f[0], "type": f[1], "value": f[2], "inherit": f[3] } for
     # custom
     ("dl-type", "dl", "table", None),
     
+    ("font-family", "table", None, "body"),
+    ("font-size", "table", None, "body"),
+    ("color", "table", None, "body"),
+    ("background-color", "table", None, "body"),
+    ("font-weight", "table", None, "body"),
+    ("font-style", "table", None, "body"),
+    ("text-decoration", "table", None, "body"),
+    ("space-before", "table", None, "body"),
+    ("space-after", "table", None, "body"),
+    ("text-align", "table", None, "body"),
+    ("start-indent", "table", None, "body"),
+    ("line-height", "table", None, "body"),
+    # custom
+    ("caption-number", "table", "document", None),
+    
+    ("font-family", "fig", None, "body"),
+    ("font-size", "fig", None, "body"),
+    ("color", "fig", None, "body"),
+    ("background-color", "fig", None, "body"),
+    ("font-weight", "fig", None, "body"),
+    ("font-style", "fig", None, "body"),
+    ("text-decoration", "fig", None, "body"),
+    ("space-before", "fig", None, "body"),
+    ("space-after", "fig", None, "body"),
+    ("text-align", "fig", None, "body"),
+    ("start-indent", "fig", None, "body"),
+    ("line-height", "fig", None, "body"),
+    # custom
+    ("caption-number", "fig", "document", None),
+    
     ("font-family", "link", None, "body"),
     ("font-size", "link", None, "body"),
     ("color", "link", "blue", None),
@@ -326,7 +356,7 @@ class StylePluginGenerator(DitaGenerator):
         self.mirror_page_margins = None
         #self.dl = None
         self.title_numbering = None
-        self.table_numbering = None
+        #self.table_numbering = None
         self.figure_numbering = None
         #self.link_pagenumber = None
         self.table_continued = None
@@ -1126,7 +1156,7 @@ class StylePluginGenerator(DitaGenerator):
         if self.table_continued:
             __root.append(ET.fromstring(langs[lang][u"#table-continued"]))
         # table caption numbering
-        if self.table_numbering == u"none":
+        if "caption-number" in self.style["table"] and self.style["table"]["caption-number"] == "none":
             __root.append(ET.fromstring(langs[lang][u"Table"]))
         # figure caption numbering
         if self.figure_numbering == u"none":
