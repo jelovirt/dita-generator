@@ -63,7 +63,8 @@ function previewSpaceHandler(event) {
     v = (v == "true") ? "inline" : "none";
     break;
   default:
-    if ($("[data-field][data-style]").length) {
+    var all = $("[data-field='" + field + "'][data-style='" + type + "']");
+    if (all.length) {
       var all = $("[data-field='" + field + "'][data-style='" + type + "']");
       all.hide();
       all.filter("[data-value='" + v + "']").show();
