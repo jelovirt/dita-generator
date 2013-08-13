@@ -276,67 +276,114 @@ langs = {
   u"de": {
     u"#table-continued": u"<variable id='#table-continued'>Table continued&#x2026;</variable>",
     u"Figure": u"<variable id='Figure'>Abbildung: <param ref-name='title'/></variable>",
-    u"Table": u"<variable id='Table'>Tabelle: <param ref-name='title'/></variable>"
+    u"Table": u"<variable id='Table'>Tabelle: <param ref-name='title'/></variable>",
+    #u"Chapter with number": u"<variable id='Chapter with number'></variable>",
+    u"Table of Contents Chapter": u"<variable id='Table of Contents Chapter'></variable>",
+    u"Table of Contents Appendix": u"<variable id='Table of Contents Appendix'>Anhang:&#xA0;</variable>"
   },
   u"en": {
     u"#table-continued": u"<variable id='#table-continued'>Table continued&#x2026;</variable>",
     u"Figure": u"<variable id='Figure'>Figure: <param ref-name='title'/></variable>",
-    u"Table": u"<variable id='Table'>Table: <param ref-name='title'/></variable>"
+    u"Table": u"<variable id='Table'>Table: <param ref-name='title'/></variable>",
+    #u"Chapter with number": u"<variable id='Chapter with number'></variable>",
+    u"Table of Contents Chapter": u"<variable id='Table of Contents Chapter'></variable>",
+    u"Table of Contents Appendix": u"<variable id='Table of Contents Appendix'>Appendix:&#xA0;</variable>"
   },
   u"es": {
     u"#table-continued": u"<variable id='#table-continued'>Table continued&#x2026;</variable>",
     u"Figure": u"<variable id='Figure'>Figura: <param ref-name='title'/></variable>",
-    u"Table": u"<variable id='Table'>Tabla: <param ref-name='title'/></variable>"
+    u"Table": u"<variable id='Table'>Tabla: <param ref-name='title'/></variable>",
+    #u"Chapter with number": u"<variable id='Chapter with number'></variable>",
+    u"Table of Contents Chapter": u"<variable id='Table of Contents Chapter'></variable>",
+    u"Table of Contents Appendix": u"<variable id='Table of Contents Appendix'>Ap&#xe9;ndice:&#xA0;</variable>"
   },
   u"fi": {
     u"#table-continued": u"<variable id='#table-continued'>Table continued&#x2026;</variable>",
     u"Figure": u"<variable id='Figure'>Kuva. <param ref-name='title'/></variable>",
-    u"Table": u"<variable id='Table'>Taulu. <param ref-name='title'/></variable>"
+    u"Table": u"<variable id='Table'>Taulu. <param ref-name='title'/></variable>",
+    #u"Chapter with number": u"<variable id='Chapter with number'></variable>",
+    u"Table of Contents Chapter": u"<variable id='Table of Contents Chapter'></variable>",
+    u"Table of Contents Appendix": u"<variable id='Table of Contents Appendix'>Liite </variable>"
   },
   u"fr": {
     u"#table-continued": u"<variable id='#table-continued'>Table continued&#x2026;</variable>",
     u"Figure": u"<variable id='Figure'>Illustration: <param ref-name='title'/></variable>",
-    u"Table": u"<variable id='Table'>Table: <param ref-name='title'/></variable>"
+    u"Table": u"<variable id='Table'>Table: <param ref-name='title'/></variable>",
+    #u"Chapter with number": u"<variable id='Chapter with number'></variable>",
+    u"Table of Contents Chapter": u"<variable id='Table of Contents Chapter'></variable>",
+    u"Table of Contents Appendix": u"<variable id='Table of Contents Appendix'>Annexe&#xA0;:&#xA0;</variable>"
   },
   u"he": {
     u"#table-continued": u"<variable id='#table-continued'>Table continued&#x2026;</variable>",
     u"Figure": u"<variable id='Figure'>&#x5d0;&#x5d9;&#x5d5;&#x5e8;. <param ref-name='title'/></variable>",
-    u"Table": u"<variable id='Table'>&#x5d8;&#x5d1;&#x5dc;&#x5d4;. <param ref-name='title'/></variable>"
+    u"Table": u"<variable id='Table'>&#x5d8;&#x5d1;&#x5dc;&#x5d4;. <param ref-name='title'/></variable>",
+    #u"Chapter with number": u"<variable id='Chapter with number'></variable>",
+    u"Table of Contents Chapter": u"<variable id='Table of Contents Chapter'></variable>",
+    u"Table of Contents Appendix": u"<variable id='Table of Contents Appendix'>&#x5e0;&#x5e1;&#x5e4;&#x5d7; </variable>"
   },
   u"it": {
     u"#table-continued": u"<variable id='#table-continued'>Table continued&#x2026;</variable>",
     u"Figure": u"<variable id='Figure'> Figura: <param ref-name='title'/></variable>",
-    u"Table": u"<variable id='Table'>Tabella: <param ref-name='title'/></variable>"
+    u"Table": u"<variable id='Table'>Tabella: <param ref-name='title'/></variable>",
+    #u"Chapter with number": u"<variable id='Chapter with number'></variable>",
+    u"Table of Contents Chapter": u"<variable id='Table of Contents Chapter'></variable>",
+    u"Table of Contents Appendix": u"<variable id='Table of Contents Appendix'>Appendice:&#xA0;</variable>"
   },
   u"ja": {
     u"#table-continued": u"<variable id='#table-continued'>Table continued&#x2026;</variable>",
     u"Figure": u"<variable id='Figure'>&#x56f3; : <param ref-name='title'/></variable>",
-    u"Table": u"<variable id='Table'>&#x8868; : <param ref-name='title'/></variable>"
+    u"Table": u"<variable id='Table'>&#x8868; : <param ref-name='title'/></variable>",
+    #u"Chapter with number": u"<variable id='Chapter with number'></variable>",
+    u"Table of Contents Chapter": u"<variable id='Table of Contents Chapter'></variable>",
+    u"Table of Contents Appendix": u"<variable id='Table of Contents Appendix'>&#x4ed8;&#x9332; : </variable>"
   },
   u"nl": {
     u"#table-continued": u"<variable id='#table-continued'>Table continued&#x2026;</variable>",
     u"Figure": u"<variable id='Figure'>Figuur: <param ref-name='title'/></variable>",
-    u"Table": u"<variable id='Table'>Tabel: <param ref-name='title'/></variable>"
+    u"Table": u"<variable id='Table'>Tabel: <param ref-name='title'/></variable>",
+    #u"Chapter with number": u"<variable id='Chapter with number'></variable>",
+    u"Table of Contents Chapter": u"<variable id='Table of Contents Chapter'></variable>",
+    u"Table of Contents Appendix": u"<variable id='Table of Contents Appendix'>Bijlage:&#xA0;</variable>"
   },
   u"ro": {
     u"#table-continued": u"<variable id='#table-continued'>Table continued&#x2026;</variable>",
-    u"Figure": u"<variable id='Figure'>Fig.. <param ref-name='title'/></variable>",
-    u"Table": u"<variable id='Table'>Tabel. <param ref-name='title'/></variable>"
+    u"Figure": u"<variable id='Figure'>Fig. <param ref-name='title'/></variable>",
+    u"Table": u"<variable id='Table'>Tabel. <param ref-name='title'/></variable>",
+    #u"Chapter with number": u"<variable id='Chapter with number'></variable>",
+    u"Table of Contents Chapter": u"<variable id='Table of Contents Chapter'></variable>",
+    u"Table of Contents Appendix": u"<variable id='Table of Contents Appendix'>Anexa </variable>"
   },
   u"ru": {
     u"#table-continued": u"<variable id='#table-continued'>Table continued&#x2026;</variable>",
     u"Figure": u"<variable id='Figure'>&#x420;&#x438;&#x441;&#x443;&#x43d;&#x43e;&#x43a;. <param ref-name='title'/></variable>",
-    u"Table": u"<variable id='Table'>&#x422;&#x430;&#x431;&#x43b;&#x438;&#x446;&#x430;. <param ref-name='title'/></variable>"
+    u"Table": u"<variable id='Table'>&#x422;&#x430;&#x431;&#x43b;&#x438;&#x446;&#x430;. <param ref-name='title'/></variable>",
+    #u"Chapter with number": u"<variable id='Chapter with number'></variable>",
+    u"Table of Contents Chapter": u"<variable id='Table of Contents Chapter'></variable>",
+    u"Table of Contents Appendix": u"<variable id='Table of Contents Appendix'>&#x41f;&#x440;&#x438;&#x43b;&#x43e;&#x436;&#x435;&#x43d;&#x438;&#x435; </variable>"
+  },
+  u"sl": {
+    u"#table-continued": u"<variable id='#table-continued'>Table continued&#x2026;</variable>",
+    u"Figure": u"<variable id='Figure'>Slika: <param ref-name='title'/></variable>",
+    u"Table": u"<variable id='Table'>Tabela: <param ref-name='title'/></variable>",
+    #u"Chapter with number": u"<variable id='Chapter with number'></variable>",
+    u"Table of Contents Chapter": u"<variable id='Table of Contents Chapter'></variable>",
+    u"Table of Contents Appendix": u"<variable id='Table of Contents Appendix'>Kazalo dodatka:&#xA0;</variable>"
   },
   u"sv": {
     u"#table-continued": u"<variable id='#table-continued'>Table continued&#x2026;</variable>",
     u"Figure": u"<variable id='Figure'>Figur. <param ref-name='title'/></variable>",
-    u"Table": u"<variable id='Table'>Tabell. <param ref-name='title'/></variable>"
+    u"Table": u"<variable id='Table'>Tabell. <param ref-name='title'/></variable>",
+    #u"Chapter with number": u"<variable id='Chapter with number'></variable>",
+    u"Table of Contents Chapter": u"<variable id='Table of Contents Chapter'></variable>",
+    u"Table of Contents Appendix": u"<variable id='Table of Contents Appendix'>Appendix </variable>"
   },
   u"zh_CN": {
     u"#table-continued": u"<variable id='#table-continued'>Table continued&#x2026;</variable>",
     u"Figure": u"<variable id='Figure'>&#x56fe;: <param ref-name='title'/></variable>",
-    u"Table": u"<variable id='Table'>&#x8868;: <param ref-name='title'/></variable>"
+    u"Table": u"<variable id='Table'>&#x8868;: <param ref-name='title'/></variable>",
+    #u"Chapter with number": u"<variable id='Chapter with number'></variable>",
+    u"Table of Contents Chapter": u"<variable id='Table of Contents Chapter'></variable>",
+    u"Table of Contents Appendix": u"<variable id='Table of Contents Appendix'>&#x9644;&#x5f55;:&#xA0;</variable>"
   }
 } 
 
@@ -712,6 +759,97 @@ class StylePluginGenerator(DitaGenerator):
   
 </xsl:stylesheet>
 """
+        __numberless_chapter_raw = """
+<xsl:stylesheet xmlns:fo="http://www.w3.org/1999/XSL/Format"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:e="e"
+                xmlns:opentopic="http://www.idiominc.com/opentopic"
+                exclude-result-prefixes="e opentopic"
+                version="2.0">
+
+    <xsl:template name="insertChapterFirstpageStaticContent">
+        <xsl:param name="type"/>
+        <fo:block>
+            <xsl:attribute name="id">
+                <xsl:call-template name="generate-toc-id"/>
+            </xsl:attribute>
+            <xsl:choose>
+                <xsl:when test="$type = 'chapter'">
+                    <fo:block xsl:use-attribute-sets="__chapter__frontmatter__name__container">
+                        <xsl:call-template name="insertVariable">
+                            <xsl:with-param name="theVariableID" select="'Chapter with number'"/>
+                            <xsl:with-param name="theParameters">
+                                <number>
+                                    <!--fo:block xsl:use-attribute-sets="__chapter__frontmatter__number__container">
+                                        <xsl:apply-templates select="key('map-id', @id)[1]" mode="topicTitleNumber"/>
+                                    </fo:block-->
+                                </number>
+                            </xsl:with-param>
+                        </xsl:call-template>
+                    </fo:block>
+                </xsl:when>
+                <xsl:when test="$type = 'appendix'">
+                    <fo:block xsl:use-attribute-sets="__chapter__frontmatter__name__container">
+                        <xsl:call-template name="insertVariable">
+                            <xsl:with-param name="theVariableID" select="'Appendix with number'"/>
+                            <xsl:with-param name="theParameters">
+                                <number>
+                                    <!--fo:block xsl:use-attribute-sets="__chapter__frontmatter__number__container">
+                                        <xsl:apply-templates select="key('map-id', @id)[1]" mode="topicTitleNumber"/>
+                                    </fo:block-->
+                                </number>
+                            </xsl:with-param>
+                        </xsl:call-template>
+                    </fo:block>
+                </xsl:when>
+                <xsl:when test="$type = 'appendices'">
+                    <fo:block xsl:use-attribute-sets="__chapter__frontmatter__name__container">
+                      <xsl:call-template name="insertVariable">
+                        <xsl:with-param name="theVariableID" select="'Appendix with number'"/>
+                        <xsl:with-param name="theParameters">
+                          <number>
+                            <fo:block xsl:use-attribute-sets="__chapter__frontmatter__number__container">
+                              <xsl:text>&#xA0;</xsl:text>
+                            </fo:block>
+                          </number>
+                        </xsl:with-param>
+                      </xsl:call-template>
+                    </fo:block>
+                </xsl:when>
+                <xsl:when test="$type = 'part'">
+                    <fo:block xsl:use-attribute-sets="__chapter__frontmatter__name__container">
+                        <xsl:call-template name="insertVariable">
+                            <xsl:with-param name="theVariableID" select="'Part with number'"/>
+                            <xsl:with-param name="theParameters">
+                                <number>
+                                    <fo:block xsl:use-attribute-sets="__chapter__frontmatter__number__container">
+                                        <xsl:apply-templates select="key('map-id', @id)[1]" mode="topicTitleNumber"/>
+                                    </fo:block>
+                                </number>
+                            </xsl:with-param>
+                        </xsl:call-template>
+                    </fo:block>
+                </xsl:when>
+                <xsl:when test="$type = 'preface'">
+                    <fo:block xsl:use-attribute-sets="__chapter__frontmatter__name__container">
+                        <xsl:call-template name="insertVariable">
+                            <xsl:with-param name="theVariableID" select="'Preface title'"/>
+                        </xsl:call-template>
+                    </fo:block>
+                </xsl:when>
+                <xsl:when test="$type = 'notices'">
+                    <fo:block xsl:use-attribute-sets="__chapter__frontmatter__name__container">
+                        <xsl:call-template name="insertVariable">
+                            <xsl:with-param name="theVariableID" select="'Notices title'"/>
+                        </xsl:call-template>
+                    </fo:block>
+                </xsl:when>
+            </xsl:choose>
+        </fo:block>
+    </xsl:template>
+
+</xsl:stylesheet>
+"""
         if stylesheet == "front-matter" or not stylesheet:
             if self.cover_image_name:
                 __root.append(ET.Comment("cover"))
@@ -769,6 +907,9 @@ class StylePluginGenerator(DitaGenerator):
             ET.SubElement(__root, NS_XSL + "variable", name=u"e:number-levels", select="(" + ", ".join([str(l).lower() + "()" for l in __number_levels]) + ")")
             for __c in list(ET.fromstring(__get_title_raw)):
                 __root.append(__c)
+            if "title-numbering" in self.style["topic"] and self.style["topic"]["title-numbering"] != "true":   
+                for __c in list(ET.fromstring(__numberless_chapter_raw)):
+                    __root.append(__c)
             
             if not ("icon" in self.style["note"] and self.style["note"]["icon"] == "icon"):
                 __root.append(ET.Comment("note"))
@@ -868,7 +1009,7 @@ class StylePluginGenerator(DitaGenerator):
         ditagen.generator.set_prefixes(__root, self.__get_ns())
         
         __d = ET.ElementTree(__root)
-        __d.write(self.out, "UTF-8")
+        __d.write(self.out, "ASCII")#"UTF-8"
 
     def __attribute_set(self, __root, __style, __attribute_set, __include=properties):
         """Generate attribute set."""
@@ -1170,6 +1311,11 @@ class StylePluginGenerator(DitaGenerator):
         # figure caption numbering
         if "caption-number" in self.style["fig"] and self.style["fig"]["caption-number"] == "none":
             __root.append(ET.fromstring(langs[lang][u"Figure"]))
+        # chapter numbering
+        if "title-numbering" in self.style["topic"] and self.style["topic"]["title-numbering"] != "true":
+        #    __root.append(ET.fromstring(langs[lang]["Chapter with number"]))
+            __root.append(ET.fromstring(langs[lang]["Table of Contents Chapter"]))
+            __root.append(ET.fromstring(langs[lang]["Table of Contents Appendix"]))
         
         # static content
         for args, var_names in [(self.header, self.__headers), (self.footer, self.__footers)]:
