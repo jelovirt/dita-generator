@@ -765,9 +765,25 @@ jumps over the lazy dog.</pre>
     <fieldset>
       <p>
         <label for="pdf.cover_image">Cover image</label>
+        <select id="cover_image_chooser">
+          <option value="file">Upload image</option>
+          <option value="metadata">Map metadata</option>  
+        </select>
+      </p>
+      <p class="controller" id="cover_image_file">
         <input name="pdf.cover_image" id="pdf.cover_image" type="file">
       </p>
+      <p class="controller" id="cover_image_metadata">
+        <label for="df.cover_image_metadata" class="inline">Data element name</label>:
+        <input name="pdf.cover_image_metadata" id="df.cover_image_metadata" type="input" placeholder="cover-image">
+      </p>
       <p class="instruction">Image on the cover page.</p>
+      <div class="help">
+        <p>Either upload a cover graphic and bundle it with the plug-in, or read the cover graphic file name from map metadata field:</p>
+        <pre>&lt;data name="cover-image"&gt;
+  &lt;image href="cover.svg"/&gt;
+&lt;/data&gt;</pre>
+      </div>
     </fieldset>
     <h3>Table of Contents</h3>
     <fieldset>

@@ -50,6 +50,7 @@ $(document).ready(function() {
     $(":input[name='pdf.formatter']").change(formatterHandler).change();
     $(":input[name='transtype']").change(transtypeChangeHandler);
     $(":input[name='pdf.body-column-count']").change(columnChangeHandler).change();
+    $("#cover_image_chooser").change(coverChangeHandler).change();
   $.each(storeFields, function(f) {
     $(":input[id='pdf." + this + "']").change(styleEditorHandler);
   });
@@ -73,6 +74,17 @@ function validateLength(event) {
 }
 
 var pdfStyleSelectorCurrent;
+
+function coverChangeHandler(event) {
+	var target = $(event.target);
+	if (target.val() == "file") {
+		$("#cover_image_file").prop("disable", false).show();
+		$("#cover_image_metadata").prop("disable", true).hide();
+	} else {
+		$("#cover_image_file").prop("disable", true).hide();
+		$("#cover_image_metadata").prop("disable", false).show();
+	}
+}
 
 // Column methods
 

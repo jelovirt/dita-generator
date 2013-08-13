@@ -108,10 +108,10 @@ table table tr {
   border-top: 1px solid gray;
   border-bottom: 1px solid gray;
 }
-fieldset p.help,
-fieldset p.instruction,
-fieldset p.legend,
-fieldset p.controller,
+fieldset .help,
+fieldset .instruction,
+fieldset .legend,
+fieldset .controller,
 #controls {
     padding-left: 150px;
 }

@@ -362,10 +362,12 @@ function setMessage(input, level, text, tip) {
 
 function helpHandler(event) {
   $(event.target).parents("fieldset:first").find(".help").show("fast");
+  return cancelEvent(event);
 }
 
 function closeHandler(event) {
   $(event.target).parents(".help").hide("fast");
+  return cancelEvent(event);
 }
 
 // Initialization

@@ -416,6 +416,7 @@ class StylePluginGenerator(DitaGenerator):
         self.override_shell = False
         self.cover_image = None
         self.cover_image_name = None
+        self.cover_image_metadata = None
         self.header = {
             "odd": ["pagenum"],
             "even": ["pagenum"]
@@ -514,6 +515,47 @@ class StylePluginGenerator(DitaGenerator):
         """Generate plugin custom XSLT file."""
         __root = ET.Element(NS_XSL + "stylesheet", {"version":"2.0", "exclude-result-prefixes": "ditaarch opentopic e"})
         
+        __cover_metadata_raw = """
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:fo="http://www.w3.org/1999/XSL/Format"
+                xmlns:e="e"
+                exclude-result-prefixes="e"
+                version="2.0">
+
+  <xsl:template name="e:cover-image">
+    <xsl:for-each select="($map//*[contains(@class, ' topic/data ')][@name = '%s']/*[contains(@class, ' topic/image ')])[1]">
+      <xsl:apply-templates select="." mode="placeImage">
+        <xsl:with-param name="imageAlign" select="@align"/>
+        <xsl:with-param name="href" select="if (@scope = 'external' or opentopic-func:isAbsolute(@href)) then @href else concat($input.dir.url, @href)"/>
+        <xsl:with-param name="height" select="@height"/>
+        <xsl:with-param name="width" select="@width"/>
+      </xsl:apply-templates>
+    </xsl:for-each>
+  </xsl:template>
+  
+</xsl:stylesheet>"""
+        __cover_file_raw = """
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:fo="http://www.w3.org/1999/XSL/Format"
+                xmlns:e="e"
+                exclude-result-prefixes="e"
+                version="2.0">
+
+  <xsl:template name="e:cover-image">
+    <xsl:variable name="path">
+      <xsl:call-template name="insertVariable">
+        <xsl:with-param name="theVariableID" select="'cover-image-path'"/>
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:apply-templates select="." mode="placeImage">
+      <xsl:with-param name="imageAlign" select="'center'"/>
+      <xsl:with-param name="href" select="concat($artworkPrefix, $path)"/>
+      <xsl:with-param name="height" select="()"/>
+      <xsl:with-param name="width" select="()"/>
+    </xsl:apply-templates>
+  </xsl:template>
+  
+</xsl:stylesheet>"""
         __cover_raw = """
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:fo="http://www.w3.org/1999/XSL/Format"
@@ -546,7 +588,9 @@ class StylePluginGenerator(DitaGenerator):
           <fo:block xsl:use-attribute-sets="__frontmatter__owner">
             <xsl:apply-templates select="$map//*[contains(@class,' bookmap/bookmeta ')]"/>
           </fo:block>
-          <fo:external-graphic src="url({concat($artworkPrefix, $e:cover-image-path)})" xsl:use-attribute-sets="image"/>
+          <fo:block xsl:use-attribute-sets="image__block">
+            <xsl:call-template name="e:cover-image"/>
+          </fo:block>
         </fo:block>
       </fo:flow>
     </fo:page-sequence>
@@ -851,8 +895,14 @@ class StylePluginGenerator(DitaGenerator):
 </xsl:stylesheet>
 """
         if stylesheet == "front-matter" or not stylesheet:
-            if self.cover_image_name:
+            if self.cover_image_name or self.cover_image_metadata:
                 __root.append(ET.Comment("cover"))
+                if self.cover_image_name:
+                    for __c in list(ET.fromstring(__cover_file_raw)):
+                        __root.append(__c)
+                if self.cover_image_metadata:
+                    for __c in list(ET.fromstring(__cover_metadata_raw % self.cover_image_metadata)):
+                        __root.append(__c)
                 for __c in list(ET.fromstring(__cover_raw)):
                         __root.append(__c)
         
@@ -903,7 +953,6 @@ class StylePluginGenerator(DitaGenerator):
         if stylesheet == "commons" or not stylesheet:
             __root.append(ET.Comment("title numbering"))
             __number_levels = ["title-numbering" in self.style[s] and self.style[s]["title-numbering"] == "true" for s in ['topic', 'topic.topic', 'topic.topic.topic', 'topic.topic.topic.topic']]
-            print __number_levels
             ET.SubElement(__root, NS_XSL + "variable", name=u"e:number-levels", select="(" + ", ".join([str(l).lower() + "()" for l in __number_levels]) + ")")
             for __c in list(ET.fromstring(__get_title_raw)):
                 __root.append(__c)
@@ -1023,9 +1072,14 @@ class StylePluginGenerator(DitaGenerator):
         """Generate plugin custom XSLT file."""
         __root = ET.Element(NS_XSL + "stylesheet", {"version":"2.0", "exclude-result-prefixes": "ditaarch opentopic e"})
         
-        if stylesheet == "front-matter-attr" or not stylesheet:
-            if self.cover_image_name:
-                ET.SubElement(__root, NS_XSL + "variable", name="e:cover-image-path").text = "Customization/OpenTopic/common/artwork/" + self.cover_image_name
+        #if stylesheet == "front-matter-attr" or not stylesheet:
+            #if self.cover_image_name:
+            #    ET.SubElement(__root, NS_XSL + "variable", name="e:cover-image-path", select="concat($artworkPrefix, 'Customization/OpenTopic/common/artwork/%s'" % self.cover_image_name)
+            #el
+            #if self.cover_image_metadata:
+                #__cover_image_path = ET.SubElement(__root, NS_XSL + "variable", name="e:cover-image-path", select="($map//*[contains(@class, ' topic/data ')][@name = '%s'])[1]/@href" % self.cover_image_metadata)
+            #    __cover_image_path = ET.SubElement(__root, NS_XSL + "variable", name="e:cover-image")
+            #    ET.SubElement(__cover_image_path, NS_XSL + "apply-templates", select="($map//*[contains(@class, ' topic/data ')][@name = '%s']/*[contains(@class, ' topic/image ')])[1]" % self.cover_image_metadata, mode="e:cover-image")
         
         if stylesheet == "commons-attr" or not stylesheet:
             # force page count
@@ -1316,7 +1370,9 @@ class StylePluginGenerator(DitaGenerator):
         #    __root.append(ET.fromstring(langs[lang]["Chapter with number"]))
             __root.append(ET.fromstring(langs[lang]["Table of Contents Chapter"]))
             __root.append(ET.fromstring(langs[lang]["Table of Contents Appendix"]))
-        
+        # cover image
+        if self.cover_image_name:
+            ET.SubElement(__root, "variable", id="cover-image-path").text = "Customization/OpenTopic/common/artwork/%s" % self.cover_image_name
         # static content
         for args, var_names in [(self.header, self.__headers), (self.footer, self.__footers)]:
             for id in var_names: 

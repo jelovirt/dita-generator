@@ -341,6 +341,8 @@ class PluginGenerateHandler(webapp.RequestHandler):
             if "pdf.cover_image" in self.request.arguments() and type(self.request.POST["pdf.cover_image"]) != unicode:
                 __dita_gen.cover_image = self.request.get("pdf.cover_image")
                 __dita_gen.cover_image_name = self.request.POST["pdf.cover_image"].filename
+            if "cover_image_metadata" in __args:
+                __dita_gen.cover_image_metadata = __args["cover_image_metadata"]
             __dita_gen.header = __args["header"]
             
             __dita_gen.out = self.response.out
@@ -408,6 +410,8 @@ class PluginGenerateHandler(webapp.RequestHandler):
         if "pdf.cover_image" in self.request.arguments() and type(self.request.POST["pdf.cover_image"]) != unicode:
             #ret["cover_image"] = self.request.get("pdf.cover_image")
             ret["cover_image_name"] = self.request.POST["pdf.cover_image"].filename
+        if "pdf.cover_image_metadata" in self.request.arguments():
+            ret["cover_image_metadata"] = self.request.get("pdf.cover_image_metadata")
         #ret["drop_folio"] = u"pdf.drop-folio" in self.request.arguments()
         __header_folio = []
         if not self.request.get(u"pdf.drop-folio"):

@@ -240,6 +240,8 @@ def main():
             "pdf.caption-number.fig": "none",
             "pdf.background-color.fig": "yellow",
 
+            "pdf.cover_image_metadata": "cover-image",
+
             "pdf.text-align": "justify",
             #"pdf.dl": "list",
             "pdf.title-numbering": "all",
