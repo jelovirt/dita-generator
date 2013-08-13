@@ -59,6 +59,8 @@ styles = [{ "property": f[0], "type": f[1], "value": f[2], "inherit": f[3] } for
     ("text-align", "topic", "start", None),
     ("start-indent", "topic", "0pt", None),
     ("line-height", "topic", None, "body"),
+    # custom
+    ("title-numbering", "topic", "true", None),
     
     ("font-family", "topic.topic", "sans-serif", None),
     ("font-size", "topic.topic", "14pt", None),
@@ -72,7 +74,9 @@ styles = [{ "property": f[0], "type": f[1], "value": f[2], "inherit": f[3] } for
     ("text-align", "topic.topic", "start", None),
     ("start-indent", "topic.topic", "0pt", None),
     ("line-height", "topic.topic", None, "body"),
-    
+    # custom
+    ("title-numbering", "topic.topic", "false", None),
+
     ("font-family", "topic.topic.topic", "sans-serif", None),
     ("font-size", "topic.topic.topic", "12pt", None),
     ("color", "topic.topic.topic", "black", "body"),
@@ -85,6 +89,8 @@ styles = [{ "property": f[0], "type": f[1], "value": f[2], "inherit": f[3] } for
     ("text-align", "topic.topic.topic", "start", None),
     ("start-indent", "topic.topic.topic", "0pt", None),
     ("line-height", "topic.topic.topic", None, "body"),
+    # custom
+    ("title-numbering", "topic.topic.topic", "false", None),
     
     ("font-family", "topic.topic.topic.topic", "serif", "body"),
     ("font-size", "topic.topic.topic.topic", "10pt", "body"),
@@ -98,6 +104,8 @@ styles = [{ "property": f[0], "type": f[1], "value": f[2], "inherit": f[3] } for
     ("text-align", "topic.topic.topic.topic", "start", None),
     ("start-indent", "topic.topic.topic.topic", None, "body"),
     ("line-height", "topic.topic.topic.topic", None, "body"),
+    # custom
+    ("title-numbering", "topic.topic.topic.topic", "false", None),
 
     ("font-family", "section", "sans-serif", None),
     ("font-size", "section", None, "body"),
@@ -356,11 +364,6 @@ class StylePluginGenerator(DitaGenerator):
         self.include_related_links = None
         self.column_gap = None
         self.mirror_page_margins = None
-        #self.dl = None
-        self.title_numbering = None
-        #self.table_numbering = None
-        #self.figure_numbering = None
-        #self.link_pagenumber = None
         self.table_continued = None
         self.formatter = None
         self.override_shell = False
@@ -682,22 +685,24 @@ class StylePluginGenerator(DitaGenerator):
     <xsl:variable name="mapTopics" select="key('map-id', $id)"/>
     <fo:inline>
       <xsl:for-each select="$mapTopics[1]">
+        <xsl:variable name="depth" select="count(ancestor-or-self::*[contains(@class, ' map/topicref')])"/>
         <xsl:choose>
           <xsl:when test="parent::opentopic:map"/>
           <xsl:when test="ancestor-or-self::*[contains(@class, ' bookmap/frontmatter ') or
                                               contains(@class, ' bookmap/backmatter ')]"/>
-          <xsl:when test="ancestor-or-self::*[contains(@class, ' bookmap/appendix ')]">
+          <xsl:when test="ancestor-or-self::*[contains(@class, ' bookmap/appendix ')] and
+                          $e:number-levels[$depth]">
             <xsl:number count="*[contains(@class, ' map/topicref ')]
-                                [ancestor-or-self::*[contains(@class, ' bookmap/appendix ')]]"
+                                [ancestor-or-self::*[contains(@class, ' bookmap/appendix ')]] "
                         level="multiple"
                         format="A.1.1"/>
           </xsl:when>
-          <xsl:otherwise>
+          <xsl:when test="$e:number-levels[$depth]">
             <xsl:number count="*[contains(@class, ' map/topicref ')]
                                 [not(ancestor-or-self::*[contains(@class, ' bookmap/frontmatter ')])]"
                         level="multiple"
                         format="1.1"/>
-          </xsl:otherwise>
+          </xsl:when>
         </xsl:choose>
       </xsl:for-each>
     </fo:inline>
@@ -758,12 +763,12 @@ class StylePluginGenerator(DitaGenerator):
 """
         
         if stylesheet == "commons" or not stylesheet:
-            if self.title_numbering == "all":
-                __root.append(ET.Comment("title numbering"))
-                for __c in list(ET.fromstring(__get_title_raw)):
-                    __root.append(__c)
-            elif self.title_numbering == "chapters":
-                pass #DITA-OT default
+            __root.append(ET.Comment("title numbering"))
+            __number_levels = ["title-numbering" in self.style[s] and self.style[s]["title-numbering"] == "true" for s in ['topic', 'topic.topic', 'topic.topic.topic', 'topic.topic.topic.topic']]
+            print __number_levels
+            ET.SubElement(__root, NS_XSL + "variable", name=u"e:number-levels", select="(" + ", ".join([str(l).lower() + "()" for l in __number_levels]) + ")")
+            for __c in list(ET.fromstring(__get_title_raw)):
+                __root.append(__c)
             
             if not ("icon" in self.style["note"] and self.style["note"]["icon"] == "icon"):
                 __root.append(ET.Comment("note"))
@@ -894,7 +899,8 @@ class StylePluginGenerator(DitaGenerator):
                 if k.startswith("topic") or k.startswith("section"):
                     __title_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name=k + ".title")
                     for (p, v) in e.items():
-                        ET.SubElement(__title_attr, NS_XSL + "attribute", name=p).text = v
+                        if p in properties:
+                            ET.SubElement(__title_attr, NS_XSL + "attribute", name=p).text = v
             # link
             link_attr_sets = ["common.link"]
             for n in link_attr_sets:

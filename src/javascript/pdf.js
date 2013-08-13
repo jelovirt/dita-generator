@@ -167,6 +167,8 @@ function styleHandler(event) {
 	readFromModel(target.val());
 }
 var storeFields = ["font-family", "font-size", "font-weight", "font-style", "color", "background-color", "space-before", "space-after", "start-indent", "text-align", "text-decoration", "line-height",
+				   // titles
+				   "title-numbering",
                    // note
                    "icon",
                    // link
@@ -188,11 +190,7 @@ function readFromModel(type) {
 		}
 		var view = $("#style-form :input[id='pdf." + storeFields[i] + "']");
 		if (view.is(":checkbox")) {
-			if (model.val() == view.val()) {
-				view.attr("checked", true);
-			} else {
-				view.removeAttr("checked");
-			}
+			view.prop("checked", model.val() == view.val());
 		} else if (view.is(".editable-list")) {
 			var id = view.attr("name") != undefined ? ui.attr("name") : view.attr("id");
 			var store = $("#style-model :input[id='" + id + "']");

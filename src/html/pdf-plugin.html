@@ -627,6 +627,17 @@
             </td>
           </tr>
         </tbody>
+        <tbody data-style="topic topic.topic topic.topic.topic topic.topic.topic.topic">
+          <tr>
+            <th colspan="2"><h4>Numbering</h4></th>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <label for="pdf.title-numbering" class="inline">Title numbering</label>:
+              <input id="pdf.title-numbering" type="checkbox" value="true" title="Title numbering">
+            </td>
+          </tr>
+        </tbody>
         <tbody data-style="dl">
           <tr>
             <th colspan="2"><h4>List styles</h4></th>
@@ -648,7 +659,7 @@
           </tr>
           <tr>
             <td colspan="2">
-            <label for="pdf.caption-number" class="inline">Caption numbering</label>:
+              <label for="pdf.caption-number" class="inline">Caption numbering</label>:
               <select id="pdf.caption-number" title="Caption numbering">
                 <option value="document" selected>Document wide</option>
                 <option value="none">No numbering</option>
@@ -666,8 +677,8 @@
     <div class="example-block" id="example-pdf-style">
       <div class="example-block-page" id="pdf.start-indent.examplex">
         <div class="example-page-content" id="pdf.text-align.examplex">
-          <div class="example-page-content-topic">Heading 1</div>
-          <div class="example-page-content-topic.topic">Heading 2</div>
+          <div class="example-page-content-topic"><span data-style="topic" data-field="title-numbering" data-value="true">1 </span>Heading 1</div>
+          <div class="example-page-content-topic.topic"><span data-style="topic.topic" data-field="title-numbering" data-value="true">1.1 </span>Heading 2</div>
           <p class="example-page-content-body">
             The quick brown fox jumps over the lazy dog.
             The quick brown fox jumps over the lazy dog.
@@ -712,14 +723,14 @@
           
             The quick <span class="example-page-content-link">brown fox</span><span class="example-page-content-link-url"> at www.example.com</span> jumps over the lazy dog.
           </p>
-          <div class="example-page-content-topic.topic.topic">Heading 3</div>
+          <div class="example-page-content-topic.topic.topic"><span data-style="topic.topic.topic" data-field="title-numbering" data-value="true">1.1.1 </span>Heading 3</div>
           <p class="example-page-content-body">
             The quick brown fox jumps over the lazy dog.
             The quick brown fox jumps over the lazy dog.
             The quick brown fox jumps over the lazy dog.
             The quick brown fox jumps over the lazy dog.
           </p>
-          <div class="example-page-content-topic.topic.topic.topic">Heading 4</div>
+          <div class="example-page-content-topic.topic.topic.topic"><span data-style="topic.topic.topic.topic" data-field="title-numbering" data-value="true">1.1.1.1 </span>Heading 4</div>
           <p class="example-page-content-body">
             The quick brown fox jumps over the lazy dog.
             The quick brown fox jumps over the lazy dog.

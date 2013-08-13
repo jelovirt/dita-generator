@@ -207,7 +207,10 @@ def main():
             "pdf.font-size.topic": "18pt",
             "pdf.color.topic": "blue",
             "pdf.font-weight.topic": "bold",
+            "pdf.title-numbering.topic": "true",
             
+            "pdf.title-numbering.topic.topic": "true",
+
             "pdf.font-style.topic.topic.topic": "italic",
             "pdf.start-indent.topic.topic.topic" : "5pt",
             
