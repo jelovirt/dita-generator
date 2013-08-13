@@ -47,21 +47,6 @@ function previewSpaceHandler(event) {
       break;
     }
     break;
-  case "icon":
-//    type = "icon";
-    cls = "display";
-    v = (v == "icon") ? "table-cell" : "none";
-    break;
-  case "link-page-number":
-//    type = "link-page-number";
-    cls = "display";
-    v = (v == "true") ? "inline" : "none";
-    break;
-  case "link-url":
-//    type = "link-url";
-    cls = "display";
-    v = (v == "true") ? "inline" : "none";
-    break;
   default:
     var all = $("[data-field='" + field + "'][data-style='" + type + "']");
     if (all.length) {

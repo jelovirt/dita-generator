@@ -687,7 +687,7 @@
           </p>
           <table class="example-page-content-note">
             <tr>
-              <td class="example-page-content-icon"><img src="/images/hand.gif" style="height:16px"/></td>
+              <td data-style="note" data-field="icon" data-value="icon"><img src="/images/hand.gif" style="height:16px"/></td>
               <td><strong class="example-page-content-note-label">Note:</strong> The quick brown fox jumps over the lazy dog.</td>
             </tr>
           </table>
@@ -719,9 +719,9 @@
             <li><strong>XXX</strong><br>The quick brown fox jumps over the lazy dog.</li>
           </ul>
           <p class="example-page-content-body">
-            The quick brown <span class="example-page-content-link">fox jumps</span><span class="link-page-number-example example-page-content-link-page-number"> on page 42</span> over the lazy dog.
+            The quick brown <span class="example-page-content-link">fox jumps</span><span data-style="link" data-field="link-page-number" data-value="true"> on page 42</span> over the lazy dog.
           
-            The quick <span class="example-page-content-link">brown fox</span><span class="example-page-content-link-url"> at www.example.com</span> jumps over the lazy dog.
+            The quick <span class="example-page-content-link">brown fox</span><span data-style="link" data-field="link-url" data-value="true"> at www.example.com</span> jumps over the lazy dog.
           </p>
           <div class="example-page-content-topic.topic.topic"><span data-style="topic.topic.topic" data-field="title-numbering" data-value="true">1.1.1 </span>Heading 3</div>
           <p class="example-page-content-body">
@@ -743,7 +743,7 @@ jumps over the lazy dog.</pre>
   (if (<= n 1)
        1
        (* n (factorial (- n 1)))))</pre>
-          <p class="example-page-content-table-title"><strong>Table<span data-style="table" data-field="caption-number" data-value="document"> 4</span>: Table caption</strong></p>
+          <p  class="example-page-content-body example-page-content-table-title"><strong>Table<span data-style="table" data-field="caption-number" data-value="document"> 4</span>: Table caption</strong></p>
           <table class="example-page-content-table" border="1">
             <tr class="example-page-content-tr">
               <td class="example-page-content-td">Dog</td>
@@ -755,7 +755,7 @@ jumps over the lazy dog.</pre>
             </tr>
           </table>
           <p class="example-page-content-fig"><img src="http://upload.wikimedia.org/wikipedia/en/5/5a/Dogcow.png" style="height: 30px"/></p>
-          <p class="example-page-content-fig-title"><strong>Figure<span data-style="fig" data-field="caption-number" data-value="document"> 6</span>: Figure caption</strong></p>
+          <p class="example-page-content-body example-page-content-fig-title"><strong>Figure<span data-style="fig" data-field="caption-number" data-value="document"> 6</span>: Figure caption</strong></p>
         </div>
       </div>
     </div>
