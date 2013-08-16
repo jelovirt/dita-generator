@@ -425,11 +425,13 @@ class StylePluginGenerator(DitaGenerator):
             "odd": [],
             "even": []
             }
+        self.page_number = None
             
     def __get_ns(self):
         return {
             "xsl": "http://www.w3.org/1999/XSL/Transform",
             "fo": "http://www.w3.org/1999/XSL/Format",
+            "xs": "http://www.w3.org/2001/XMLSchema",
             "e": self.plugin_name,
             "ditaarch": "http://dita.oasis-open.org/architecture/2005/",
             "opentopic": "http://www.idiominc.com/opentopic",
@@ -510,6 +512,18 @@ class StylePluginGenerator(DitaGenerator):
         ditagen.generator.set_prefixes(__root, {"": "urn:oasis:names:tc:entity:xmlns:xml:catalog"})
         __d = ET.ElementTree(__root)
         __d.write(self.out, "UTF-8")
+
+    @staticmethod
+    def copy_xml(__root, __raw):
+        for __c in list(ET.fromstring("""
+<xsl:stylesheet xmlns:fo="http://www.w3.org/1999/XSL/Format"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:e="e"
+                xmlns:opentopic="http://www.idiominc.com/opentopic"
+                xmlns:opentopic-func="http://www.idiominc.com/opentopic/exsl/function"
+                exclude-result-prefixes="e opentopic opentopic-func"
+                version="2.0">%s</xsl:stylesheet>""" % __raw)):
+             __root.append(__c)
 
     def __generate_custom(self, stylesheet=None):
         """Generate plugin custom XSLT file."""
@@ -949,7 +963,36 @@ class StylePluginGenerator(DitaGenerator):
   
 </xsl:stylesheet>
 """
-        
+        __chapter_page_number_raw = """
+<xsl:template name="startPageNumbering">
+  <xsl:variable name="topicType" as="xs:string">
+    <xsl:call-template name="determineTopicType"/>
+  </xsl:variable>
+  <xsl:variable name="topic" select="ancestor-or-self::*[contains(@class, ' topic/topic ')][1]"/>
+  <xsl:variable name="id" select="$topic/@id"/>
+  <xsl:variable name="mapTopics" select="key('map-id', $id)"/>  
+  <xsl:for-each select="$mapTopics[1]">
+    <xsl:choose>
+      <xsl:when test="$topicType = 'topicChapter'">
+        <xsl:attribute name="initial-page-number">1</xsl:attribute>
+        <fo:folio-prefix>
+          <xsl:number format="1" count="*[contains(@class, ' bookmap/chapter ')]"/>
+          <xsl:text>&#x2014;</xsl:text>
+        </fo:folio-prefix>
+      </xsl:when>
+      <xsl:when test="$topicType = ('topicAppendix', 'topicAppendices')">
+        <xsl:attribute name="initial-page-number">1</xsl:attribute>
+        <fo:folio-prefix>
+          <xsl:number format="A" count="*[contains(@class, ' bookmap/appendix ')]"/>
+          <xsl:text>&#x2014;</xsl:text>
+        </fo:folio-prefix>
+      </xsl:when>
+    </xsl:choose>
+  </xsl:for-each>
+  <xsl:comment>topicType: <xsl:value-of select="$topicType"/></xsl:comment>
+</xsl:template>
+"""
+
         if stylesheet == "commons" or not stylesheet:
             __root.append(ET.Comment("title numbering"))
             __number_levels = ["title-numbering" in self.style[s] and self.style[s]["title-numbering"] == "true" for s in ['topic', 'topic.topic', 'topic.topic.topic', 'topic.topic.topic.topic']]
@@ -965,6 +1008,9 @@ class StylePluginGenerator(DitaGenerator):
                 __note = ET.fromstring(__note_raw)
                 for __c in list(__note):
                     __root.append(__c)
+            if self.page_number:
+                if self.page_number == "chapter-page":
+                    self.copy_xml(__root, __chapter_page_number_raw)
 
         __link_raw = """
 <xsl:stylesheet xmlns:fo="http://www.w3.org/1999/XSL/Format"
@@ -1070,7 +1116,7 @@ class StylePluginGenerator(DitaGenerator):
 
     def __generate_custom_attr(self, stylesheet=None):
         """Generate plugin custom XSLT file."""
-        __root = ET.Element(NS_XSL + "stylesheet", {"version":"2.0", "exclude-result-prefixes": "ditaarch opentopic e"})
+        __root = ET.Element(NS_XSL + "stylesheet", {"version":"2.0", "exclude-result-prefixes": "xs ditaarch opentopic e"})
         
         #if stylesheet == "front-matter-attr" or not stylesheet:
             #if self.cover_image_name:

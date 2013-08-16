@@ -253,6 +253,7 @@ def main():
             "pdf.override_shell": "true",
             "pdf.header.even": "chapter",
             "pdf.header.odd": "chapter",
+            "pdf.page-number": "chapter-page",
             "pdf.drop-folio": "pagenum",
             "id": "com.example.print-pdf",
             "transtype": "print-pdf",

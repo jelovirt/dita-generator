@@ -345,6 +345,7 @@ class PluginGenerateHandler(webapp.RequestHandler):
                 __dita_gen.cover_image_metadata = __args["cover_image_metadata"]
             __dita_gen.header = __args["header"]
             __dita_gen.footer = __args["footer"]
+            __dita_gen.page_number = __args["page_number"]
             
             __dita_gen.out = self.response.out
             self.response.headers["Content-Type"] = "application/zip"
@@ -426,6 +427,8 @@ class PluginGenerateHandler(webapp.RequestHandler):
                 "odd": ["pagenum"],
                 "even": ["pagenum"]
                 }
+        if "pdf.page-number" in self.request.arguments():
+            ret["page_number"] = self.request.get("pdf.page-number")
         return ret
 
     def parse_dict_list(self, base):
