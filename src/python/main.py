@@ -346,7 +346,8 @@ class PluginGenerateHandler(webapp.RequestHandler):
             __dita_gen.header = __args["header"]
             if "footer" in __args:
                 __dita_gen.footer = __args["footer"]
-            __dita_gen.page_number = __args["page_number"]
+            if "page_number" in __args:
+                __dita_gen.page_number = __args["page_number"]
             
             __dita_gen.out = self.response.out
             self.response.headers["Content-Type"] = "application/zip"
