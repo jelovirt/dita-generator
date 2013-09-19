@@ -344,7 +344,8 @@ class PluginGenerateHandler(webapp.RequestHandler):
             if "cover_image_metadata" in __args:
                 __dita_gen.cover_image_metadata = __args["cover_image_metadata"]
             __dita_gen.header = __args["header"]
-            __dita_gen.footer = __args["footer"]
+            if "footer" in __args:
+                __dita_gen.footer = __args["footer"]
             __dita_gen.page_number = __args["page_number"]
             
             __dita_gen.out = self.response.out
