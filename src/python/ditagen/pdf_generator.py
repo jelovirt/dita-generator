@@ -548,6 +548,23 @@ class StylePluginGenerator(DitaGenerator):
   </xsl:template>
   
 </xsl:stylesheet>"""
+        # Backport from DITA-OT 2.0
+        __cover_metadata_v1_raw = """
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:fo="http://www.w3.org/1999/XSL/Format"
+                xmlns:opentopic-func="http://www.idiominc.com/opentopic/exsl/function"
+                xmlns:e="e"
+                exclude-result-prefixes="e opentopic-func"
+                version="2.0">
+
+  <!-- Test whether URI is absolute -->
+  <xsl:function name="opentopic-func:isAbsolute" as="xs:boolean">
+    <xsl:param name="uri" as="xs:anyURI"/>
+    <xsl:sequence select="some $prefix in ('/', 'file:') satisfies starts-with($uri, $prefix) or
+                          contains($uri, '://')"/>
+  </xsl:function>
+  
+</xsl:stylesheet>"""
         __cover_file_raw = """
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:fo="http://www.w3.org/1999/XSL/Format"
@@ -917,6 +934,9 @@ class StylePluginGenerator(DitaGenerator):
                 if self.cover_image_metadata:
                     for __c in list(ET.fromstring(__cover_metadata_raw % self.cover_image_metadata)):
                         __root.append(__c)
+                    if self.ot_version < Version("2.0"):
+                        for __c in list(ET.fromstring(__cover_metadata_v1_raw)):
+                            __root.append(__c)
                 for __c in list(ET.fromstring(__cover_raw)):
                         __root.append(__c)
         
