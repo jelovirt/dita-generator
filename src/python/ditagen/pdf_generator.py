@@ -809,7 +809,7 @@ class StylePluginGenerator(DitaGenerator):
       <xsl:for-each select="$mapTopics[1]">
         <xsl:variable name="depth" select="count(ancestor-or-self::*[contains(@class, ' map/topicref')])"/>
         <xsl:choose>
-          <xsl:when test="parent::opentopic:map"/>
+          <xsl:when test="parent::opentopic:map and contains(@class, ' bookmap/bookmap ')"/>
           <xsl:when test="ancestor-or-self::*[contains(@class, ' bookmap/frontmatter ') or
                                               contains(@class, ' bookmap/backmatter ')]"/>
           <xsl:when test="ancestor-or-self::*[contains(@class, ' bookmap/appendix ')] and
