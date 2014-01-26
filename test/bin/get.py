@@ -7,6 +7,7 @@ from StringIO import StringIO
 import sys
 import os.path
 import json
+import logging
 
 class bcolors:
     HEADER = '\033[95m'
@@ -56,7 +57,8 @@ def main():
               "owner": "test",
               "output": "shell",
               "type": "concept",
-              "id": "test"
+              "id": "test",
+              "version": "1.2"
             },
         "specialization": {
               "domain": [
@@ -82,99 +84,108 @@ def main():
               "owner": "test",
               "output": "specialization",
               "root": "test",
-              "id": "test"
+              "id": "test",
+              "version": "1.2"
             },
         "pdf": {
-              "orientation": "",
-              "header": {
-                "even": ["chapter"],
-                "odd": ["chapter"]
-              },
-              "chapter_layout": "BASIC",
-              "id": "com.example.print-pdf",
-              "style": {
-                "body": {
-                  "font-size": "12pt",
-                  "start-indent": "25pt",
-                  "color": "black",
-                  "font-family": "Sans",
-                  "line-height": "1.8em",
-                  "text-align": "justify"
+            "id": "com.example.print-pdf",
+            "ot_version": "1.8",
+            "plugin_version": "1.0.0",
+            "transtype": "print-pdf",
+            "configuration": {
+                "style": {
+                    "body": {
+                      "font-size": "12pt",
+                      "start-indent": "25pt",
+                      "color": "black",
+                      "font-family": "Sans",
+                      "line-height": "1.8em",
+                      "text-align": "justify"
+                    },
+                    "pre": {
+                        "line-height": "1em"
+                    },
+                    "dl": {
+                      "dl-type": "list",
+                      "background-color": "pink"
+                    },
+                    "topic.topic.topic": {
+                      "font-style": "italic",
+                      "start-indent": "5pt"
+                    },
+                    "section": {
+                      "font-style": "italic",
+                      "start-indent": "5pt"
+                    },
+                    "note": {
+                      "color": "gray",
+                      "font-size": "10pt",
+                      "start-indent": "50pt",
+                      "icon": "icon"
+                    },
+                    "topic.topic": {
+                        "title-numbering": "true"
+                    },
+                    "topic": {
+                      "color": "blue",
+                      "title-numbering": "true",
+                      "font-size": "18pt",
+                      "font-weight": "bold",
+                      "font-family": "Serif"
+                    },
+                    "link": {
+                      "color": "black",
+                      "link-url": "true",
+                      "font-style": "italic",
+                      "link-page-number": "true"
+                    },
+                    "fig": {
+                      "background-color": "yellow",
+                      "caption-number": "none"
+                    },
+                    "table": {
+                      "background-color": "cyan",
+                      "caption-number": "document"
+                    },
+                    "codeblock": {
+                        "background-color": "silver"
+                    }
                 },
-                "pre": {"line-height": "1em"},
-                "codeblock": {
-                  "background-color": "silver"
+                "bookmark_style": "EXPANDED",
+                "page_size": [
+                    "210mm",
+                    "297mm"
+                ],
+                "include_related_links": "nofamily",
+                "page_number": "chapter-page",
+                "formatter": "ah",
+                "override_shell": True,
+                "column_gap": "10mm",
+                "table_continued": True,
+                "title_numbering": "all",
+                "cover_image_metadata": "cover-image",
+                "page_margins": {
+                    "top": "20mm",
+                    "inside": "30mm",
+                    "outside": "20mm",
+                    "bottom": "20mm"
                 },
-                "dl": {},
-                "topic.topic.topic": {
-                  "font-style": "italic",
-                  "start-indent": "5pt"
+                "force_page_count": "auto",
+                "header": {
+                    "even": ["chapter"],
+                    "odd": ["chapter"]
                 },
-                "section": {
-                  "font-style": "italic",
-                  "start-indent": "5pt"
+                "chapter_layout": "BASIC",
+                "footer": {
+                    "even": ["pagenum"],
+                    "odd": ["pagenum"]
                 },
-                "topic.topic.topic.topic": {},
-                "note": {
-                  "color": "gray",
-                  "font-size": "10pt",
-                  "start-indent": "50pt",
-                  "icon": "icon"
-                },
-                "topic.topic": {},
-                "topic": {
-                  "color": "blue",
-                  "font-size": "18pt",
-                  "font-weight": "bold",
-                  "font-family": "Serif"
-                },
-                "link": {
-                  "color": "black",
-                  "font-style": "italic",
-                  "link-page-number": "true",
-                  "link-url": "true"
-                },
-                "dl": {
-                  "dl-type": "list"
-                },
-                "table": {
-                  "caption-number": "document"
-                }
-              },
-              "bookmark_style": "EXPANDED",
-              "page_size": [
-                "210mm",
-                "297mm"
-              ],
-              "include_related_links": "nofamily",
-              "formatter": "ah",
-              "override_shell": True,
-              "column_gap": "10mm",
-              #"dl": "list",
-              "table_continued": True,
-              "title_numbering": "all",
-              "page_margins": {
-                "top": "20mm",
-                "inside": "30mm",
-                "bottom": "20mm",
-                "outside": "20mm"
-              },
-              "force_page_count": "auto",
-              #"link_pagenumber": True,
-              "plugin_version": "1.0.0",
-              "footer": {
-                "even": ["pagenum"],
-                "odd": ["pagenum"]
-              },
-              "ot_version": "1.6",
-              "mirror_page_margins": True,
-              "figure_numbering": "none",
-              "transtype": "print-pdf",
-              "task_label": True,
-              #"table_numbering": "document",
-              "toc_maximum_level": 3
+                "mirror_page_margins": True,
+                "task_label": True,
+                "toc_maximum_level": 3
             }
         }
+    }
     form_targets = {
         "pdf": {
             "output": "pdf-plugin",
@@ -213,7 +224,9 @@ def main():
 
             "pdf.font-style.topic.topic.topic": "italic",
             "pdf.start-indent.topic.topic.topic" : "5pt",
-            
+
+            "pdf.font-style.topic.topic.topic.topic": "italic",
+
             "pdf.font-style.section": "italic",
             "pdf.start-indent.section" : "5pt",
             
@@ -297,7 +310,7 @@ def main():
             #("domain", "d4p_renditionTargetAtt-d")
             ],
         "specialization": [
-            #('version', '1.2'),
+            ('version', '1.2'),
             #('file', 'plugin'),
             ('title', 'test'),
             ('owner', 'test'),
@@ -387,6 +400,7 @@ def get(server, handler, params, url):
 
 def post(server, handler, params, url):
     conn = httplib.HTTPConnection(server[0], server[1])
+    conn.set_debuglevel(1)
     conn.request("POST", url, json.dumps(params), {"Content-Type": "application/json"})
     response = conn.getresponse()
     with zipfile.ZipFile(StringIO(response.read()), "r") as zip:

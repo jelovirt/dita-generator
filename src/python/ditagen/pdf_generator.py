@@ -1015,7 +1015,7 @@ class StylePluginGenerator(DitaGenerator):
 
         if stylesheet == "commons" or not stylesheet:
             __root.append(ET.Comment("title numbering"))
-            __number_levels = ["title-numbering" in self.style[s] and self.style[s]["title-numbering"] == "true" for s in ['topic', 'topic.topic', 'topic.topic.topic', 'topic.topic.topic.topic']]
+            __number_levels = [s in self.style and "title-numbering" in self.style[s] and self.style[s]["title-numbering"] == "true" for s in ['topic', 'topic.topic', 'topic.topic.topic', 'topic.topic.topic.topic']]
             ET.SubElement(__root, NS_XSL + "variable", name=u"e:number-levels", select="(" + ", ".join([str(l).lower() + "()" for l in __number_levels]) + ")")
             for __c in list(ET.fromstring(__get_title_raw)):
                 __root.append(__c)
