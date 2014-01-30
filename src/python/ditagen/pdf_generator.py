@@ -1197,7 +1197,7 @@ class StylePluginGenerator(DitaGenerator):
     </xsl:template>
 
     <xsl:template match="*[contains(@class, ' topic/ol ')]/*[contains(@class, ' topic/li ')]">
-        <xsl:variable name="depth" select="count(ancestor::*[contains(@class, ' topic/ul ')])"/>
+        <xsl:variable name="depth" select="count(ancestor::*[contains(@class, ' topic/ol ')])"/>
         <xsl:variable name="format">
             <xsl:call-template name="insertVariable">
                 <xsl:with-param name="theVariableID" select="concat('Ordered List Format ', $depth)"/>
@@ -1366,6 +1366,56 @@ class StylePluginGenerator(DitaGenerator):
             if "start-indent" in self.style["body"]:
                 ET.SubElement(__root, NS_XSL + "variable", name=u"side-col-width").text = self.style["body"]["start-indent"]
         
+        __list_raw = """
+<xsl:stylesheet xmlns:fo="http://www.w3.org/1999/XSL/Format"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:e="e"
+                xmlns:opentopic="http://www.idiominc.com/opentopic"
+                xmlns:opentopic-func="http://www.idiominc.com/opentopic/exsl/function"
+                exclude-result-prefixes="e opentopic opentopic-func"
+                version="2.0">
+
+  <xsl:attribute-set name="ol">
+    <xsl:attribute name="provisional-distance-between-starts">
+      <xsl:call-template name="e:list-label-length"/>
+      <xsl:text>em * 0.7</xsl:text>
+    </xsl:attribute>
+  </xsl:attribute-set>
+
+  <xsl:template name="e:list-label-length">
+    <xsl:variable name="labels" as="xs:integer*">
+      <xsl:variable name="depth" select="count(ancestor-or-self::*[contains(@class, ' topic/ol ')])" />
+      <xsl:variable name="format" as="xs:string">
+        <xsl:call-template name="insertVariable">
+          <xsl:with-param name="theVariableID" select="concat('Ordered List Format ', $depth)" />
+        </xsl:call-template>
+      </xsl:variable>
+      <xsl:for-each select="*[contains(@class, ' topic/li ')]">
+        <xsl:variable name="s">
+          <xsl:call-template name="insertVariable">
+            <xsl:with-param name="theVariableID" select="concat('Ordered List Number ', $depth)" />
+            <xsl:with-param name="theParameters">
+              <number>
+                <xsl:number format="{$format}" />
+              </number>
+            </xsl:with-param>
+          </xsl:call-template>
+        </xsl:variable>
+        <xsl:sequence select="string-length(normalize-space($s))"/>
+      </xsl:for-each>
+    </xsl:variable>
+    <xsl:sequence select="max($labels)"/>
+  </xsl:template>
+
+</xsl:stylesheet>
+"""
+
+        if stylesheet == "lists-attr" or not stylesheet:
+            __root.append(ET.Comment("list"))
+            __link = ET.fromstring(__list_raw)
+            for __c in list(__link):
+                __root.append(__c)
+
         if stylesheet == "pr-domain-attr" or not stylesheet:
             # codeblock
             __pre_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name=u"codeblock")
@@ -1400,6 +1450,8 @@ class StylePluginGenerator(DitaGenerator):
         if self.override_shell:
             fs.append("plugin:%s:xsl/fo/links.xsl" % (self.plugin_name))
         fs.append("plugin:org.dita.pdf2:cfg/fo/attrs/lists-attr.xsl")
+        if self.override_shell:
+            fs.append("plugin:%s:cfg/fo/attrs/lists-attr.xsl" % (self.plugin_name))
         fs.append("plugin:org.dita.pdf2:xsl/fo/lists.xsl")
         if self.override_shell:
             fs.append("plugin:%s:xsl/fo/lists.xsl" % (self.plugin_name))
@@ -1581,26 +1633,30 @@ class StylePluginGenerator(DitaGenerator):
                     i = i + 1
         for level in range(1, 5):
             v = "ol-%s" % level
-            if v in self.style["ol"]:
-                var = ET.SubElement(__root, "variable", id="Ordered List Number " + str(level))
-                if "ol" in self.style and "ol-before-%d" % level in self.style["ol"]:
-                    var.text = self.style["ol"]["ol-before-%s" %level]
-                else:
-                    var.text = default_style("ol", "ol-before-" + str(level))
-                p = ET.SubElement(var, u"param", { "ref-name": "number" })
-                if "ol" in self.style and "ol-after-%d" % level in self.style["ol"]:
-                    p.tail = self.style["ol"]["ol-after-%d" % level]
-                else:
-                    p.tail = default_style("ol", "ol-after-%d" % level)
-
+            var = ET.SubElement(__root, "variable", id="Ordered List Number %d" %level)
+            if "ol" in self.style and "ol-before-%d" % level in self.style["ol"]:
+                var.text = self.style["ol"]["ol-before-%s" %level]
+            else:
+                var.text = default_style("ol", "ol-before-%d" % level)
+            p = ET.SubElement(var, u"param", { "ref-name": "number" })
+            if "ol" in self.style and "ol-after-%d" % level in self.style["ol"]:
+                p.tail = self.style["ol"]["ol-after-%d" % level]
+            else:
+                p.tail = default_style("ol", "ol-after-%d" % level)
         for level in range(1, 5):
-            v = "ol-" + str(level)
-            if v in self.style["ol"]:
-                ET.SubElement(__root, "variable", id="Ordered List Format " + str(level)).text = self.style["ol"][v]
+            v = "ol-%d" % level
+            var = ET.SubElement(__root, "variable", id="Ordered List Format %d" %level)
+            if "ol" in self.style and "ol-%d" % level in self.style["ol"]:
+                var.text = self.style["ol"]["ol-%s" %level]
+            else:
+                var.text = default_style("ol", "ol-%d" % level)
         for level in range(1, 5):
-            v = "ul-" + str(level)
-            if v in self.style["ul"]:
-                ET.SubElement(__root, "variable", id="Unordered List bullet " + str(level)).text = self.style["ul"][v]
+            v = "ul-%d" % level
+            var = ET.SubElement(__root, "variable", id="Unordered List bullet %d" %level)
+            if "ul" in self.style and "ul-%d" % level in self.style["ul"]:
+                var.text = self.style["ul"]["ul-%s" %level]
+            else:
+                var.text = default_style("ul", "ul-%d" % level)
 
         ditagen.generator.indent(__root, max=1)
         ditagen.generator.set_prefixes(__root, {"": "http://www.idiominc.com/opentopic/vars"})
@@ -1643,7 +1699,7 @@ class StylePluginGenerator(DitaGenerator):
                                         "%s/cfg/fo/xsl/custom.xsl" % (self.plugin_name))
                 # custom XSLT attribute sets
                 if self.override_shell:
-                    for s in ["front-matter-attr", "commons-attr", "layout-masters-attr", "tables-attr", "basic-settings", "pr-domain-attr"]:
+                    for s in ["front-matter-attr", "commons-attr", "layout-masters-attr", "tables-attr", "basic-settings", "lists-attr", "pr-domain-attr"]:
                         self._run_generation(__zip, lambda: self.__generate_custom_attr(s),
                                             "%s/cfg/fo/attrs/%s.xsl" % (self.plugin_name, s))
                 else:
