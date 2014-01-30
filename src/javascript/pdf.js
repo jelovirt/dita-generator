@@ -185,8 +185,15 @@ var storeFields = ["font-family", "font-size", "font-weight", "font-style", "col
                    "icon",
                    // link
                    "link-page-number", "link-url",
-                   //
+                   // dl
                    "dl-type",
+                   // ol
+                   "ol-1", "ol-2", "ol-3", "ol-4",
+                   "ol-before-1", "ol-before-2", "ol-before-3", "ol-before-4",
+                   "ol-after-1", "ol-after-2", "ol-after-3", "ol-after-4",
+                   "ol-sublevel",
+                   // ul
+                   "ul-1", "ul-2", "ul-3", "ul-4",
                    // table, fig
                    "caption-number"];
 /**

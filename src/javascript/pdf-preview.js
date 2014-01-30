@@ -34,7 +34,7 @@ function previewSpaceHandler(event) {
     break;
   case "line-height":
     cls = field;
-    isLength = true;
+    isLength = isNaN(Number(v));
     break;
   case "text-align":
     cls = field;
@@ -50,9 +50,12 @@ function previewSpaceHandler(event) {
   default:
     var all = $("[data-field='" + field + "'][data-style='" + type + "']");
     if (all.length) {
-      var all = $("[data-field='" + field + "'][data-style='" + type + "']");
-      all.hide();
-      all.filter("[data-value='" + v + "']").show();
+      if (all.filter("[data-value]").length) {
+          all.hide();
+          all.filter("[data-value='" + v + "']").show();
+      } else {
+          all.text(v);
+      }
     } else {
       cls = field;
     }

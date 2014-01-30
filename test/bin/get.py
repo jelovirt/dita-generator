@@ -109,6 +109,18 @@ def main():
                       "dl-type": "list",
                       "background-color": "pink"
                     },
+                    "ol": {
+                        "ol-1": "A",
+                        "ol-2": "I",
+                        "ol-3": "i",
+                        "ol-4": "1",
+                        "ol-before-1": "(",
+                        "ol-after-1": ") "
+                    },
+                    "ul": {
+                        "ul-2": u"\u2022",
+                        "ul-1": "*"
+                    },
                     "topic.topic.topic": {
                       "font-style": "italic",
                       "start-indent": "5pt"
@@ -226,6 +238,16 @@ def main():
             "pdf.start-indent.topic.topic.topic" : "5pt",
 
             "pdf.font-style.topic.topic.topic.topic": "italic",
+
+            "pdf.ol-1.ol": "A",
+            "pdf.ol-2.ol": "I",
+            "pdf.ol-3.ol": "i",
+            "pdf.ol-4.ol": "1",
+            "pdf.ol-before-1.ol": "(",
+            "pdf.ol-after-1.ol": ") ",
+
+            "pdf.ul-2.ul": u"\u2022",
+            "pdf.ul-1.ul": "*",
 
             "pdf.font-style.section": "italic",
             "pdf.start-indent.section" : "5pt",
@@ -391,7 +413,10 @@ Targets:
 """)
 
 def get(server, handler, params, url):
+    for k, v in params.iteritems():
+        params[k] = v.encode("UTF-8")
     conn = httplib.HTTPConnection(server[0], server[1])
+    #conn.set_debuglevel(1)
     conn.request("POST", url, urllib.urlencode(params))
     response = conn.getresponse()
     with zipfile.ZipFile(StringIO(response.read()), "r") as zip:
@@ -400,7 +425,7 @@ def get(server, handler, params, url):
 
 def post(server, handler, params, url):
     conn = httplib.HTTPConnection(server[0], server[1])
-    conn.set_debuglevel(1)
+    #conn.set_debuglevel(1)
     conn.request("POST", url, json.dumps(params), {"Content-Type": "application/json"})
     response = conn.getresponse()
     with zipfile.ZipFile(StringIO(response.read()), "r") as zip:

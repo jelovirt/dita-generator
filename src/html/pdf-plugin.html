@@ -422,6 +422,8 @@
             <option value="note">Note</option>
             <option value="pre">Preformatted</option>
             <option value="codeblock">Code block</option>
+            <option value="ol">Ordered list</option>
+            <option value="ul">Unordered list</option>
             <option value="dl">Definition list</option>
             <option value="table">Table</option>
             <option value="fig">Figure</option>
@@ -613,9 +615,9 @@
                   <td>
                     <input type="hidden" id="pdf.line-height" class="editable-list">
                     <select id="pdf.line-height.list">
-                      <option value="1.2em" selected>Single</option>
-                      <option value="1.8em">1.5 lines</option>
-                      <option value="2.4em">Double</option>
+                      <option value="1.2" selected>Single</option>
+                      <option value="1.8">1.5 lines</option>
+                      <option value="2.4">Double</option>
                       <option value="#other">Exactly</option>
                     </select>
                   </td>
@@ -653,6 +655,158 @@
             </td>
           </tr>
         </tbody>
+
+        <tbody data-style="ol">
+          <tr>
+            <th colspan="2"><h4>Ordered list styles</h4></th>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Level</th>
+                    <th>Numbering</th>
+                    <th>Before</th>
+                    <th>After</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>1</th>
+                    <td>
+                      <select id="pdf.ol-1">
+                        <option value="1">1, 2, 3, …</option>
+                        <option value="A">A, B, C, …</option>
+                        <option value="a">a, b, c, …</option>
+                        <option value="I">I, II, III, …</option>
+                        <option value="i">i, ii, iii, …</option>
+                      </select>
+                    </td>
+                    <td><input id="pdf.ol-before-1" size="1"></td>
+                    <td><input id="pdf.ol-after-1" size="2" value=". "></td>
+                  </tr>
+                  <tr>
+                    <th>2</th>
+                    <td>
+                      <select id="pdf.ol-2">
+                        <option value="1">1, 2, 3, …</option>
+                        <option value="A">A, B, C, …</option>
+                        <option value="a">a, b, c, …</option>
+                        <option value="I">I, II, III, …</option>
+                        <option value="i">i, ii, iii, …</option>
+                      </select>
+                      <td><input id="pdf.ol-before-2" size="1"></td>
+                      <td><input id="pdf.ol-after-2" size="2" value=". "></td>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>3</th>
+                    <td>
+                      <select id="pdf.ol-3">
+                        <option value="1">1, 2, 3, …</option>
+                        <option value="A">A, B, C, …</option>
+                        <option value="a">a, b, c, …</option>
+                        <option value="I">I, II, III, …</option>
+                        <option value="i">i, ii, iii, …</option>
+                      </select>
+                      <td><input id="pdf.ol-before-3" size="1"></td>
+                      <td><input id="pdf.ol-after-3" size="2" value=". "></td>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>4</th>
+                    <td>
+                      <select id="pdf.ol-4">
+                        <option value="1">1, 2, 3, …</option>
+                        <option value="A">A, B, C, …</option>
+                        <option value="a">a, b, c, …</option>
+                        <option value="I">I, II, III, …</option>
+                        <option value="i">i, ii, iii, …</option>
+                      </select>
+                      <td><input id="pdf.ol-before-4" size="1"></td>
+                      <td><input id="pdf.ol-after-4" size="2" value=". "></td>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <!--label for="pdf.ol-sublevel" class="inline">Show sublevels</label>:
+              <select id="pdf.ol-sublevel" title="Show sublevels">
+                <option value="true" selected>Yes</option>
+                <option value="false">No</option>
+              </select-->
+            </td>
+          </tr>
+        </tbody>
+
+        <tbody data-style="ul">
+          <tr>
+            <th colspan="2"><h4>Unordered list styles</h4></th>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Level</th>
+                    <th>Character</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>1</th>
+                    <td>
+                      <select id="pdf.ul-1">
+                        <option value="&#x2022;">&#x2022;</option>
+                        <option value="&#x25C6;">&#x25C6;</option>
+                        <option value="&#x2014;">&#x2014;</option>
+                        <option value="&#x2013;">&#x2013;</option>
+                        <option value="&#x2012;">&#x2012;</option>
+                      </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>2</th>
+                    <td>
+                      <select id="pdf.ul-2">
+                        <option value="&#x2022;">&#x2022;</option>
+                        <option value="&#x25C6;">&#x25C6;</option>
+                        <option value="&#x2014;">&#x2014;</option>
+                        <option value="&#x2013;">&#x2013;</option>
+                        <option value="&#x2012;">&#x2012;</option>
+                      </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>3</th>
+                    <td>
+                      <select id="pdf.ul-3">
+                        <option value="&#x2022;">&#x2022;</option>
+                        <option value="&#x25C6;">&#x25C6;</option>
+                        <option value="&#x2014;">&#x2014;</option>
+                        <option value="&#x2013;">&#x2013;</option>
+                        <option value="&#x2012;">&#x2012;</option>
+                      </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>4</th>
+                    <td>
+                      <select id="pdf.ul-4">
+                        <option value="&#x2022;">&#x2022;</option>
+                        <option value="&#x25C6;">&#x25C6;</option>
+                        <option value="&#x2014;">&#x2014;</option>
+                        <option value="&#x2013;">&#x2013;</option>
+                        <option value="&#x2012;">&#x2012;</option>
+                      </select>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+
         <tbody data-style="table fig">
           <tr>
             <th colspan="2"><h4>Captions</h4></th>
@@ -698,6 +852,55 @@
             The quick brown fox jumps over the lazy dog.
             The quick brown fox jumps over the lazy dog.
           </p>
+          <ol class="example-page-content-ol">
+            <li>
+              <span data-field="ol-before-1" data-style="ol"></span><span data-field="ol-1" data-style="ol">1</span><span data-field="ol-after-1" data-style="ol">.</span>
+              The quick brown fox jumps over the lazy dog.
+              <ol>
+                <li>
+                  <span data-field="ol-before-2" data-style="ol"></span><span data-field="ol-sublevel" data-style="ol" data-value="true"><span data-field="ol-1" data-style="ol">1</span>.</span><span data-field="ol-2" data-style="ol">1</span><span data-field="ol-after-2" data-style="ol">.</span>
+                  The quick brown fox jumps over the lazy dog.
+                  <ol>
+                    <li>
+                      <span data-field="ol-before-3" data-style="ol"></span><span data-field="ol-sublevel" data-style="ol" data-value="true"><span data-field="ol-1" data-style="ol">1</span>.<span data-field="ol-2" data-style="ol">1</span>.</span><span data-field="ol-3" data-style="ol">1</span><span data-field="ol-after-3" data-style="ol">.</span>
+                      The quick brown fox jumps over the lazy dog.
+                      <ol>
+                        <li>
+                          <span data-field="ol-before-4" data-style="ol"></span><span data-field="ol-sublevel" data-style="ol" data-value="true"><span data-field="ol-1" data-style="ol">1</span>.<span data-field="ol-2" data-style="ol">1</span>.<span data-field="ol-3" data-style="ol">1</span>.</span><span data-field="ol-4" data-style="ol">1</span><span data-field="ol-after-4" data-style="ol">.</span>
+                          The quick brown fox jumps over the lazy dog.
+                        </li>
+                      </ol>
+                    </li>
+                  </ol>
+                </li>
+              </ol>
+            </li>
+          </ol>
+
+          <ul class="example-page-content-ul">
+            <li>
+              <span data-field="ul-1" data-style="ul">&#x2022;</span>
+              The quick brown fox jumps over the lazy dog.
+              <ul>
+                <li>
+                  <span data-field="ul-2" data-style="ul">&#x2022;</span>
+                  The quick brown fox jumps over the lazy dog.
+                  <ul>
+                    <li>
+                      <span data-field="ul-3" data-style="ul">&#x2022;</span>
+                      The quick brown fox jumps over the lazy dog.
+                      <ul>
+                        <li>
+                          <span data-field="ul-4" data-style="ul">&#x2022;</span>
+                          The quick brown fox jumps over the lazy dog.
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
           <dl class="example-page-content-dl" data-style="dl" data-field="dl-type" data-value="html">
             <dt><strong>Pangram</strong></dt>
             <dd>The quick brown fox jumps over the lazy dog.</dd>

@@ -45,7 +45,7 @@ styles = [{ "property": f[0], "type": f[1], "value": f[2], "inherit": f[3] } for
     ("space-after", "body", "6pt", None),
     ("text-align", "body", "start", None),
     ("start-indent", "body", "25pt", None),
-    ("line-height", "body", "1.2em", None),
+    ("line-height", "body", "1.2", None),
     
     ("font-family", "topic", "sans-serif", None),
     ("font-size", "topic", "18pt", None),
@@ -175,6 +175,51 @@ styles = [{ "property": f[0], "type": f[1], "value": f[2], "inherit": f[3] } for
     ("line-height", "dl", None, "body"),
     # custom
     ("dl-type", "dl", "table", None),
+
+    ("font-family", "ol", None, "body"),
+    ("font-size", "ol", None, "body"),
+    ("color", "ol", None, "body"),
+    ("background-color", "ol", None, "body"),
+    ("font-weight", "ol", None, "body"),
+    ("font-style", "ol", None, "body"),
+    ("text-decoration", "ol", None, "body"),
+    ("space-before", "ol", None, "body"),
+    ("space-after", "ol", None, "body"),
+    ("text-align", "ol", None, "body"),
+    ("start-indent", "ol", None, "body"),
+    ("line-height", "ol", None, "body"),
+    # custom
+    ("ol-1", "ol", "1", None),
+    ("ol-2", "ol", "1", None),
+    ("ol-3", "ol", "1", None),
+    ("ol-4", "ol", "1", None),
+    ("ol-before-1", "ol", "", None),
+    ("ol-before-2", "ol", "", None),
+    ("ol-before-3", "ol", "", None),
+    ("ol-before-4", "ol", "", None),
+    ("ol-after-1", "ol", ". ", None),
+    ("ol-after-2", "ol", ". ", None),
+    ("ol-after-3", "ol", ". ", None),
+    ("ol-after-4", "ol", ". ", None),
+    ("ol-sublevel", "ol", "false", None),
+
+    ("font-family", "ul", None, "body"),
+    ("font-size", "ul", None, "body"),
+    ("color", "ul", None, "body"),
+    ("background-color", "ul", None, "body"),
+    ("font-weight", "ul", None, "body"),
+    ("font-style", "ul", None, "body"),
+    ("text-decoration", "ul", None, "body"),
+    ("space-before", "ul", None, "body"),
+    ("space-after", "ul", None, "body"),
+    ("text-align", "ul", None, "body"),
+    ("start-indent", "ul", None, "body"),
+    ("line-height", "ul", None, "body"),
+    # custom
+    ("ul-1", "ul", u"\u2022", None),
+    ("ul-2", "ul", u"\u2022", None),
+    ("ul-3", "ul", u"\u2022", None),
+    ("ul-4", "ul", u"\u2022", None),
     
     ("font-family", "table", None, "body"),
     ("font-size", "table", None, "body"),
@@ -222,6 +267,12 @@ styles = [{ "property": f[0], "type": f[1], "value": f[2], "inherit": f[3] } for
     ("link-page-number", "link", "true", None),
     ("link-url", "link", None, None)
     ]]
+
+def default_style(type, property):
+    for s in styles:
+        if s["property"] == property and s["type"] == type:
+            return s["value"]
+    return None
 
 fonts = {
     "Sans": {
@@ -1115,6 +1166,77 @@ class StylePluginGenerator(DitaGenerator):
                 for __c in list(__link):
                     __root.append(__c)
 
+        __list_raw = """
+<xsl:stylesheet xmlns:fo="http://www.w3.org/1999/XSL/Format"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:e="e"
+                xmlns:opentopic="http://www.idiominc.com/opentopic"
+                xmlns:opentopic-func="http://www.idiominc.com/opentopic/exsl/function"
+                exclude-result-prefixes="e opentopic opentopic-func"
+                version="2.0">
+
+    <xsl:template match="*[contains(@class, ' topic/ul ')]/*[contains(@class, ' topic/li ')]">
+        <xsl:variable name="depth" select="count(ancestor::*[contains(@class, ' topic/ul ')])"/>
+        <fo:list-item xsl:use-attribute-sets="ul.li">
+            <fo:list-item-label xsl:use-attribute-sets="ul.li__label">
+                <fo:block xsl:use-attribute-sets="ul.li__label__content">
+                    <fo:inline>
+                        <xsl:call-template name="commonattributes"/>
+                    </fo:inline>
+                    <xsl:call-template name="insertVariable">
+                        <xsl:with-param name="theVariableID" select="concat('Unordered List bullet ', $depth)"/>
+                    </xsl:call-template>
+                </fo:block>
+            </fo:list-item-label>
+            <fo:list-item-body xsl:use-attribute-sets="ul.li__body">
+                <fo:block xsl:use-attribute-sets="ul.li__content">
+                    <xsl:apply-templates/>
+                </fo:block>
+            </fo:list-item-body>
+        </fo:list-item>
+    </xsl:template>
+
+    <xsl:template match="*[contains(@class, ' topic/ol ')]/*[contains(@class, ' topic/li ')]">
+        <xsl:variable name="depth" select="count(ancestor::*[contains(@class, ' topic/ul ')])"/>
+        <xsl:variable name="format">
+            <xsl:call-template name="insertVariable">
+                <xsl:with-param name="theVariableID" select="concat('Ordered List Format ', $depth)"/>
+            </xsl:call-template>
+        </xsl:variable>
+        <fo:list-item xsl:use-attribute-sets="ol.li">
+            <fo:list-item-label xsl:use-attribute-sets="ol.li__label">
+                <fo:block xsl:use-attribute-sets="ol.li__label__content">
+                    <fo:inline>
+                        <xsl:call-template name="commonattributes"/>
+                    </fo:inline>
+                    <xsl:call-template name="insertVariable">
+                        <xsl:with-param name="theVariableID" select="concat('Ordered List Number ', $depth)"/>
+                        <xsl:with-param name="theParameters">
+                            <number>
+                                <xsl:number format="{$format}"/>
+                            </number>
+                        </xsl:with-param>
+                    </xsl:call-template>
+                </fo:block>
+            </fo:list-item-label>
+            <fo:list-item-body xsl:use-attribute-sets="ol.li__body">
+                <fo:block xsl:use-attribute-sets="ol.li__content">
+                    <xsl:apply-templates/>
+                </fo:block>
+            </fo:list-item-body>
+        </fo:list-item>
+    </xsl:template>
+
+</xsl:stylesheet>
+"""
+
+        if stylesheet == "lists" or not stylesheet:
+            if "ol" in self.style or "ul" in self.style:
+                __root.append(ET.Comment("list"))
+                __link = ET.fromstring(__list_raw)
+                for __c in list(__link):
+                    __root.append(__c)
+
         if not stylesheet:
             if not self.override_shell and self.toc_maximum_level:
                 __root.append(ET.Comment("TOC"))
@@ -1279,6 +1401,8 @@ class StylePluginGenerator(DitaGenerator):
             fs.append("plugin:%s:xsl/fo/links.xsl" % (self.plugin_name))
         fs.append("plugin:org.dita.pdf2:cfg/fo/attrs/lists-attr.xsl")
         fs.append("plugin:org.dita.pdf2:xsl/fo/lists.xsl")
+        if self.override_shell:
+            fs.append("plugin:%s:xsl/fo/lists.xsl" % (self.plugin_name))
         fs.append("plugin:org.dita.pdf2:cfg/fo/attrs/tables-attr.xsl")
         if self.override_shell:
             fs.append("plugin:%s:cfg/fo/attrs/tables-attr.xsl" % (self.plugin_name))
@@ -1455,7 +1579,29 @@ class StylePluginGenerator(DitaGenerator):
                         e.tail = " | "
                     f.append(e)
                     i = i + 1
-        
+        for level in range(1, 5):
+            v = "ol-%s" % level
+            if v in self.style["ol"]:
+                var = ET.SubElement(__root, "variable", id="Ordered List Number " + str(level))
+                if "ol" in self.style and "ol-before-%d" % level in self.style["ol"]:
+                    var.text = self.style["ol"]["ol-before-%s" %level]
+                else:
+                    var.text = default_style("ol", "ol-before-" + str(level))
+                p = ET.SubElement(var, u"param", { "ref-name": "number" })
+                if "ol" in self.style and "ol-after-%d" % level in self.style["ol"]:
+                    p.tail = self.style["ol"]["ol-after-%d" % level]
+                else:
+                    p.tail = default_style("ol", "ol-after-%d" % level)
+
+        for level in range(1, 5):
+            v = "ol-" + str(level)
+            if v in self.style["ol"]:
+                ET.SubElement(__root, "variable", id="Ordered List Format " + str(level)).text = self.style["ol"][v]
+        for level in range(1, 5):
+            v = "ul-" + str(level)
+            if v in self.style["ul"]:
+                ET.SubElement(__root, "variable", id="Unordered List bullet " + str(level)).text = self.style["ul"][v]
+
         ditagen.generator.indent(__root, max=1)
         ditagen.generator.set_prefixes(__root, {"": "http://www.idiominc.com/opentopic/vars"})
         __d = ET.ElementTree(__root)
@@ -1489,7 +1635,7 @@ class StylePluginGenerator(DitaGenerator):
                 
                 # custom XSLT
                 if self.override_shell:
-                    for s in ["front-matter", "commons", "tables", "links"]:
+                    for s in ["front-matter", "commons", "tables", "links", "lists"]:
                         self._run_generation(__zip, lambda: self.__generate_custom(s),
                                             "%s/xsl/fo/%s.xsl" % (self.plugin_name, s))
                 else:

@@ -154,3 +154,21 @@ table.example-page-body td.gap{
 .example-text p {
   margin: 0 2px;
 }
+
+.example-page-content-ol,
+.example-page-content-ol ol {
+  list-style: none;
+  padding-left: 0px;
+}
+.example-page-content-ol ol {
+  padding-left: 10px;
+}
+
+.example-page-content-ul,
+.example-page-content-ul ul {
+  list-style: none;
+  padding-left: 0px;
+}
+.example-page-content-ul ul {
+  padding-left: 10px;
+}
