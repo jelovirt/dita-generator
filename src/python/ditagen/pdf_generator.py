@@ -583,12 +583,6 @@ class StylePluginGenerator(DitaGenerator):
         __root = ET.Element(NS_XSL + "stylesheet", {"version":"2.0", "exclude-result-prefixes": "ditaarch opentopic e"})
         
         __cover_metadata_raw = """
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:fo="http://www.w3.org/1999/XSL/Format"
-                xmlns:e="e"
-                exclude-result-prefixes="e"
-                version="2.0">
-
   <xsl:template name="e:cover-image">
     <xsl:for-each select="($map//*[contains(@class, ' topic/data ')][@name = '%s']/*[contains(@class, ' topic/image ')])[1]">
       <xsl:apply-templates select="." mode="placeImage">
@@ -599,32 +593,17 @@ class StylePluginGenerator(DitaGenerator):
       </xsl:apply-templates>
     </xsl:for-each>
   </xsl:template>
-  
-</xsl:stylesheet>"""
+"""
         # Backport from DITA-OT 2.0
         __cover_metadata_v1_raw = """
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:fo="http://www.w3.org/1999/XSL/Format"
-                xmlns:opentopic-func="http://www.idiominc.com/opentopic/exsl/function"
-                xmlns:e="e"
-                exclude-result-prefixes="e opentopic-func"
-                version="2.0">
-
   <!-- Test whether URI is absolute -->
   <xsl:function name="opentopic-func:isAbsolute" as="xs:boolean">
     <xsl:param name="uri" as="xs:anyURI"/>
     <xsl:sequence select="some $prefix in ('/', 'file:') satisfies starts-with($uri, $prefix) or
                           contains($uri, '://')"/>
   </xsl:function>
-  
-</xsl:stylesheet>"""
+"""
         __cover_file_raw = """
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:fo="http://www.w3.org/1999/XSL/Format"
-                xmlns:e="e"
-                exclude-result-prefixes="e"
-                version="2.0">
-
   <xsl:template name="e:cover-image">
     <xsl:variable name="path">
       <xsl:call-template name="insertVariable">
@@ -638,15 +617,8 @@ class StylePluginGenerator(DitaGenerator):
       <xsl:with-param name="width" select="()"/>
     </xsl:apply-templates>
   </xsl:template>
-  
-</xsl:stylesheet>"""
+"""
         __cover_raw = """
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:fo="http://www.w3.org/1999/XSL/Format"
-                xmlns:e="e"
-                exclude-result-prefixes="e"
-                version="2.0">
-
   <xsl:template name="createFrontMatter_1.0">
     <fo:page-sequence master-reference="front-matter" xsl:use-attribute-sets="__force__page__count">
       <xsl:call-template name="insertFrontMatterStaticContents"/>
@@ -682,16 +654,9 @@ class StylePluginGenerator(DitaGenerator):
       <xsl:call-template name="createNotices"/>
     </xsl:if>
   </xsl:template>
-  
-</xsl:stylesheet>"""
+"""
 
         __table_footer_raw = """
-<xsl:stylesheet xmlns:fo="http://www.w3.org/1999/XSL/Format"
-                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:e="e"
-                exclude-result-prefixes="e"
-                version="2.0">
-                
   <xsl:template match="*[contains(@class, ' topic/tbody ')]" name="topic.tbody">
     <fo:table-footer xsl:use-attribute-sets="tgroup.tfoot">
       <fo:table-row>
@@ -703,16 +668,8 @@ class StylePluginGenerator(DitaGenerator):
       <xsl:apply-templates/>
     </fo:table-body>
   </xsl:template>
-                
-</xsl:stylesheet>
 """
         __table_continued_raw = """
-<xsl:stylesheet xmlns:fo="http://www.w3.org/1999/XSL/Format"
-                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:e="e"
-                exclude-result-prefixes="e"
-                version="2.0">
-                
   <xsl:variable name="table.frame-default" select="'all'"/>
                 
   <xsl:template match="*[contains(@class, ' topic/tbody ')]" name="topic.tbody">
@@ -761,16 +718,8 @@ class StylePluginGenerator(DitaGenerator):
       <xsl:apply-templates/>
     </fo:table-row>
   </xsl:template>
-                
-</xsl:stylesheet>
-"""        
+"""
         __dl_list_raw = """
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:fo="http://www.w3.org/1999/XSL/Format"
-                xmlns:e="e"
-                exclude-result-prefixes="e"
-                version="2.0">
-
   <xsl:template match="*[contains(@class, ' topic/dl ')]">
     <fo:list-block xsl:use-attribute-sets="ul e:dl">
       <xsl:call-template name="commonattributes"/>
@@ -808,16 +757,8 @@ class StylePluginGenerator(DitaGenerator):
       <xsl:apply-templates/>
     </fo:block>
   </xsl:template>
-
-</xsl:stylesheet>
 """
         __dl_html_raw = """
-<xsl:stylesheet  xmlns:e="e"
-                 xmlns:fo="http://www.w3.org/1999/XSL/Format"
-                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                 exclude-result-prefixes="e"
-                 version="2.0">
-  
   <xsl:template match="*[contains(@class, ' topic/dl ')]">
     <fo:block xsl:use-attribute-sets="e:dl">
       <xsl:call-template name="commonattributes" />
@@ -843,17 +784,8 @@ class StylePluginGenerator(DitaGenerator):
       <xsl:apply-templates />
     </fo:block>
   </xsl:template>
-
-</xsl:stylesheet>
 """   
         __get_title_raw = """
-<xsl:stylesheet xmlns:fo="http://www.w3.org/1999/XSL/Format"
-                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:e="e"
-                xmlns:opentopic="http://www.idiominc.com/opentopic"
-                exclude-result-prefixes="e opentopic"
-                version="2.0">
-  
   <xsl:template match="*" mode="getTitle">
     <xsl:variable name="topic" select="ancestor-or-self::*[contains(@class, ' topic/topic ')][1]"/>
     <xsl:variable name="id" select="$topic/@id"/>
@@ -884,114 +816,99 @@ class StylePluginGenerator(DitaGenerator):
     <xsl:text> </xsl:text>
     <xsl:apply-templates/>
   </xsl:template>
-  
-</xsl:stylesheet>
 """
         __numberless_chapter_raw = """
-<xsl:stylesheet xmlns:fo="http://www.w3.org/1999/XSL/Format"
-                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:e="e"
-                xmlns:opentopic="http://www.idiominc.com/opentopic"
-                exclude-result-prefixes="e opentopic"
-                version="2.0">
-
-    <xsl:template name="insertChapterFirstpageStaticContent">
-        <xsl:param name="type"/>
-        <fo:block>
-            <xsl:attribute name="id">
-                <xsl:call-template name="generate-toc-id"/>
-            </xsl:attribute>
-            <xsl:choose>
-                <xsl:when test="$type = 'chapter'">
-                    <fo:block xsl:use-attribute-sets="__chapter__frontmatter__name__container">
-                        <xsl:call-template name="insertVariable">
-                            <xsl:with-param name="theVariableID" select="'Chapter with number'"/>
-                            <xsl:with-param name="theParameters">
-                                <number>
-                                    <!--fo:block xsl:use-attribute-sets="__chapter__frontmatter__number__container">
-                                        <xsl:apply-templates select="key('map-id', @id)[1]" mode="topicTitleNumber"/>
-                                    </fo:block-->
-                                </number>
-                            </xsl:with-param>
-                        </xsl:call-template>
-                    </fo:block>
-                </xsl:when>
-                <xsl:when test="$type = 'appendix'">
-                    <fo:block xsl:use-attribute-sets="__chapter__frontmatter__name__container">
-                        <xsl:call-template name="insertVariable">
-                            <xsl:with-param name="theVariableID" select="'Appendix with number'"/>
-                            <xsl:with-param name="theParameters">
-                                <number>
-                                    <!--fo:block xsl:use-attribute-sets="__chapter__frontmatter__number__container">
-                                        <xsl:apply-templates select="key('map-id', @id)[1]" mode="topicTitleNumber"/>
-                                    </fo:block-->
-                                </number>
-                            </xsl:with-param>
-                        </xsl:call-template>
-                    </fo:block>
-                </xsl:when>
-                <xsl:when test="$type = 'appendices'">
-                    <fo:block xsl:use-attribute-sets="__chapter__frontmatter__name__container">
-                      <xsl:call-template name="insertVariable">
+<xsl:template name="insertChapterFirstpageStaticContent">
+    <xsl:param name="type"/>
+    <fo:block>
+        <xsl:attribute name="id">
+            <xsl:call-template name="generate-toc-id"/>
+        </xsl:attribute>
+        <xsl:choose>
+            <xsl:when test="$type = 'chapter'">
+                <fo:block xsl:use-attribute-sets="__chapter__frontmatter__name__container">
+                    <xsl:call-template name="insertVariable">
+                        <xsl:with-param name="theVariableID" select="'Chapter with number'"/>
+                        <xsl:with-param name="theParameters">
+                            <number>
+                                <!--fo:block xsl:use-attribute-sets="__chapter__frontmatter__number__container">
+                                    <xsl:apply-templates select="key('map-id', @id)[1]" mode="topicTitleNumber"/>
+                                </fo:block-->
+                            </number>
+                        </xsl:with-param>
+                    </xsl:call-template>
+                </fo:block>
+            </xsl:when>
+            <xsl:when test="$type = 'appendix'">
+                <fo:block xsl:use-attribute-sets="__chapter__frontmatter__name__container">
+                    <xsl:call-template name="insertVariable">
                         <xsl:with-param name="theVariableID" select="'Appendix with number'"/>
                         <xsl:with-param name="theParameters">
-                          <number>
-                            <fo:block xsl:use-attribute-sets="__chapter__frontmatter__number__container">
-                              <xsl:text>&#xA0;</xsl:text>
-                            </fo:block>
-                          </number>
+                            <number>
+                                <!--fo:block xsl:use-attribute-sets="__chapter__frontmatter__number__container">
+                                    <xsl:apply-templates select="key('map-id', @id)[1]" mode="topicTitleNumber"/>
+                                </fo:block-->
+                            </number>
                         </xsl:with-param>
-                      </xsl:call-template>
-                    </fo:block>
-                </xsl:when>
-                <xsl:when test="$type = 'part'">
-                    <fo:block xsl:use-attribute-sets="__chapter__frontmatter__name__container">
-                        <xsl:call-template name="insertVariable">
-                            <xsl:with-param name="theVariableID" select="'Part with number'"/>
-                            <xsl:with-param name="theParameters">
-                                <number>
-                                    <fo:block xsl:use-attribute-sets="__chapter__frontmatter__number__container">
-                                        <xsl:apply-templates select="key('map-id', @id)[1]" mode="topicTitleNumber"/>
-                                    </fo:block>
-                                </number>
-                            </xsl:with-param>
-                        </xsl:call-template>
-                    </fo:block>
-                </xsl:when>
-                <xsl:when test="$type = 'preface'">
-                    <fo:block xsl:use-attribute-sets="__chapter__frontmatter__name__container">
-                        <xsl:call-template name="insertVariable">
-                            <xsl:with-param name="theVariableID" select="'Preface title'"/>
-                        </xsl:call-template>
-                    </fo:block>
-                </xsl:when>
-                <xsl:when test="$type = 'notices'">
-                    <fo:block xsl:use-attribute-sets="__chapter__frontmatter__name__container">
-                        <xsl:call-template name="insertVariable">
-                            <xsl:with-param name="theVariableID" select="'Notices title'"/>
-                        </xsl:call-template>
-                    </fo:block>
-                </xsl:when>
-            </xsl:choose>
-        </fo:block>
-    </xsl:template>
-
-</xsl:stylesheet>
+                    </xsl:call-template>
+                </fo:block>
+            </xsl:when>
+            <xsl:when test="$type = 'appendices'">
+                <fo:block xsl:use-attribute-sets="__chapter__frontmatter__name__container">
+                  <xsl:call-template name="insertVariable">
+                    <xsl:with-param name="theVariableID" select="'Appendix with number'"/>
+                    <xsl:with-param name="theParameters">
+                      <number>
+                        <fo:block xsl:use-attribute-sets="__chapter__frontmatter__number__container">
+                          <xsl:text>&#xA0;</xsl:text>
+                        </fo:block>
+                      </number>
+                    </xsl:with-param>
+                  </xsl:call-template>
+                </fo:block>
+            </xsl:when>
+            <xsl:when test="$type = 'part'">
+                <fo:block xsl:use-attribute-sets="__chapter__frontmatter__name__container">
+                    <xsl:call-template name="insertVariable">
+                        <xsl:with-param name="theVariableID" select="'Part with number'"/>
+                        <xsl:with-param name="theParameters">
+                            <number>
+                                <fo:block xsl:use-attribute-sets="__chapter__frontmatter__number__container">
+                                    <xsl:apply-templates select="key('map-id', @id)[1]" mode="topicTitleNumber"/>
+                                </fo:block>
+                            </number>
+                        </xsl:with-param>
+                    </xsl:call-template>
+                </fo:block>
+            </xsl:when>
+            <xsl:when test="$type = 'preface'">
+                <fo:block xsl:use-attribute-sets="__chapter__frontmatter__name__container">
+                    <xsl:call-template name="insertVariable">
+                        <xsl:with-param name="theVariableID" select="'Preface title'"/>
+                    </xsl:call-template>
+                </fo:block>
+            </xsl:when>
+            <xsl:when test="$type = 'notices'">
+                <fo:block xsl:use-attribute-sets="__chapter__frontmatter__name__container">
+                    <xsl:call-template name="insertVariable">
+                        <xsl:with-param name="theVariableID" select="'Notices title'"/>
+                    </xsl:call-template>
+                </fo:block>
+            </xsl:when>
+        </xsl:choose>
+    </fo:block>
+</xsl:template>
 """
         if stylesheet == "front-matter" or not stylesheet:
             if self.cover_image_name or self.cover_image_metadata:
                 __root.append(ET.Comment("cover"))
                 if self.cover_image_name:
-                    for __c in list(ET.fromstring(__cover_file_raw)):
-                        __root.append(__c)
+                    self.copy_xml(__root, __cover_file_raw)
                 if self.cover_image_metadata:
-                    for __c in list(ET.fromstring(__cover_metadata_raw % self.cover_image_metadata)):
-                        __root.append(__c)
+                    self.copy_xml(__root, __cover_metadata_raw % self.cover_image_metadata)
                     if self.ot_version < Version("2.0"):
-                        for __c in list(ET.fromstring(__cover_metadata_v1_raw)):
-                            __root.append(__c)
-                for __c in list(ET.fromstring(__cover_raw)):
-                        __root.append(__c)
+                        self.copy_xml(__root, __cover_metadata_v1_raw)
+                self.copy_xml(__root, __cover_raw)
         
         __table_title_raw = """
 <xsl:template match="*[contains(@class, ' topic/table ')]">
@@ -1017,32 +934,20 @@ class StylePluginGenerator(DitaGenerator):
             __root.append(ET.Comment("table"))
             if "table" in self.style and "caption-position" in self.style["table"] and self.style["table"]["caption-position"] == "after":
                 self.copy_xml(__root, __table_title_raw)
-            __table_raw = __table_footer_raw
             if self.table_continued:
-                __table_raw = __table_continued_raw
-            for __c in list(ET.fromstring(__table_raw)):
-                __root.append(__c)
-        
-            __dl_raw = None
+                self.copy_xml(__root, __table_continued_raw)
+            else:
+                self.copy_xml(__root, __table_footer_raw)
+
             if "dl-type" in self.style["dl"]:
                 if self.style["dl"]["dl-type"] == "list":
-                    __dl_raw = __dl_list_raw
+                    __root.append(ET.Comment("dl"))
+                    self.copy_xml(__root, __dl_list_raw)
                 elif self.style["dl"]["dl-type"] == "html":
-                    __dl_raw = __dl_html_raw
-            if __dl_raw:
-                __root.append(ET.Comment("dl"))
-                __dl = ET.fromstring(__dl_raw)
-                for __c in list(__dl):
-                    __root.append(__c)
-        
+                    __root.append(ET.Comment("dl"))
+                    self.copy_xml(__root, __dl_html_raw)
+
         __note_raw = """
-<xsl:stylesheet xmlns:fo="http://www.w3.org/1999/XSL/Format"
-                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:e="e"
-                xmlns:opentopic="http://www.idiominc.com/opentopic"
-                exclude-result-prefixes="e opentopic"
-                version="2.0">
-  
   <xsl:template match="*[contains(@class,' topic/note ')]">
     <fo:table xsl:use-attribute-sets="note__table">
       <fo:table-column xsl:use-attribute-sets="note__text__column"/>
@@ -1055,8 +960,6 @@ class StylePluginGenerator(DitaGenerator):
       </fo:table-body>
     </fo:table>
   </xsl:template>
-  
-</xsl:stylesheet>
 """
         __chapter_page_number_raw = """
 <xsl:template name="startPageNumbering">
@@ -1105,17 +1008,13 @@ class StylePluginGenerator(DitaGenerator):
             __root.append(ET.Comment("title numbering"))
             __number_levels = [s in self.style and "title-numbering" in self.style[s] and self.style[s]["title-numbering"] == "true" for s in ['topic', 'topic.topic', 'topic.topic.topic', 'topic.topic.topic.topic']]
             ET.SubElement(__root, NS_XSL + "variable", name=u"e:number-levels", select="(" + ", ".join([str(l).lower() + "()" for l in __number_levels]) + ")")
-            for __c in list(ET.fromstring(__get_title_raw)):
-                __root.append(__c)
-            if "title-numbering" in self.style["topic"] and self.style["topic"]["title-numbering"] != "true":   
-                for __c in list(ET.fromstring(__numberless_chapter_raw)):
-                    __root.append(__c)
-            
+            self.copy_xml(__root, __get_title_raw)
+            if "title-numbering" in self.style["topic"] and self.style["topic"]["title-numbering"] != "true":
+                self.copy_xml(__root, __numberless_chapter_raw)
+
             if not ("icon" in self.style["note"] and self.style["note"]["icon"] == "icon"):
                 __root.append(ET.Comment("note"))
-                __note = ET.fromstring(__note_raw)
-                for __c in list(__note):
-                    __root.append(__c)
+                self.copy_xml(__root, __note_raw)
             if self.page_number:
                 if self.page_number == "chapter-page":
                     self.copy_xml(__root, __chapter_page_number_raw)
@@ -1123,14 +1022,6 @@ class StylePluginGenerator(DitaGenerator):
                 self.copy_xml(__root, __figure_raw)
 
         __link_raw = """
-<xsl:stylesheet xmlns:fo="http://www.w3.org/1999/XSL/Format"
-                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:e="e"
-                xmlns:opentopic="http://www.idiominc.com/opentopic"
-                xmlns:opentopic-func="http://www.idiominc.com/opentopic/exsl/function"
-                exclude-result-prefixes="e opentopic opentopic-func"
-                version="2.0">
-
   <xsl:template match="*[contains(@class,' topic/xref ')]" name="topic.xref">
     <fo:inline>
       <xsl:call-template name="commonattributes"/>
@@ -1194,87 +1085,71 @@ class StylePluginGenerator(DitaGenerator):
     <xsl:variable name="h" select="if (starts-with($href, 'http://')) then substring($href, 8) else $href"/>
     <xsl:value-of select="if (contains($h, '/') and substring-after($h, '/') = '') then substring($h, 0, string-length($h)) else $h"/>
   </xsl:function>
-
-</xsl:stylesheet>
 """
 
         if stylesheet == "links" or not stylesheet:
             if "link-url" in self.style["link"] and self.style["link"]["link-url"] == "true":
                 __root.append(ET.Comment("link"))
-                __link = ET.fromstring(__link_raw)
-                for __c in list(__link):
-                    __root.append(__c)
+                self.copy_xml(__root, __link_raw)
 
         __list_raw = """
-<xsl:stylesheet xmlns:fo="http://www.w3.org/1999/XSL/Format"
-                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:e="e"
-                xmlns:opentopic="http://www.idiominc.com/opentopic"
-                xmlns:opentopic-func="http://www.idiominc.com/opentopic/exsl/function"
-                exclude-result-prefixes="e opentopic opentopic-func"
-                version="2.0">
+<xsl:template match="*[contains(@class, ' topic/ul ')]/*[contains(@class, ' topic/li ')]">
+    <xsl:variable name="depth" select="count(ancestor::*[contains(@class, ' topic/ul ')])"/>
+    <fo:list-item xsl:use-attribute-sets="ul.li">
+        <fo:list-item-label xsl:use-attribute-sets="ul.li__label">
+            <fo:block xsl:use-attribute-sets="ul.li__label__content">
+                <fo:inline>
+                    <xsl:call-template name="commonattributes"/>
+                </fo:inline>
+                <xsl:call-template name="insertVariable">
+                    <xsl:with-param name="theVariableID" select="concat('Unordered List bullet ', $depth)"/>
+                </xsl:call-template>
+            </fo:block>
+        </fo:list-item-label>
+        <fo:list-item-body xsl:use-attribute-sets="ul.li__body">
+            <fo:block xsl:use-attribute-sets="ul.li__content">
+                <xsl:apply-templates/>
+            </fo:block>
+        </fo:list-item-body>
+    </fo:list-item>
+</xsl:template>
 
-    <xsl:template match="*[contains(@class, ' topic/ul ')]/*[contains(@class, ' topic/li ')]">
-        <xsl:variable name="depth" select="count(ancestor::*[contains(@class, ' topic/ul ')])"/>
-        <fo:list-item xsl:use-attribute-sets="ul.li">
-            <fo:list-item-label xsl:use-attribute-sets="ul.li__label">
-                <fo:block xsl:use-attribute-sets="ul.li__label__content">
-                    <fo:inline>
-                        <xsl:call-template name="commonattributes"/>
-                    </fo:inline>
-                    <xsl:call-template name="insertVariable">
-                        <xsl:with-param name="theVariableID" select="concat('Unordered List bullet ', $depth)"/>
-                    </xsl:call-template>
-                </fo:block>
-            </fo:list-item-label>
-            <fo:list-item-body xsl:use-attribute-sets="ul.li__body">
-                <fo:block xsl:use-attribute-sets="ul.li__content">
-                    <xsl:apply-templates/>
-                </fo:block>
-            </fo:list-item-body>
-        </fo:list-item>
-    </xsl:template>
-
-    <xsl:template match="*[contains(@class, ' topic/ol ')]/*[contains(@class, ' topic/li ')]">
-        <xsl:variable name="depth" select="count(ancestor::*[contains(@class, ' topic/ol ')])"/>
-        <xsl:variable name="format">
-            <xsl:call-template name="insertVariable">
-                <xsl:with-param name="theVariableID" select="concat('Ordered List Format ', $depth)"/>
-            </xsl:call-template>
-        </xsl:variable>
-        <fo:list-item xsl:use-attribute-sets="ol.li">
-            <fo:list-item-label xsl:use-attribute-sets="ol.li__label">
-                <fo:block xsl:use-attribute-sets="ol.li__label__content">
-                    <fo:inline>
-                        <xsl:call-template name="commonattributes"/>
-                    </fo:inline>
-                    <xsl:call-template name="insertVariable">
-                        <xsl:with-param name="theVariableID" select="concat('Ordered List Number ', $depth)"/>
-                        <xsl:with-param name="theParameters">
-                            <number>
-                                <xsl:number format="{$format}"/>
-                            </number>
-                        </xsl:with-param>
-                    </xsl:call-template>
-                </fo:block>
-            </fo:list-item-label>
-            <fo:list-item-body xsl:use-attribute-sets="ol.li__body">
-                <fo:block xsl:use-attribute-sets="ol.li__content">
-                    <xsl:apply-templates/>
-                </fo:block>
-            </fo:list-item-body>
-        </fo:list-item>
-    </xsl:template>
-
-</xsl:stylesheet>
+<xsl:template match="*[contains(@class, ' topic/ol ')]/*[contains(@class, ' topic/li ')]">
+    <xsl:variable name="depth" select="count(ancestor::*[contains(@class, ' topic/ol ')])"/>
+    <xsl:variable name="format">
+        <xsl:call-template name="insertVariable">
+            <xsl:with-param name="theVariableID" select="concat('Ordered List Format ', $depth)"/>
+        </xsl:call-template>
+    </xsl:variable>
+    <fo:list-item xsl:use-attribute-sets="ol.li">
+        <fo:list-item-label xsl:use-attribute-sets="ol.li__label">
+            <fo:block xsl:use-attribute-sets="ol.li__label__content">
+                <fo:inline>
+                    <xsl:call-template name="commonattributes"/>
+                </fo:inline>
+                <xsl:call-template name="insertVariable">
+                    <xsl:with-param name="theVariableID" select="concat('Ordered List Number ', $depth)"/>
+                    <xsl:with-param name="theParameters">
+                        <number>
+                            <xsl:number format="{$format}"/>
+                        </number>
+                    </xsl:with-param>
+                </xsl:call-template>
+            </fo:block>
+        </fo:list-item-label>
+        <fo:list-item-body xsl:use-attribute-sets="ol.li__body">
+            <fo:block xsl:use-attribute-sets="ol.li__content">
+                <xsl:apply-templates/>
+            </fo:block>
+        </fo:list-item-body>
+    </fo:list-item>
+</xsl:template>
 """
 
         if stylesheet == "lists" or not stylesheet:
             if "ol" in self.style or "ul" in self.style:
                 __root.append(ET.Comment("list"))
-                __link = ET.fromstring(__list_raw)
-                for __c in list(__link):
-                    __root.append(__c)
+                self.copy_xml(__root, __list_raw)
 
         if not stylesheet:
             if not self.override_shell and self.toc_maximum_level:
@@ -1406,14 +1281,6 @@ class StylePluginGenerator(DitaGenerator):
                 ET.SubElement(__root, NS_XSL + "variable", name=u"side-col-width").text = self.style["body"]["start-indent"]
         
         __list_raw = """
-<xsl:stylesheet xmlns:fo="http://www.w3.org/1999/XSL/Format"
-                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:e="e"
-                xmlns:opentopic="http://www.idiominc.com/opentopic"
-                xmlns:opentopic-func="http://www.idiominc.com/opentopic/exsl/function"
-                exclude-result-prefixes="e opentopic opentopic-func"
-                version="2.0">
-
   <xsl:attribute-set name="ol">
     <xsl:attribute name="provisional-distance-between-starts">
       <xsl:call-template name="e:list-label-length"/>
@@ -1445,15 +1312,11 @@ class StylePluginGenerator(DitaGenerator):
     </xsl:variable>
     <xsl:sequence select="max($labels)"/>
   </xsl:template>
-
-</xsl:stylesheet>
 """
 
         if stylesheet == "lists-attr" or not stylesheet:
             __root.append(ET.Comment("list"))
-            __link = ET.fromstring(__list_raw)
-            for __c in list(__link):
-                __root.append(__c)
+            self.copy_xml(__root, __list_raw)
 
         if stylesheet == "pr-domain-attr" or not stylesheet:
             # codeblock
