@@ -195,7 +195,7 @@ var storeFields = ["font-family", "font-size", "font-weight", "font-style", "col
                    // ul
                    "ul-1", "ul-2", "ul-3", "ul-4",
                    // table, fig
-                   "caption-number"];
+                   "caption-number", "caption-position"];
 /**
  * Read fields from model to UI.
  * @param type

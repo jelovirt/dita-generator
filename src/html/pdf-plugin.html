@@ -812,11 +812,18 @@
             <th colspan="2"><h4>Captions</h4></th>
           </tr>
           <tr>
-            <td colspan="2">
-              <label for="pdf.caption-number" class="inline">Caption numbering</label>:
+            <td>
+              <label for="pdf.caption-number" class="inline">Numbering</label>:
               <select id="pdf.caption-number" title="Caption numbering">
                 <option value="document" selected>Document wide</option>
                 <option value="none">No numbering</option>
+              </select>
+            </td>
+            <td>
+              <label for="pdf.caption-position" class="inline">Position</label>:
+              <select id="pdf.caption-position" title="Caption position">
+                <option value="before">Above</option>
+                <option value="after">Below</option>
               </select>
             </td>
           </tr>
@@ -946,7 +953,8 @@ jumps over the lazy dog.</pre>
   (if (<= n 1)
        1
        (* n (factorial (- n 1)))))</pre>
-          <p  class="example-page-content-body example-page-content-table-title"><strong>Table<span data-style="table" data-field="caption-number" data-value="document"> 4</span>: Table caption</strong></p>
+          <p class="example-page-content-body example-page-content-table-title"
+             data-style="table" data-field="caption-position" data-value="before"><strong>Table<span data-style="table" data-field="caption-number" data-value="document"> 4</span>: Table caption</strong></p>
           <table class="example-page-content-table" border="1">
             <tr class="example-page-content-tr">
               <td class="example-page-content-td">Dog</td>
@@ -957,8 +965,13 @@ jumps over the lazy dog.</pre>
               <td class="example-page-content-td">quick, brown</td>
             </tr>
           </table>
+          <p class="example-page-content-body example-page-content-table-title"
+             data-style="table" data-field="caption-position" data-value="after"><strong>Table<span data-style="table" data-field="caption-number" data-value="document"> 4</span>: Table caption</strong></p>
+          <p class="example-page-content-body example-page-content-fig-title"
+             data-style="fig" data-field="caption-position" data-value="before"><strong>Figure<span data-style="fig" data-field="caption-number" data-value="document"> 6</span>: Figure caption</strong></p>
           <p class="example-page-content-fig"><img src="http://upload.wikimedia.org/wikipedia/en/5/5a/Dogcow.png" style="height: 30px"/></p>
-          <p class="example-page-content-body example-page-content-fig-title"><strong>Figure<span data-style="fig" data-field="caption-number" data-value="document"> 6</span>: Figure caption</strong></p>
+          <p class="example-page-content-body example-page-content-fig-title"
+             data-style="fig" data-field="caption-position" data-value="after"><strong>Figure<span data-style="fig" data-field="caption-number" data-value="document"> 6</span>: Figure caption</strong></p>
         </div>
       </div>
     </div>

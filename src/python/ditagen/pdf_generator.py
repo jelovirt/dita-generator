@@ -235,6 +235,7 @@ styles = [{ "property": f[0], "type": f[1], "value": f[2], "inherit": f[3] } for
     ("line-height", "table", None, "body"),
     # custom
     ("caption-number", "table", "document", None),
+    ("caption-position", "table", "before", None),
     
     ("font-family", "fig", None, "body"),
     ("font-size", "fig", None, "body"),
@@ -250,6 +251,7 @@ styles = [{ "property": f[0], "type": f[1], "value": f[2], "inherit": f[3] } for
     ("line-height", "fig", None, "body"),
     # custom
     ("caption-number", "fig", "document", None),
+    ("caption-position", "fig", "after", None),
     
     ("font-family", "link", None, "body"),
     ("font-size", "link", None, "body"),
@@ -991,8 +993,30 @@ class StylePluginGenerator(DitaGenerator):
                 for __c in list(ET.fromstring(__cover_raw)):
                         __root.append(__c)
         
+        __table_title_raw = """
+<xsl:template match="*[contains(@class, ' topic/table ')]">
+    <xsl:variable name="scale">
+        <xsl:call-template name="getTableScale"/>
+    </xsl:variable>
+    <fo:block xsl:use-attribute-sets="table">
+        <xsl:call-template name="commonattributes"/>
+        <xsl:if test="not(@id)">
+          <xsl:attribute name="id">
+            <xsl:call-template name="get-id"/>
+          </xsl:attribute>
+        </xsl:if>
+        <xsl:if test="not($scale = '')">
+            <xsl:attribute name="font-size"><xsl:value-of select="concat($scale, '%')"/></xsl:attribute>
+        </xsl:if>
+        <xsl:apply-templates select="*[contains(@class, ' topic/tgroup ')]"/>
+        <xsl:apply-templates select="*[contains(@class, ' topic/title ') or contains(@class, ' topic/desc ')]"/>
+    </fo:block>
+</xsl:template>"""
+
         if stylesheet == "tables" or not stylesheet:
             __root.append(ET.Comment("table"))
+            if "table" in self.style and "caption-position" in self.style["table"] and self.style["table"]["caption-position"] == "after":
+                self.copy_xml(__root, __table_title_raw)
             __table_raw = __table_footer_raw
             if self.table_continued:
                 __table_raw = __table_continued_raw
@@ -1063,6 +1087,19 @@ class StylePluginGenerator(DitaGenerator):
   <xsl:comment>topicType: <xsl:value-of select="$topicType"/></xsl:comment>
 </xsl:template>
 """
+        __figure_raw = """
+<xsl:template match="*[contains(@class,' topic/fig ')]">
+    <fo:block xsl:use-attribute-sets="fig">
+        <xsl:call-template name="commonattributes"/>
+        <xsl:if test="not(@id)">
+          <xsl:attribute name="id">
+            <xsl:call-template name="get-id"/>
+          </xsl:attribute>
+        </xsl:if>
+        <xsl:apply-templates/>
+    </fo:block>
+</xsl:template>
+"""
 
         if stylesheet == "commons" or not stylesheet:
             __root.append(ET.Comment("title numbering"))
@@ -1082,6 +1119,8 @@ class StylePluginGenerator(DitaGenerator):
             if self.page_number:
                 if self.page_number == "chapter-page":
                     self.copy_xml(__root, __chapter_page_number_raw)
+            if "fig" in self.style and "caption-position" in self.style["fig"] and self.style["fig"]["caption-position"] == "before":
+                self.copy_xml(__root, __figure_raw)
 
         __link_raw = """
 <xsl:stylesheet xmlns:fo="http://www.w3.org/1999/XSL/Format"

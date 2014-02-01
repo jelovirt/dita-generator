@@ -153,11 +153,13 @@ def main():
                     },
                     "fig": {
                       "background-color": "yellow",
-                      "caption-number": "none"
+                      "caption-number": "none",
+                      "caption-position": "before"
                     },
                     "table": {
                       "background-color": "cyan",
-                      "caption-number": "document"
+                      "caption-number": "document",
+                      "caption-position": "after"
                     },
                     "codeblock": {
                         "background-color": "silver"
@@ -271,9 +273,11 @@ def main():
             
             "pdf.caption-number.table": "document",
             "pdf.background-color.table": "cyan",
+            "pdf.caption-position.table": "after",
             
             "pdf.caption-number.fig": "none",
             "pdf.background-color.fig": "yellow",
+            "pdf.caption-position.fig": "before",
 
             "pdf.cover_image_metadata": "cover-image",
 
