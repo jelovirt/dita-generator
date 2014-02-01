@@ -2,6 +2,20 @@ fieldset.model {
   display: none;
 }
 
+.form,
+.example-block {
+  float: left;
+}
+.form {
+  width: 500px;
+}
+.example-block {
+  width: 600px;
+  margin-top: 1em;
+  margin-left: 1em;
+}
+
+
 .preview .preview-page {
   width: 50px;
   height: 75px;
@@ -34,12 +48,11 @@ fieldset.model {
 }
 
 fieldset {
-  width: 500px;
-  clear: none;
+  /*clear: clear;*/
 }
 
 h3 {
-  clear: both;
+  /*clear: both;*/
 }
 
 .example {
@@ -47,7 +60,6 @@ h3 {
   float: right;
   font-size: 10px;
   line-height: 10px;
-  /*border: solid 1px gray;*/
   padding: 5px;
   clear: both;
 }
@@ -93,7 +105,6 @@ div.example-page-body {
   background-color: silver;
 }
 table.example-page-body td {
-  /*background-color: silver;*/
   height: 100%;
   empty-cells: show;
 }
@@ -115,15 +126,6 @@ table.example-page-body td.gap{
   padding: 0px;
 }
 
-
-
-.example-block {
-  width: 100%;
-  /*border: solid 1px black;
-  box-shadow: 3px 3px 3px #ccc;*/
-  padding: 0px;
-  clear: both;
-}
 .example-block-page {
   border: solid 1px black;
   border-style: dashed solid;
@@ -131,19 +133,16 @@ table.example-page-body td.gap{
   box-shadow: 3px 3px 3px #ccc;
 }
 
-
 .example-page-wrapper {
   line-height: 1.2 !important;
 }
 .example-page-content-topic {
-  /* margin-top: 5px; set dynamically */
-  /* font-weight: bold; set dynamically */
+  /* margin-top set dynamically */
+  /* font-weight set dynamically */
 }
 .example-page-content-body {
   /* margin-top set dynamically */
   /* margin-bottom set dynamically */
-  /*margin-top: 5px;
-  margin-bottom: 5px;*/
 }
 
 .example-text {

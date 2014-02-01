@@ -1,15 +1,19 @@
 body {
   font-family: "Gill Sans", sans-serif;
   font-size: 14px;
+  /*
   margin: 0;
   padding: 0;
   width: 100%;
   text-align: center;
+  /*
 }
 #body {
+  /*
   margin: 0 auto 0 auto;
   padding: 10px 0 0 0;
-  width: 750px;/*640px;*/
+  width: 750px;
+  */
   text-align: left;
 }
 
@@ -115,8 +119,6 @@ fieldset .controller,
 #controls {
     padding-left: 150px;
 }
-/*.help {
-}*/
 fieldset .instruction, fieldset .help {
   font-size: 12px;
 }

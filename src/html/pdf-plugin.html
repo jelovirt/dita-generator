@@ -8,9 +8,11 @@
   <div class="page">
     <p class="help">A PDF customisation plug-in defines a new DITA-OT
       transformation type based on the built-in PDF conversion.</p>
+    <h3>Target environment</h3>
+    <div class="form">
     <fieldset>
       <p>
-        <label for="ot.version" class="required">DITA-OT version</label>
+        <label for="ot.version" title="Version of DITA-OT for which the plug-in is installed into.">DITA-OT version</label>
         <select name="ot.version" id="ot.version" title="DITA-OT version">
           <option value="2.0">2.0</option>
           <option value="1.8" selected>1.8</option>
@@ -21,7 +23,7 @@
     </fieldset>
     <fieldset>
       <p>
-        <label for="pdf.formatter" class="required">XSL formatter</label>
+        <label for="pdf.formatter">XSL formatter</label>
         <select name="pdf.formatter" id="pdf.formatter" title="XSL formatter">
           <option value="fop" selected>FOP</option>
           <option value="ah">AntennaHouse Formatter</option>
@@ -29,40 +31,24 @@
         </select>
       </p>
       <p class="instruction">XSL formatter used to generate PDF output. DITA-OT comes with open source FOP formatter.</p>
-    </fieldset>
-    <p class="help">Note that customisation features available are dependent
+      <p class="help">Note that customisation features available are dependent
         on the target DITA-OT and XSL formatter.</p>
+    </fieldset>
     <fieldset>
       <p>
-        <label for="pdf.override_shell" class="required">Override shell</label>
+        <label for="pdf.override_shell">Override shell</label>
         <input type="checkbox" name="pdf.override_shell" id="pdf.override_shell" title="Override shell"
                value="true">
       </p>
       <p class="instruction">Override XSLT shell stylesheet. Advanced generation option which will make further developing the generated plug-in
         easier.</p>
     </fieldset>
-    <!--fieldset>
-      <p>
-        <label for="pdf.generate-shell" class="required">Generate shell</label>
-        <input type="checkbox" name="pdf.generate-shell" value="true" id="pdf.generate-shell" title="Generate shell">
-      </p>
-      <p class="instruction">Generate an XSLT shell stylesheet.</p>
-      <p class="help">A custom XSLT shell stylesheet will allow more customization
-        possibilities if plug-in is uses as a basis for further development.</p>
-    </fieldset-->
+    </div>
   </div>
   <!-- page -->
   <div class="page">
+    <div class="form">
     <h3>Page</h3>
-    <!--div class="example" id="pdf.page.example">
-      <div class="example-page even">
-        <table class="example-page-body">
-          <tr>
-            <td><div></div></td>
-          </tr>
-        </table>
-      </div>
-    </div-->
     <fieldset>
       <p>
         <label for="pdf.page-size">Page size</label>
@@ -97,27 +83,7 @@
         </select>
       </p>
     </fieldset>
-    <!--
-  </div>
-  <div class="page">
-    -->
     <h3>Margins</h3>
-    <div class="example" id="pdf.margin.example">
-      <div class="example-page even" title="Even page">
-        <table class="example-page-body">
-          <tr>
-            <td><div></div></td>
-          </tr>
-        </table>
-      </div>
-      <div class="example-page odd" title="Odd page">
-        <table class="example-page-body">
-          <tr>
-            <td><div></div></td>
-          </tr>
-        </table>
-      </div>
-    </div>
     <fieldset>
       <p>
         <label for="pdf.page-margin-top">Top</label>
@@ -169,6 +135,23 @@
         <input name="pdf.column-gap" id="pdf.column-gap" placeholder="12pt" pattern="(\d+(\.\d+)?|\.\d+)(pt|mm|in|pc|cm|em)" class="length-value">
       </p>
     </fieldset>
+    </div>
+    <div class="example-block" id="pdf.margin.example">
+      <div class="example-page even" title="Even page">
+        <table class="example-page-body">
+          <tr>
+            <td><div></div></td>
+          </tr>
+        </table>
+      </div>
+      <div class="example-page odd" title="Odd page">
+        <table class="example-page-body">
+          <tr>
+            <td><div></div></td>
+          </tr>
+        </table>
+      </div>
+    </div>
   </div>
   <div class="page">
     <h3 class="v1_6 v1_7 v1_8">Header and footer</h3>
@@ -217,13 +200,36 @@
       <p class="instruction">Place page number in footer.</p>
     </fieldset>
     <h3>Layout</h3>
-    <!--
-    <div id="page-preview" class="preview" style="float: right; width: 130px;">
-      <div>Preview</div>
-      <canvas id="preview.sequence" height="250" width="250"></canvas>
+    <div class="form">
+    <fieldset>
+      <p>
+        <label for="pdf.force-page-count">Section start<!--Chapter page--></label>
+        <select name="pdf.force-page-count" id="pdf.force-page-count" title="Force page count">
+          {% if advanced %}<option value="">default</option>{% endif %}
+          <option value="auto">new page</option>
+          <option value="even" selected>odd page</option>
+          <option value="odd">even page</option>
+        </select>
+      </p>
+      <p class="instruction">Chapters can be made to always start on an odd
+        page or directly follow the previous page.</p>
+      <p class="help">Default page count behavior for Bookmaps is to start every
+      chapter on an odd page.</p>
+    </fieldset>
+    <fieldset>
+      <p>
+        <label for="pdf.chapter-layout" >Chapter layout</label>
+        <select name="pdf.chapter-layout" id="pdf.chapter-layout" title="Chapter page layout">
+          {% if advanced %}<option value="">default</option>{% endif %}
+          <option value="MINITOC" selected>chapter TOC</option>
+          <option value="BASIC">no chapter TOC</option>
+        </select>
+      </p>
+      <p class="instruction">Chapters can start with a table of chapter contents on a separate chapter cover page.</p>
+    </fieldset>
     </div>
-    -->
-    <div class="example pdf_force-page-count_example_auto">
+    <div class="example-block">
+    <div class="pdf_force-page-count_example_auto">
       <div class="example-page even" title="Even page">
         <table class="example-page-body">
           <tr>
@@ -253,7 +259,7 @@
         </table>
       </div>
     </div>
-    <div class="example pdf_force-page-count_example_even">
+    <div class="pdf_force-page-count_example_even">
       <div class="example-page even" title="Even page">
         <table class="example-page-body">
           <tr>
@@ -283,7 +289,7 @@
         </table>
       </div>
     </div>
-    <div class="example pdf_force-page-count_example_odd">
+    <div class="pdf_force-page-count_example_odd">
       <div class="example-page even" title="Even page, last page of chapter">
         <table class="example-page-body cut-off">
           <tr>
@@ -313,94 +319,11 @@
         </table>
       </div>
     </div>
-    <fieldset>
-      <p>
-        <label for="pdf.force-page-count">Section start<!--Chapter page--></label>
-        <select name="pdf.force-page-count" id="pdf.force-page-count" title="Force page count">
-          {% if advanced %}<option value="">default</option>{% endif %}
-          <option value="auto">new page</option>
-          <option value="even" selected>odd page</option>
-          <option value="odd">even page</option>
-        </select>
-      </p>
-      <p class="instruction">Chapters can be made to always start on an odd
-        page or directly follow the previous page.</p>
-      <p class="help">Default page count behavior for Bookmaps is to start every
-      chapter on an odd page.</p>
-    </fieldset>
-    <fieldset>
-      <p>
-        <label for="pdf.chapter-layout" >Chapter layout</label>
-        <select name="pdf.chapter-layout" id="pdf.chapter-layout" title="Chapter page layout">
-          {% if advanced %}<option value="">default</option>{% endif %}
-          <option value="MINITOC" selected>chapter TOC</option>
-          <option value="BASIC">no chapter TOC</option>
-        </select>
-      </p>
-      <p class="instruction">Chapters can start with a table of chapter contents on a separate chapter cover page.</p>
-    </fieldset>
-  </div>
-  <div class="page">
-    <!--h3>Paragraph</h3>
-    <div class="example">
-      <div class="example-page-fragment" id="pdf.side-col-width.example">
-      <div class="example-page-wrapper" id="pdf.text-align.example">
-        <div class="example-page-content-topic">Heading 1</div>
-        <div class="example-page-content-topic.topic">Heading 2</div>
-        <p class="example-page-content-body">
-        The quick brown fox jumps over the lazy dog.
-        The quick brown fox jumps over the lazy dog.
-        </p>
-        <p class="example-page-content-body">
-        The quick brown fox jumps over the lazy dog.
-        The quick brown fox jumps over the lazy dog.
-        The quick brown fox jumps over the lazy dog.
-        </p>
-        <div class="example-page-content-topic.topic.topic">Heading 3</div>
-        <p class="example-page-content-body">
-        The quick brown fox jumps over the lazy dog.
-        The quick brown fox jumps over the lazy dog.
-        </p>
-      </div>
-      </div>
     </div>
-    <fieldset>
-      <p>
-        <label for="pdf.side-col-width">Indentation</label>
-        <input name="pdf.side-col-width" id="pdf.side-col-width" placeholder="25pt" pattern="(\d+(\.\d+)?|\.\d+)(pt|mm|in|pc|cm|em)" size="5" class="length-value">
-      </p>
-      <p class="instruction">Amount the body text is indented relative to the left margin.</p>
-    </fieldset>
-    <fieldset>
-      <p>
-        <label for="pdf.spacing">Spacing before</label>
-        <input name="pdf.spacing.before" id="pdf.spacing.before" placeholder="0.6em" pattern="(\d+(\.\d+)?|\.\d+)(pt|mm|in|pc|cm|em)" size="5" class="length-value">
-      </p>
-    </fieldset>
-    <fieldset>
-      <p>
-        <label for="pdf.spacing">Spacing after</label>
-        <input name="pdf.spacing.after" id="pdf.spacing.after" placeholder="0.6em" pattern="(\d+(\.\d+)?|\.\d+)(pt|mm|in|pc|cm|em)" size="5" class="length-value">
-      </p>
-    </fieldset>
-    <fieldset>
-      <p>
-        <label for="pdf.text-align">Text alignment</label>
-        <select name="pdf.text-align" id="pdf.text-align">
-          {% if advanced %}<option value="">default</option>{% endif %}
-          <option value="start" selected>left</option>
-          <option value="center">center</option>
-          <option value="end">right</option>
-          <option value="justify">justify</option>
-        </select>
-      </p>
-    </fieldset>
-    -->
-    <!--
   </div>
   <div class="page">
-    -->
     <h3>Style</h3>
+    <div class="form">
     <fieldset>
       <!-- Style model -->
       <fieldset id="style-model" class="model">
@@ -672,10 +595,11 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <th>1</th>
+                {% for i in "1234" %}
+                <tr>
+                    <th>{{i}}</th>
                     <td>
-                      <select id="pdf.ol-1">
+                      <select id="pdf.ol-{{i}}">
                         <option value="1">1, 2, 3, …</option>
                         <option value="A">A, B, C, …</option>
                         <option value="a">a, b, c, …</option>
@@ -683,51 +607,10 @@
                         <option value="i">i, ii, iii, …</option>
                       </select>
                     </td>
-                    <td><input id="pdf.ol-before-1" size="1"></td>
-                    <td><input id="pdf.ol-after-1" size="2" value=". "></td>
+                    <td><input id="pdf.ol-before-{{i}}" size="1"></td>
+                    <td><input id="pdf.ol-after-{{i}}" size="2" value=". "></td>
                   </tr>
-                  <tr>
-                    <th>2</th>
-                    <td>
-                      <select id="pdf.ol-2">
-                        <option value="1">1, 2, 3, …</option>
-                        <option value="A">A, B, C, …</option>
-                        <option value="a">a, b, c, …</option>
-                        <option value="I">I, II, III, …</option>
-                        <option value="i">i, ii, iii, …</option>
-                      </select>
-                      <td><input id="pdf.ol-before-2" size="1"></td>
-                      <td><input id="pdf.ol-after-2" size="2" value=". "></td>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>3</th>
-                    <td>
-                      <select id="pdf.ol-3">
-                        <option value="1">1, 2, 3, …</option>
-                        <option value="A">A, B, C, …</option>
-                        <option value="a">a, b, c, …</option>
-                        <option value="I">I, II, III, …</option>
-                        <option value="i">i, ii, iii, …</option>
-                      </select>
-                      <td><input id="pdf.ol-before-3" size="1"></td>
-                      <td><input id="pdf.ol-after-3" size="2" value=". "></td>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>4</th>
-                    <td>
-                      <select id="pdf.ol-4">
-                        <option value="1">1, 2, 3, …</option>
-                        <option value="A">A, B, C, …</option>
-                        <option value="a">a, b, c, …</option>
-                        <option value="I">I, II, III, …</option>
-                        <option value="i">i, ii, iii, …</option>
-                      </select>
-                      <td><input id="pdf.ol-before-4" size="1"></td>
-                      <td><input id="pdf.ol-after-4" size="2" value=". "></td>
-                    </td>
-                  </tr>
+                {% endfor %}
                 </tbody>
               </table>
               <!--label for="pdf.ol-sublevel" class="inline">Show sublevels</label>:
@@ -753,10 +636,11 @@
                   </tr>
                 </thead>
                 <tbody>
+                  {% for i in "1234" %}
                   <tr>
-                    <th>1</th>
+                    <th>{{i}}</th>
                     <td>
-                      <select id="pdf.ul-1">
+                      <select id="pdf.ul-{{i}}">
                         <option value="&#x2022;">&#x2022;</option>
                         <option value="&#x25C6;">&#x25C6;</option>
                         <option value="&#x2014;">&#x2014;</option>
@@ -765,42 +649,7 @@
                       </select>
                     </td>
                   </tr>
-                  <tr>
-                    <th>2</th>
-                    <td>
-                      <select id="pdf.ul-2">
-                        <option value="&#x2022;">&#x2022;</option>
-                        <option value="&#x25C6;">&#x25C6;</option>
-                        <option value="&#x2014;">&#x2014;</option>
-                        <option value="&#x2013;">&#x2013;</option>
-                        <option value="&#x2012;">&#x2012;</option>
-                      </select>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>3</th>
-                    <td>
-                      <select id="pdf.ul-3">
-                        <option value="&#x2022;">&#x2022;</option>
-                        <option value="&#x25C6;">&#x25C6;</option>
-                        <option value="&#x2014;">&#x2014;</option>
-                        <option value="&#x2013;">&#x2013;</option>
-                        <option value="&#x2012;">&#x2012;</option>
-                      </select>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>4</th>
-                    <td>
-                      <select id="pdf.ul-4">
-                        <option value="&#x2022;">&#x2022;</option>
-                        <option value="&#x25C6;">&#x25C6;</option>
-                        <option value="&#x2014;">&#x2014;</option>
-                        <option value="&#x2013;">&#x2013;</option>
-                        <option value="&#x2012;">&#x2012;</option>
-                      </select>
-                    </td>
-                  </tr>
+                  {% endfor %}
                 </tbody>
               </table>
             </td>
@@ -830,11 +679,9 @@
         </tbody>
         </table>
       </div>
-      <!--p class="help">Style definition.</p-->
     </fieldset>
-    
+    </div>
     <!-- Style preview -->
-    <!--h4>Formatting preview</h4-->
     <div class="example-block" id="example-pdf-style">
       <div class="example-block-page" id="pdf.start-indent.examplex">
         <div class="example-page-content" id="pdf.text-align.examplex">
@@ -930,7 +777,7 @@
           </ul>
           <p class="example-page-content-body">
             The quick brown <span class="example-page-content-link">fox jumps</span><span data-style="link" data-field="link-page-number" data-value="true"> on page 42</span> over the lazy dog.
-          
+
             The quick <span class="example-page-content-link">brown fox</span><span data-style="link" data-field="link-url" data-value="true"> at www.example.com</span> jumps over the lazy dog.
           </p>
           <div class="example-page-content-topic.topic.topic"><span data-style="topic.topic.topic" data-field="title-numbering" data-value="true">1.1.1 </span>Heading 3</div>
@@ -1045,7 +892,16 @@ jumps over the lazy dog.</pre>
   <div class="page">
     -->
     <h3>Labels</h3>
-    <div class="example">
+    <div class="form">
+    <fieldset>
+      <p>
+        <label for="pdf.task-label">Task labels</label>
+        <input type="checkbox" name="pdf.task-label" id="pdf.task-label" value="true" title="Task labels">
+      </p>
+      <p class="instruction">Generate titles for task steps and sections.</p>
+    </fieldset>
+    </div>
+    <div class="example-block">
       <div class="example-text">
         <p class="example-page-content-para example-task-label"><strong>About this task</strong></p>
         <p class="example-page-content-para">Learn how to add nails to walls.</p>
@@ -1055,13 +911,6 @@ jumps over the lazy dog.</pre>
         <p class="example-page-content-para">1. Hammer in the nail.</p>
       </div>
     </div>
-    <fieldset>
-      <p>
-        <label for="pdf.task-label">Task labels</label>
-        <input type="checkbox" name="pdf.task-label" id="pdf.task-label" value="true" title="Task labels">
-      </p>
-      <p class="instruction">Generate titles for task steps and sections.</p>
-    </fieldset>
     <fieldset class="fah">
       <p class="not-available">Not available for FOP and RenderX XEP</p>
       <p>
