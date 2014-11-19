@@ -79,11 +79,14 @@ function coverChangeHandler(event) {
 	var target = $(event.target);
 	if (target.val() == "file") {
 		$("#cover_image_file").prop("disable", false).show();
-		$("#cover_image_metadata").prop("disable", true).hide();
-	} else {
-		$("#cover_image_file").prop("disable", true).hide();
-		$("#cover_image_metadata").prop("disable", false).show();
-	}
+		$("#cover_image_metadata, #cover_image_topic").prop("disable", true).hide();
+	} else if (target.val() == "metadata") {
+        $("#cover_image_metadata").prop("disable", false).show();
+        $("#cover_image_file, #cover_image_topic").prop("disable", true).hide();
+    } else if (target.val() == "topic") {
+        $("#cover_image_topic").prop("disable", false).show();
+        $("#cover_image_file, #cover_image_metadata").prop("disable", true).hide();
+    }
 }
 
 // Column methods

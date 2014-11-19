@@ -831,14 +831,19 @@ jumps over the lazy dog.</pre>
         <select id="cover_image_chooser">
           <option value="file">Upload image</option>
           <option value="metadata">Map metadata</option>  
+          <option value="topic">Cover topic</option>
         </select>
       </p>
       <p class="controller" id="cover_image_file">
         <input name="pdf.cover_image" id="pdf.cover_image" type="file">
       </p>
       <p class="controller" id="cover_image_metadata">
-        <label for="df.cover_image_metadata" class="inline">Data element name</label>:
-        <input name="pdf.cover_image_metadata" id="df.cover_image_metadata" type="input" value="cover-image">
+        <label for="pdf.cover_image_metadata" class="inline">Data element name</label>:
+        <input name="pdf.cover_image_metadata" id="pdf.cover_image_metadata" type="text" value="cover-image">
+      </p>
+      <p class="controller" id="cover_image_topic">
+        <label for="pdf.cover_image_topic" class="inline">Outputclass attribute value</label>:
+        <input name="pdf.cover_image_topic" id="pdf.cover_image_topic" type="text" value="front-cover">
       </p>
       <p class="instruction">Image on the cover page.</p>
       <div class="help">
@@ -846,6 +851,8 @@ jumps over the lazy dog.</pre>
         <pre>&lt;data name="cover-image"&gt;
   &lt;image href="cover.svg"/&gt;
 &lt;/data&gt;</pre>
+        <p>Or use topic as cover topic:</p>
+        <pre>&lt;topicref href="cover.dita" outputclass="front-cover" toc="no"/&gt;</pre>
       </div>
     </fieldset>
     <h3>Table of Contents</h3>

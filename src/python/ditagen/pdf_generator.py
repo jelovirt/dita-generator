@@ -470,6 +470,7 @@ class StylePluginGenerator(DitaGenerator):
         self.cover_image = None
         self.cover_image_name = None
         self.cover_image_metadata = None
+        self.cover_image_topic = None
         self.header = {
             "odd": ["pagenum"],
             "even": ["pagenum"]
@@ -603,6 +604,13 @@ class StylePluginGenerator(DitaGenerator):
                           contains($uri, '://')"/>
   </xsl:function>
 """
+        __cover_topic_raw = """
+  <xsl:template name="e:cover-image">
+    <xsl:for-each select="($map//*[contains(@class, ' map/topicref ')][@outputclass = '%s'])[1]">
+      <xsl:apply-templates select="key('id', @id)/*[contains(@class, ' topic/body ')]/node()"/>
+    </xsl:for-each>
+  </xsl:template>
+"""
         __cover_file_raw = """
   <xsl:template name="e:cover-image">
     <xsl:variable name="path">
@@ -618,41 +626,50 @@ class StylePluginGenerator(DitaGenerator):
     </xsl:apply-templates>
   </xsl:template>
 """
+        # Backport from DITA-OT 2.0
         __cover_raw = """
   <xsl:template name="createFrontMatter_1.0">
     <fo:page-sequence master-reference="front-matter" xsl:use-attribute-sets="__force__page__count">
       <xsl:call-template name="insertFrontMatterStaticContents"/>
       <fo:flow flow-name="xsl-region-body">
         <fo:block xsl:use-attribute-sets="__frontmatter">
-          <fo:block xsl:use-attribute-sets="__frontmatter__title">
-            <xsl:choose>
-              <xsl:when test="$map/*[contains(@class,' topic/title ')][1]">
-                <xsl:apply-templates select="$map/*[contains(@class,' topic/title ')][1]"/>
-              </xsl:when>
-              <xsl:when test="$map//*[contains(@class,' bookmap/mainbooktitle ')][1]">
-                <xsl:apply-templates select="$map//*[contains(@class,' bookmap/mainbooktitle ')][1]"/>
-              </xsl:when>
-              <xsl:when test="//*[contains(@class, ' map/map ')]/@title">
-                <xsl:value-of select="//*[contains(@class, ' map/map ')]/@title"/>
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:value-of select="/descendant::*[contains(@class, ' topic/topic ')][1]/*[contains(@class, ' topic/title ')]"/>
-              </xsl:otherwise>
-            </xsl:choose>
-          </fo:block>
-          <xsl:apply-templates select="$map//*[contains(@class,' bookmap/booktitlealt ')]"/>
-          <fo:block xsl:use-attribute-sets="__frontmatter__owner">
-            <xsl:apply-templates select="$map//*[contains(@class,' bookmap/bookmeta ')]"/>
-          </fo:block>
-          <fo:block xsl:use-attribute-sets="image__block">
-            <xsl:call-template name="e:cover-image"/>
-          </fo:block>
+          <xsl:call-template name="createFrontCoverContents"/>
         </fo:block>
       </fo:flow>
     </fo:page-sequence>
     <xsl:if test="not($retain-bookmap-order)">
       <xsl:call-template name="createNotices"/>
     </xsl:if>
+  </xsl:template>
+"""
+        __cover_contents_raw = """
+  <xsl:template name="createFrontCoverContents">
+    <!-- set the title -->
+    <fo:block xsl:use-attribute-sets="__frontmatter__title">
+      <xsl:choose>
+        <xsl:when test="$map/*[contains(@class,' topic/title ')][1]">
+          <xsl:apply-templates select="$map/*[contains(@class,' topic/title ')][1]"/>
+        </xsl:when>
+        <xsl:when test="$map//*[contains(@class,' bookmap/mainbooktitle ')][1]">
+          <xsl:apply-templates select="$map//*[contains(@class,' bookmap/mainbooktitle ')][1]"/>
+        </xsl:when>
+        <xsl:when test="//*[contains(@class, ' map/map ')]/@title">
+          <xsl:value-of select="//*[contains(@class, ' map/map ')]/@title"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="/descendant::*[contains(@class, ' topic/topic ')][1]/*[contains(@class, ' topic/title ')]"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </fo:block>
+    <!-- set the subtitle -->
+    <xsl:apply-templates select="$map//*[contains(@class,' bookmap/booktitlealt ')]"/>
+    <fo:block xsl:use-attribute-sets="__frontmatter__owner">
+      <xsl:apply-templates select="$map//*[contains(@class,' bookmap/bookmeta ')]"/>
+    </fo:block>
+    <!-- cover image -->
+    <fo:block xsl:use-attribute-sets="image__block">
+      <xsl:call-template name="e:cover-image"/>
+    </fo:block>
   </xsl:template>
 """
 
@@ -900,15 +917,19 @@ class StylePluginGenerator(DitaGenerator):
 </xsl:template>
 """
         if stylesheet == "front-matter" or not stylesheet:
-            if self.cover_image_name or self.cover_image_metadata:
+            if self.cover_image_name or self.cover_image_metadata or self.cover_image_topic:
                 __root.append(ET.Comment("cover"))
+                if self.ot_version < Version("2.0"):
+                    self.copy_xml(__root, __cover_raw)
+                self.copy_xml(__root, __cover_contents_raw)
                 if self.cover_image_name:
                     self.copy_xml(__root, __cover_file_raw)
-                if self.cover_image_metadata:
+                elif self.cover_image_metadata:
                     self.copy_xml(__root, __cover_metadata_raw % self.cover_image_metadata)
                     if self.ot_version < Version("2.0"):
                         self.copy_xml(__root, __cover_metadata_v1_raw)
-                self.copy_xml(__root, __cover_raw)
+                elif self.cover_image_topic:
+                    self.copy_xml(__root, __cover_topic_raw % self.cover_image_topic)
         
         __table_title_raw = """
 <xsl:template match="*[contains(@class, ' topic/table ')]">
@@ -1020,6 +1041,8 @@ class StylePluginGenerator(DitaGenerator):
                     self.copy_xml(__root, __chapter_page_number_raw)
             if "fig" in self.style and "caption-position" in self.style["fig"] and self.style["fig"]["caption-position"] == "before":
                 self.copy_xml(__root, __figure_raw)
+            if self.cover_image_topic:
+                ET.SubElement(__root, NS_XSL + "template", match="*[contains(@class, ' topic/topic ')][@outputclass = '%s']" % self.cover_image_topic, priority="1000")
 
         __link_raw = """
   <xsl:template match="*[contains(@class,' topic/xref ')]" name="topic.xref">
