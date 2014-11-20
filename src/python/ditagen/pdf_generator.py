@@ -655,6 +655,36 @@ class StylePluginGenerator(DitaGenerator):
     </xsl:if>
   </xsl:template>
 """
+        __cover_raw_2 = """
+  <xsl:template name="createFrontCoverContents">
+    <!-- set the title -->
+    <fo:block xsl:use-attribute-sets="__frontmatter__title">
+      <xsl:choose>
+        <xsl:when test="$map/*[contains(@class,' topic/title ')][1]">
+          <xsl:apply-templates select="$map/*[contains(@class,' topic/title ')][1]"/>
+        </xsl:when>
+        <xsl:when test="$map//*[contains(@class,' bookmap/mainbooktitle ')][1]">
+          <xsl:apply-templates select="$map//*[contains(@class,' bookmap/mainbooktitle ')][1]"/>
+        </xsl:when>
+        <xsl:when test="//*[contains(@class, ' map/map ')]/@title">
+          <xsl:value-of select="//*[contains(@class, ' map/map ')]/@title"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="/descendant::*[contains(@class, ' topic/topic ')][1]/*[contains(@class, ' topic/title ')]"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </fo:block>
+    <!-- set the subtitle -->
+    <xsl:apply-templates select="$map//*[contains(@class,' bookmap/booktitlealt ')]"/>
+    <fo:block xsl:use-attribute-sets="__frontmatter__owner">
+      <xsl:apply-templates select="$map//*[contains(@class,' bookmap/bookmeta ')]"/>
+    </fo:block>
+    <!-- cover image -->
+    <fo:block xsl:use-attribute-sets="image__block">
+      <xsl:call-template name="e:cover-image"/>
+    </fo:block>
+  </xsl:template>
+"""
 
         __table_footer_raw = """
   <xsl:template match="*[contains(@class, ' topic/tbody ')]" name="topic.tbody">
@@ -908,7 +938,10 @@ class StylePluginGenerator(DitaGenerator):
                     self.copy_xml(__root, __cover_metadata_raw % self.cover_image_metadata)
                     if self.ot_version < Version("2.0"):
                         self.copy_xml(__root, __cover_metadata_v1_raw)
-                self.copy_xml(__root, __cover_raw)
+                if self.ot_version >= Version("2.0"):
+                    self.copy_xml(__root, __cover_raw_2)
+                else:
+                    self.copy_xml(__root, __cover_raw)
         
         __table_title_raw = """
 <xsl:template match="*[contains(@class, ' topic/table ')]">
@@ -1330,12 +1363,14 @@ class StylePluginGenerator(DitaGenerator):
         __d.write(self.out, "UTF-8")
 
     def __generate_shell(self):
-        __root = ET.Element(NS_XSL + "stylesheet", {"version":"2.0", "exclude-result-prefixes": "ditaarch opentopic e"})
+        __root = ET.Element(NS_XSL + "stylesheet", {"version":"2.0", "exclude-result-prefixes": "ditaarch opentopic e", "e:version": str(self.ot_version)})
         
         __root.append(ET.Comment("base imports"))
         fs = []
         fs.append("plugin:org.dita.base:xsl/common/dita-utilities.xsl")
         fs.append("plugin:org.dita.base:xsl/common/dita-textonly.xsl")
+        if self.ot_version >= Version("2.0"):
+            fs.append("plugin:org.dita.base:xsl/common/related-links.xsl")
         
         fs.append("plugin:org.dita.pdf2:xsl/common/attr-set-reflection.xsl")
         fs.append("plugin:org.dita.pdf2:xsl/common/vars.xsl")
