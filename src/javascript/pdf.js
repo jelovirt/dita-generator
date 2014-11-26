@@ -22,6 +22,9 @@ function toggleByClass(p, prefix) {
     });
 }
 
+/**
+ * Validate transtype value.
+ */
 function transtypeChangeHandler(event) {
     var id = $(event.target);
     var val = id.attr("value");
@@ -41,10 +44,10 @@ $(document).ready(function () {
         var l = $(":input[id='" + id + ".list']");
         var o = $(":input[id='" + id + ".other']");
         s.change(editableHandler);
-        o.change(function (event) {
+        o.change(function () {
             editableOtherHandler(s, l, o);
         });
-        l.change(function (event) {
+        l.change(function () {
             editableListHandler(s, l, o);
         });
     });
@@ -55,7 +58,7 @@ $(document).ready(function () {
     $(":input[name='transtype']").change(transtypeChangeHandler);
     $(":input[name='pdf.body-column-count']").change(columnChangeHandler).change();
     $("#cover_image_chooser").change(coverChangeHandler).change();
-    $.each(storeFields, function (f) {
+    $.each(storeFields, function () {
         $(":input[id='pdf." + this + "']").change(styleEditorHandler);
     });
     $("#pdf-style-selector").change(styleHandler);
@@ -95,6 +98,9 @@ function coverChangeHandler(event) {
 
 // Column methods
 
+/**
+ * Show/hide column gap input based on column count.
+ */
 function columnChangeHandler(event) {
     var target = $(event.target);
     if (target.val() == 1) {
@@ -227,11 +233,11 @@ function readFromModel(type) {
         }
     }
 }
-function writeToModel(type) {
-    for (var i = 0; i < storeFields.length; i++) {
-        writeFieldToModel(storeFields[i], type);
-    }
-}
+//function writeToModel(type) {
+//    for (var i = 0; i < storeFields.length; i++) {
+//        writeFieldToModel(storeFields[i], type);
+//    }
+//}
 function writeFieldToModel(field, type) {
     var view = $("#style-form :input[id='pdf." + field + "']");
     var model = $("#style-model :input[name='pdf." + field + "." + type + "']");
