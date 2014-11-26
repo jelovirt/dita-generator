@@ -203,7 +203,7 @@ def main():
     form_targets = {
         "pdf": {
             "output": "pdf-plugin",
-            "ot.version": "1.6",
+            "ot.version": "2.0",
             "pdf.page-size": "210mm 297mm",
             #"pdf.orientation": "landscape",
             "pdf.page-margin-top": "20mm",
@@ -280,6 +280,7 @@ def main():
             "pdf.caption-position.fig": "before",
 
             "pdf.cover_image_metadata": "cover-image",
+            #"pdf.cover_image_topic": "front-cover",
 
             "pdf.text-align": "justify",
             #"pdf.dl": "list",

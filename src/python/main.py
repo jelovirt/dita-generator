@@ -346,6 +346,8 @@ class PluginGenerateHandler(webapp.RequestHandler):
                 __dita_gen.cover_image_name = self.request.POST["pdf.cover_image"].filename
             if "cover_image_metadata" in __config:
                 __dita_gen.cover_image_metadata = __config["cover_image_metadata"]
+            if "cover_image_topic" in __config:
+                __dita_gen.cover_image_topic = __config["cover_image_topic"]
             __dita_gen.header = __config["header"]
             if "footer" in __config:
                 __dita_gen.footer = __config["footer"]
@@ -421,6 +423,8 @@ class PluginGenerateHandler(webapp.RequestHandler):
             __config["cover_image_name"] = self.request.POST["pdf.cover_image"].filename
         if "pdf.cover_image_metadata" in self.request.arguments():
             __config["cover_image_metadata"] = self.request.get("pdf.cover_image_metadata")
+        if "pdf.cover_image_topic" in self.request.arguments():
+            __config["cover_image_topic"] = self.request.get("pdf.cover_image_topic")
         #ret["drop_folio"] = u"pdf.drop-folio" in self.request.arguments()
         __header_folio = []
         if not self.request.get(u"pdf.drop-folio"):
