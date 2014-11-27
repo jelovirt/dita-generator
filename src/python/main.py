@@ -312,7 +312,7 @@ class PluginGenerateHandler(webapp.RequestHandler):
             __dita_gen.transtype = __args["transtype"]
 
             __config = __args["configuration"]
-            if "pdf.page-size" in __config:
+            if "page-size" in __config:
                 if "orientation" in __config and __config["orientation"] == u"landscape":
                     __dita_gen.page_size = __config["page_size"].reverse()
                 else:
@@ -341,9 +341,9 @@ class PluginGenerateHandler(webapp.RequestHandler):
             __dita_gen.table_continued = __config["table_continued"]
             __dita_gen.formatter = __config["formatter"]
             __dita_gen.override_shell = __config["override_shell"]
-            if "pdf.cover_image" in self.request.arguments() and type(self.request.POST["pdf.cover_image"]) != unicode:
-                __dita_gen.cover_image = self.request.get("pdf.cover_image")
-                __dita_gen.cover_image_name = self.request.POST["pdf.cover_image"].filename
+            if "cover_image" in self.request.arguments() and type(self.request.POST["cover_image"]) != unicode:
+                __dita_gen.cover_image = self.request.get("cover_image")
+                __dita_gen.cover_image_name = self.request.POST["cover_image"].filename
             if "cover_image_metadata" in __config:
                 __dita_gen.cover_image_metadata = __config["cover_image_metadata"]
             if "cover_image_topic" in __config:
@@ -376,70 +376,70 @@ class PluginGenerateHandler(webapp.RequestHandler):
             __ret["plugin_version"] = self.request.get(u"plugin-version")
         __ret["transtype"] = self.request.get(u"transtype")
         __config = {}
-        if self.request.get(u"pdf.page-size"):
-            __config["page_size"] = self.request.get(u"pdf.page-size").split(" ")
-        __config["orientation"] = self.request.get(u"pdf.orientation")
+        if self.request.get(u"page-size"):
+            __config["page_size"] = self.request.get(u"page-size").split(" ")
+        __config["orientation"] = self.request.get(u"orientation")
         __config["page_margins"] = {}
-        if u"pdf.page-margin-top" in self.request.arguments() and self.request.get("pdf.page-margin-top").strip():
-            __config["page_margins"]["top"] = self.request.get("pdf.page-margin-top")
-        if u"pdf.page-margin-outside" in self.request.arguments() and self.request.get("pdf.page-margin-outside").strip():
-            __config["page_margins"]["outside"] = self.request.get("pdf.page-margin-outside")
-        if u"pdf.page-margin-bottom" in self.request.arguments() and self.request.get("pdf.page-margin-bottom").strip():
-            __config["page_margins"]["bottom"] = self.request.get("pdf.page-margin-bottom")
-        if u"pdf.page-margin-inside" in self.request.arguments() and self.request.get("pdf.page-margin-inside").strip():
-            __config["page_margins"]["inside"] = self.request.get("pdf.page-margin-inside")
+        if u"page-margin-top" in self.request.arguments() and self.request.get("page-margin-top").strip():
+            __config["page_margins"]["top"] = self.request.get("page-margin-top")
+        if u"page-margin-outside" in self.request.arguments() and self.request.get("page-margin-outside").strip():
+            __config["page_margins"]["outside"] = self.request.get("page-margin-outside")
+        if u"page-margin-bottom" in self.request.arguments() and self.request.get("page-margin-bottom").strip():
+            __config["page_margins"]["bottom"] = self.request.get("page-margin-bottom")
+        if u"page-margin-inside" in self.request.arguments() and self.request.get("page-margin-inside").strip():
+            __config["page_margins"]["inside"] = self.request.get("page-margin-inside")
         __config["style"] = {}
         for __type in set([f["type"] for f in ditagen.pdf_generator.styles]):
             group = {}
             for __property in set([f["property"] for f in ditagen.pdf_generator.styles]):
-                v = self.request.get(u"pdf." + __property + "." + __type)
+                v = self.request.get(u"" + __property + "." + __type)
                 if v:
                     group[__property] = v 
             __config["style"][__type] = group
-        __config["force_page_count"] = self.request.get(u"pdf.force-page-count")
-        __config["chapter_layout"] = self.request.get(u"pdf.chapter-layout")
-        __config["bookmark_style"] = self.request.get(u"pdf.bookmark-style")
-        if u"pdf.toc-maximum-level" in self.request.arguments():
-            __config["toc_maximum_level"] = int(self.request.get(u"pdf.toc-maximum-level"))
-        __config["task_label"] = u"pdf.task-label" in self.request.arguments()
-        __config["include_related_links"] = self.request.get(u"pdf.include-related-links")
-        if u"pdf.body-column-count" in self.request.arguments():
-            __config["body_column_count"] = int(self.request.get(u"pdf.body-column-count"))
-        if u"pdf.index-column-count" in self.request.arguments():
-            __config["index_column_count"] = int(self.request.get(u"pdf.index-column-count"))
-        if u"pdf.column-gap" in self.request.arguments() and self.request.get(u"pdf.column-gap").strip():
-            __config["column_gap"] = self.request.get(u"pdf.column-gap")
-        __config["mirror_page_margins"] = u"pdf.mirror-page-margins" in self.request.arguments()
-        #ret["dl"] = self.request.get(u"pdf.dl")
-        __config["title_numbering"] = self.request.get(u"pdf.title-numbering")
-        #ret["table_numbering"] = self.request.get(u"pdf.table-numbering")
-        #ret["figure_numbering"] = self.request.get(u"pdf.figure-numbering")
-        #ret["link_pagenumber"] = u"pdf.link-page-number" in self.request.arguments()
-        __config["table_continued"] = u"pdf.table-continued" in self.request.arguments()
-        __config["formatter"] = self.request.get(u"pdf.formatter")
-        __config["override_shell"] = u"pdf.override_shell" in self.request.arguments()
-        if "pdf.cover_image" in self.request.arguments() and type(self.request.POST["pdf.cover_image"]) != unicode:
-            #ret["cover_image"] = self.request.get("pdf.cover_image")
-            __config["cover_image_name"] = self.request.POST["pdf.cover_image"].filename
-        if "pdf.cover_image_metadata" in self.request.arguments():
-            __config["cover_image_metadata"] = self.request.get("pdf.cover_image_metadata")
-        if "pdf.cover_image_topic" in self.request.arguments():
-            __config["cover_image_topic"] = self.request.get("pdf.cover_image_topic")
-        #ret["drop_folio"] = u"pdf.drop-folio" in self.request.arguments()
+        __config["force_page_count"] = self.request.get(u"force-page-count")
+        __config["chapter_layout"] = self.request.get(u"chapter-layout")
+        __config["bookmark_style"] = self.request.get(u"bookmark-style")
+        if u"toc-maximum-level" in self.request.arguments():
+            __config["toc_maximum_level"] = int(self.request.get(u"toc-maximum-level"))
+        __config["task_label"] = u"task-label" in self.request.arguments()
+        __config["include_related_links"] = self.request.get(u"include-related-links")
+        if u"body-column-count" in self.request.arguments():
+            __config["body_column_count"] = int(self.request.get(u"body-column-count"))
+        if u"index-column-count" in self.request.arguments():
+            __config["index_column_count"] = int(self.request.get(u"index-column-count"))
+        if u"column-gap" in self.request.arguments() and self.request.get(u"column-gap").strip():
+            __config["column_gap"] = self.request.get(u"column-gap")
+        __config["mirror_page_margins"] = u"mirror-page-margins" in self.request.arguments()
+        #ret["dl"] = self.request.get(u"dl")
+        __config["title_numbering"] = self.request.get(u"title-numbering")
+        #ret["table_numbering"] = self.request.get(u"table-numbering")
+        #ret["figure_numbering"] = self.request.get(u"figure-numbering")
+        #ret["link_pagenumber"] = u"link-page-number" in self.request.arguments()
+        __config["table_continued"] = u"table-continued" in self.request.arguments()
+        __config["formatter"] = self.request.get(u"formatter")
+        __config["override_shell"] = u"override_shell" in self.request.arguments()
+        if "cover_image" in self.request.arguments() and type(self.request.POST["cover_image"]) != unicode:
+            #ret["cover_image"] = self.request.get("cover_image")
+            __config["cover_image_name"] = self.request.POST["cover_image"].filename
+        if "cover_image_metadata" in self.request.arguments():
+            __config["cover_image_metadata"] = self.request.get("cover_image_metadata")
+        if "cover_image_topic" in self.request.arguments():
+            __config["cover_image_topic"] = self.request.get("cover_image_topic")
+        #ret["drop_folio"] = u"drop-folio" in self.request.arguments()
         __header_folio = []
-        if not self.request.get(u"pdf.drop-folio"):
+        if not self.request.get(u"drop-folio"):
             __header_folio = ["pagenum"]
         __config["header"] = {
-            "odd": self.request.get(u"pdf.header.even").split() + __header_folio,
-            "even": __header_folio + self.request.get(u"pdf.header.odd").split()
+            "odd": self.request.get(u"header.even").split() + __header_folio,
+            "even": __header_folio + self.request.get(u"header.odd").split()
             }
-        if self.request.get(u"pdf.drop-folio"):
+        if self.request.get(u"drop-folio"):
             __config["footer"] = {
                 "odd": ["pagenum"],
                 "even": ["pagenum"]
                 }
-        if "pdf.page-number" in self.request.arguments():
-            __config["page_number"] = self.request.get("pdf.page-number")
+        if "page-number" in self.request.arguments():
+            __config["page_number"] = self.request.get("page-number")
         __ret["configuration"] = __config
         return __ret
 

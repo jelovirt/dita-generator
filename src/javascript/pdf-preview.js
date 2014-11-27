@@ -3,14 +3,13 @@ var factor = 0.12;
 function previewSpaceHandler(event) {
     var model = $(event.target);
     var id = model.attr("name");
-    var first = id.indexOf(".");
-    var second = id.indexOf(".", first + 1);
-    var field = id.substring(first + 1, second)
-    var type = id.substring(second + 1);
+    var idx = id.indexOf(".");
+    var field = id.substring(0, idx);
+    var type = id.substring(idx + 1);
 
     var v = getVal(model);
     if (v == undefined && model.data("inherit") != undefined) {
-        v = getVal($(":input[name='pdf." + field + "." + model.data("inherit") + "']"));
+        v = getVal($(":input[name='" + field + "." + model.data("inherit") + "']"));
     }
 
     var isLength = false;
@@ -101,8 +100,8 @@ function updatePageExample(page) {
     content.height((dim.pageHeight - dim.marginTop - dim.marginBottom) * factor);
     content.width((dim.pageWidth - dim.marginInside - dim.marginOutside) * factor);
 
-    var columns = new Number($(":input[name='pdf.body-column-count']").val());
-    var columnWidth = toPt(getVal($(":input[name='pdf.column-gap']")))
+    var columns = new Number($(":input[name='body-column-count']").val());
+    var columnWidth = toPt(getVal($(":input[name='column-gap']")))
     var tr = page.find(".example-page-body tr");
     var buf = $("<tr></tr>");
     for (var i = 0; i < columns; i++) {
@@ -145,27 +144,27 @@ function Dimensions() {
 function readPageDimensions() {
     var res = new Dimensions();
 
-    var pageSize = $(":input[name='pdf.page-size']").val().split(' ');
-    if ($(":input[name='pdf.orientation']").val() == "landscape") {
+    var pageSize = $(":input[name='page-size']").val().split(' ');
+    if ($(":input[name='orientation']").val() == "landscape") {
         res.pageWidth = toPt(pageSize[1]);
         res.pageHeight = toPt(pageSize[0]);
     } else {
         res.pageWidth = toPt(pageSize[0]);
         res.pageHeight = toPt(pageSize[1]);
     }
-    res.marginTop = toPt(getVal($(":input[name='pdf.page-margin-top']")));
-    res.marginOutside = toPt(getVal($(":input[name='pdf.page-margin-outside']")));
-    res.marginBottom = toPt(getVal($(":input[name='pdf.page-margin-bottom']")));
-    res.marginInside = toPt(getVal($(":input[name='pdf.page-margin-inside']")));
+    res.marginTop = toPt(getVal($(":input[name='page-margin-top']")));
+    res.marginOutside = toPt(getVal($(":input[name='page-margin-outside']")));
+    res.marginBottom = toPt(getVal($(":input[name='page-margin-bottom']")));
+    res.marginInside = toPt(getVal($(":input[name='page-margin-inside']")));
 
     return res;
 }
 
 function forcePageCountChangeHandler(event) {
     var target = $(event.target);
-    $(".pdf_force-page-count_example_auto, .pdf_force-page-count_example_odd, .pdf_force-page-count_example_even").each(function () {
+    $(".force-page-count_example_auto, .force-page-count_example_odd, .force-page-count_example_even").each(function () {
         var t = $(this);
-        if (t.is(".pdf_force-page-count_example_" + target.val())) {
+        if (t.is(".force-page-count_example_" + target.val())) {
             t.show();
         } else {
             t.hide();
@@ -211,15 +210,15 @@ function mirrorPageHandler(event) {
 
 function definitionListHandler(event) {
     var target = $(event.target);
-    $("*[id='pdf.dl.example.html'], *[id='pdf.dl.example.list'], *[id='pdf.dl.example.table']").hide();
-    $("*[id='pdf.dl.example." + target.val() + "']").show();
+    $("*[id='dl.example.html'], *[id='dl.example.list'], *[id='dl.example.table']").hide();
+    $("*[id='dl.example." + target.val() + "']").show();
 }
 
 function titleNumberingHandler(event) {
     var target = $(event.target);
-    var preview = $("*[id='pdf.title-numbering.example']");
+    var preview = $("*[id='title-numbering.example']");
     preview.children().hide();
-    $("*[id='pdf.title-numbering.example." + target.val() + "']").show();
+    $("*[id='title-numbering.example." + target.val() + "']").show();
 }
 
 function tableAndFigureNumberingHandler(event) {
@@ -233,29 +232,29 @@ function tableAndFigureNumberingHandler(event) {
 }
 
 $(document).ready(function () {
-    $(":input[name='pdf.title-numbering']").change(titleNumberingHandler).change();
-    $(":input[name='pdf.table-numbering']," +
-    ":input[name='pdf.figure-numbering']").change(tableAndFigureNumberingHandler).change();
-    $(":input[name='pdf.dl']").change(definitionListHandler).change();
-    $(":input[name='pdf.mirror-page-margins']").change(mirrorPageHandler).change();
-    $(":input[name='pdf.task-label']").change(taskLabelHandler).change();
-    $(":input[name='pdf.force-page-count']").change(forcePageCountChangeHandler).change();
+    $(":input[name='title-numbering']").change(titleNumberingHandler).change();
+    $(":input[name='table-numbering']," +
+    ":input[name='figure-numbering']").change(tableAndFigureNumberingHandler).change();
+    $(":input[name='dl']").change(definitionListHandler).change();
+    $(":input[name='mirror-page-margins']").change(mirrorPageHandler).change();
+    $(":input[name='task-label']").change(taskLabelHandler).change();
+    $(":input[name='force-page-count']").change(forcePageCountChangeHandler).change();
     $("#style-model :input").change(previewSpaceHandler).change();
-    $(":input[name='pdf.page-size']," +
-    ":input[name='pdf.orientation']," +
-    ":input[name='pdf.page-margin-top']," +
-    ":input[name='pdf.page-margin-bottom']," +
-    ":input[name='pdf.page-margin-inside']," +
-    ":input[name='pdf.page-margin-outside']," +
-    ":input[name='pdf.body-column-count']," +
-    ":input[name='pdf.column-gap']").change(pageMarginHandler).first().change();
+    $(":input[name='page-size']," +
+    ":input[name='orientation']," +
+    ":input[name='page-margin-top']," +
+    ":input[name='page-margin-bottom']," +
+    ":input[name='page-margin-inside']," +
+    ":input[name='page-margin-outside']," +
+    ":input[name='body-column-count']," +
+    ":input[name='column-gap']").change(pageMarginHandler).first().change();
 });
 
 // Utilities -------------------------------------------------------------------
 
-function validateDistance(event) {
-    var target = $(event.target);
-}
+//function validateDistance(event) {
+//    var target = $(event.target);
+//}
 
 function getVal(input) {
     return input.val() != "" ? input.val() : input.attr("placeholder");
@@ -313,7 +312,7 @@ function toPt(val) {
     } else if (unit == "pc") {
         return value * 12;
     } else if (unit == "em") {
-        var val = $(":input[name='pdf.font-size.body']").val();
+        var val = $(":input[name='font-size.body']").val();
         return val.substring(0, val.length - 2) * value;
     } else if (unit == "pt") {
         return value;

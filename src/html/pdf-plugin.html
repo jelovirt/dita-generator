@@ -23,8 +23,8 @@
     </fieldset>
     <fieldset>
       <p>
-        <label for="pdf.formatter">XSL formatter</label>
-        <select name="pdf.formatter" id="pdf.formatter" title="XSL formatter">
+        <label for="formatter">XSL formatter</label>
+        <select name="formatter" id="formatter" title="XSL formatter">
           <option value="fop" selected>FOP</option>
           <option value="ah">AntennaHouse Formatter</option>
           <option value="xep">RenderX XEP</option>
@@ -36,8 +36,8 @@
     </fieldset>
     <fieldset>
       <p>
-        <label for="pdf.override_shell">Override shell</label>
-        <input type="checkbox" name="pdf.override_shell" id="pdf.override_shell" title="Override shell"
+        <label for="override_shell">Override shell</label>
+        <input type="checkbox" name="override_shell" id="override_shell" title="Override shell"
                value="true">
       </p>
       <p class="instruction">Override XSLT shell stylesheet. Advanced generation option which will make further developing the generated plug-in
@@ -51,8 +51,8 @@
     <h3>Page</h3>
     <fieldset>
       <p>
-        <label for="pdf.page-size">Page size</label>
-        <select name="pdf.page-size" id="pdf.page-size" title="Page size">
+        <label for="page-size">Page size</label>
+        <select name="page-size" id="page-size" title="Page size">
           {% if advanced %}<option value="">default</option>{% endif %}
           <option value="210mm 297mm">A3</option>
           <option value="210mm 297mm">A4</option>
@@ -75,8 +75,8 @@
     </fieldset>
     <fieldset>
       <p>
-        <label for="pdf.orientation">Orientation</label>
-        <select name="pdf.orientation" id="pdf.orientation">
+        <label for="orientation">Orientation</label>
+        <select name="orientation" id="orientation">
           {% if advanced %}<option value="">default</option>{% endif %}
           <option value="portrait" selected>portrait</option>
           <option value="landscape">landscape</option>
@@ -86,43 +86,43 @@
     <h3>Margins</h3>
     <fieldset>
       <p>
-        <label for="pdf.page-margin-top">Top</label>
-        <input name="pdf.page-margin-top" id="pdf.page-margin-top" placeholder="20mm" pattern="(\d+(\.\d+)?|\.\d+)(pt|mm|in|pc|cm|em)" class="length-value">
+        <label for="page-margin-top">Top</label>
+        <input name="page-margin-top" id="page-margin-top" placeholder="20mm" pattern="(\d+(\.\d+)?|\.\d+)(pt|mm|in|pc|cm|em)" class="length-value">
       </p>
       <p>
-        <label for="pdf.page-margin-outside">Outside</label>
-        <input name="pdf.page-margin-outside" id="pdf.page-margin-outside" placeholder="20mm" pattern="(\d+(\.\d+)?|\.\d+)(pt|mm|in|pc|cm|em)" class="length-value">
+        <label for="page-margin-outside">Outside</label>
+        <input name="page-margin-outside" id="page-margin-outside" placeholder="20mm" pattern="(\d+(\.\d+)?|\.\d+)(pt|mm|in|pc|cm|em)" class="length-value">
       </p>
       <p>
-        <label for="pdf.page-margin-bottom">Bottom</label>
-        <input name="pdf.page-margin-bottom" id="pdf.page-margin-bottom" placeholder="20mm" pattern="(\d+(\.\d+)?|\.\d+)(pt|mm|in|pc|cm|em)" class="length-value">
+        <label for="page-margin-bottom">Bottom</label>
+        <input name="page-margin-bottom" id="page-margin-bottom" placeholder="20mm" pattern="(\d+(\.\d+)?|\.\d+)(pt|mm|in|pc|cm|em)" class="length-value">
       </p>
       <p>
-        <label for="pdf.page-margin-inside">Inside</label>
-        <input name="pdf.page-margin-inside" id="pdf.page-margin-inside" placeholder="20mm" pattern="(\d+(\.\d+)?|\.\d+)(pt|mm|in|pc|cm|em)" class="length-value">
+        <label for="page-margin-inside">Inside</label>
+        <input name="page-margin-inside" id="page-margin-inside" placeholder="20mm" pattern="(\d+(\.\d+)?|\.\d+)(pt|mm|in|pc|cm|em)" class="length-value">
       </p>
       <p class="instruction">Page margins.</p>
     </fieldset>
     <fieldset>
       <p>
-        <label for="pdf.mirror-page-margins">Mirror margins</label>
-        <input type="checkbox" name="pdf.mirror-page-margins" id="pdf.mirror-page-margins"
+        <label for="mirror-page-margins">Mirror margins</label>
+        <input type="checkbox" name="mirror-page-margins" id="mirror-page-margins"
                value="true">
       </p>
     </fieldset>
     <h3>Columns</h3>
     <fieldset>
       <p>
-        <label for="pdf.body-column-count">Body column count</label>
-        <select name="pdf.body-column-count" id="pdf.body-column-count">
+        <label for="body-column-count">Body column count</label>
+        <select name="body-column-count" id="body-column-count">
           {% if advanced %}<option value="">default</option>{% endif %}
           <option value="1" selected>1</option>
           <option value="2">2</option>
         </select>
       </p>
       <p>
-        <label for="pdf.index-column-count">Index column count</label>
-        <select name="pdf.index-column-count" id="pdf.index-column-count">
+        <label for="index-column-count">Index column count</label>
+        <select name="index-column-count" id="index-column-count">
           {% if advanced %}<option value="">default</option>{% endif %}
           <option value="1">1</option>
           <option value="2" selected>2</option>
@@ -131,12 +131,12 @@
         </select>
       </p>
       <p>
-        <label for="pdf.column-gap">Column gap</label>
-        <input name="pdf.column-gap" id="pdf.column-gap" placeholder="12pt" pattern="(\d+(\.\d+)?|\.\d+)(pt|mm|in|pc|cm|em)" class="length-value">
+        <label for="column-gap">Column gap</label>
+        <input name="column-gap" id="column-gap" placeholder="12pt" pattern="(\d+(\.\d+)?|\.\d+)(pt|mm|in|pc|cm|em)" class="length-value">
       </p>
     </fieldset>
     </div>
-    <div class="example-block" id="pdf.margin.example">
+    <div class="example-block" id="margin.example">
       <div class="example-page even" title="Even page">
         <table class="example-page-body">
           <tr>
@@ -158,18 +158,18 @@
     <fieldset class="v1_6 v1_7 v1_8 v2_0">
       <p class="not-available">Not available for DITA-OT older than 1.6</p>
       <p>
-        <label for="pdf.header">Header</label>
+        <label for="header">Header</label>
         <table>
           <thead class="even">
             <tr>
-              <th><label for="pdf.header.even">even</label></th>
-              <th><label for="pdf.header.odd">odd</label></th>
+              <th><label for="header.even">even</label></th>
+              <th><label for="header.odd">odd</label></th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td class="even">
-                <select for="pdf.header.even">
+                <select for="header.even">
                   <option value="">empty</option>
                   <!--option value="part">Part title</option-->
                   <!--option value="number">Chapter number</option-->
@@ -179,7 +179,7 @@
                 </select>
               </td>
               <td>
-                <select for="pdf.header.odd">
+                <select for="header.odd">
                   <option value="">empty</option>
                   <option value="chapter" selected>Chapter title</option>
                   <!--option value="subhead">Subhead</option-->
@@ -194,8 +194,8 @@
     </fieldset>
     <fieldset class="v1_6 v1_7 v1_8 v2_0">
       <p>
-        <label for="pdf.drop-folio">Drop folio</label>
-        <input type="checkbox" name="pdf.drop-folio" id="pdf.drop-folio" value="pagenum">
+        <label for="drop-folio">Drop folio</label>
+        <input type="checkbox" name="drop-folio" id="drop-folio" value="pagenum">
       </p>
       <p class="instruction">Place page number in footer.</p>
     </fieldset>
@@ -203,8 +203,8 @@
     <div class="form">
     <fieldset>
       <p>
-        <label for="pdf.force-page-count">Section start<!--Chapter page--></label>
-        <select name="pdf.force-page-count" id="pdf.force-page-count" title="Force page count">
+        <label for="force-page-count">Section start<!--Chapter page--></label>
+        <select name="force-page-count" id="force-page-count" title="Force page count">
           {% if advanced %}<option value="">default</option>{% endif %}
           <option value="auto">new page</option>
           <option value="even" selected>odd page</option>
@@ -218,8 +218,8 @@
     </fieldset>
     <fieldset>
       <p>
-        <label for="pdf.chapter-layout" >Chapter layout</label>
-        <select name="pdf.chapter-layout" id="pdf.chapter-layout" title="Chapter page layout">
+        <label for="chapter-layout" >Chapter layout</label>
+        <select name="chapter-layout" id="chapter-layout" title="Chapter page layout">
           {% if advanced %}<option value="">default</option>{% endif %}
           <option value="MINITOC" selected>chapter TOC</option>
           <option value="BASIC">no chapter TOC</option>
@@ -229,7 +229,7 @@
     </fieldset>
     </div>
     <div class="example-block">
-    <div class="pdf_force-page-count_example_auto">
+    <div class="force-page-count_example_auto">
       <div class="example-page even" title="Even page">
         <table class="example-page-body">
           <tr>
@@ -259,7 +259,7 @@
         </table>
       </div>
     </div>
-    <div class="pdf_force-page-count_example_even">
+    <div class="force-page-count_example_even">
       <div class="example-page even" title="Even page">
         <table class="example-page-body">
           <tr>
@@ -289,7 +289,7 @@
         </table>
       </div>
     </div>
-    <div class="pdf_force-page-count_example_odd">
+    <div class="force-page-count_example_odd">
       <div class="example-page even" title="Even page, last page of chapter">
         <table class="example-page-body cut-off">
           <tr>
@@ -328,13 +328,13 @@
       <!-- Style model -->
       <fieldset id="style-model" class="model">
         {% for s in styles %}
-          <input type="hidden" name="pdf.{{ s.property }}.{{ s.type }}" {% if s.value %} value="{{ s.value|default_if_none:"" }}" {% endif %} {% if s.inherit %} data-inherit="{{ s.inherit }}" {% endif %}>
+          <input type="hidden" name="{{ s.property }}.{{ s.type }}" {% if s.value %} value="{{ s.value|default_if_none:"" }}" {% endif %} {% if s.inherit %} data-inherit="{{ s.inherit }}" {% endif %}>
         {% endfor %}
       </fieldset>
-      <input type="hidden" id="pdf-style-selector-current">
+      <input type="hidden" id="style-selector-current">
       <!-- Style UI -->
       <div id="style-form">
-        <select id="pdf-style-selector" class="label">
+        <select id="style-selector" class="label">
           <optgroup label="Block" class="block">
             <option value="body" selected>Normal</option>
             <option value="topic">Heading 1</option>
@@ -366,15 +366,15 @@
           </tr>
           <tr>
             <td colspan="2">
-            <label for="pdf.font-family" class="inline">Family</label>:
-            <select id="pdf.font-family" title="Font family">
+            <label for="font-family" class="inline">Family</label>:
+            <select id="font-family" title="Font family">
               {% if advanced %}<option value="">default</option>{% endif %}
               <option value="serif">serif</option>
               <option value="sans-serif">sans-serif</option>
               <option value="monospace">monospace</option>
             </select>
-            <label for="pdf.font-size" class="inline">Size</label>:
-            <select id="pdf.font-size">
+            <label for="font-size" class="inline">Size</label>:
+            <select id="font-size">
               {% if advanced %}<option value="">default</option>{% endif %}
               <option value="8pt">8</option>
               <option value="9pt">9</option>
@@ -398,17 +398,17 @@
           </tr>
           <tr>
             <td colspan="2">
-              <label for="pdf.font-weight" class="inline">Bold</label>:
-              <input id="pdf.font-weight" type="checkbox" value="bold">
-              <label for="pdf.font-style" class="inline">Italic</label>:
-              <input id="pdf.font-style" type="checkbox" checked value="italic">
-              <label for="pdf.text-decoration" class="inline">Underline</label>:
-              <input id="pdf.text-decoration" type="checkbox" checked value="underline">
-              <!--label for="pdf.text-decoration" class="inline">Underline</label> <input id="pdf.text-decoration" type="checkbox" value="underline"-->
+              <label for="font-weight" class="inline">Bold</label>:
+              <input id="font-weight" type="checkbox" value="bold">
+              <label for="font-style" class="inline">Italic</label>:
+              <input id="font-style" type="checkbox" checked value="italic">
+              <label for="text-decoration" class="inline">Underline</label>:
+              <input id="text-decoration" type="checkbox" checked value="underline">
+              <!--label for="text-decoration" class="inline">Underline</label> <input id="text-decoration" type="checkbox" value="underline"-->
               <br>
-              <label for="pdf.color" class="inline">Color</label>:
-              <input type="hidden" id="pdf.color" class="editable-list">
-              <select id="pdf.color.list" title="Color">
+              <label for="color" class="inline">Color</label>:
+              <input type="hidden" id="color" class="editable-list">
+              <select id="color.list" title="Color">
                 {% if advanced %}<option value="">default</option>{% endif %}
                 <option value="aqua">aqua</option>
                 <option value="black">black</option>
@@ -429,14 +429,14 @@
                 <!--option value="inherit">inherit</option-->
                 <option value="#other">other…</option>
               </select>
-              <input type="text" id="pdf.color.other" style="display:none" size="7">
+              <input type="text" id="color.other" style="display:none" size="7">
               </td>
           </tr>
           <tr>
             <td colspan="2">
-              <label for="pdf.background-color" class="inline">Background color</label>:
-              <input type="hidden" id="pdf.background-color" class="editable-list">              
-              <select id="pdf.background-color.list" title="Background color">
+              <label for="background-color" class="inline">Background color</label>:
+              <input type="hidden" id="background-color" class="editable-list">              
+              <select id="background-color.list" title="Background color">
                 {% if advanced %}<option value="">default</option>{% endif %}
                 <option value="transparent">transparent</option>
                 <option value="aqua">aqua</option>
@@ -458,16 +458,16 @@
                 <!--option value="inherit">inherit</option-->
                 <option value="#other">other…</option>
               </select>
-              <input type="text" id="pdf.background-color.other" style="display:none" size="7">
+              <input type="text" id="background-color.other" style="display:none" size="7">
             </td>
           </tr>
-          <tr class="pdf-style-selector-block">
+          <tr class="style-selector-block">
             <th colspan="2"><h4>Indents and Spacing</h4></th>
           </tr>
-          <tr class="pdf-style-selector-block">
+          <tr class="style-selector-block">
             <td colspan="2">
-              <label for="pdf.text-align" class="inline">Alignment</label>:
-              <select id="pdf.text-align">
+              <label for="text-align" class="inline">Alignment</label>:
+              <select id="text-align">
                 {% if advanced %}<option value="">default</option>{% endif %}
                 <option value="start" selected>left</option>
                 <option value="center">center</option>
@@ -476,53 +476,53 @@
               </select>
             </td>
           </tr>
-          <tr class="pdf-style-selector-block">
+          <tr class="style-selector-block">
             <td>
               <label class="inline">Indentation</label>
               <table>
-                <tr class="pdf-style-selector-block">
+                <tr class="style-selector-block">
                   <th>
-                    <label for="pdf.start-indent" class="inline">Left</label>:
+                    <label for="start-indent" class="inline">Left</label>:
                   </th>
                   <td>
-                    <input id="pdf.start-indent" pattern="(\d+(\.\d+)?|\.\d+)(pt|mm|in|pc|cm|em)" size="5" class="length-value">
+                    <input id="start-indent" pattern="(\d+(\.\d+)?|\.\d+)(pt|mm|in|pc|cm|em)" size="5" class="length-value">
                   </td>
                 </tr>
               </table>
             </td>
             <td data-style="note">
-              <label for="pdf.icon" class="inline">Note icon</label>:
-              <input id="pdf.icon" type="checkbox" value="icon" checked>
+              <label for="icon" class="inline">Note icon</label>:
+              <input id="icon" type="checkbox" value="icon" checked>
             </td>
           </tr>
           <tr data-style="link">
             <td>
-              <label for="pdf.link-page-number" class="inline">Page number</label>:
-              <input id="pdf.link-page-number" type="checkbox" value="true" checked title="Add page number to links.">
+              <label for="link-page-number" class="inline">Page number</label>:
+              <input id="link-page-number" type="checkbox" value="true" checked title="Add page number to links.">
             </td>
             <td>
-              <label for="pdf.link-url" class="inline">Show URL</label>:
-              <input id="pdf.link-url" type="checkbox" value="true" title="Show external link address.">
+              <label for="link-url" class="inline">Show URL</label>:
+              <input id="link-url" type="checkbox" value="true" title="Show external link address.">
             </td>
           </tr>
-          <tr class="pdf-style-selector-block">
+          <tr class="style-selector-block">
             <td>
               <label class="inline">Spacing</label>
               <table>
-                <tr class="pdf-style-selector-block">
+                <tr class="style-selector-block">
                   <th>
-                    <label for="pdf.space-before" class="inline">Before</label>:
+                    <label for="space-before" class="inline">Before</label>:
                   </th>
                   <td>
-                    <input id="pdf.space-before" pattern="(\d+(\.\d+)?|\.\d+)(pt|mm|in|pc|cm|em)" size="5" class="length-value">
+                    <input id="space-before" pattern="(\d+(\.\d+)?|\.\d+)(pt|mm|in|pc|cm|em)" size="5" class="length-value">
                   </td>
                 </tr>
-                <tr class="pdf-style-selector-block">
+                <tr class="style-selector-block">
                   <th>
-                    <label for="pdf.space-after" class="inline">After</label>:
+                    <label for="space-after" class="inline">After</label>:
                   </th>
                   <td>
-                    <input id="pdf.space-after" pattern="(\d+(\.\d+)?|\.\d+)(pt|mm|in|pc|cm|em)" size="5" class="length-value">
+                    <input id="space-after" pattern="(\d+(\.\d+)?|\.\d+)(pt|mm|in|pc|cm|em)" size="5" class="length-value">
                   </td>
                 </tr>
               </table>
@@ -531,13 +531,13 @@
               <table>
                 <tr>
                   <th colspan="2">
-                    <label for="pdf.line-height" class="inline">Line spacing</label>:
+                    <label for="line-height" class="inline">Line spacing</label>:
                   </th>
                 </tr>
                 <tr>
                   <td>
-                    <input type="hidden" id="pdf.line-height" class="editable-list">
-                    <select id="pdf.line-height.list">
+                    <input type="hidden" id="line-height" class="editable-list">
+                    <select id="line-height.list">
                       <option value="1.2" selected>Single</option>
                       <option value="1.8">1.5 lines</option>
                       <option value="2.4">Double</option>
@@ -545,7 +545,7 @@
                     </select>
                   </td>
                   <td>
-                    <input id="pdf.line-height.other" pattern="(\d+(\.\d+)?|\.\d+)(pt|mm|in|pc|cm|em)" size="5" style="display:none" class="length-value">
+                    <input id="line-height.other" pattern="(\d+(\.\d+)?|\.\d+)(pt|mm|in|pc|cm|em)" size="5" style="display:none" class="length-value">
                   </td>
                 </tr>
               </table>
@@ -558,8 +558,8 @@
           </tr>
           <tr>
             <td colspan="2">
-              <label for="pdf.title-numbering" class="inline">Title numbering</label>:
-              <input id="pdf.title-numbering" type="checkbox" value="true" title="Title numbering">
+              <label for="title-numbering" class="inline">Title numbering</label>:
+              <input id="title-numbering" type="checkbox" value="true" title="Title numbering">
             </td>
           </tr>
         </tbody>
@@ -569,8 +569,8 @@
           </tr>
           <tr>
             <td colspan="2">
-              <label for="pdf.dl-type" class="inline">List type</label>:
-              <select id="pdf.dl-type" title="Definition list style">
+              <label for="dl-type" class="inline">List type</label>:
+              <select id="dl-type" title="Definition list style">
                 <option value="table" selected>table</option>
                 <option value="html">HTML style</option>
                 <option value="list">bullet list</option>
@@ -599,7 +599,7 @@
                 <tr>
                     <th>{{i}}</th>
                     <td>
-                      <select id="pdf.ol-{{i}}">
+                      <select id="ol-{{i}}">
                         <option value="1">1, 2, 3, …</option>
                         <option value="A">A, B, C, …</option>
                         <option value="a">a, b, c, …</option>
@@ -607,14 +607,14 @@
                         <option value="i">i, ii, iii, …</option>
                       </select>
                     </td>
-                    <td><input id="pdf.ol-before-{{i}}" size="1"></td>
-                    <td><input id="pdf.ol-after-{{i}}" size="2" value=". "></td>
+                    <td><input id="ol-before-{{i}}" size="1"></td>
+                    <td><input id="ol-after-{{i}}" size="2" value=". "></td>
                   </tr>
                 {% endfor %}
                 </tbody>
               </table>
-              <!--label for="pdf.ol-sublevel" class="inline">Show sublevels</label>:
-              <select id="pdf.ol-sublevel" title="Show sublevels">
+              <!--label for="ol-sublevel" class="inline">Show sublevels</label>:
+              <select id="ol-sublevel" title="Show sublevels">
                 <option value="true" selected>Yes</option>
                 <option value="false">No</option>
               </select-->
@@ -640,7 +640,7 @@
                   <tr>
                     <th>{{i}}</th>
                     <td>
-                      <select id="pdf.ul-{{i}}">
+                      <select id="ul-{{i}}">
                         <option value="&#x2022;">&#x2022;</option>
                         <option value="&#x25C6;">&#x25C6;</option>
                         <option value="&#x2014;">&#x2014;</option>
@@ -662,15 +662,15 @@
           </tr>
           <tr>
             <td>
-              <label for="pdf.caption-number" class="inline">Numbering</label>:
-              <select id="pdf.caption-number" title="Caption numbering">
+              <label for="caption-number" class="inline">Numbering</label>:
+              <select id="caption-number" title="Caption numbering">
                 <option value="document" selected>Document wide</option>
                 <option value="none">No numbering</option>
               </select>
             </td>
             <td>
-              <label for="pdf.caption-position" class="inline">Position</label>:
-              <select id="pdf.caption-position" title="Caption position">
+              <label for="caption-position" class="inline">Position</label>:
+              <select id="caption-position" title="Caption position">
                 <option value="before">Above</option>
                 <option value="after">Below</option>
               </select>
@@ -682,9 +682,9 @@
     </fieldset>
     </div>
     <!-- Style preview -->
-    <div class="example-block" id="example-pdf-style">
-      <div class="example-block-page" id="pdf.start-indent.examplex">
-        <div class="example-page-content" id="pdf.text-align.examplex">
+    <div class="example-block" id="example-style">
+      <div class="example-block-page" id="start-indent.examplex">
+        <div class="example-page-content" id="text-align.examplex">
           <div class="example-page-content-topic"><span data-style="topic" data-field="title-numbering" data-value="true">1 </span>Heading 1</div>
           <div class="example-page-content-topic.topic"><span data-style="topic.topic" data-field="title-numbering" data-value="true">1.1 </span>Heading 2</div>
           <p class="example-page-content-body">
@@ -827,7 +827,7 @@ jumps over the lazy dog.</pre>
     <h3>Cover</h3>
     <fieldset>
       <p>
-        <label for="pdf.cover_image">Cover image</label>
+        <label for="cover_image">Cover image</label>
         <select id="cover_image_chooser">
           <option value="file">Upload image</option>
           <option value="metadata">Map metadata</option>  
@@ -835,15 +835,15 @@ jumps over the lazy dog.</pre>
         </select>
       </p>
       <p class="controller" id="cover_image_file">
-        <input name="pdf.cover_image" id="pdf.cover_image" type="file">
+        <input name="cover_image" id="cover_image" type="file">
       </p>
       <p class="controller" id="cover_image_metadata">
-        <label for="pdf.cover_image_metadata" class="inline">Data element name</label>:
-        <input name="pdf.cover_image_metadata" id="pdf.cover_image_metadata" type="text" value="cover-image">
+        <label for="cover_image_metadata" class="inline">Data element name</label>:
+        <input name="cover_image_metadata" id="cover_image_metadata" type="text" value="cover-image">
       </p>
       <p class="controller" id="cover_image_topic">
-        <label for="pdf.cover_image_topic" class="inline">Outputclass attribute value</label>:
-        <input name="pdf.cover_image_topic" id="pdf.cover_image_topic" type="text" value="front-cover">
+        <label for="cover_image_topic" class="inline">Outputclass attribute value</label>:
+        <input name="cover_image_topic" id="cover_image_topic" type="text" value="front-cover">
       </p>
       <p class="instruction">Image on the cover page.</p>
       <div class="help">
@@ -858,8 +858,8 @@ jumps over the lazy dog.</pre>
     <h3>Table of Contents</h3>
     <fieldset>
       <p>
-        <label for="pdf.toc-maximum-level">Show level</label>
-        <select name="pdf.toc-maximum-level" id="pdf.toc-maximum-level">
+        <label for="toc-maximum-level">Show level</label>
+        <select name="toc-maximum-level" id="toc-maximum-level">
           {% if advanced %}<option value="">default</option>{% endif %}
           <option value="2">1</option>
           <option value="3">2</option>
@@ -873,8 +873,8 @@ jumps over the lazy dog.</pre>
     <fieldset class="fah">
       <p class="not-available">Not available for FOP and RenderX XEP</p>
       <p>
-        <label for="pdf.page-number">Page number</label>
-        <select name="pdf.page-number" id="pdf.page-number">
+        <label for="page-number">Page number</label>
+        <select name="page-number" id="page-number">
           <option value="page" selected>1</option>
           <option value="chapter-page">1-1</option>
         </select>
@@ -885,8 +885,8 @@ jumps over the lazy dog.</pre>
     <h3>PDF Bookmarks</h3>
     <fieldset>
       <p>
-        <label for="pdf.bookmark-style">Bookmarks state</label>
-        <select name="pdf.bookmark-style" id="pdf.bookmark-style" title="Bookmark initial state">
+        <label for="bookmark-style">Bookmarks state</label>
+        <select name="bookmark-style" id="bookmark-style" title="Bookmark initial state">
           {% if advanced %}<option value="">default</option>{% endif %}
           <option value="COLLAPSED" selected>collapsed</option>
           <option value="EXPANDED">expanded</option>
@@ -902,8 +902,8 @@ jumps over the lazy dog.</pre>
     <div class="form">
     <fieldset>
       <p>
-        <label for="pdf.task-label">Task labels</label>
-        <input type="checkbox" name="pdf.task-label" id="pdf.task-label" value="true" title="Task labels">
+        <label for="task-label">Task labels</label>
+        <input type="checkbox" name="task-label" id="task-label" value="true" title="Task labels">
       </p>
       <p class="instruction">Generate titles for task steps and sections.</p>
     </fieldset>
@@ -921,16 +921,16 @@ jumps over the lazy dog.</pre>
     <fieldset class="fah">
       <p class="not-available">Not available for FOP and RenderX XEP</p>
       <p>
-        <label for="pdf.table-continued">Table continued</label>
-        <input type="checkbox" name="pdf.table-continued" id="pdf.table-continued" value="true" title="Mark continued table">
+        <label for="table-continued">Table continued</label>
+        <input type="checkbox" name="table-continued" id="table-continued" value="true" title="Mark continued table">
       </p>
       <p class="instruction">Generate "Table continued…" to table footer when table is broken to multiple pages.</p>
     </fieldset>
     <h3>Linking</h3>
     <fieldset>
       <p>
-        <label for="pdf.include-related-links">Related links</label>
-        <select name="pdf.include-related-links" id="pdf.include-related-links" title="Related links">
+        <label for="include-related-links">Related links</label>
+        <select name="include-related-links" id="include-related-links" title="Related links">
           {% if advanced %}<option value="">default</option>{% endif %}
           <option value="none" selected>none</option>
           <option value="nofamily">no family</option>

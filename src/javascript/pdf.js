@@ -54,17 +54,17 @@ $(document).ready(function () {
 
     // form initialization
     $(":input[name='ot.version']").change(toolkitVersionChangeHandler).change();
-    $(":input[name='pdf.formatter']").change(formatterHandler).change();
+    $(":input[name='formatter']").change(formatterHandler).change();
     $(":input[name='transtype']").change(transtypeChangeHandler);
-    $(":input[name='pdf.body-column-count']").change(columnChangeHandler).change();
+    $(":input[name='body-column-count']").change(columnChangeHandler).change();
     $("#cover_image_chooser").change(coverChangeHandler).change();
     $.each(storeFields, function () {
-        $(":input[id='pdf." + this + "']").change(styleEditorHandler);
+        $(":input[id='" + this + "']").change(styleEditorHandler);
     });
-    $("#pdf-style-selector").change(styleHandler);
+    $("#style-selector").change(styleHandler);
     readFromModel("body");// initialize style dialog
     pdfStyleSelectorCurrent = "body";
-    $("#pdf-style-selector").change();
+    $("#style-selector").change();
     $(":input.length-value").keydown(valueChangeHandler).change(validateLength);
 });
 
@@ -104,9 +104,9 @@ function coverChangeHandler(event) {
 function columnChangeHandler(event) {
     var target = $(event.target);
     if (target.val() == 1) {
-        $(":input[name='pdf.column-gap']").prop("disable", true).parent().hide();
+        $(":input[name='column-gap']").prop("disable", true).parent().hide();
     } else {
-        $(":input[name='pdf.column-gap']").prop("disable", false).parent().show();
+        $(":input[name='column-gap']").prop("disable", false).parent().show();
     }
 }
 
@@ -184,9 +184,9 @@ function styleHandler(event) {
     });
     var type = target.find(":selected").parent("optgroup.block");
     if (type.length == 0) {
-        $(".pdf-style-selector-block").hide().find(":input").attr("disabled", true);
+        $(".style-selector-block").hide().find(":input").attr("disabled", true);
     } else {
-        $(".pdf-style-selector-block").show().find(":input").removeAttr("disabled");
+        $(".style-selector-block").show().find(":input").removeAttr("disabled");
     }
     pdfStyleSelectorCurrent = target.val();
     readFromModel(target.val());
@@ -215,22 +215,26 @@ var storeFields = ["font-family", "font-size", "font-weight", "font-style", "col
  */
 function readFromModel(type) {
     for (var i = 0; i < storeFields.length; i++) {
-        var model = $("#style-model :input[name='pdf." + storeFields[i] + "." + type + "']");
+        var model = $("#style-model :input[name='" + storeFields[i] + "." + type + "']");
         // if no value, inherit from body
         if (model.data("inherit") != undefined && (model.val() == undefined || model.val() == "")) {
-            model = $("#style-model :input[name='pdf." + storeFields[i] + "." + "body" + "']");
+            model = $("#style-model :input[name='" + storeFields[i] + "." + "body" + "']");
         }
-        var view = $("#style-form :input[id='pdf." + storeFields[i] + "']");
+        var view = $("#style-form :input[id='" + storeFields[i] + "']");
         if (view.is(":checkbox")) {
             view.prop("checked", model.val() == view.val());
         } else if (view.is(".editable-list")) {
-            var id = view.attr("name") != undefined ? ui.attr("name") : view.attr("id");
-            var store = $("#style-model :input[id='" + id + "']");
-            store.val(model.val());
-            store.change();
+            //var id = view.attr("name") != undefined ? ui.attr("name") : view.attr("id");
+            //var id = storeFields[i];//view.attr("id");
+            //var store = $("#style-model :input[id='" + id + "']");
+            //store.val(model.val());
+            //store.change();
+            //console.log("readFromModel: " + storeFields[i] + " = " + model.val());
+            view.val(model.val());
         } else {
             view.val(model.val());
         }
+        view.change();
     }
 }
 //function writeToModel(type) {
@@ -239,8 +243,8 @@ function readFromModel(type) {
 //    }
 //}
 function writeFieldToModel(field, type) {
-    var view = $("#style-form :input[id='pdf." + field + "']");
-    var model = $("#style-model :input[name='pdf." + field + "." + type + "']");
+    var view = $("#style-form :input[id='" + field + "']");
+    var model = $("#style-model :input[name='" + field + "." + type + "']");
     var oldValue = model.val();
     var newValue;
     if (view.is(":checkbox")) {
@@ -259,7 +263,7 @@ function writeFieldToModel(field, type) {
 
     // if equals body value, treat as inherit value
     if (model.data("inherit") != undefined) {
-        var b = $("#style-model :input[name='pdf." + field + "." + "body" + "']");
+        var b = $("#style-model :input[name='" + field + "." + "body" + "']");
         if (oldValue == b.val()) {
             newValue = undefined;
         }
@@ -267,7 +271,7 @@ function writeFieldToModel(field, type) {
     } else if (type == "body") {
         $("#style-model :input[data-inherit=body]").each(function () {
             var m = $(this);
-            if (m.is("[name^='pdf." + field + "']")) {
+            if (m.is("[name^='" + field + "']")) {
                 if (m.val() == undefined || m.val() == "" || m.val() == oldValue) {
                     m.val(newValue);
                     m.change();
@@ -286,6 +290,6 @@ function writeFieldToModel(field, type) {
  */
 function styleEditorHandler(event) {
     var ui = $(event.target);
-    var field = ui.attr("id").split(".")[1];
+    var field = ui.attr("id");
     writeFieldToModel(field, pdfStyleSelectorCurrent);
 }
