@@ -673,6 +673,7 @@ class StylePluginGenerator(DitaGenerator):
   </xsl:template>
 """
 
+        # empty table footer
         __table_footer_raw = """
   <xsl:template match="*[contains(@class, ' topic/tbody ')]" name="topic.tbody">
     <fo:table-footer xsl:use-attribute-sets="tgroup.tfoot">
@@ -686,6 +687,7 @@ class StylePluginGenerator(DitaGenerator):
     </fo:table-body>
   </xsl:template>
 """
+        # table footer with "table continued"
         __table_continued_raw = """
   <xsl:variable name="table.frame-default" select="'all'"/>
                 
@@ -919,9 +921,11 @@ class StylePluginGenerator(DitaGenerator):
         if stylesheet == "front-matter" or not stylesheet:
             if self.cover_image_name or self.cover_image_metadata or self.cover_image_topic:
                 __root.append(ET.Comment("cover"))
-                if self.ot_version < Version("2.0"):
+                if self.ot_version >= Version("2.0"):
+                    self.copy_xml(__root, __cover_raw_2)
+                else:
                     self.copy_xml(__root, __cover_raw)
-                self.copy_xml(__root, __cover_contents_raw)
+                #self.copy_xml(__root, __cover_contents_raw)
                 if self.cover_image_name:
                     self.copy_xml(__root, __cover_file_raw)
                 elif self.cover_image_metadata:
@@ -930,11 +934,8 @@ class StylePluginGenerator(DitaGenerator):
                         self.copy_xml(__root, __cover_metadata_v1_raw)
                 elif self.cover_image_topic:
                     self.copy_xml(__root, __cover_topic_raw % self.cover_image_topic)
-                if self.ot_version >= Version("2.0"):
-                    self.copy_xml(__root, __cover_raw_2)
-                else:
-                    self.copy_xml(__root, __cover_raw)
 
+        # caption position after table
         __table_title_raw = """
 <xsl:template match="*[contains(@class, ' topic/table ')]">
     <xsl:variable name="scale">
@@ -948,7 +949,7 @@ class StylePluginGenerator(DitaGenerator):
           </xsl:attribute>
         </xsl:if>
         <xsl:if test="not($scale = '')">
-            <xsl:attribute name="font-size"><xsl:value-of select="concat($scale, '%')"/></xsl:attribute>
+          <xsl:attribute name="font-size" select="concat($scale, '%')"/>
         </xsl:if>
         <xsl:apply-templates select="*[contains(@class, ' topic/tgroup ')]"/>
         <xsl:apply-templates select="*[contains(@class, ' topic/title ') or contains(@class, ' topic/desc ')]"/>
@@ -1075,7 +1076,7 @@ class StylePluginGenerator(DitaGenerator):
         </xsl:when>
         <xsl:when test="not(@scope = 'external' or @format = 'html')">
           <xsl:call-template name="insertPageNumberCitation">
-            <xsl:with-param name="isTitleEmpty" select="'yes'"/>
+            <xsl:with-param name="isTitleEmpty" select=\"""" + ("true()" if self.ot_version >= Version("2.0") else "'yes'") +  """\"/>
             <xsl:with-param name="destination" select="$destination"/>
             <xsl:with-param name="element" select="$element"/>
           </xsl:call-template>
@@ -1083,7 +1084,7 @@ class StylePluginGenerator(DitaGenerator):
         <xsl:otherwise>
           <xsl:choose>
             <xsl:when test="exists(*[not(contains(@class,' topic/desc '))] | text()) and
-                            exists(processing-instruction()[name()='ditaot'][.='usertext'])">
+                            exists(processing-instruction('ditaot')[. = 'usertext'])">
               <xsl:apply-templates select="*[not(contains(@class,' topic/desc '))] | text()"/>
             </xsl:when>
             <xsl:otherwise>
@@ -1094,14 +1095,14 @@ class StylePluginGenerator(DitaGenerator):
       </xsl:choose>
     </fo:basic-link>
     <xsl:if test="not(@scope = 'external' or @format = 'html') and not($referenceTitle = '') and not($element[contains(@class, ' topic/fn ')])">
-      <xsl:if test="not(processing-instruction()[name()='ditaot'][.='usertext'])">
+      <xsl:if test="not(processing-instruction('ditaot')[. = 'usertext'])">
         <xsl:call-template name="insertPageNumberCitation">
           <xsl:with-param name="destination" select="$destination"/>
           <xsl:with-param name="element" select="$element"/>
         </xsl:call-template>
       </xsl:if>
     </xsl:if>
-    <xsl:if test="@scope = 'external' and exists(processing-instruction()[name()='ditaot'][.='usertext'])">
+    <xsl:if test="@scope = 'external' and exists(processing-instruction('ditaot')[. = 'usertext'])">
       <xsl:text> at </xsl:text>
       <xsl:value-of select="e:format-link-url(@href)"/>
     </xsl:if>
