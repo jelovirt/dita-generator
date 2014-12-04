@@ -36,7 +36,11 @@ function transtypeChangeHandler(event) {
     }
 }
 
+var styleModel;
+
 $(document).ready(function () {
+    styleModel = $("#style-model :input");
+
     // widget initialization
     $(":input.editable-list").each(function () {
         var s = $(this);
@@ -215,10 +219,10 @@ var storeFields = ["font-family", "font-size", "font-weight", "font-style", "col
  */
 function readFromModel(type) {
     for (var i = 0; i < storeFields.length; i++) {
-        var model = $("#style-model :input[name='" + storeFields[i] + "." + type + "']");
+        var model = styleModel.filter("[name='" + storeFields[i] + "." + type + "']");
         // if no value, inherit from body
         if (model.data("inherit") != undefined && (model.val() == undefined || model.val() == "")) {
-            model = $("#style-model :input[name='" + storeFields[i] + "." + "body" + "']");
+            model = styleModel.filter("[name='" + storeFields[i] + "." + "body" + "']");
         }
         var view = $("#style-form :input[id='" + storeFields[i] + "']");
         if (view.is(":checkbox")) {
@@ -226,7 +230,7 @@ function readFromModel(type) {
         } else if (view.is(".editable-list")) {
             //var id = view.attr("name") != undefined ? ui.attr("name") : view.attr("id");
             //var id = storeFields[i];//view.attr("id");
-            //var store = $("#style-model :input[id='" + id + "']");
+            //var store = styleModel.filter("[id='" + id + "']");
             //store.val(model.val());
             //store.change();
             //console.log("readFromModel: " + storeFields[i] + " = " + model.val());
@@ -244,7 +248,7 @@ function readFromModel(type) {
 //}
 function writeFieldToModel(field, type) {
     var view = $("#style-form :input[id='" + field + "']");
-    var model = $("#style-model :input[name='" + field + "." + type + "']");
+    var model = styleModel.filter("[name='" + field + "." + type + "']");
     var oldValue = model.val();
     var newValue;
     if (view.is(":checkbox")) {
@@ -263,13 +267,13 @@ function writeFieldToModel(field, type) {
 
     // if equals body value, treat as inherit value
     if (model.data("inherit") != undefined) {
-        var b = $("#style-model :input[name='" + field + "." + "body" + "']");
+        var b = styleModel.filter("[name='" + field + "." + "body" + "']");
         if (oldValue == b.val()) {
             newValue = undefined;
         }
         // update inheriting model fields
     } else if (type == "body") {
-        $("#style-model :input[data-inherit=body]").each(function () {
+        styleModel.filter("[data-inherit=body]").each(function () {
             var m = $(this);
             if (m.is("[name^='" + field + "']")) {
                 if (m.val() == undefined || m.val() == "" || m.val() == oldValue) {
