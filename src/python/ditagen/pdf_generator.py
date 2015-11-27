@@ -825,7 +825,7 @@ class StylePluginGenerator(DitaGenerator):
   </xsl:template>
 """   
         __get_title_raw = """
-  <xsl:template match="*" mode="getTitle">
+  <xsl:template match="*[contains(@class, ' topic/topic ')]/*[contains(@class, ' topic/title ')]" mode="getTitle">
     <xsl:variable name="topic" select="ancestor-or-self::*[contains(@class, ' topic/topic ')][1]"/>
     <xsl:variable name="id" select="$topic/@id"/>
     <xsl:variable name="mapTopics" select="key('map-id', $id)"/>
