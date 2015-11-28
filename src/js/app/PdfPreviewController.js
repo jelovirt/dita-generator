@@ -54,7 +54,7 @@ define([
       var tr = page.find(".example-page-body tr")
       var buf = $("<tr></tr>")
       for (var i = 0; i < columns; i++) {
-        if (i != 0) {
+        if (i !== 0) {
           buf.append($("<td class='gap'><span/></td>").width(columnWidth * factor))
         }
         buf.append($("<td><div/></td>"))
@@ -95,7 +95,7 @@ define([
       var res = new Dimensions()
 
       var pageSize = $(":input[name='page-size']").val().split(' ')
-      if ($(":input[name='orientation']").val() == "landscape") {
+      if ($(":input[name='orientation']").val() === "landscape") {
         res.pageWidth = Utils.toPt(pageSize[1])
         res.pageHeight = Utils.toPt(pageSize[0])
       } else {
@@ -159,7 +159,7 @@ define([
     function tableAndFigureNumberingHandler(event) {
       var target = $(event.target)
       var preview = $("*[id='" + target.attr("name") + ".example']")
-      if (target.val() == "none") {
+      if (target.val() === "none") {
         preview.hide()
       } else {
         preview.show()

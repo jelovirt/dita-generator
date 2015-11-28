@@ -44,35 +44,35 @@ define([
       var type = id.substring(idx + 1)
 
       var v = Utils.getVal(model)
-      if (v == undefined && model.data("inherit") != undefined) {
+      if (v === undefined && model.data("inherit") !== undefined) {
         v = Utils.getVal($(":input[name='" + field + "." + model.data("inherit") + "']"))
       }
 
       var isLength = false
-      var cls
+      var property
       switch (field) {
         case "space-before":
-          cls = "margin-top"
+          property = "margin-top"
           isLength = true
           break
         case "space-after":
-          cls = "margin-bottom"
+          property = "margin-bottom"
           isLength = true
           break
         case "start-indent":
-          cls = "margin-left"
+          property = "margin-left"
           isLength = true
           break
         case "font-size":
-          cls = field
+          property = field
           isLength = true
           break
         case "line-height":
-          cls = field
+          property = field
           isLength = isNaN(Number(v))
           break
         case "text-align":
-          cls = field
+          property = field
           switch (v) {
             case "start":
               v = "left"
@@ -92,20 +92,20 @@ define([
               all.text(v)
             }
           } else {
-            cls = field
+            property = field
           }
           break
       }
-      if (cls != undefined) {
+      if (property !== undefined) {
         if (isLength) {
-          if (v == undefined) { // support undefined values
+          if (v === undefined) { // support undefined values
             return true
           }
           v = Utils.toPt(v)
           var f = 0.9
           v = String(v * f) + "px"
         }
-        $("*[class~='example-page-content-" + type + "']").css(cls, v)
+        $("*[class~='example-page-content-" + type + "']").css(property, v)
       }
     }
 
@@ -121,7 +121,7 @@ define([
         f.toggle($(this).attr("data-style").split(" ").indexOf(style) !== -1)
       })
       var type = target.find(":selected").parent("optgroup.block")
-      if (type.length == 0) {
+      if (type.length === 0) {
         $(".style-selector-block").hide().find(":input").attr("disabled", true)
       } else {
         $(".style-selector-block").show().find(":input").removeAttr("disabled")
@@ -138,14 +138,14 @@ define([
       for (var i = 0; i < storeFields.length; i++) {
         var model = styleModel.filter("[name='" + storeFields[i] + "." + type + "']")
         // if no value, inherit from body
-        if (model.data("inherit") != undefined && (model.val() == undefined || model.val() == "")) {
+        if (model.data("inherit") !== undefined && (model.val() === undefined || model.val() === "")) {
           model = styleModel.filter("[name='" + storeFields[i] + "." + "body" + "']")
         }
         var view = $("#style-form :input[id='" + storeFields[i] + "']")
         if (view.is(":checkbox")) {
-          view.prop("checked", model.val() == view.val())
+          view.prop("checked", model.val() === view.val())
         } else if (view.is(".editable-list")) {
-          //var id = view.attr("name") != undefined ? ui.attr("name") : view.attr("id")
+          //var id = view.attr("name") !== undefined ? ui.attr("name") : view.attr("id")
           //var id = storeFields[i];//view.attr("id")
           //var store = styleModel.filter("[id='" + id + "']")
           //store.val(model.val())
@@ -167,7 +167,7 @@ define([
       if (view.is(":checkbox")) {
         if (view.is(":checked")) {
           newValue = view.val()
-        } else if (field == "text-decoration") {
+        } else if (field === "text-decoration") {
           newValue = "none"
         } else {
           newValue = "normal"
@@ -179,17 +179,17 @@ define([
       }
 
       // if equals body value, treat as inherit value
-      if (model.data("inherit") != undefined) {
+      if (model.data("inherit") !== undefined) {
         var b = styleModel.filter("[name='" + field + "." + "body" + "']")
-        if (oldValue == b.val()) {
+        if (oldValue === b.val()) {
           newValue = undefined
         }
         // update inheriting model fields
-      } else if (type == "body") {
+      } else if (type === "body") {
         styleModel.filter("[data-inherit=body]").each(function () {
           var m = $(this)
           if (m.is("[name^='" + field + "']")) {
-            if (m.val() == undefined || m.val() == "" || m.val() == oldValue) {
+            if (m.val() === undefined || m.val() === "" || m.val() === oldValue) {
               m.val(newValue)
               m.change()
             }

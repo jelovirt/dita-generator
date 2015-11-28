@@ -12,7 +12,7 @@ define([
     // widget initialization
     $(":input.editable-list").each(function () {
       var s = $(this)
-      var id = s.attr("name") != undefined ? s.attr("name") : s.attr("id")
+      var id = s.attr("name") !== undefined ? s.attr("name") : s.attr("id")
       var l = $(":input[id='" + id + ".list']")
       var o = $(":input[id='" + id + ".other']")
       s.change(editableHandler)
@@ -53,7 +53,7 @@ define([
       p.find("option").each(function () {
         var s = $(this).attr("value")
         var c = "." + prefix + s.replace(/\./g, "_")
-        if (val == s) {
+        if (val === s) {
           $(c).removeClass("disabled").find(":input").removeAttr("disabled")
         }
       })
@@ -78,7 +78,7 @@ define([
     function validateLength(event) {
       var target = $(event.target)
       var val = Utils.toPt(Utils.getVal(target))
-      if (val == undefined) {
+      if (val === undefined) {
         setError(target, $("<span>Invalid value</span>"), "Invalid XSL FO length value")
       } else {
         setOk(target)
@@ -99,7 +99,7 @@ define([
      */
     function columnChangeHandler(event) {
       var target = $(event.target)
-      if (target.val() == 1) {
+      if (target.val() === 1) {
         $(":input[name='column-gap']").prop("disable", true).parent().hide()
       } else {
         $(":input[name='column-gap']").prop("disable", false).parent().show()
@@ -110,11 +110,11 @@ define([
 
     function editableHandler(event) {
       var target = $(event.target)
-      var id = target.attr("name") != undefined ? target.attr("name") : target.attr("id")
+      var id = target.attr("name") !== undefined ? target.attr("name") : target.attr("id")
       var list = $(":input[id='" + id + ".list" + "']")
       var other = $(":input[id='" + id + ".other" + "']")
       other.val(target.val())
-      if (list.find("option[value='" + other.val() + "']").length != 0) { // same value in list
+      if (list.find("option[value='" + other.val() + "']").length !== 0) { // same value in list
         other.hide().prop("disabled", true)
         list.val(other.val())
         other.val(undefined)
@@ -125,7 +125,7 @@ define([
     }
 
     function editableListHandler(store, list, other) {
-      if (list.val() == "#other") {
+      if (list.val() === "#other") {
         store.val(other.val()).change()
       } else {
         store.val(list.val()).change()
@@ -160,7 +160,7 @@ define([
 
     function addToValue(target, add) {
       var val = target.val()
-      if (val == "") {
+      if (val === "") {
         val = target.attr("placeholder")
       }
       var num = Number(val.substring(0, val.length - 2))
