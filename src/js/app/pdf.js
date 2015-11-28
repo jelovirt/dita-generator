@@ -1,3 +1,10 @@
+define([
+  '../app/pdf-utils',
+  '../app/pdf-preview'
+], function (
+    Utils
+) {
+
 function toolkitVersionChangeHandler(event) {
     toggleByClass($(event.target), "v");
 }
@@ -38,45 +45,11 @@ function transtypeChangeHandler(event) {
 
 var styleModel;
 
-$(document).ready(function () {
-    styleModel = $("#style-model :input");
-
-    // widget initialization
-    $(":input.editable-list").each(function () {
-        var s = $(this);
-        var id = s.attr("name") != undefined ? s.attr("name") : s.attr("id");
-        var l = $(":input[id='" + id + ".list']");
-        var o = $(":input[id='" + id + ".other']");
-        s.change(editableHandler);
-        o.change(function () {
-            editableOtherHandler(s, l, o);
-        });
-        l.change(function () {
-            editableListHandler(s, l, o);
-        });
-    });
-
-    // form initialization
-    $(":input[name='ot.version']").change(toolkitVersionChangeHandler).change();
-    $(":input[name='formatter']").change(formatterHandler).change();
-    $(":input[name='transtype']").change(transtypeChangeHandler);
-    $(":input[name='body-column-count']").change(columnChangeHandler).change();
-    $("#cover_image_chooser").change(coverChangeHandler).change();
-    $.each(storeFields, function () {
-        $(":input[id='" + this + "']").change(styleEditorHandler);
-    });
-    $("#style-selector").change(styleHandler);
-    readFromModel("body");// initialize style dialog
-    pdfStyleSelectorCurrent = "body";
-    $("#style-selector").change();
-    $(":input.length-value").keydown(valueChangeHandler).change(validateLength);
-});
-
 // UI --------------------------------------------------------------------------
 
 function validateLength(event) {
     var target = $(event.target);
-    var val = toPt(getVal(target));
+    var val = Utils.toPt(Utils.getVal(target));
     if (val == undefined) {
         setError(target, $("<span>Invalid value</span>"), "Invalid XSL FO length value");
     } else {
@@ -88,16 +61,21 @@ var pdfStyleSelectorCurrent;
 
 function coverChangeHandler(event) {
     var target = $(event.target);
+    var $all = $('#cover_image_file, #cover_image_metadata, #cover_image_topic')
+    $('#cover_image_' + target.val()).prop("disable", false).show();
+    $all.not('#cover_image_' + target.val()).prop("disable", true).hide();
+    /*
     if (target.val() == "file") {
-        $("#cover_image_file").prop("disable", false).show();
-        $("#cover_image_metadata, #cover_image_topic").prop("disable", true).hide();
+        $("#cover_image_file").find(":input").prop("disable", false).show();
+        $("#cover_image_metadata, #cover_image_topic").find(":input").prop("disable", true).hide();
     } else if (target.val() == "metadata") {
-        $("#cover_image_metadata").prop("disable", false).show();
-        $("#cover_image_file, #cover_image_topic").prop("disable", true).hide();
+        $("#cover_image_metadata").find(":input").prop("disable", false).show();
+        $("#cover_image_file, #cover_image_topic").find(":input").prop("disable", true).hide();
     } else if (target.val() == "topic") {
-        $("#cover_image_topic").prop("disable", false).show();
-        $("#cover_image_file, #cover_image_metadata").prop("disable", true).hide();
+        $("#cover_image_topic").find(":input").prop("disable", false).show();
+        $("#cover_image_file, #cover_image_metadata").find(":input").prop("disable", true).hide();
     }
+    */
 }
 
 // Column methods
@@ -195,7 +173,7 @@ function styleHandler(event) {
     pdfStyleSelectorCurrent = target.val();
     readFromModel(target.val());
 }
-var storeFields = ["font-family", "font-size", "font-weight", "font-style", "color", "background-color", "space-before", "space-after", "start-indent", "text-align", "text-decoration", "line-height",
+const storeFields = ["font-family", "font-size", "font-weight", "font-style", "color", "background-color", "space-before", "space-after", "start-indent", "text-align", "text-decoration", "line-height",
     // titles
     "title-numbering",
     // note
@@ -297,3 +275,42 @@ function styleEditorHandler(event) {
     var field = ui.attr("id");
     writeFieldToModel(field, pdfStyleSelectorCurrent);
 }
+
+// Init
+init()
+
+function init() {
+    styleModel = $("#style-model :input");
+
+    // widget initialization
+    $(":input.editable-list").each(function () {
+        var s = $(this);
+        var id = s.attr("name") != undefined ? s.attr("name") : s.attr("id");
+        var l = $(":input[id='" + id + ".list']");
+        var o = $(":input[id='" + id + ".other']");
+        s.change(editableHandler);
+        o.change(function () {
+            editableOtherHandler(s, l, o);
+        });
+        l.change(function () {
+            editableListHandler(s, l, o);
+        });
+    });
+
+    // form initialization
+    $(":input[name='ot.version']").change(toolkitVersionChangeHandler).change();
+    $(":input[name='formatter']").change(formatterHandler).change();
+    $(":input[name='transtype']").change(transtypeChangeHandler);
+    $(":input[name='body-column-count']").change(columnChangeHandler).change();
+    $("#cover_image_chooser").change(coverChangeHandler).change();
+    _.forEach(storeFields, function (field) {
+        $(":input[id='" + field + "']").change(styleEditorHandler);
+    });
+    $("#style-selector").change(styleHandler);
+    readFromModel("body");// initialize style dialog
+    pdfStyleSelectorCurrent = "body";
+    $("#style-selector").change();
+    $(":input.length-value").keydown(valueChangeHandler).change(validateLength);
+}
+
+})

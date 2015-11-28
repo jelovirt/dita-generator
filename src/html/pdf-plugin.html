@@ -835,15 +835,15 @@ jumps over the lazy dog.</pre>
         </select>
       </p>
       <p class="controller" id="cover_image_file">
-        <input name="cover_image" id="cover_image" type="file">
+        <input name="cover_image" id="cover_image_file_value" type="file">
       </p>
       <p class="controller" id="cover_image_metadata">
-        <label for="cover_image_metadata" class="inline">Data element name</label>:
-        <input name="cover_image_metadata" id="cover_image_metadata" type="text" value="cover-image">
+        <label for="cover_image_metadata_value" class="inline">Data element name</label>:
+        <input name="cover_image_metadata" id="cover_image_metadata_value" type="text" value="cover-image">
       </p>
       <!--p class="controller" id="cover_image_topic">
-        <label for="cover_image_topic" class="inline">Outputclass attribute value</label>:
-        <input name="cover_image_topic" id="cover_image_topic" type="text" value="front-cover">
+        <label for="cover_image_topic_value" class="inline">Outputclass attribute value</label>:
+        <input name="cover_image_topic" id="cover_image_topic_value" type="text" value="front-cover">
       </p-->
       <p class="instruction">Image on the cover page.</p>
       <div class="help">
@@ -981,5 +981,6 @@ jumps over the lazy dog.</pre>
       </p>
     </fieldset>
   </div>
-  <script type="text/javascript" src="/js/pdf.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.22/require.min.js" type="text/javascript" data-main="/js/app"></script>
+  <!--script type="text/javascript" src="/js/pdf.js"></script-->
 {% endblock %}

@@ -22,8 +22,8 @@
       <attribute name="output"/>
       <sequential>
         <jscomp compilationLevel="simple" prettyPrint="false" warning="quiet"
-                output="${work.dir}/javascript/@{output}">
-          <sources dir="${src.dir}/javascript" files="@{js}"/>
+                output="${work.dir}/js/@{output}">
+          <sources dir="${src.dir}/js" files="@{js}"/>
         </jscomp>
       </sequential>
     </macrodef>
@@ -54,14 +54,14 @@
   </target>
 
   <target name="generate-js" depends="-init" description="Generate JS files from Python source.">
-    <mkdir dir="${work.dir}/javascript"/>
-    <exec executable="python" output="${src.dir}/javascript/domains.js">
+    <mkdir dir="${work.dir}/js"/>
+    <exec executable="python" output="${src.dir}/js/domains.js">
       <arg file="${basedir}/build/generate-js.py"/>
       <env key="PYTHONPATH" path="${basedir}/build:${basedir}/build:${python.dir}"/>
     </exec>
     <compiler js="domains.js,form.js" output="generator.js"/>
     <compiler js="dtd.js" output="dtd.js"/>
-    <compiler js="pdf.js,pdf-preview.js" output="pdf.js"/>
+    <!--compiler js="pdf.js,pdf-preview.js" output="pdf.js"/-->
   </target>
   
   <target name="dist" depends="-init, -manifest, -version" description="Build distribution package.">
@@ -133,7 +133,12 @@
         <include name="images/*.png"/>
         <include name="images/*.gif"/>
       </zipfileset>
-      <zipfileset dir="${work.dir}/javascript" prefix="${prefix}/js">
+      <zipfileset dir="${src.dir}/js" prefix="${prefix}/js">
+        <exclude name="domains.js"/>
+        <exclude name="form.js"/>
+        <exclude name="dtd.js"/>
+      </zipfileset>
+      <zipfileset dir="${work.dir}/js" prefix="${prefix}/js">
         <include name="*.js"/>
       </zipfileset>
     </jar>

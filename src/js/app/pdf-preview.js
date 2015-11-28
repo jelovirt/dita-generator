@@ -1,3 +1,9 @@
+define([
+  '../app/pdf-utils'
+], function (
+    Utils
+) {
+
 var factor = 0.12;
 
 function previewSpaceHandler(event) {
@@ -7,9 +13,9 @@ function previewSpaceHandler(event) {
     var field = id.substring(0, idx);
     var type = id.substring(idx + 1);
 
-    var v = getVal(model);
+    var v = Utils.getVal(model);
     if (v == undefined && model.data("inherit") != undefined) {
-        v = getVal($(":input[name='" + field + "." + model.data("inherit") + "']"));
+        v = Utils.getVal($(":input[name='" + field + "." + model.data("inherit") + "']"));
     }
 
     var isLength = false;
@@ -65,7 +71,7 @@ function previewSpaceHandler(event) {
             if (v == undefined) { // support undefined values
                 return true;
             }
-            v = toPt(v);
+            v = Utils.toPt(v);
             var f = 0.9;
             v = String(v * f) + "px";
         }
@@ -101,7 +107,7 @@ function updatePageExample(page) {
     content.width((dim.pageWidth - dim.marginInside - dim.marginOutside) * factor);
 
     var columns = new Number($(":input[name='body-column-count']").val());
-    var columnWidth = toPt(getVal($(":input[name='column-gap']")))
+    var columnWidth = Utils.toPt(Utils.getVal($(":input[name='column-gap']")))
     var tr = page.find(".example-page-body tr");
     var buf = $("<tr></tr>");
     for (var i = 0; i < columns; i++) {
@@ -146,16 +152,16 @@ function readPageDimensions() {
 
     var pageSize = $(":input[name='page-size']").val().split(' ');
     if ($(":input[name='orientation']").val() == "landscape") {
-        res.pageWidth = toPt(pageSize[1]);
-        res.pageHeight = toPt(pageSize[0]);
+        res.pageWidth = Utils.toPt(pageSize[1]);
+        res.pageHeight = Utils.toPt(pageSize[0]);
     } else {
-        res.pageWidth = toPt(pageSize[0]);
-        res.pageHeight = toPt(pageSize[1]);
+        res.pageWidth = Utils.toPt(pageSize[0]);
+        res.pageHeight = Utils.toPt(pageSize[1]);
     }
-    res.marginTop = toPt(getVal($(":input[name='page-margin-top']")));
-    res.marginOutside = toPt(getVal($(":input[name='page-margin-outside']")));
-    res.marginBottom = toPt(getVal($(":input[name='page-margin-bottom']")));
-    res.marginInside = toPt(getVal($(":input[name='page-margin-inside']")));
+    res.marginTop = Utils.toPt(Utils.getVal($(":input[name='page-margin-top']")));
+    res.marginOutside = Utils.toPt(Utils.getVal($(":input[name='page-margin-outside']")));
+    res.marginBottom = Utils.toPt(Utils.getVal($(":input[name='page-margin-bottom']")));
+    res.marginInside = Utils.toPt(Utils.getVal($(":input[name='page-margin-inside']")));
 
     return res;
 }
@@ -185,7 +191,7 @@ function taskLabelHandler(event) {
 /** @deprecated */
 function spacingHandler(event, cls) {
     var target = $(event.target);
-    var val = toPt(getVal(target));
+    var val = Utils.toPt(Utils.getVal(target));
     if (val == undefined) {
         setError(target, $("<span>Invalid value</span>"), "Invalid XSL FO length value");
     } else {
@@ -231,7 +237,9 @@ function tableAndFigureNumberingHandler(event) {
     }
 }
 
-$(document).ready(function () {
+init()
+
+function init() {
     $(":input[name='title-numbering']").change(titleNumberingHandler).change();
     $(":input[name='table-numbering']," +
     ":input[name='figure-numbering']").change(tableAndFigureNumberingHandler).change();
@@ -248,75 +256,6 @@ $(document).ready(function () {
     ":input[name='page-margin-outside']," +
     ":input[name='body-column-count']," +
     ":input[name='column-gap']").change(pageMarginHandler).first().change();
-});
-
-// Utilities -------------------------------------------------------------------
-
-//function validateDistance(event) {
-//    var target = $(event.target);
-//}
-
-function getVal(input) {
-    return input.val() != "" ? input.val() : input.attr("placeholder");
 }
 
-function stripUnit(val) {
-    return new Number(val.substring(0, val.length - 2));
-}
-
-/**
- * Convert length value to millimetres.
- *
- * @param val length with CSS unit
- * @return Number
- */
-function toMm(val) {
-    if (val == undefined) {
-        return undefined;
-    }
-    var unit = val.substring(val.length - 2);
-    var value = stripUnit(val);
-    if (unit == "cm") {
-        return value * 10;
-    } else if (unit == "in") {
-        return value * 25.4;
-    } else if (unit == "pt" || unit == "px") {
-        return value * 25.4 / 72;
-    } else if (unit == "pc") {
-        return value * 25.4 / 72 * 12;
-    } else if (unit == "mm") {
-        return value;
-    } else {
-        return undefined;
-    }
-}
-
-/**
- * Convert length value to points.
- *
- * @param val length with CSS unit
- * @return Number
- */
-function toPt(val) {
-    if (val == undefined) {
-        return undefined;
-    }
-    var unit = val.substring(val.length - 2);
-    var value = val.substring(0, val.length - 2);
-    if (unit == "cm") {
-        return value / 2.54 * 72;
-    } else if (unit == "mm") {
-        return value / 25.4 * 72;
-    } else if (unit == "in") {
-        return value * 72;
-    } else if (unit == "pc") {
-        return value * 12;
-    } else if (unit == "em") {
-        var val = $(":input[name='font-size.body']").val();
-        return val.substring(0, val.length - 2) * value;
-    } else if (unit == "pt") {
-        return value;
-    } else {
-        return undefined;
-    }
-}
+})
