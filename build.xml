@@ -61,7 +61,7 @@
     </exec>
     <compiler js="domains.js,form.js" output="generator.js"/>
     <compiler js="dtd.js" output="dtd.js"/>
-    <!--compiler js="pdf.js,pdf-preview.js" output="pdf.js"/-->
+    <!--compiler js="pdf.js,PdfPreviewController.js" output="pdf.js"/-->
   </target>
   
   <target name="dist" depends="-init, -manifest, -version" description="Build distribution package.">

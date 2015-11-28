@@ -1,9 +1,10 @@
 define([
   '../app/StyleController',
-  '../app/pdf-utils',
-  '../app/pdf-preview'
+  'PdfPreviewController',
+  '../app/pdf-utils'
 ], function (
   StyleController,
+  PdfPreviewController,
   Utils
 ) {
   function toolkitVersionChangeHandler(event) {
@@ -141,8 +142,9 @@ define([
 
   // Init
 
-  StyleController()
   init()
+  PdfPreviewController()
+  StyleController()
 
   function init() {
     // widget initialization
