@@ -23,10 +23,10 @@ define([
       ":input[name='column-gap']").change(pageMarginHandler).first().change()
 
     function pageMarginHandler(event) {
-      $(".example-page").each(function () {
+      $('.example-page').each(function () {
         updatePageExample($(this))
       })
-      $(".example-block-page").each(function () {
+      $('.example-block-page').each(function () {
         updateFixedPageExample($(this))
       })
     }
@@ -35,17 +35,17 @@ define([
      * For pages with fixed factor
      */
     function updatePageExample(page) {
-      var isOdd = page.is(".odd")
+      var isOdd = page.is('.odd')
       var dim = readPageDimensions()
 
       page.height(dim.pageHeight * factor)
       page.width(dim.pageWidth * factor)
 
-      var content = page.find(".example-page-body")
-      content.css("margin-top", (dim.marginTop * factor) + "px")
-      content.css(isOdd ? "margin-right" : "margin-left", (dim.marginOutside * factor) + "px")
-      content.css("margin-bottom", (dim.marginBottom * factor) + "px")
-      content.css(isOdd ? "margin-left" : "margin-right", (dim.marginInside * factor) + "px")
+      var content = page.find('.example-page-body')
+      content.css('margin-top', (dim.marginTop * factor) +  'px')
+      content.css(isOdd ?  'margin-right' :  'margin-left', (dim.marginOutside * factor) +  'px')
+      content.css('margin-bottom', (dim.marginBottom * factor) +  'px')
+      content.css(isOdd ?  'margin-left' :  'margin-right', (dim.marginInside * factor) +  'px')
       content.height((dim.pageHeight - dim.marginTop - dim.marginBottom) * factor)
       content.width((dim.pageWidth - dim.marginInside - dim.marginOutside) * factor)
 
@@ -71,9 +71,9 @@ define([
       var blockWidth = 700
       var factor = blockWidth / dim.pageWidth
 
-      var content = page.find(".example-page-content")
-      content.css("margin-right", (dim.marginOutside * factor) + "px")
-      content.css("margin-left", (dim.marginInside * factor) + "px")
+      var content = page.find('.example-page-content')
+      content.css('margin-right', (dim.marginOutside * factor) +  'px')
+      content.css('margin-left', (dim.marginInside * factor) +  'px')
     }
 
     /**
@@ -95,7 +95,7 @@ define([
       var res = new Dimensions()
 
       var pageSize = $(":input[name='page-size']").val().split(' ')
-      if ($(":input[name='orientation']").val() === "landscape") {
+      if ($(':input[name=orientation]').val() ===  'landscape') {
         res.pageWidth = Utils.toPt(pageSize[1])
         res.pageHeight = Utils.toPt(pageSize[0])
       } else {
@@ -114,7 +114,7 @@ define([
       var target = $(event.target)
       $(".force-page-count_example_auto, .force-page-count_example_odd, .force-page-count_example_even").each(function () {
         var t = $(this)
-        if (t.is(".force-page-count_example_" + target.val())) {
+        if (t.is('.force-page-count_example_' + target.val())) {
           t.show()
         } else {
           t.hide()
@@ -124,7 +124,7 @@ define([
 
     function taskLabelHandler(event) {
       var target = $(event.target)
-      var e = $(".example-task-label")
+      var e = $('.example-task-label')
       if (target.is(":checked")) {
         e.show()
       } else {
@@ -134,8 +134,8 @@ define([
 
     function mirrorPageHandler(event) {
       var target = $(event.target)
-      var evenPage = $(".even")
-      if (target.prop("checked")) {
+      var evenPage = $('.even')
+      if (target.prop('checked')) {
         evenPage.show()
       } else {
         evenPage.hide()
@@ -158,8 +158,8 @@ define([
 
     function tableAndFigureNumberingHandler(event) {
       var target = $(event.target)
-      var preview = $("*[id='" + target.attr("name") + ".example']")
-      if (target.val() === "none") {
+      var preview = $("*[id='" + target.attr('name') + ".example']")
+      if (target.val() ===  'none') {
         preview.hide()
       } else {
         preview.show()
