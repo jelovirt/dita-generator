@@ -13,7 +13,7 @@ handlers:
   static_files: robots.txt
   upload: robots.txt
 - url: /favicon.ico
-  static_files: favicon.ico
+  static_files: images/favicon.ico
   upload: favicon.ico
 - url: /js
   static_dir: js
