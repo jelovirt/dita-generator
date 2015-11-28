@@ -39,6 +39,7 @@ from ditagen.generator import Version
 import re
 import logging
 import json
+import conf
 
 
 class MainHandler(webapp.RequestHandler):
@@ -55,8 +56,9 @@ class MainHandler(webapp.RequestHandler):
         template_values = {
             #"advanced": self.request.get("debug") == "true",
             "advanced": False,
-            "version": "1.2"
-            #"title": "DITA Generator"
+            "version": "1.2",
+            "revision": conf.revision,
+            "revision_short": conf.revision_short
         }
         template_file = "index.html"
         

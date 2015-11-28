@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="DITA DTD Generator">
+<project name="DITA DTD Generator" default="build">
 
   <target name="-init">
     <property file="${basedir}/local.properties"/>
@@ -36,6 +36,9 @@
     <exec outputproperty="build.current.revision.short" executable="git">
       <arg line='log --pretty=format:"%h" -1'/>
     </exec>
+    <echo file="${src.dir}/conf.py">revision = "${build.current.revision}"
+revision_short = "${build.current.revision.short}"
+</echo>
   </target>
 
   <target name="-version" unless="version">
@@ -145,6 +148,8 @@
     </jar>
   </target>
   
+  <target name="build" depends="-init, -hg.info, generate-js"/>
+
   <target name="clean" depends="-init">
     <delete dir="${temp.dir}"/>
   </target>
