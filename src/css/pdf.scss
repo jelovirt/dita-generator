@@ -15,36 +15,37 @@ fieldset.model {
   margin-left: 1em;
 }
 
-
-.preview .preview-page {
-  width: 50px;
-  height: 75px;
-  border: solid 1px black;
-  overflow: hidden;
-  box-shadow: 3px 3px 3px #ccc;
-  margin: 5px;
-  float: right;
-}
-.preview .preview-content {
-}
-.preview .preview-para {
-  margin-bottom: 5px;
-}
-.preview .preview-line,
-.preview .preview-line-last {
-  border-top: solid 1px silver;
-  height: 1px;
-  margin-left: 2px;
-  margin-bottom: 1px;
-}
-.preview .preview-line-last {
-  width: 30%;
-}
-.preview .preview-title {
-  border-top: solid 1px black;
-  height: 1px;
-  width: 60%;
-  margin-bottom: 1px;
+.preview {
+  .preview-page {
+    width: 50px;
+    height: 75px;
+    border: solid 1px black;
+    overflow: hidden;
+    box-shadow: 3px 3px 3px #ccc;
+    margin: 5px;
+    float: right;
+  }
+  .preview-content {
+  }
+  .preview-para {
+    margin-bottom: 5px;
+  }
+  .preview-line,
+  .preview-line-last {
+    border-top: solid 1px silver;
+    height: 1px;
+    margin-left: 2px;
+    margin-bottom: 1px;
+  }
+  .preview-line-last {
+    width: 30%;
+  }
+  .preview-title {
+    border-top: solid 1px black;
+    height: 1px;
+    width: 60%;
+    margin-bottom: 1px;
+  }
 }
 
 fieldset {
@@ -62,6 +63,21 @@ h3 {
   line-height: 10px;
   padding: 5px;
   clear: both;
+
+  ul {
+    padding-left: 20px;
+  }
+  dd {
+    margin-left: 20px;
+  }
+  table {
+    border-collapse: collapse;
+  }
+  table, td, th {
+    border: solid 1px black;
+    margin: 0 auto;
+  }
+
 }
 .example:before,
 .example-block:before{
@@ -72,19 +88,6 @@ h3 {
   font-style: italic;
 }
 
-.example ul {
-  padding-left: 20px;
-}
-.example dd {
-  margin-left: 20px;
-}
-.example table {
-  border-collapse: collapse;
-}
-.example table, .example td, .example th {
-  border: solid 1px black;
-  margin: 0 auto;
-}
 .example-page, .example-page-fragment {
   /* height set dynamically */
   /* width set dynamically */
@@ -149,9 +152,10 @@ table.example-page-body td.gap{
   border: solid 1px black;
   box-shadow: 3px 3px 3px #ccc;
   padding: 5px;
-}
-.example-text p {
-  margin: 0 2px;
+
+  p {
+    margin: 0 2px;
+  }
 }
 
 .example-page-content-ol,

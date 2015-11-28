@@ -32,15 +32,22 @@ fieldset {
     border: none;
     /*border-bottom: 1px solid gray;*/
     clear: both;
-}
-fieldset:first-child {
+
+  &:first-child {
     /*border-top: 1px solid gray;*/
-}
-fieldset label, fieldset select.label {
+  }
+  label,
+  select.label {
     width: 140px;
     margin-right: 10px;
     float: left;
     display: block;
+  }
+  p,
+  div {
+    margin: 6px 0;
+  }
+
 }
 label.inline {
     width: auto;
@@ -52,10 +59,6 @@ label.required {
     font-weight: bold;
 }
 
-fieldset p,
-fieldset div {
-    margin: 6px 0;
-}
 hr {
   display: none;
 }
