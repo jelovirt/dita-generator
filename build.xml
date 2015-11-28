@@ -12,8 +12,8 @@
     <property name="work.dir" location="${temp.dir}/work/${DATE_STAMP}"/>
     <property name="dist.dir" location="${temp.dir}/dist"/>
     <property name="src.dir" location="${basedir}/src"/>
-    <property name="python.dir" location="${src.dir}/python"/>
-    <property name="resources.dir" location="${src.dir}/resources"/>
+    <property name="python.dir" location="${src.dir}"/>
+    <property name="resources.dir" location="${basedir}"/>
     
     <taskdef name="jscomp" classname="com.google.javascript.jscomp.ant.CompileTask"
              classpath="${basedir}/lib/compiler.jar"/>
@@ -22,7 +22,7 @@
       <attribute name="output"/>
       <sequential>
         <jscomp compilationLevel="simple" prettyPrint="false" warning="quiet"
-                output="${work.dir}/js/@{output}">
+                output="${src.dir}/js/@{output}">
           <sources dir="${src.dir}/js" files="@{js}"/>
         </jscomp>
       </sequential>
@@ -64,6 +64,7 @@
     <!--compiler js="pdf.js,PdfPreviewController.js" output="pdf.js"/-->
   </target>
   
+  <!-- Obsolete -->
   <target name="dist" depends="-init, -manifest, -version" description="Build distribution package.">
     <property name="prefix" value="ditagen-${version}"/>
     <property name="dist.file" location="${dist.dir}/${prefix}.zip"/><!--build.current.-->
@@ -82,13 +83,13 @@
         <include name="setup.py"/>
       </zipfileset>
       <zipfileset dir="${python.dir}" prefix="${prefix}"><!--build.current.-->
-        <include name="**"/>
+        <include name="**/*.py"/>
         <exclude name="setup.py"/>
         <exclude name="main.py"/>
         <exclude name="**/*.pyc"/>
       </zipfileset>
       <zipfileset dir="${resources.dir}" prefix="${prefix}"><!--build.current.-->
-        <include name="**"/>
+        <include name="LICENCE"/>
       </zipfileset>
     </jar>
   </target>
@@ -99,7 +100,7 @@
     <delete file="${dist.file}"/>
     <mkdir dir="${dist.dir}"/>
     <copy todir="${work.dir}" filtering="true">
-      <fileset dir="${src.dir}/html">
+      <fileset dir="${src.dir}">
         <include name="*.html"/>
       </fileset>
       <filterset>
@@ -113,14 +114,14 @@
         <include name="*.html"/>
       </zipfileset>
       <zipfileset dir="${python.dir}" prefix="${prefix}">
-        <include name="**"/>
+        <include name="**/*.py"/>
         <exclude name="setup.py"/>
         <exclude name="ditagen/cli.py"/>
         <exclude name="ditagen/web.py"/>
         <exclude name="**_test.py"/>
         <exclude name="**/*.pyc"/>
       </zipfileset>
-      <zipfileset dir="${src.dir}/conf" prefix="${prefix}">
+      <zipfileset dir="${src.dir}" prefix="${prefix}">
         <include name="app.yaml"/>
         <include name="index.yaml"/>
         <include name="robots.txt"/>
