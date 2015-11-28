@@ -29,63 +29,51 @@ define([
       $('.example-block-page').each(function () {
         updateFixedPageExample($(this))
       })
-    }
 
-    /**
-     * For pages with fixed factor
-     */
-    function updatePageExample(page) {
-      var isOdd = page.is('.odd')
-      var dim = readPageDimensions()
+      /**
+       * For pages with fixed factor
+       */
+      function updatePageExample(page) {
+        var isOdd = page.is('.odd')
+        var dim = readPageDimensions()
 
-      page.height(dim.pageHeight * factor)
-      page.width(dim.pageWidth * factor)
+        page.height(dim.pageHeight * factor)
+        page.width(dim.pageWidth * factor)
 
-      var content = page.find('.example-page-body')
-      content.css('margin-top', (dim.marginTop * factor) +  'px')
-      content.css(isOdd ?  'margin-right' :  'margin-left', (dim.marginOutside * factor) +  'px')
-      content.css('margin-bottom', (dim.marginBottom * factor) +  'px')
-      content.css(isOdd ?  'margin-left' :  'margin-right', (dim.marginInside * factor) +  'px')
-      content.height((dim.pageHeight - dim.marginTop - dim.marginBottom) * factor)
-      content.width((dim.pageWidth - dim.marginInside - dim.marginOutside) * factor)
+        var content = page.find('.example-page-body')
+        content.css('margin-top', (dim.marginTop * factor) + 'px')
+        content.css(isOdd ? 'margin-right' : 'margin-left', (dim.marginOutside * factor) + 'px')
+        content.css('margin-bottom', (dim.marginBottom * factor) + 'px')
+        content.css(isOdd ? 'margin-left' : 'margin-right', (dim.marginInside * factor) + 'px')
+        content.height((dim.pageHeight - dim.marginTop - dim.marginBottom) * factor)
+        content.width((dim.pageWidth - dim.marginInside - dim.marginOutside) * factor)
 
-      var columns = Number($(":input[name='body-column-count']").val())
-      var columnWidth = Utils.toPt(Utils.getVal($(":input[name='column-gap']")))
-      var tr = page.find(".example-page-body tr")
-      var buf = $("<tr></tr>")
-      for (var i = 0; i < columns; i++) {
-        if (i !== 0) {
-          buf.append($("<td class='gap'><span/></td>").width(columnWidth * factor))
+        var columns = Number($(":input[name='body-column-count']").val())
+        var columnWidth = Utils.toPt(Utils.getVal($(":input[name='column-gap']")))
+        var tr = page.find(".example-page-body tr")
+        var buf = $("<tr></tr>")
+        for (var i = 0; i < columns; i++) {
+          if (i !== 0) {
+            buf.append($("<td class='gap'><span/></td>").width(columnWidth * factor))
+          }
+          buf.append($("<td><div/></td>"))
         }
-        buf.append($("<td><div/></td>"))
+        tr.replaceWith(buf)
       }
-      tr.replaceWith(buf)
-    }
 
-    /**
-     * For pages with fixed width
-     */
-    function updateFixedPageExample(page) {
-      var dim = readPageDimensions()
+      /**
+       * For pages with fixed width
+       */
+      function updateFixedPageExample(page) {
+        var dim = readPageDimensions()
 
-      var blockWidth = 700
-      var factor = blockWidth / dim.pageWidth
+        var blockWidth = 700
+        var factor = blockWidth / dim.pageWidth
 
-      var content = page.find('.example-page-content')
-      content.css('margin-right', (dim.marginOutside * factor) +  'px')
-      content.css('margin-left', (dim.marginInside * factor) +  'px')
-    }
-
-    /**
-     * Page dimensions in points.
-     */
-    function Dimensions() {
-      var pageWidth
-      var pageHeight
-      var marginTop
-      var marginOutside
-      var marginBottom
-      var marginInside
+        var content = page.find('.example-page-content')
+        content.css('margin-right', (dim.marginOutside * factor) + 'px')
+        content.css('margin-left', (dim.marginInside * factor) + 'px')
+      }
     }
 
     /**
@@ -95,7 +83,7 @@ define([
       var res = new Dimensions()
 
       var pageSize = $(":input[name='page-size']").val().split(' ')
-      if ($(':input[name=orientation]').val() ===  'landscape') {
+      if ($(':input[name=orientation]').val() === 'landscape') {
         res.pageWidth = Utils.toPt(pageSize[1])
         res.pageHeight = Utils.toPt(pageSize[0])
       } else {
@@ -159,11 +147,23 @@ define([
     function tableAndFigureNumberingHandler(event) {
       var target = $(event.target)
       var preview = $("*[id='" + target.attr('name') + ".example']")
-      if (target.val() ===  'none') {
+      if (target.val() === 'none') {
         preview.hide()
       } else {
         preview.show()
       }
     }
+  }
+
+  /**
+   * Page dimensions in points.
+   */
+  function Dimensions() {
+    var pageWidth
+    var pageHeight
+    var marginTop
+    var marginOutside
+    var marginBottom
+    var marginInside
   }
 })

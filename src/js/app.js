@@ -1,7 +1,8 @@
 requirejs.config({
   baseUrl: '/js/lib',
   paths: {
-    app: '../app'
+    app: '../app',
+    rx: 'https://cdnjs.cloudflare.com/ajax/libs/rxjs/4.0.7/rx.lite.min'
   }
 });
 

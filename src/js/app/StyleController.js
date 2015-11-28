@@ -1,11 +1,15 @@
 define([
-  '../app/pdf-utils'
+  '../app/pdf-utils',
+  'rx'
 ], function (
-  Utils
+  Utils,
+  Rx
 ) {
   return function StyleController() {
 
-    const storeFields = ['font-family', 'font-size', 'font-weight', 'font-style', 'color', 'background-color', 'space-before', 'space-after', 'start-indent', 'text-align', 'text-decoration', 'line-height',
+    const storeFields = [
+      'font-family', 'font-size', 'font-weight', 'font-style', 'color', 'background-color',
+      'space-before', 'space-after', 'start-indent', 'text-align', 'text-decoration', 'line-height',
       // titles
       'title-numbering',
       // note
@@ -24,15 +28,18 @@ define([
       // table, fig
       'caption-number', 'caption-position']
 
-    var styleModel = $("#style-model :input")
-    styleModel.change(previewSpaceHandler).change()
+    var styleModel = StyleModel()
+    styleModel.change.subscribe(previewSpaceHandler)
+    styleModel.fields.change()
+
+    var $styleForm = $('#style-form')
     _.forEach(storeFields, function (field) {
-      $(":input[id='" + field + "']").change(styleEditorHandler)
+      $styleForm.find(":input[id='" + field + "']").change(styleEditorHandler)
     })
-    $("#style-selector").change(styleHandler)
-    readFromModel('body');// initialize style dialog
-    var pdfStyleSelectorCurrent = 'body'
-    $("#style-selector").change()
+
+    var pdfStyleSelectorCurrent
+    var $styleSelector = $('#style-selector')
+    $styleSelector.change(styleHandler).val('body').change()
 
     // Style dialog methods
 
@@ -116,7 +123,7 @@ define([
     function styleHandler(event) {
       var target = $(event.target)
       var style = target.val()
-      $("#style-form [data-style]").each(function () {
+      $styleForm.find('[data-style]').each(function () {
         var f = $(this)
         f.toggle($(this).attr('data-style').split(" ").indexOf(style) !== -1)
       })
@@ -127,79 +134,7 @@ define([
         $(".style-selector-block").show().find(":input").removeAttr('disabled')
       }
       pdfStyleSelectorCurrent = target.val()
-      readFromModel(target.val())
-    }
-
-    /**
-     * Read fields from model to UI.
-     * @param type
-     */
-    function readFromModel(type) {
-      for (var i = 0; i < storeFields.length; i++) {
-        var model = styleModel.filter("[name='" + storeFields[i] + "." + type + "']")
-        // if no value, inherit from body
-        if (model.data('inherit') !== undefined && (model.val() === undefined || model.val() === "")) {
-          model = styleModel.filter("[name='" + storeFields[i] + "." + 'body' + "']")
-        }
-        var view = $("#style-form :input[id='" + storeFields[i] + "']")
-        if (view.is(":checkbox")) {
-          view.prop('checked', model.val() === view.val())
-        } else if (view.is(".editable-list")) {
-          //var id = view.attr('name') !== undefined ? ui.attr('name') : view.attr('id')
-          //var id = storeFields[i];//view.attr('id')
-          //var store = styleModel.filter("[id='" + id + "']")
-          //store.val(model.val())
-          //store.change()
-          //console.log("readFromModel: " + storeFields[i] + " = " + model.val())
-          view.val(model.val())
-        } else {
-          view.val(model.val())
-        }
-        view.change()
-      }
-    }
-
-    function writeFieldToModel(field, type) {
-      var view = $("#style-form :input[id='" + field + "']")
-      var model = styleModel.filter("[name='" + field + "." + type + "']")
-      var oldValue = model.val()
-      var newValue
-      if (view.is(":checkbox")) {
-        if (view.is(":checked")) {
-          newValue = view.val()
-        } else if (field === 'text-decoration') {
-          newValue = 'none'
-        } else {
-          newValue = 'normal'
-        }
-      } else if (view.is(".editable-list")) {
-        newValue = view.val()
-      } else {
-        newValue = view.val()
-      }
-
-      // if equals body value, treat as inherit value
-      if (model.data('inherit') !== undefined) {
-        var b = styleModel.filter("[name='" + field + "." + 'body' + "']")
-        if (oldValue === b.val()) {
-          newValue = undefined
-        }
-        // update inheriting model fields
-      } else if (type === 'body') {
-        styleModel.filter("[data-inherit=body]").each(function () {
-          var m = $(this)
-          if (m.is("[name^='" + field + "']")) {
-            if (m.val() === undefined || m.val() === "" || m.val() === oldValue) {
-              m.val(newValue)
-              m.change()
-            }
-          }
-        })
-      }
-
-      model.val(newValue)
-      // fire change event
-      model.change()
+      styleModel.readFromModel(target.val())
     }
 
     /**
@@ -209,7 +144,90 @@ define([
     function styleEditorHandler(event) {
       var ui = $(event.target)
       var field = ui.attr('id')
-      writeFieldToModel(field, pdfStyleSelectorCurrent)
+      styleModel.writeFieldToModel(field, pdfStyleSelectorCurrent)
+    }
+
+    function StyleModel() {
+      var $element = $('#style-model')
+      var $inputs = $element.find(':input')
+      //$inputs.change(previewSpaceHandler).change()
+      var change = Rx.Observable.fromEvent($inputs, 'change')
+
+      /**
+       * Read fields from model to UI.
+       * @param type
+       */
+      function readFromModel(type) {
+        for (var i = 0; i < storeFields.length; i++) {
+          var model = styleModel.field(storeFields[i], type)
+          // if no value, inherit from body
+          if (model.data('inherit') !== undefined && (model.val() === undefined || model.val() === "")) {
+            model = styleModel.field(storeFields[i],'body')
+          }
+          var view = $styleForm.find(":input[id='" + storeFields[i] + "']")
+          if (view.is(":checkbox")) {
+            view.prop('checked', model.val() === view.val())
+          } else if (view.is(".editable-list")) {
+            view.val(model.val())
+          } else {
+            view.val(model.val())
+          }
+          view.change()
+        }
+      }
+
+      function writeFieldToModel(field, type) {
+        var view = $styleForm.find(":input[id='" + field + "']")
+        var model = styleModel.field(field, type)
+        var oldValue = model.val()
+        var newValue
+        if (view.is(":checkbox")) {
+          if (view.is(":checked")) {
+            newValue = view.val()
+          } else if (field === 'text-decoration') {
+            newValue = 'none'
+          } else {
+            newValue = 'normal'
+          }
+        } else if (view.is(".editable-list")) {
+          newValue = view.val()
+        } else {
+          newValue = view.val()
+        }
+
+        // if equals body value, treat as inherit value
+        if (model.data('inherit') !== undefined) {
+          var b = styleModel.field(field, 'body')//filter("[name='" + field + "." + 'body' + "']")
+          if (oldValue === b.val()) {
+            newValue = undefined
+          }
+          // update inheriting model fields
+        } else if (type === 'body') {
+          styleModel.fields.filter("[data-inherit=body]").each(function () {
+            var m = $(this)
+            if (m.is("[name^='" + field + "']")) {
+              if (m.val() === undefined || m.val() === "" || m.val() === oldValue) {
+                m.val(newValue)
+                m.change()
+              }
+            }
+          })
+        }
+
+        model.val(newValue)
+        // fire change event
+        model.change()
+      }
+
+      return {
+        change: change,
+        fields: $inputs,
+        field: function(field, type) {
+          return $inputs.filter("[name='" + field + "." + type + "']")
+        },
+        readFromModel: readFromModel,
+        writeFieldToModel: writeFieldToModel
+      }
     }
   }
 })

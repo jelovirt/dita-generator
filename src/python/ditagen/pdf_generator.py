@@ -35,7 +35,7 @@ properties = set(["absolute-position", "active-state", "alignment-adjust", "alig
 
 styles_json = {
     "body": {
-        "font-family": { "default": "serif", "inherit": None },
+        "font-family": { "default": "Times New Roman", "inherit": None },
         "font-size": { "default": "10pt", "inherit": None },
         "color": { "default": "black", "inherit": None },
         "background-color": { "default": "transparent", "inherit": None },
@@ -49,7 +49,7 @@ styles_json = {
         "line-height": { "default": "1.2", "inherit": None },
     },
     "topic": {
-        "font-family": { "default": "sans-serif", "inherit": None },
+        "font-family": { "default": "Helvetica", "inherit": None },
         "font-size": { "default": "18pt", "inherit": None },
         "color": { "default": "black", "inherit": "body" },
         "background-color": { "default": "transparent", "inherit": None },
@@ -65,7 +65,7 @@ styles_json = {
         "title-numbering": { "default": "true", "inherit": None },
     },
     "topic.topic": {
-        "font-family": { "default": "sans-serif", "inherit": None },
+        "font-family": { "default": "Helvetica", "inherit": None },
         "font-size": { "default": "14pt", "inherit": None },
         "color": { "default": "black", "inherit": "body" },
         "background-color": { "default": "transparent", "inherit": None },
@@ -81,7 +81,7 @@ styles_json = {
         "title-numbering": { "default": "false", "inherit": None },
     },
     "topic.topic.topic": {
-        "font-family": { "default": "sans-serif", "inherit": None },
+        "font-family": { "default": "Helvetica", "inherit": None },
         "font-size": { "default": "12pt", "inherit": None },
         "color": { "default": "black", "inherit": "body" },
         "background-color": { "default": "transparent", "inherit": None },
@@ -97,7 +97,7 @@ styles_json = {
         "title-numbering": { "default": "false", "inherit": None },
     },
     "topic.topic.topic.topic": {
-        "font-family": { "default": "serif", "inherit": "body" },
+        "font-family": { "default": "Times New Roman", "inherit": "body" },
         "font-size": { "default": "10pt", "inherit": "body" },
         "color": { "default": "black", "inherit": "body" },
         "background-color": { "default": "transparent", "inherit": None },
@@ -113,7 +113,7 @@ styles_json = {
         "title-numbering": { "default": "false", "inherit": None },
     },
     "section": {
-        "font-family": { "default": "sans-serif", "inherit": None },
+        "font-family": { "default": "Helvetica", "inherit": None },
         "font-size": { "default": None, "inherit": "body" },
         "color": { "default": None, "inherit": "body" },
         "background-color": { "default": "transparent", "inherit": None },
@@ -143,7 +143,7 @@ styles_json = {
         "icon": { "default": "icon", "inherit": None },
     },
     "pre": {
-        "font-family": { "default": "monospace", "inherit": None },
+        "font-family": { "default": "Monaco", "inherit": None },
         "font-size": { "default": None, "inherit": "body" },
         "color": { "default": None, "inherit": "body" },
         "background-color": { "default": "transparent", "inherit": None },
@@ -157,7 +157,7 @@ styles_json = {
         "line-height": { "default": None, "inherit": "body" },
     },
     "codeblock": {
-        "font-family": { "default": "monospace", "inherit": None },
+        "font-family": { "default": "Monaco", "inherit": None },
         "font-size": { "default": None, "inherit": "body" },
         "color": { "default": None, "inherit": "body" },
         "background-color": { "default": "transparent", "inherit": None },
