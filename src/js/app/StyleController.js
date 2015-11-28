@@ -159,11 +159,6 @@ define([
       }
     }
 
-    //function writeToModel(type) {
-    //    for (var i = 0; i < storeFields.length; i++) {
-    //        writeFieldToModel(storeFields[i], type)
-    //    }
-    //}
     function writeFieldToModel(field, type) {
       var view = $("#style-form :input[id='" + field + "']")
       var model = styleModel.filter("[name='" + field + "." + type + "']")
@@ -217,5 +212,4 @@ define([
       writeFieldToModel(field, pdfStyleSelectorCurrent)
     }
   }
-
 })

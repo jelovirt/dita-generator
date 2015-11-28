@@ -132,22 +132,6 @@ define([
       }
     }
 
-    /** @deprecated */
-    /*
-    function spacingHandler(event, cls) {
-      var target = $(event.target)
-      var val = Utils.toPt(Utils.getVal(target))
-      if (val == undefined) {
-        setError(target, $("<span>Invalid value</span>"), "Invalid XSL FO length value")
-      } else {
-        setOk(target)
-      }
-      var f = 0.3
-      var v = String(val * f) + "px"
-      $(".example-page-content-body, .example-page-content-topic, .example-page-content-topic.topic").css(cls, v)
-    }
-    */
-
     function mirrorPageHandler(event) {
       var target = $(event.target)
       var evenPage = $(".even")
@@ -158,7 +142,6 @@ define([
       }
       pageMarginHandler(event)
     }
-
 
     function definitionListHandler(event) {
       var target = $(event.target)
@@ -183,5 +166,4 @@ define([
       }
     }
   }
-
 })

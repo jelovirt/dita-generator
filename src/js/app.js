@@ -5,4 +5,4 @@ requirejs.config({
   }
 });
 
-requirejs(['app/pdf'])
+requirejs(['app/main'])
