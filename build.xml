@@ -60,7 +60,7 @@
       <env key="PYTHONPATH" path="${basedir}/build:${basedir}/build:${python.dir}"/>
     </exec>
     <compiler js="domains.js,form.js" output="generator.js"/>
-    <compiler js="dtd.js" output="dtd.js"/>
+    <!--compiler js="dtd.js" output="dtd.js"/-->
     <!--compiler js="pdf.js,PdfPreviewController.js" output="pdf.js"/-->
   </target>
   
