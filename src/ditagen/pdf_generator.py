@@ -325,26 +325,6 @@ fonts = {
         }
     }
 
-imports = {
-    "ah": [
-        "plugin:org.dita.pdf2:cfg/fo/attrs/tables-attr_axf.xsl", 
-        "plugin:org.dita.pdf2:cfg/fo/attrs/toc-attr_axf.xsl", 
-        "plugin:org.dita.pdf2:cfg/fo/attrs/index-attr_axf.xsl",
-        "plugin:org.dita.pdf2:xsl/fo/root-processing_axf.xsl", 
-        "plugin:org.dita.pdf2:xsl/fo/index_axf.xsl"],
-    "fop": [
-        "plugin:org.dita.pdf2:cfg/fo/attrs/commons-attr_fop.xsl", 
-        "plugin:org.dita.pdf2:cfg/fo/attrs/tables-attr_fop.xsl", 
-        "plugin:org.dita.pdf2:cfg/fo/attrs/toc-attr_fop.xsl",
-        "plugin:org.dita.pdf2:xsl/fo/root-processing_fop.xsl", 
-        "plugin:org.dita.pdf2:xsl/fo/index_fop.xsl"],
-    "xep": [
-        "plugin:org.dita.pdf2:cfg/fo/attrs/commons-attr_xep.xsl", 
-        "plugin:org.dita.pdf2:cfg/fo/attrs/layout-masters-attr_xep.xsl", 
-        "plugin:org.dita.pdf2:xsl/fo/root-processing_xep.xsl", 
-        "plugin:org.dita.pdf2:xsl/fo/index_xep.xsl"]
-    }
-
 langs = {
   u"de": {
     u"#table-continued": u"<variable id='#table-continued'>Table continued&#x2026;</variable>",
@@ -615,15 +595,6 @@ class StylePluginGenerator(DitaGenerator):
     </xsl:for-each>
   </xsl:template>
 """
-        # Backport from DITA-OT 2.0
-        __cover_metadata_v1_raw = """
-  <!-- Test whether URI is absolute -->
-  <xsl:function name="opentopic-func:isAbsolute" as="xs:boolean">
-    <xsl:param name="uri" as="xs:anyURI"/>
-    <xsl:sequence select="some $prefix in ('/', 'file:') satisfies starts-with($uri, $prefix) or
-                          contains($uri, '://')"/>
-  </xsl:function>
-"""
         __cover_topic_raw = """
   <xsl:template name="e:cover-image">
     <xsl:for-each select="($map//*[contains(@class, ' map/topicref ')][@outputclass = '%s'])[1]">
@@ -644,22 +615,6 @@ class StylePluginGenerator(DitaGenerator):
       <xsl:with-param name="height" select="()"/>
       <xsl:with-param name="width" select="()"/>
     </xsl:apply-templates>
-  </xsl:template>
-"""
-        # Backport from DITA-OT 2.0
-        __cover_raw = """
-  <xsl:template name="createFrontMatter_1.0">
-    <fo:page-sequence master-reference="front-matter" xsl:use-attribute-sets="__force__page__count">
-      <xsl:call-template name="insertFrontMatterStaticContents"/>
-      <fo:flow flow-name="xsl-region-body">
-        <fo:block xsl:use-attribute-sets="__frontmatter">
-          <xsl:call-template name="createFrontCoverContents"/>
-        </fo:block>
-      </fo:flow>
-    </fo:page-sequence>
-    <xsl:if test="not($retain-bookmap-order)">
-      <xsl:call-template name="createNotices"/>
-    </xsl:if>
   </xsl:template>
 """
         __cover_raw_2 = """
@@ -941,17 +896,12 @@ class StylePluginGenerator(DitaGenerator):
         if stylesheet == "front-matter" or not stylesheet:
             if self.cover_image_name or self.cover_image_metadata or self.cover_image_topic:
                 __root.append(ET.Comment("cover"))
-                if self.ot_version >= Version("2.0"):
-                    self.copy_xml(__root, __cover_raw_2)
-                else:
-                    self.copy_xml(__root, __cover_raw)
+                self.copy_xml(__root, __cover_raw_2)
                 #self.copy_xml(__root, __cover_contents_raw)
                 if self.cover_image_name:
                     self.copy_xml(__root, __cover_file_raw)
                 elif self.cover_image_metadata:
                     self.copy_xml(__root, __cover_metadata_raw % self.cover_image_metadata)
-                    if self.ot_version < Version("2.0"):
-                        self.copy_xml(__root, __cover_metadata_v1_raw)
                 elif self.cover_image_topic:
                     self.copy_xml(__root, __cover_topic_raw % self.cover_image_topic)
 
@@ -1096,7 +1046,7 @@ class StylePluginGenerator(DitaGenerator):
         </xsl:when>
         <xsl:when test="not(@scope = 'external' or @format = 'html')">
           <xsl:call-template name="insertPageNumberCitation">
-            <xsl:with-param name="isTitleEmpty" select=\"""" + ("true()" if self.ot_version >= Version("2.0") else "'yes'") +  """\"/>
+            <xsl:with-param name="isTitleEmpty" select=\"true()\"/>
             <xsl:with-param name="destination" select="$destination"/>
             <xsl:with-param name="element" select="$element"/>
           </xsl:call-template>
@@ -1306,7 +1256,9 @@ class StylePluginGenerator(DitaGenerator):
                         __region_body_attr = ET.SubElement(__root, NS_XSL + "attribute-set", name=a)
                         ET.SubElement(__region_body_attr, NS_XSL + "attribute", name=u"column-count").text = str(self.index_column_count)
         
-        if stylesheet == "basic-settings" or not stylesheet:       
+        if stylesheet == "basic-settings" or not stylesheet:
+            ET.SubElement(__root, "xsl:param", name="pdfFormatter", select="'%s'" % self.formatter)
+            ET.SubElement(__root, "xsl:param", name="tocMaximumLevel", select=str(self.toc_maximum_level))
             # page size
             if self.page_size:
                 ET.SubElement(__root, NS_XSL + "variable", name=u"page-width").text = self.page_size[0]
@@ -1384,8 +1336,7 @@ class StylePluginGenerator(DitaGenerator):
         fs = []
         fs.append("plugin:org.dita.base:xsl/common/dita-utilities.xsl")
         fs.append("plugin:org.dita.base:xsl/common/dita-textonly.xsl")
-        if self.ot_version >= Version("2.0"):
-            fs.append("plugin:org.dita.base:xsl/common/related-links.xsl")
+        fs.append("plugin:org.dita.base:xsl/common/related-links.xsl")
         
         fs.append("plugin:org.dita.pdf2:xsl/common/attr-set-reflection.xsl")
         fs.append("plugin:org.dita.pdf2:xsl/common/vars.xsl")
@@ -1452,7 +1403,13 @@ class StylePluginGenerator(DitaGenerator):
         fs.append("plugin:org.dita.pdf2:xsl/fo/hi-domain.xsl")
         fs.append("plugin:org.dita.pdf2:cfg/fo/attrs/ui-domain-attr.xsl")
         fs.append("plugin:org.dita.pdf2:xsl/fo/ui-domain.xsl")
-        
+        fs.append("plugin:org.dita.pdf2:xsl/fo/ut-domain.xsl")
+        fs.append("plugin:org.dita.pdf2:xsl/fo/abbrev-domain.xsl")
+        fs.append("plugin:org.dita.pdf2:cfg/fo/attrs/markup-domain-attr.xsl")
+        fs.append("plugin:org.dita.pdf2:xsl/fo/markup-domain.xsl")
+        fs.append("plugin:org.dita.pdf2:cfg/fo/attrs/xml-domain-attr.xsl")
+        fs.append("plugin:org.dita.pdf2:xsl/fo/xml-domain.xsl")
+
         fs.append("plugin:org.dita.pdf2:cfg/fo/attrs/static-content-attr.xsl")
         fs.append("plugin:org.dita.pdf2:xsl/fo/static-content.xsl")
         fs.append("plugin:org.dita.pdf2:cfg/fo/attrs/glossary-attr.xsl")
@@ -1464,12 +1421,14 @@ class StylePluginGenerator(DitaGenerator):
         fs.append("plugin:org.dita.pdf2:xsl/fo/learning-elements.xsl")
         
         fs.append("plugin:org.dita.pdf2:xsl/fo/flagging.xsl")
+        if self.ot_version >= Version("2.2"):
+            fs.append("plugin:org.dita.pdf2:xsl/fo/flagging-from-preprocess.xsl")
 
         for i in fs:
             ET.SubElement(__root, "xsl:import", href=i)
             
         __root.append(ET.Comment("formatter specific imports"))
-        for i in imports[self.formatter]:
+        for i in self.__get_formatter_imports():
             ET.SubElement(__root, "xsl:import", href=i)
         
         if not self.override_shell:
@@ -1478,28 +1437,42 @@ class StylePluginGenerator(DitaGenerator):
                 ET.SubElement(__root, "xsl:import", href=i)
         
         __root.append(ET.Comment("parameters"))
-        ET.SubElement(__root, "xsl:param", name="locale")
-        ET.SubElement(__root, "xsl:param", name="customizationDir.url")
-        ET.SubElement(__root, "xsl:param", name="artworkPrefix")
-        ET.SubElement(__root, "xsl:param", name="publishRequiredCleanup")
-        ET.SubElement(__root, "xsl:param", name="DRAFT")
-        ET.SubElement(__root, "xsl:param", name="output.dir.url")
-        ET.SubElement(__root, "xsl:param", name="work.dir.url")
-        ET.SubElement(__root, "xsl:param", name="input.dir.url")
-        ET.SubElement(__root, "xsl:param", name="disableRelatedLinks", select="'yes'")
-        ET.SubElement(__root, "xsl:param", name="pdfFormatter", select="'%s'" % self.formatter)
-        ET.SubElement(__root, "xsl:param", name="antArgsBookmarkStyle")
-        ET.SubElement(__root, "xsl:param", name="antArgsChapterLayout")
-        ET.SubElement(__root, "xsl:param", name="antArgsIncludeRelatedLinks")
-        ET.SubElement(__root, "xsl:param", name="include.rellinks")
-        ET.SubElement(__root, "xsl:param", name="antArgsGenerateTaskLabels")
-        ET.SubElement(__root, "xsl:param", name="tocMaximumLevel", select=str(self.toc_maximum_level))
-        ET.SubElement(__root, "xsl:param", name="ditaVersion", select="number(/*[contains(@class,' map/map ')]/@ditaarch:DITAArchVersion)")
-        
+
         ditagen.generator.indent(__root)
         ditagen.generator.set_prefixes(__root, self.__get_ns())
         __d = ET.ElementTree(__root)
         __d.write(self.out, "UTF-8")
+
+    def __get_formatter_imports(self, ):
+        imports = None
+        plugin = "plugin:org.dita.pdf2"
+        if self.formatter == "ah":
+            if self.ot_version >= Version("2.2"):
+                plugin = plugin + ".axf"
+            imports = [
+                "cfg/fo/attrs/tables-attr_axf.xsl",
+                "cfg/fo/attrs/toc-attr_axf.xsl",
+                "cfg/fo/attrs/index-attr_axf.xsl",
+                "xsl/fo/root-processing_axf.xsl",
+                "xsl/fo/index_axf.xsl"]
+        elif self.formatter == "fop":
+            if self.ot_version >= Version("2.2"):
+                plugin = plugin + ".fop"
+            imports = [
+                "cfg/fo/attrs/commons-attr_fop.xsl",
+                "cfg/fo/attrs/tables-attr_fop.xsl",
+                "cfg/fo/attrs/toc-attr_fop.xsl",
+                "xsl/fo/root-processing_fop.xsl",
+                "xsl/fo/index_fop.xsl"]
+        elif self.formatter == "xep":
+            if self.ot_version >= Version("2.2"):
+                plugin = plugin + ".xep"
+            imports = [
+                "cfg/fo/attrs/commons-attr_xep.xsl",
+                "cfg/fo/attrs/layout-masters-attr_xep.xsl",
+                "xsl/fo/root-processing_xep.xsl",
+                "xsl/fo/index_xep.xsl"]
+        return [(plugin + ":" + i) for i in imports]
 
     def __generate_font_mappings(self):
         """Generate font mapping file."""
