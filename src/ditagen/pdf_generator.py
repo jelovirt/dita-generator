@@ -510,6 +510,10 @@ class StylePluginGenerator(DitaGenerator):
             "name": "customization.dir",
             "location": ("${dita.plugin.%s.dir}/cfg" % self.plugin_name)
             })
+        ET.SubElement(__init, "property", {
+            "name": "pdf2.i18n.skip",
+            "value": "true"
+        })
         if self.override_shell:
             ET.SubElement(__init, "property", {
                 "name": "args.xsl.pdf",
