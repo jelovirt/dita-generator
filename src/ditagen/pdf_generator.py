@@ -564,8 +564,9 @@ class StylePluginGenerator(DitaGenerator):
     def __generate_catalog(self):
         """Generate plugin configuration file."""
         __root = ET.Element("catalog", prefer="system")
-        ET.SubElement(__root, "uri", name="cfg:fo/attrs/custom.xsl", uri="fo/attrs/custom.xsl")
-        ET.SubElement(__root, "uri", name="cfg:fo/xsl/custom.xsl", uri="fo/xsl/custom.xsl")
+        if not self.override_shell:
+            ET.SubElement(__root, "uri", name="cfg:fo/attrs/custom.xsl", uri="fo/attrs/custom.xsl")
+            ET.SubElement(__root, "uri", name="cfg:fo/xsl/custom.xsl", uri="fo/xsl/custom.xsl")
         ditagen.generator.indent(__root)
         ditagen.generator.set_prefixes(__root, {"": "urn:oasis:names:tc:entity:xmlns:xml:catalog"})
         __d = ET.ElementTree(__root)
