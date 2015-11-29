@@ -609,8 +609,8 @@ class StylePluginGenerator(DitaGenerator):
         __cover_file_raw = """
   <xsl:template name="e:cover-image">
     <xsl:variable name="path">
-      <xsl:call-template name="insertVariable">
-        <xsl:with-param name="theVariableID" select="'cover-image-path'"/>
+      <xsl:call-template name="getVariable">
+        <xsl:with-param name="id" select="'cover-image-path'"/>
       </xsl:call-template>
     </xsl:variable>
     <xsl:apply-templates select="." mode="placeImage">
@@ -696,8 +696,8 @@ class StylePluginGenerator(DitaGenerator):
               </xsl:call-template>
             </xsl:if>
             <fo:block>
-              <xsl:call-template name="insertVariable">
-                <xsl:with-param name="theVariableID" select="'#table-continued'"/>
+              <xsl:call-template name="getVariable">
+                <xsl:with-param name="id" select="'#table-continued'"/>
               </xsl:call-template>
             </fo:block>
           </fo:table-cell>
@@ -730,8 +730,8 @@ class StylePluginGenerator(DitaGenerator):
       <fo:list-item-label xsl:use-attribute-sets="ul.li__label">
         <fo:block xsl:use-attribute-sets="ul.li__label__content">
           <xsl:call-template name="commonattributes"/>
-          <xsl:call-template name="insertVariable">
-            <xsl:with-param name="theVariableID" select="'Unordered List bullet'"/>
+          <xsl:call-template name="getVariable">
+            <xsl:with-param name="id" select="'Unordered List bullet'"/>
           </xsl:call-template>
         </fo:block>
       </fo:list-item-label>
@@ -825,9 +825,9 @@ class StylePluginGenerator(DitaGenerator):
         <xsl:choose>
             <xsl:when test="$type = 'chapter'">
                 <fo:block xsl:use-attribute-sets="__chapter__frontmatter__name__container">
-                    <xsl:call-template name="insertVariable">
-                        <xsl:with-param name="theVariableID" select="'Chapter with number'"/>
-                        <xsl:with-param name="theParameters">
+                    <xsl:call-template name="getVariable">
+                        <xsl:with-param name="id" select="'Chapter with number'"/>
+                        <xsl:with-param name="params">
                             <number>
                                 <!--fo:block xsl:use-attribute-sets="__chapter__frontmatter__number__container">
                                     <xsl:apply-templates select="key('map-id', @id)[1]" mode="topicTitleNumber"/>
@@ -839,9 +839,9 @@ class StylePluginGenerator(DitaGenerator):
             </xsl:when>
             <xsl:when test="$type = 'appendix'">
                 <fo:block xsl:use-attribute-sets="__chapter__frontmatter__name__container">
-                    <xsl:call-template name="insertVariable">
-                        <xsl:with-param name="theVariableID" select="'Appendix with number'"/>
-                        <xsl:with-param name="theParameters">
+                    <xsl:call-template name="getVariable">
+                        <xsl:with-param name="id" select="'Appendix with number'"/>
+                        <xsl:with-param name="params">
                             <number>
                                 <!--fo:block xsl:use-attribute-sets="__chapter__frontmatter__number__container">
                                     <xsl:apply-templates select="key('map-id', @id)[1]" mode="topicTitleNumber"/>
@@ -853,9 +853,9 @@ class StylePluginGenerator(DitaGenerator):
             </xsl:when>
             <xsl:when test="$type = 'appendices'">
                 <fo:block xsl:use-attribute-sets="__chapter__frontmatter__name__container">
-                  <xsl:call-template name="insertVariable">
-                    <xsl:with-param name="theVariableID" select="'Appendix with number'"/>
-                    <xsl:with-param name="theParameters">
+                  <xsl:call-template name="getVariable">
+                    <xsl:with-param name="id" select="'Appendix with number'"/>
+                    <xsl:with-param name="params">
                       <number>
                         <fo:block xsl:use-attribute-sets="__chapter__frontmatter__number__container">
                           <xsl:text>&#xA0;</xsl:text>
@@ -867,9 +867,9 @@ class StylePluginGenerator(DitaGenerator):
             </xsl:when>
             <xsl:when test="$type = 'part'">
                 <fo:block xsl:use-attribute-sets="__chapter__frontmatter__name__container">
-                    <xsl:call-template name="insertVariable">
-                        <xsl:with-param name="theVariableID" select="'Part with number'"/>
-                        <xsl:with-param name="theParameters">
+                    <xsl:call-template name="getVariable">
+                        <xsl:with-param name="id" select="'Part with number'"/>
+                        <xsl:with-param name="params">
                             <number>
                                 <fo:block xsl:use-attribute-sets="__chapter__frontmatter__number__container">
                                     <xsl:apply-templates select="key('map-id', @id)[1]" mode="topicTitleNumber"/>
@@ -881,15 +881,15 @@ class StylePluginGenerator(DitaGenerator):
             </xsl:when>
             <xsl:when test="$type = 'preface'">
                 <fo:block xsl:use-attribute-sets="__chapter__frontmatter__name__container">
-                    <xsl:call-template name="insertVariable">
-                        <xsl:with-param name="theVariableID" select="'Preface title'"/>
+                    <xsl:call-template name="getVariable">
+                        <xsl:with-param name="id" select="'Preface title'"/>
                     </xsl:call-template>
                 </fo:block>
             </xsl:when>
             <xsl:when test="$type = 'notices'">
                 <fo:block xsl:use-attribute-sets="__chapter__frontmatter__name__container">
-                    <xsl:call-template name="insertVariable">
-                        <xsl:with-param name="theVariableID" select="'Notices title'"/>
+                    <xsl:call-template name="getVariable">
+                        <xsl:with-param name="id" select="'Notices title'"/>
                     </xsl:call-template>
                 </fo:block>
             </xsl:when>
@@ -1103,8 +1103,8 @@ class StylePluginGenerator(DitaGenerator):
                 <fo:inline>
                     <xsl:call-template name="commonattributes"/>
                 </fo:inline>
-                <xsl:call-template name="insertVariable">
-                    <xsl:with-param name="theVariableID" select="concat('Unordered List bullet ', $depth)"/>
+                <xsl:call-template name="getVariable">
+                    <xsl:with-param name="id" select="concat('Unordered List bullet ', $depth)"/>
                 </xsl:call-template>
             </fo:block>
         </fo:list-item-label>
@@ -1119,8 +1119,8 @@ class StylePluginGenerator(DitaGenerator):
 <xsl:template match="*[contains(@class, ' topic/ol ')]/*[contains(@class, ' topic/li ')]">
     <xsl:variable name="depth" select="count(ancestor::*[contains(@class, ' topic/ol ')])"/>
     <xsl:variable name="format">
-        <xsl:call-template name="insertVariable">
-            <xsl:with-param name="theVariableID" select="concat('Ordered List Format ', $depth)"/>
+        <xsl:call-template name="getVariable">
+            <xsl:with-param name="id" select="concat('Ordered List Format ', $depth)"/>
         </xsl:call-template>
     </xsl:variable>
     <fo:list-item xsl:use-attribute-sets="ol.li">
@@ -1129,9 +1129,9 @@ class StylePluginGenerator(DitaGenerator):
                 <fo:inline>
                     <xsl:call-template name="commonattributes"/>
                 </fo:inline>
-                <xsl:call-template name="insertVariable">
-                    <xsl:with-param name="theVariableID" select="concat('Ordered List Number ', $depth)"/>
-                    <xsl:with-param name="theParameters">
+                <xsl:call-template name="getVariable">
+                    <xsl:with-param name="id" select="concat('Ordered List Number ', $depth)"/>
+                    <xsl:with-param name="params">
                         <number>
                             <xsl:number format="{$format}"/>
                         </number>
@@ -1296,15 +1296,15 @@ class StylePluginGenerator(DitaGenerator):
     <xsl:variable name="labels" as="xs:integer*">
       <xsl:variable name="depth" select="count(ancestor-or-self::*[contains(@class, ' topic/ol ')])" />
       <xsl:variable name="format" as="xs:string">
-        <xsl:call-template name="insertVariable">
-          <xsl:with-param name="theVariableID" select="concat('Ordered List Format ', $depth)" />
+        <xsl:call-template name="getVariable">
+          <xsl:with-param name="id" select="concat('Ordered List Format ', $depth)" />
         </xsl:call-template>
       </xsl:variable>
       <xsl:for-each select="*[contains(@class, ' topic/li ')]">
         <xsl:variable name="s">
-          <xsl:call-template name="insertVariable">
-            <xsl:with-param name="theVariableID" select="concat('Ordered List Number ', $depth)" />
-            <xsl:with-param name="theParameters">
+          <xsl:call-template name="getVariable">
+            <xsl:with-param name="id" select="concat('Ordered List Number ', $depth)" />
+            <xsl:with-param name="params">
               <number>
                 <xsl:number format="{$format}" />
               </number>
