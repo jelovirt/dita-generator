@@ -557,7 +557,7 @@ class UiDomain(ditagen.dita.Domain):
     """User interface domain."""
     id = u"ui-d"
     si_module = u"technicalContent/dtd/uiDomain.mod"
-    si_entity = u"technicalContent/dtd/uiDomain.end"
+    si_entity = u"technicalContent/dtd/uiDomain.ent"
     pi_entity = u"-//OASIS//ENTITIES DITA 1.2 User Interface Domain//EN"
     pi_module = u"-//OASIS//ELEMENTS DITA 1.2 User Interface Domain//EN"
     title = u"User Interface"
