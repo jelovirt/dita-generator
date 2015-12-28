@@ -72,8 +72,8 @@ class MainHandler(webapp.RequestHandler):
                 pass
             elif __idx == 0:
                 # legacy
-                if a in ("plugin"):
-                    self.redirect("/pdf-plugin")
+                if a in ("plugin", "pdf-plugin"):
+                    self.redirect("http://dita-generator.elovirta.com/", permanent=True)
                     return
                 if a in ("shell", "specialization", "attribute"):
                     template_values["output"] = a
@@ -300,7 +300,7 @@ class PluginGenerateHandler(webapp.RequestHandler):
             __dita_gen = ditagen.pdf_generator.StylePluginGenerator()
 
             #validate
-            if not u"ot_version" in __args:
+            if not "ot_version" in __args:
                 raise ValueError("version missing")
             __dita_gen.ot_version = Version(__args["ot_version"])
             if not u"id" in __args:
@@ -368,8 +368,8 @@ class PluginGenerateHandler(webapp.RequestHandler):
     def read_arguments(self):
         """Read  HTTP arguments into a JSON-like structure."""
         __ret = {}
-        if u"ot.version" in self.request.arguments():
-            __ret["ot_version"] = self.request.get(u"ot.version")
+        if u"ot_version" in self.request.arguments():
+            __ret["ot_version"] = self.request.get(u"ot_version")
         if u"id" in self.request.arguments():
             __ret["id"] = self.request.get(u"id")
         if u"plugin-name" in self.request.arguments():
