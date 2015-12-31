@@ -12,4 +12,6 @@ Future targets:
 
 * Support XML Schema generation.
 
-Online generator is available at [DITA Generator](http://dita-generator-hrd.appspot.com/) hosted by Google App Engine.
+Online schema generator is available at [DITA Generator](http://dita-generator-hrd.appspot.com/) hosted by Google App Engine.
+
+PDF plugin generator is available at [PDF Plugin Generator](http://dita-generator.elovirta.com/) hosted by Heroku and the source code is hosted at [https://github.com/jelovirt/pdf-generator](https://github.com/jelovirt/pdf-generator).
