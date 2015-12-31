@@ -6,7 +6,6 @@ Currently implemented:
 * DITA shell DTD generation.
 * DITA topic specialization DTD generation.
 * DITA attribute domain specialization DTD generation.
-* DITA-OT PDF custom style plug-in. 
 
 Future targets:
 
